@@ -20,8 +20,7 @@ int servermain( void ) {
 
     printf( "\nIn servermain\n\n" );
 //    return(0);
-    
-    
+
      int sockfd, newsockfd, portno;
      char buffer[256];
      struct sockaddr_in serv_addr, cli_addr;
@@ -38,23 +37,21 @@ int servermain( void ) {
      if (bind(sockfd, (struct sockaddr *) &serv_addr,
               sizeof(serv_addr)) < 0) 
          error("ERROR on binding");
-
      listen(sockfd,5);
+
      newsockfd = accept(sockfd,
                  (struct sockaddr *) &cli_addr, 
                  &clilen);
      if (newsockfd < 0) 
           error("ERROR on accept");
-
     while ( n < 255 ) {
      bzero(buffer,256);
      n = read(newsockfd,buffer,255);
      if (n < 0) error("ERROR reading from socket");
-     printf("Here is the message: %s\n",buffer);
-     n = write(newsockfd,"I got your message",18);
+     printf("\nMessage: %s\n",buffer);
+     n = write(newsockfd,"OK",2);
      if (n < 0) error("ERROR writing to socket");
     }
-    
      close(newsockfd);
      close(sockfd);
      return 0; 

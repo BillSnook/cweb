@@ -44,7 +44,8 @@ int clientmain( void ) {
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
         error1("ERROR connecting");
-    printf("Please enter the message: ");
+  while ( n < 255 ) {
+    printf("\nPlease enter the message: ");
     bzero(buffer,256);
     fgets(buffer,255,stdin);
     n = write(sockfd,buffer,strlen(buffer));
@@ -54,7 +55,8 @@ int clientmain( void ) {
     n = read(sockfd,buffer,255);
     if (n < 0) 
          error1("ERROR reading from socket");
-    printf("%s\n",buffer);
+    printf("\n%s\n",buffer);
+  }
     close(sockfd);
     return 0;
 }
