@@ -10,6 +10,12 @@
 #define server_h
 
 
+#define CONNECTION_PORT         5555            // Mostly arbitrary
+#define CONNECTION_LISTENER     "localhost"     // Default partner
+
+
+void error(const char *msg);
+
 int servermain( void );
 
 

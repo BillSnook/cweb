@@ -10,6 +10,7 @@
 		A9C41B8F1F6F078400DF492D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A9C41B8E1F6F078400DF492D /* main.c */; };
 		A9C41B9B1F6F083B00DF492D /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = A9C41B991F6F083B00DF492D /* client.c */; };
 		A9C41B9C1F6F083B00DF492D /* server.c in Sources */ = {isa = PBXBuildFile; fileRef = A9C41B9A1F6F083B00DF492D /* server.c */; };
+		A9C41BA21F6F3FC200DF492D /* message.c in Sources */ = {isa = PBXBuildFile; fileRef = A9C41BA01F6F3FC200DF492D /* message.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,8 @@
 		A9C41B9D1F6F086200DF492D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		A9C41B9E1F6F1B2600DF492D /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
 		A9C41B9F1F6F1B3B00DF492D /* server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
+		A9C41BA01F6F3FC200DF492D /* message.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = message.c; sourceTree = "<group>"; };
+		A9C41BA11F6F3FC200DF492D /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +56,8 @@
 				A9C41B9E1F6F1B2600DF492D /* client.h */,
 				A9C41B9A1F6F083B00DF492D /* server.c */,
 				A9C41B9F1F6F1B3B00DF492D /* server.h */,
+				A9C41BA01F6F3FC200DF492D /* message.c */,
+				A9C41BA11F6F3FC200DF492D /* message.h */,
 				A9C41B9D1F6F086200DF492D /* Makefile */,
 				A9C41B8C1F6F078400DF492D /* Products */,
 			);
@@ -127,6 +132,7 @@
 				A9C41B9B1F6F083B00DF492D /* client.c in Sources */,
 				A9C41B9C1F6F083B00DF492D /* server.c in Sources */,
 				A9C41B8F1F6F078400DF492D /* main.c in Sources */,
+				A9C41BA21F6F3FC200DF492D /* message.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
