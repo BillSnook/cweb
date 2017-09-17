@@ -10,4 +10,7 @@
 #define client_h
 
 
+int clientmain( void );
+
+
 #endif /* client_h */

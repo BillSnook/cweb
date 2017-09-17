@@ -30,6 +30,8 @@
 		A9C41B991F6F083B00DF492D /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
 		A9C41B9A1F6F083B00DF492D /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
 		A9C41B9D1F6F086200DF492D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		A9C41B9E1F6F1B2600DF492D /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		A9C41B9F1F6F1B3B00DF492D /* server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,7 +50,9 @@
 			children = (
 				A9C41B8E1F6F078400DF492D /* main.c */,
 				A9C41B991F6F083B00DF492D /* client.c */,
+				A9C41B9E1F6F1B2600DF492D /* client.h */,
 				A9C41B9A1F6F083B00DF492D /* server.c */,
+				A9C41B9F1F6F1B3B00DF492D /* server.h */,
 				A9C41B9D1F6F086200DF492D /* Makefile */,
 				A9C41B8C1F6F078400DF492D /* Products */,
 			);
@@ -253,6 +257,7 @@
 				A9C41B941F6F078400DF492D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -10,4 +10,7 @@
 #define server_h
 
 
+int servermain( void );
+
+
 #endif /* server_h */
