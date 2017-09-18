@@ -10,5 +10,5 @@
 
 void messageHandler( char *messageStr ) {
     
-    printf( "\nMessage: %s\n", messageStr );
+    printf( "%s", messageStr );
 }

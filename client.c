@@ -43,7 +43,7 @@ int clientmain( void ) {
     
     while ( n < 255 ) {
         // TODO: check inputs here to see if message is to be set else prompt
-        printf("\nPlease enter the message: ");
+        printf("> ");
         bzero(buffer,256);
         fgets(buffer,255,stdin);    // Waits for input
         
@@ -55,7 +55,7 @@ int clientmain( void ) {
         if (n < 0) 
              error("ERROR reading from socket");
         
-        printf("\n%s\n",buffer);
+//        printf("%s\n",buffer);
     }
     
     close(sockfd);

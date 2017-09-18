@@ -54,11 +54,12 @@ int servermain( void ) {
         if (n < 0)
             error("ERROR reading from socket");
         // TODO: handle message here
-        messageHandler( buffer );
-//        printf("\nMessage: %s\n",buffer);
-        n = write(newsockfd,"OK",2);
-        if (n < 0)
-            error("ERROR writing to socket");
+        if ( n > 0 ) {
+            messageHandler( buffer );
+            n = write(newsockfd,"OK",2);
+            if (n < 0)
+                error("ERROR writing to socket");
+        }
     }
     
     close(newsockfd);
