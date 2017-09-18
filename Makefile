@@ -1,6 +1,7 @@
 
 CC=clang
 CFLAGS=-I.
+DEPS = client.h server.h message.h Makefile
 OBJ = main.o client.o server.o message.o
 LIBS=-lwiringPi
 
