@@ -11,7 +11,7 @@
 
 
 #define CONNECTION_PORT         5555            // Mostly arbitrary
-#define CONNECTION_LISTENER     "localhost"     // Default partner
+#define CONNECTION_LISTENER     "zerowpi2.local"     // Default partner
 
 
 void error(const char *msg);
