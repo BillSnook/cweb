@@ -46,8 +46,9 @@ int servermain( void ) {
              &clilen);
     if (newsockfd < 0) 
         error("ERROR on accept");
-    
-    
+
+    messagesInit();
+
     while ( n < 255 ) {
         bzero(buffer,256);
         n = read(newsockfd,buffer,255);
@@ -61,7 +62,7 @@ int servermain( void ) {
                 error("ERROR writing to socket");
         }
     }
-    
+
     close(newsockfd);
     close(sockfd);
     return 0; 
