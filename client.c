@@ -11,6 +11,19 @@
 #include "server.h"
 
 
+//struct hostent {
+//	char	*h_name;	/* official name of host */
+//	char	**h_aliases;	/* alias list */
+//	int	h_addrtype;	/* host address type */
+//	int	h_length;	/* length of address */
+//	char	**h_addr_list;	/* list of addresses from name server */
+//#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
+//#define	h_addr	h_addr_list[0]	/* address, for backward compatibility */
+//#endif /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
+//};
+
+
+
 int clientmain( void ) {
     
     printf( "\nIn clientmain\n\n" );
@@ -27,7 +40,7 @@ int clientmain( void ) {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
         error("ERROR opening socket");
-    server = gethostbyname( CONNECTION_LISTENER ); // "localhost" ); // "workpi.local" );
+    server = gethostbyname( CONNECTION_LISTENER ); // "localhost" ); // "workpi.local" ); // usr/include/netdb.h - dns call??
     if (server == NULL) {
         fprintf(stderr,"ERROR, no such host\n");
         exit(0);
