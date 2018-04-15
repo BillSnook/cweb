@@ -1,2 +1,2 @@
 # cweb
-Client-server socket code in C for Raspberry Pi
+Server socket code in C++ for Raspberry Pi
