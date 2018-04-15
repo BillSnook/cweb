@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 void Listener::setupListener( int rcvPortNo) {
 	
@@ -25,15 +26,17 @@ void Listener::setupListener( int rcvPortNo) {
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
 		fprintf(stderr, "\nERROR on binding");
 	}
-	fprintf(stderr, "\nSuccess binding to socket %d, got fd: %d\n\n", portno, sockfd);
+	fprintf(stderr, "\nSuccess binding to socket %d on %s, got fd: %d\n\n", portno, inet_ntoa(serv_addr.sin_addr), sockfd);
 }
 
 void Listener::doListen() {
 	
+	fprintf(stderr, "\nIn doListen()\n");
 	while ( doLoop ) {
 		listen(sockfd,5);
 		clilen = sizeof(cli_addr);
 		newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+		fprintf(stderr, "\nAccepted connection, clientAddr: %s", inet_ntoa(cli_addr.sin_addr));
 		if (newsockfd < 0) {
 			fprintf(stderr, "\nERROR on accept");
 			return;
