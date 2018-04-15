@@ -20,7 +20,8 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 //	sleep(10); // This is your chance to press CTRL-C
 	
 	listener = new Listener();
-	listener->setupListener( 5555 );
+	listener->setupListener( 8738 );
+	listener->doListen();
 	
 	runLoop = true;
 	while ( runLoop ) {
