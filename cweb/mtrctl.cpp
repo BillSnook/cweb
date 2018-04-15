@@ -8,6 +8,10 @@
 
 #include <iostream>
 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "mtrctl.hpp"
 #include "signals.hpp"
 #include "listen.hpp"
