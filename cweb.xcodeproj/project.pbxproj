@@ -10,6 +10,7 @@
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
+		A96D730E208402C200B98679 /* sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730C208402C200B98679 /* sender.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		A96D73082083E80A00B98679 /* listen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listen.cpp; sourceTree = "<group>"; };
 		A96D73092083E80A00B98679 /* listen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = listen.hpp; sourceTree = "<group>"; };
 		A96D730B2083F34700B98679 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		A96D730C208402C200B98679 /* sender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sender.cpp; sourceTree = "<group>"; };
+		A96D730D208402C200B98679 /* sender.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sender.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 				A96D72FA2083DE8600B98679 /* signals.hpp */,
 				A96D73082083E80A00B98679 /* listen.cpp */,
 				A96D73092083E80A00B98679 /* listen.hpp */,
+				A96D730C208402C200B98679 /* sender.cpp */,
+				A96D730D208402C200B98679 /* sender.hpp */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -152,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,

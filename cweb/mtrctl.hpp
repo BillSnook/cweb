@@ -10,8 +10,10 @@
 #define mtrctl_hpp
 
 #include "listen.hpp"
+#include "sender.hpp"
 
 int			runLoop = true;
 Listener	*listener;
+Sender		*sender;
 
 #endif /* mtrctl_hpp */
