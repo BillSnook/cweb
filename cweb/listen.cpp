@@ -26,7 +26,7 @@ void Listener::setupListener( int rcvPortNo) {
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
 		fprintf(stderr, "\nERROR on binding");
 	}
-	fprintf(stderr, "\nSuccess binding to socket %02X on %s, got fd: %d\n\n", portno, inet_ntoa(serv_addr.sin_addr), sockfd);
+	fprintf(stderr, "\nSuccess binding to socket 0x%02X on %s, got fd: %d\n\n", portno, inet_ntoa(serv_addr.sin_addr), sockfd);
 }
 
 void Listener::doListen() {

@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
 		sender = new Sender();
 		char buff[32], *buffer = (char *)&buff;
-		bcopy( "Develop31.local", buffer, 16);
+		bcopy( argv[1], buffer, 16);
 		sender->setupSender( buff, 0x2222 );
 	} else {
 		listener = new Listener();
