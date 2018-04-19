@@ -31,7 +31,7 @@ void sig_handler(int signum) {
 	
 	switch ( signum ) {
 		case 2:
-			printf("\n\nReceived ctl-C - exiting now...\n\n");
+			printf("\n\nReceived INT signal (ctrl-C), exiting now.\n\n");
 			exit( 0 );
 			break;
 		default:

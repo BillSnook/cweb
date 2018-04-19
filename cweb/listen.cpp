@@ -26,14 +26,16 @@ void Listener::setupListener( int rcvPortNo) {
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
 		fprintf(stderr, "\nERROR on binding");
 	}
-	fprintf(stderr, "\nSuccess binding to socket 0x%02X on %s, got fd: %d\n\n", portno, inet_ntoa(serv_addr.sin_addr), sockfd);
+	fprintf(stderr, "\nSuccess binding to socket port %d (0x%02X) on %s, got fd: %d\n\n", portno, portno, inet_ntoa(serv_addr.sin_addr), sockfd);
+	doLoop = true;
 }
 
 void Listener::doListen() {
 	
-	fprintf(stderr, "\nIn doListen()\n");
 	while ( doLoop ) {
+		fprintf(stderr, "\nIn doListen(), blocked for listen\n");
 		listen(sockfd,5);
+		fprintf(stderr, "\nIn doListen()\n");
 		clilen = sizeof(cli_addr);
 		newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
 		fprintf(stderr, "\nAccepted connection, clientAddr: %s", inet_ntoa(cli_addr.sin_addr));
@@ -42,7 +44,7 @@ void Listener::doListen() {
 			return;
 		}
 		bzero(buffer,256);
-		n = read(newsockfd,buffer,255);
+		long n = read(newsockfd,buffer,255);
 		if (n < 0) {
 			fprintf(stderr, "\nERROR reading from socket");
 			return;

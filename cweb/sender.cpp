@@ -34,8 +34,7 @@ void Sender::setupSender( char *hostName, int rcvPortNo) {
 		  (char *)&serv_addr.sin_addr.s_addr,
 		  server->h_length);
 	serv_addr.sin_port = htons(portno);
-	char *haddress = (char *)&serv_addr;
-	fprintf(stderr, "\nFound host %s, ready to connect on socket 0x%02X\n\n", inet_ntoa(serv_addr.sin_addr), portno);
+	fprintf(stderr, "\nFound host %s, ready to connect on socket port %d (0x%02X)\n\n", inet_ntoa(serv_addr.sin_addr), portno, portno);
 	fflush( stderr );
 	int connectResult = connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr));
 	if (connectResult < 0) {
@@ -46,7 +45,7 @@ void Sender::setupSender( char *hostName, int rcvPortNo) {
 	bzero(buffer,256);
 	fgets(buffer,255,stdin);
 //	bcopy("hello\n", buffer, 7);
-	n = write(sockfd,buffer,strlen(buffer));
+	long n = write(sockfd,buffer,strlen(buffer));
 	if (n < 0) {
 		fprintf(stderr, "\nERROR writing to socket\n");
 		exit(0);

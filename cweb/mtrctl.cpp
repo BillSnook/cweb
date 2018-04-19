@@ -28,10 +28,11 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 		sender = new Sender();
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 16);
-		sender->setupSender( buff, 0x2222 );
+		sender->setupSender( buff, 5555 );
 	} else {
 		listener = new Listener();
-		listener->setupListener( 0x2222 );
+		listener->setupListener( 5555 );
+		listener->doListen();
 	}
 	
 	runLoop = true;
