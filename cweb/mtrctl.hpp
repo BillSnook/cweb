@@ -12,7 +12,6 @@
 #include "listen.hpp"
 #include "sender.hpp"
 
-int			runLoop = true;
 Listener	*listener;
 Sender		*sender;
 

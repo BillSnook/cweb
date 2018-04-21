@@ -18,29 +18,21 @@
 
 int main(int argc, const char * argv[]) {	// We do not expect any args at this time
 
-	std::cout << "Hello, World!\n";		// Test
+//	std::cout << "Hello, World!\n";		// Test
 	
 	signals_setup();
-//	sleep(10); // This is your chance to press CTRL-C
 	
-	fprintf(stderr, "\nargc = %d\n", argc);
+//	fprintf(stderr, "\nargc = %d\n", argc);
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
 		sender = new Sender();
 		char buff[32], *buffer = (char *)&buff;
-		bcopy( argv[1], buffer, 16);
+		bcopy( argv[1], buffer, 31);
 		sender->setupSender( buff, 5555 );
 	} else {
 		listener = new Listener();
 		listener->setupListener( 5555 );
 		listener->doListen();
-	}
-	
-	runLoop = true;
-	while ( runLoop ) {
-		
-		
-	}
-	
+	}	
 	
     return 0;
 }

@@ -19,7 +19,7 @@
 
 class Sender {
 	
-	int sockfd, portno, n;
+	int sockfd, portno;
 	
 	struct sockaddr_in serv_addr;
 	struct hostent *server;

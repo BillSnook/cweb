@@ -18,11 +18,10 @@
 
 class Listener {
 	
-	int sockfd, newsockfd, portno;
+	int listenSockfd, connectionSockfd, portno;
 	socklen_t clilen;
 	char buffer[256];
 	struct sockaddr_in serv_addr, cli_addr;
-	int n;
 	bool doLoop;
 	
 public:
