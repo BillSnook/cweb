@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "mtrctl.hpp"
+#include "common.hpp"
 #include "signals.hpp"
 
 int main(int argc, const char * argv[]) {	// We do not expect any args at this time
@@ -29,10 +30,10 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 		sender = new Sender();
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);
-		sender->setupSender( buff, 5555 );
+		sender->setupSender( buff, PORT );
 	} else {
 		listener = new Listener();
-		listener->setupListener( 5555 );
+		listener->setupListener( PORT );
 		listener->doListen();
 	}	
 	threader->shutdownThreads();

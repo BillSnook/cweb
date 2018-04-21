@@ -4,7 +4,7 @@ CXX = g++
 CXXFLAGS = -std=c++11
 #LDLIBS = -lwiringPi -lpthread
 
-HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp
+HEADERS = mtrctl.hpp common.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp
 OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o
 
 default: mtrctl

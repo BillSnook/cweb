@@ -44,6 +44,7 @@
 		A96D7310208BD79600B98679 /* threader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = threader.hpp; sourceTree = "<group>"; };
 		A96D7312208C052B00B98679 /* commands.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = commands.cpp; sourceTree = "<group>"; };
 		A96D7313208C052B00B98679 /* commands.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = commands.hpp; sourceTree = "<group>"; };
+		A96D7315208C05FA00B98679 /* common.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = common.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +80,7 @@
 				A96D72F7207B086900B98679 /* Makefile */,
 				A96D72F0207AFD4500B98679 /* mtrctl.cpp */,
 				A96D72F8207B0C3700B98679 /* mtrctl.hpp */,
+				A96D7315208C05FA00B98679 /* common.hpp */,
 				A96D72F92083DE8600B98679 /* signals.cpp */,
 				A96D72FA2083DE8600B98679 /* signals.hpp */,
 				A96D730F208BD79600B98679 /* threader.cpp */,
