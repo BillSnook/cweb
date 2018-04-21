@@ -44,13 +44,18 @@ void Listener::doListen() {
 		bzero( buffer, 256 );
 		long n = read( connectionSockfd, buffer, 255 );
 		if (n < 0) {
-			fprintf(  stderr, "\nERROR reading from socket");
+			fprintf(  stderr, "\nERROR reading command from socket");
 			return;
 		}
+		
 		printf( "\nHere is the message: %s\n", buffer );
-		n = write( connectionSockfd, "\nI got your message\n", 20 );
+		// start thread to service command
+		
+
+		
+		n = write( connectionSockfd, "\nAck\n", 5 );
 		if (n < 0) {
-			fprintf( stderr, "\nERROR writing to socket" );
+			fprintf( stderr, "\nERROR writing ack to socket" );
 			return;
 		}
 		close( connectionSockfd );

@@ -14,13 +14,15 @@
 
 #include "mtrctl.hpp"
 #include "signals.hpp"
-#include "listen.hpp"
 
 int main(int argc, const char * argv[]) {	// We do not expect any args at this time
 
 //	std::cout << "Hello, World!\n";		// Test
 	
 	signals_setup();
+	
+	threader = new Threader();
+	threader->setupThreader();
 	
 //	fprintf(stderr, "\nargc = %d\n", argc);
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
@@ -33,6 +35,7 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 		listener->setupListener( 5555 );
 		listener->doListen();
 	}	
-	
+	threader->shutdownThreads();
+
     return 0;
 }

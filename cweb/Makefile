@@ -2,10 +2,10 @@
 
 CXX = g++
 CXXFLAGS = -std=c++11
-#LDLIBS = -lwiringPi
+#LDLIBS = -lwiringPi -lpthread
 
-HEADERS = mtrctl.hpp signals.hpp listen.hpp sender.hpp
-OBJECTS = mtrctl.o signals.o listen.o sender.o
+HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp
+OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o
 
 default: mtrctl
 
