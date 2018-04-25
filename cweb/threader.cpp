@@ -6,15 +6,25 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "threader.hpp"
+#include "mtrctl.hpp"
 
 #include <pthread.h>
 
+
+Threader	threader;
 
 void ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
 	nextThreadType = threadType;
 	nextSocket = socket;
 	newAddress = address;
+	threader.createThread();
+}
+
+
+void *runThreads(void *arguments) {
+
+	threader.runThread( arguments );
+	return nullptr;
 }
 
 
@@ -37,10 +47,10 @@ void Threader::createThread() {
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
 
-//	pthread_create(&threadPtr,
-//				   attrPtr,
-//				   runThread,
-//				   nullptr);
+	pthread_create(threadPtr,
+				   attrPtr,
+				   runThreads,
+				   nullptr);
 
 	free( attrPtr );
 	free( threadPtr );

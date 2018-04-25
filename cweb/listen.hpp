@@ -15,15 +15,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-
 class Listener {
 	
-	int listenSockfd, connectionSockfd, portno;
-	socklen_t clilen;
-	char buffer[256];
-	struct sockaddr_in serv_addr, cli_addr;
-	bool doLoop;
-	
+	int					listenSockfd, connectionSockfd, portno;
+	socklen_t			clilen;
+	char				buffer[256];
+	struct sockaddr_in	serv_addr, cli_addr;
+	bool				doLoop;
+
 public:
 	void setupListener( int rcvPortNo );
 	void doListen();

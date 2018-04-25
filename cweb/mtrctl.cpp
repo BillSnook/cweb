@@ -16,14 +16,20 @@
 #include "common.hpp"
 #include "signals.hpp"
 
-int main(int argc, const char * argv[]) {	// We do not expect any args at this time
+#include "sender.hpp"
+#include "listen.hpp"
 
-//	std::cout << "Hello, World!\n";		// Test
-	
+
+Listener	*listener;
+Sender		*sender;
+
+int main(int argc, const char * argv[]) {
+
+//	std::cout << "Hello, World!\n";			// Test
 	signals_setup();
 	
-	threader = new Threader();
-	threader->setupThreader();
+	threader = Threader();
+	threader.setupThreader();
 	
 //	fprintf(stderr, "\nargc = %d\n", argc);
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
@@ -36,7 +42,7 @@ int main(int argc, const char * argv[]) {	// We do not expect any args at this t
 		listener->setupListener( PORT );
 		listener->doListen();
 	}	
-	threader->shutdownThreads();
+	threader.shutdownThreads();
 
     return 0;
 }

@@ -10,11 +10,8 @@
 #define mtrctl_hpp
 
 #include "threader.hpp"
-#include "sender.hpp"
-#include "listen.hpp"
 
-Listener	*listener;
-Sender		*sender;
-Threader	*threader;
+
+extern Threader	threader;
 
 #endif /* mtrctl_hpp */

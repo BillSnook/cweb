@@ -38,6 +38,7 @@ public:
 	void initThread( ThreadType threadType, int socket, uint address );
 };
 
+void *runThreads(void *arguments);
 
 class Threader {
 	
