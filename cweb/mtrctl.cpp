@@ -41,11 +41,11 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-#ifdef DEBUG
-	fprintf( stderr, "\nDebug mode !!\n" );
+#ifdef ON_PI
 	Power power = Power();
 	char *pStatus = power.getUPS2();
 	fprintf( stderr, "\nPower status: %s\n\n", pStatus );
+	free( pStatus );
 #endif
 	
 //	fprintf( stderr, "\nargc = %d\n", argc );
@@ -60,13 +60,18 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	while ( doLoop ) {
-		usleep( 10000 );
+		usleep( 1000000 );
 		threader.lock();
 		ready = threader.areThreadsOnQueue();
 		threader.unlock();
 		if ( ready ) {
 			threader.createThread();
 		}
+#ifdef ON_PI
+		pStatus = power.getUPS2();
+		fprintf( stderr, "Power status: %s\n", pStatus );
+		free( pStatus );
+#endif
 	}
 	
 	threader.shutdownThreads();
