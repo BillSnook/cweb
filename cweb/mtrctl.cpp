@@ -19,6 +19,8 @@
 #include "listen.hpp"
 #include "threader.hpp"
 
+#include "power.hpp"
+
 #define	PORT	5555
 
 extern Threader	threader;
@@ -41,6 +43,9 @@ int main(int argc, const char * argv[]) {
 	
 #ifdef DEBUG
 	fprintf( stderr, "\nDebug mode !!\n" );
+	Power power = Power();
+	char *pStatus = power.getUPS2();
+	fprintf( stderr, "\nPower status: %s\n\n", pStatus );
 #endif
 	
 //	fprintf( stderr, "\nargc = %d\n", argc );
