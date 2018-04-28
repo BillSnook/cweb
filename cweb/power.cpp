@@ -13,6 +13,8 @@
 #include <fcntl.h>			// open
 #include <sys/ioctl.h>
 #include <getopt.h>
+#include <string.h>
+#include <stdlib.h>
 
 //  SBC HAT - GPIO-controlled
 //  Raspi UPS HAT V1.0
