@@ -57,7 +57,7 @@ char *Power::getUPS2() {
 	int lo = (v >> 8) & 0x00FF;
 	int hi = (v << 8) & 0xFF00;
 	v = hi + lo;
-	sprintf( statsV, "%fV ",(((float)v)* 78.125 / 1000000.0));
+	sprintf( statsV, "%fV (%d)",(((float)v)* 78.125 / 1000000.0), v);
 	
 	int c = getI2CReg( CREG );
 	close( pi2c );
@@ -65,7 +65,7 @@ char *Power::getUPS2() {
 	lo = (c >> 8) & 0x00FF;
 	hi = (c << 8) & 0xFF00;
 	c = hi + lo;
-	sprintf( statsC, "%f%%\n",(((float)c) / 256.0));
+	sprintf( statsC, "%f%%(%d))n",(((float)c) / 256.0), c);
 	strcat( statsV, statsC );
 #endif // ON_PI
 	
