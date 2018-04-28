@@ -1,13 +1,16 @@
 # cweb
-Server code in C++ for Raspberry Pi as command line program. Can be run at startup. Does not background.
+Server code in C++ for Raspberry Pi as command line program. Can be run at startup. Does not need to background.
 
 
 Sockets working
 
+Threading working
+
+Communication using threads working
+
+
 Next - ToDo list
 
-Threading?
-	
 Get i2c working
 	
 Get motor speed table working

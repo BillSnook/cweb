@@ -11,9 +11,11 @@
 
 #include <pthread.h>
 
+
 extern Listener	listener;
 
 Threader	threader;
+
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
 	ThreadControl newThreadControl = ThreadControl();
@@ -75,20 +77,20 @@ bool Threader::areThreadsOnQueue() {
 
 void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	
-	fprintf(stderr, "\nIn queueThread at start\n");
+	fprintf( stderr, "\nIn queueThread at start\n" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		threadQueue.push( nextThreadControl );
 	} catch(...) {
-		fprintf(stderr, "\nThread queue push failure occured in queueThread\n");
+		fprintf( stderr, "\nIn queueThread, thread queue push failure occured\n" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 }
 
 void Threader::createThread() {
 	
-	fprintf(stderr, "\nIn createThread at start\n");
+	fprintf( stderr, "\nIn createThread at start\n" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -104,7 +106,7 @@ void Threader::createThread() {
 	free( threadPtr );
 }
 
-void *Threader::runThread(void *arguments) {
+void Threader::runThread( void *arguments ) {
 
 	ThreadControl nextThreadControl;
 	pthread_mutex_lock( &threadArrayMutex );
@@ -112,44 +114,30 @@ void *Threader::runThread(void *arguments) {
 		if ( ! threadQueue.empty() ) {
 			nextThreadControl = threadQueue.front();
 			threadQueue.pop();
-			fprintf(stderr, "\nIn runThread with entry in threadQueue for thread type %s\n", nextThreadControl.description());
+			fprintf( stderr, "\nIn runThread with entry in threadQueue for thread type %s\n", nextThreadControl.description() );
 		} else {
-			fprintf(stderr, "\nIn runThread with no entries in threadQueue\n");
+			fprintf( stderr, "\nIn runThread with no entries in threadQueue\n" );
 		}
 	} catch(...) {
-		fprintf(stderr, "\nIn runThread and threadQueue pop failure occured\n");
+		fprintf( stderr, "\nIn runThread and threadQueue pop failure occured\n" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 	
 	threadCount += 1;
 	fprintf( stderr, "\nThread count: %d\n", threadCount );
-	
 	switch ( nextThreadControl.nextThreadType ) {
-			//		case senderThread:
-			//			sender.doSend();
-			//			break;
 		case listenThread:
 			listener.setupListener( nextThreadControl.nextSocket );
-			listener.doListen();
+			listener.acceptConnections();
 			break;
 		case serverThread:
-			listener.serviceConnection();
+			listener.serviceConnection( nextThreadControl.nextSocket );
 			break;
-			//	case .inputThread:
-			//		consumer = Consumer()
-			//		consumer?.consume()
-			//	case .blinkThread:
-			//#if	os(Linux)
-			//		hardware.blink()
-			//#endif
-			//	case .testThread:
-			//		let testerThread = ThreadTester()
-			//		testerThread.testThread()
+		case testThread:
+			break;
 		default:
 			break;
 	}
 	threadCount -= 1;
 	fprintf( stderr, "\nIn runThread with %d threads remaining after exit for thread type %s\n", threadCount, nextThreadControl.description() );
-	
-	return nullptr;
 }

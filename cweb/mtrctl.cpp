@@ -38,11 +38,11 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-//	fprintf(stderr, "\nargc = %d\n", argc);
+//	fprintf( stderr, "\nargc = %d\n", argc );
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
-		sender = Sender();
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);
+		sender = Sender();
 		sender.setupSender( buff, PORT );
 	} else {
 		listener = Listener();

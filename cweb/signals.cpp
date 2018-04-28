@@ -31,11 +31,11 @@ void sig_handler(int signum) {
 	
 	switch ( signum ) {
 		case 2:
-			printf("\n\nReceived INT signal (ctrl-C), exiting now.\n\n");
+			fprintf( stderr, "\n\nReceived INT signal (ctrl-C), exiting now.\n\n" );
 			exit( 0 );
 			break;
 		default:
-			printf("Received unhandled signal %d\n", signum);
+			fprintf( stderr, "\n\nReceived unhandled signal %d\n", signum );
 			break;
 	}
 }

@@ -16,7 +16,7 @@
 
 extern Threader	threader;
 
-void Listener::setupListener( int rcvPortNo) {
+void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for listening
 	
 	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( listenSockfd < 0 )
@@ -30,17 +30,17 @@ void Listener::setupListener( int rcvPortNo) {
 		fprintf( stderr, "\nERROR on binding"  );
 		return;
 	}
-	fprintf( stderr, "\nSuccess binding to socket port %d on %s for fd: %d\n", portno, inet_ntoa(serv_addr.sin_addr), listenSockfd);
+	fprintf( stderr, "\nSuccess binding to socket port %d on %s\n", portno, inet_ntoa(serv_addr.sin_addr) );
 	doLoop = true;
 }
 
-int Listener::doListen() {
+void Listener::acceptConnections() {	// Main listening routine
 	
-	fprintf( stderr, "\nIn doListen at start\n" );
-	clilen = sizeof( cli_addr );
+	socklen_t clilen = sizeof( cli_addr );
 	while ( doLoop ) {
+		fprintf( stderr, "\nIn acceptConnections, listening\n" );
 		listen(  listenSockfd, 5 );
-		connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
+		int connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
 		if ( connectionSockfd < 0 ) {
 			fprintf( stderr, "\nERROR on accept" );
 			break;
@@ -52,20 +52,20 @@ int Listener::doListen() {
 //		doLoop = false; // Do once for testing
 	}
 	close( listenSockfd );
-	fprintf( stderr, "\nIn doListen at exit\n" );
-	return connectionSockfd;
+	fprintf( stderr, "\nIn acceptConnections at exit\n" );
 }
 
-void Listener::serviceConnection() {
+void Listener::serviceConnection( int connectionSockfd ) {
 	
-	bool localLoop = true;
+	char	localBuffer[256];
+	long	n;
+	bool	localLoop = true;
 	while ( localLoop ) {
-		char	localBuffer[256];
 		bzero( localBuffer, 256 );
 //		fprintf(  stderr, "\nIn serviceConnection waiting for data...\n");
-		long n = read( connectionSockfd, localBuffer, 255 );
-		if (n <= 0) {
-			fprintf(  stderr, "\nERROR reading command from socket\n");
+		n = read( connectionSockfd, localBuffer, 255 );
+		if ( n <= 0 ) {
+			fprintf( stderr, "\nERROR reading command from socket\n" );
 			break;
 		}
 		
@@ -75,11 +75,11 @@ void Listener::serviceConnection() {
 		
 		
 		n = write( connectionSockfd, "\nAck\n", 5 );
-		if (n < 0) {
+		if ( n < 0 ) {
 			fprintf( stderr, "\nERROR writing ack to socket\n" );
 			break;
 		}
 	}
 	close( connectionSockfd );
-	fprintf(  stderr, "\nIn serviceConnection at end\n");
+	fprintf( stderr, "\nIn serviceConnection at end\n\n" );
 }

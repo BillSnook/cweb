@@ -17,12 +17,21 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-void Sender::setupSender( char *hostName, int rcvPortNo) {
+void Sender::setupSender( char *hostName, int portNo) {
 	
-	portno = rcvPortNo;
+	int sockfd;
+	
+	struct sockaddr_in serv_addr;
+	struct hostent *server;
+	
+	char buffer[256];
+	bool doLoop;
+	
 	sockfd = socket( AF_INET, SOCK_STREAM, 0 );
-	if ( sockfd < 0 )
+	if ( sockfd < 0 ) {
 		fprintf( stderr, "\nERROR opening socket\n" );
+		return;
+	}
 	server = gethostbyname( hostName );
 	if ( server == NULL ) {
 		fprintf( stderr,"\nERROR, no such host: %s\n", hostName );
@@ -33,15 +42,17 @@ void Sender::setupSender( char *hostName, int rcvPortNo) {
 	bcopy((char *)server->h_addr,
 		  (char *)&serv_addr.sin_addr.s_addr,
 		  server->h_length);
-	serv_addr.sin_port = htons( portno );
-	fprintf( stderr, "\nFound host %s, ready to connect on socket port %d (0x%02X)\n\n", inet_ntoa(serv_addr.sin_addr), portno, portno );
+	serv_addr.sin_port = htons( portNo );
+	fprintf( stderr, "\nFound host %s, ready to connect on socket port %d\n\n", inet_ntoa(serv_addr.sin_addr), portNo );
 	fflush( stderr );
 	int connectResult = connect( sockfd, (struct sockaddr *)&serv_addr,sizeof( serv_addr ) );
 	if ( connectResult < 0 ) {
 		fprintf( stderr, "\nERROR connecting: %d\n", connectResult );
 		return;
 	}
-	while ( true ) {
+	
+	doLoop = true;
+	while ( doLoop ) {
 		fprintf( stderr, "Please enter a message: " );
 		bzero( buffer, 256 );
 		fgets( buffer, 255, stdin );
@@ -58,30 +69,5 @@ void Sender::setupSender( char *hostName, int rcvPortNo) {
 		}
 		printf( "%s\n", buffer );
 	}
-}
 
-void Sender::doSend() {
-	
-//	while ( doLoop ) {
-//		listen(sockfd,5);
-//		clilen = sizeof(cli_addr);
-//		newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-//		if (newsockfd < 0) {
-//			fprintf(stderr, "\nERROR on accept");
-//			return;
-//		}
-//		bzero(buffer,256);
-//		n = read(newsockfd,buffer,255);
-//		if (n < 0) {
-//			fprintf(stderr, "\nERROR reading from socket");
-//			return;
-//		}
-//		printf("Here is the message: %s\n",buffer);
-//		n = write(newsockfd,"I got your message",18);
-//		if (n < 0) {
-//			fprintf(stderr, "\nERROR writing to socket");
-//			return;
-//		}
-//	}
-	
 }

@@ -19,15 +19,14 @@
 #include <netinet/in.h>
 
 #include <queue>
-//using namespace std;
 
 
 enum ThreadType {
 	listenThread = 0,
 	serverThread = 1,
-	senderThread = 2,
-	inputThread = 3,
-	blinkThread = 4,
+//	senderThread = 2,
+//	inputThread = 3,
+//	blinkThread = 4,
 	testThread = 5
 };
 
@@ -47,9 +46,9 @@ void *runThreads(void *arguments);
 
 class Threader {
 	
-	pthread_mutex_t 		threadArrayMutex;		// Protect the queue
+	pthread_mutex_t 			threadArrayMutex;		// Protect the queue
 	std::queue<ThreadControl>	threadQueue;
-	int						threadCount = 0;		// Debug counter
+	int							threadCount = 0;		// Debug counter
 	
 public:
 	void setupThreader();
@@ -62,9 +61,7 @@ public:
 	
 	void queueThread( ThreadType threadType, int socket, uint address );
 	void createThread();
-	void *runThread(void *arguments);
-	
+	void runThread(void *arguments);
 };
-
 
 #endif /* threader_hpp */

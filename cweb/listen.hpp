@@ -18,17 +18,14 @@
 class Listener {
 	
 	int					listenSockfd, portno;
-	socklen_t			clilen;
 	char				buffer[256];
 	struct sockaddr_in	serv_addr, cli_addr;
 	bool				doLoop;
 
 public:
-	int	connectionSockfd;
-	
 	void setupListener( int rcvPortNo );
-	int  doListen();
-	void serviceConnection();
+	void acceptConnections();
+	void serviceConnection( int connectionSockfd );
 
 };
 

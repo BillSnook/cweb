@@ -19,18 +19,8 @@
 
 class Sender {
 	
-	int sockfd, portno;
-	
-	struct sockaddr_in serv_addr;
-	struct hostent *server;
-	
-	char buffer[256];
-	bool doLoop;
-	
 public:
-	void setupSender( char *hostName, int rcvPortNo );
-	void doSend();
-	
+	void setupSender( char *hostName, int portNo );
 };
 
 #endif /* sender_hpp */

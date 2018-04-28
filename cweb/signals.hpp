@@ -12,9 +12,9 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
 void signals_setup();
 
 void sig_handler(int signum);
-
 
 #endif /* signals_hpp */
