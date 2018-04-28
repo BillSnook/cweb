@@ -4,8 +4,8 @@ CXX = g++
 
 CXXFLAGS = -std=c++11 -DDEBUG
 # If on Raspberry Pi (as opposed to being developed on a Mac), enable these two lines instead:
-#CXXFLAGS += -DON_PI
-#LDLIBS = -lwiringPi -lpthread
+CXXFLAGS += -DON_PI
+LDLIBS = -lwiringPi -lpthread
 
 HEADERS = mtrctl.hpp common.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp power.hpp
 OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o power.o
