@@ -13,12 +13,13 @@
 #include <unistd.h>
 
 #include "mtrctl.hpp"
-#include "common.hpp"
 #include "signals.hpp"
 
 #include "sender.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
+
+#define	PORT	5555
 
 extern Threader	threader;
 

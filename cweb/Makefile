@@ -7,7 +7,7 @@ CXXFLAGS = -std=c++11 -DDEBUG
 CXXFLAGS += -DON_PI
 LDLIBS = -lwiringPi -lpthread
 
-HEADERS = mtrctl.hpp common.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp power.hpp
+HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp power.hpp
 OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o power.o
 
 default: mtrctl
