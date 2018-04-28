@@ -6,18 +6,37 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "mtrctl.hpp"
+#include "threader.hpp"
+#include "listen.hpp"
 
 #include <pthread.h>
 
+extern Listener	listener;
 
 Threader	threader;
 
-void ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
-	nextThreadType = threadType;
-	nextSocket = socket;
-	newAddress = address;
-	threader.createThread();
+ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
+	ThreadControl newThreadControl = ThreadControl();
+	newThreadControl.nextThreadType = threadType;
+	newThreadControl.nextSocket = socket;
+	newThreadControl.newAddress = address;
+	return newThreadControl;
+}
+
+const char *ThreadControl::description() {
+	const char *name;
+	switch (nextThreadType ) {
+		case listenThread:
+			name = "listenThread";
+			break;
+		case serverThread:
+			name = "serverThread";
+			break;
+		default:
+			name = "noThread";
+			break;
+	}
+	return name;
 }
 
 
@@ -30,17 +49,46 @@ void *runThreads(void *arguments) {
 
 void Threader::setupThreader() {
 	
-	pthread_mutex_init( &threadControlMutex, nullptr );
-
+	pthread_mutex_init( &threadArrayMutex, nullptr );
+	
 }
 
 void Threader::shutdownThreads() {
 	
-	pthread_mutex_destroy( &threadControlMutex );
+	pthread_mutex_destroy( &threadArrayMutex );
+}
+
+void Threader::lock() {
+	
+	pthread_mutex_lock( &threadArrayMutex );
+}
+
+void Threader::unlock() {
+	
+	pthread_mutex_unlock( &threadArrayMutex );
+}
+
+bool Threader::areThreadsOnQueue() {
+	
+	return !threadQueue.empty();
+}
+
+void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
+	
+	fprintf(stderr, "\nIn queueThread at start\n");
+	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
+	pthread_mutex_lock( &threadArrayMutex );
+	try {
+		threadQueue.push( nextThreadControl );
+	} catch(...) {
+		fprintf(stderr, "\nThread queue push failure occured in queueThread\n");
+	}
+	pthread_mutex_unlock( &threadArrayMutex );
 }
 
 void Threader::createThread() {
 	
+	fprintf(stderr, "\nIn createThread at start\n");
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -58,44 +106,50 @@ void Threader::createThread() {
 
 void *Threader::runThread(void *arguments) {
 
-	ThreadControl tc;
-	pthread_mutex_lock( &threadControlMutex );
-//	if threadArray.count > 0 {
-//		tc = threadArray.remove(at: 0)
-//	}
-	pthread_mutex_unlock( &threadControlMutex );
-//	guard let nextThreadControl = tc else { return }
-//
-	threadCount += 1;
-//	//	printx( "Thread count: \(threadCount) for \(nextThreadControl.nextThreadType.rawValue)" )
-//
-//	switch nextThreadControl.nextThreadType {
-//	case .senderThread:
-//		sender?.doLoop()
-//	case .listenThread:
-//		listener?.doListen()
-//	case .serverThread:
-//		serverThread( sockfd: nextThreadControl.nextSocket, address: nextThreadControl.newAddress )
-//	case .inputThread:
-//		consumer = Consumer()
-//		consumer?.consume()
-//	case .blinkThread:
-//#if	os(Linux)
-//		hardware.blink()
-//#endif
-//	case .testThread:
-//		let testerThread = ThreadTester()
-//		testerThread.testThread()
-//	}
-	threadCount -= 1;
-//	//	printx( "Threads remaining: \(threadCount) after exit for \(nextThreadControl.nextThreadType.rawValue)" )
-
-	return nullptr;
-}
-
-void Threader::startThread() {
+	ThreadControl nextThreadControl;
+	pthread_mutex_lock( &threadArrayMutex );
+	try {
+		if ( ! threadQueue.empty() ) {
+			nextThreadControl = threadQueue.front();
+			threadQueue.pop();
+			fprintf(stderr, "\nIn runThread with entry in threadQueue for thread type %s\n", nextThreadControl.description());
+		} else {
+			fprintf(stderr, "\nIn runThread with no entries in threadQueue\n");
+		}
+	} catch(...) {
+		fprintf(stderr, "\nIn runThread and threadQueue pop failure occured\n");
+	}
+	pthread_mutex_unlock( &threadArrayMutex );
 	
-	pthread_mutex_lock( &threadControlMutex );
-//	threadArray.append( ThreadControl( threadType: threadType, socket: socket, address: address ) );
-	pthread_mutex_unlock( &threadControlMutex );
+	threadCount += 1;
+	fprintf( stderr, "\nThread count: %d\n", threadCount );
+	
+	switch ( nextThreadControl.nextThreadType ) {
+			//		case senderThread:
+			//			sender.doSend();
+			//			break;
+		case listenThread:
+			listener.setupListener( nextThreadControl.nextSocket );
+			listener.doListen();
+			break;
+		case serverThread:
+			listener.serviceConnection();
+			break;
+			//	case .inputThread:
+			//		consumer = Consumer()
+			//		consumer?.consume()
+			//	case .blinkThread:
+			//#if	os(Linux)
+			//		hardware.blink()
+			//#endif
+			//	case .testThread:
+			//		let testerThread = ThreadTester()
+			//		testerThread.testThread()
+		default:
+			break;
+	}
+	threadCount -= 1;
+	fprintf( stderr, "\nIn runThread with %d threads remaining after exit for thread type %s\n", threadCount, nextThreadControl.description() );
+	
+	return nullptr;
 }

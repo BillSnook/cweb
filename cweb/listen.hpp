@@ -17,17 +17,21 @@
 
 class Listener {
 	
-	int					listenSockfd, connectionSockfd, portno;
+	int					listenSockfd, portno;
 	socklen_t			clilen;
 	char				buffer[256];
 	struct sockaddr_in	serv_addr, cli_addr;
 	bool				doLoop;
 
 public:
-	void setupListener( int rcvPortNo );
-	void doListen();
+	int	connectionSockfd;
 	
+	void setupListener( int rcvPortNo );
+	int  doListen();
+	void serviceConnection();
+
 };
 
+extern Listener	listener;
 
 #endif /* listen_hpp */

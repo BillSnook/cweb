@@ -9,9 +9,5 @@
 #ifndef mtrctl_hpp
 #define mtrctl_hpp
 
-#include "threader.hpp"
-
-
-extern Threader	threader;
 
 #endif /* mtrctl_hpp */

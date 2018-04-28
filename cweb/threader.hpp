@@ -18,11 +18,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+#include <queue>
+//using namespace std;
+
 
 enum ThreadType {
-	senderThread = 0,
-	listenThread = 1,
-	serverThread = 2,
+	listenThread = 0,
+	serverThread = 1,
+	senderThread = 2,
 	inputThread = 3,
 	blinkThread = 4,
 	testThread = 5
@@ -30,30 +33,37 @@ enum ThreadType {
 
 
 class ThreadControl {
+public:
 	ThreadType nextThreadType;
 	int nextSocket;
 	uint newAddress;
 	
 public:
-	void initThread( ThreadType threadType, int socket, uint address );
+	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
+	const char *description();
 };
 
 void *runThreads(void *arguments);
 
 class Threader {
 	
-	pthread_mutex_t 	threadControlMutex;			// Protect the list
-	ThreadControl		threadArray[16], *threads = threadArray;
-	int					threadCount = 0;			// Debug counter
+	pthread_mutex_t 		threadArrayMutex;		// Protect the queue
+	std::queue<ThreadControl>	threadQueue;
+	int						threadCount = 0;		// Debug counter
 	
 public:
 	void setupThreader();
 	void shutdownThreads();
-
+	
+	void lock();
+	void unlock();
+	
+	bool areThreadsOnQueue();
+	
+	void queueThread( ThreadType threadType, int socket, uint address );
 	void createThread();
 	void *runThread(void *arguments);
-	void startThread();
-
+	
 };
 
 

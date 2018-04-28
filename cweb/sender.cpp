@@ -41,19 +41,23 @@ void Sender::setupSender( char *hostName, int rcvPortNo) {
 		fprintf( stderr, "\nERROR connecting: %d\n", connectResult );
 		return;
 	}
-	fprintf( stderr, "Please enter the message: " );
-	bzero( buffer, 256 );
-	fgets( buffer, 255, stdin );
-	long n = write( sockfd, buffer, strlen( buffer ) );
-	if (n < 0) {
-		fprintf( stderr, "\nERROR writing to socket\n" );
-		return;
+	while ( true ) {
+		fprintf( stderr, "Please enter a message: " );
+		bzero( buffer, 256 );
+		fgets( buffer, 255, stdin );
+		long n = write( sockfd, buffer, strlen( buffer ) );
+		if (n < 0) {
+			fprintf( stderr, "\nERROR writing to socket\n" );
+			return;
+		}
+		bzero( buffer, 256 );
+		n = read( sockfd, buffer, 255 );
+		if (n < 0) {
+			fprintf( stderr, "\nERROR reading from socket\n" );
+			return;
+		}
+		printf( "%s\n", buffer );
 	}
-	bzero( buffer, 256 );
-	n = read( sockfd, buffer, 255 );
-	if (n < 0)
-		fprintf( stderr, "\nERROR reading from socket\n" );
-	printf( "%s\n", buffer );
 }
 
 void Sender::doSend() {

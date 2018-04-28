@@ -18,14 +18,21 @@
 
 #include "sender.hpp"
 #include "listen.hpp"
+#include "threader.hpp"
 
+extern Threader	threader;
 
-Listener	*listener;
-Sender		*sender;
+Listener	listener;
+Sender		sender;
+
+bool		doLoop;
+bool		ready;
 
 int main(int argc, const char * argv[]) {
 
-//	std::cout << "Hello, World!\n";			// Test
+	doLoop = true;
+	ready = true;
+
 	signals_setup();
 	
 	threader = Threader();
@@ -33,15 +40,25 @@ int main(int argc, const char * argv[]) {
 	
 //	fprintf(stderr, "\nargc = %d\n", argc);
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
-		sender = new Sender();
+		sender = Sender();
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);
-		sender->setupSender( buff, PORT );
+		sender.setupSender( buff, PORT );
 	} else {
-		listener = new Listener();
-		listener->setupListener( PORT );
-		listener->doListen();
-	}	
+		listener = Listener();
+		threader.queueThread( listenThread, PORT, 0 );
+	}
+	
+	while ( doLoop ) {
+		usleep( 10000 );
+		threader.lock();
+		ready = threader.areThreadsOnQueue();
+		threader.unlock();
+		if ( ready ) {
+			threader.createThread();
+		}
+	}
+	
 	threader.shutdownThreads();
 
     return 0;

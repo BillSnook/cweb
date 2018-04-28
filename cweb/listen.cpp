@@ -7,11 +7,14 @@
 //
 
 #include "listen.hpp"
+#include "threader.hpp"
 
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+
+extern Threader	threader;
 
 void Listener::setupListener( int rcvPortNo) {
 	
@@ -23,42 +26,60 @@ void Listener::setupListener( int rcvPortNo) {
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons( portno );
-	if ( bind( listenSockfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr)  ) < 0) {
+	if ( bind( listenSockfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr) ) < 0) {
 		fprintf( stderr, "\nERROR on binding"  );
+		return;
 	}
-	fprintf( stderr, "\nSuccess binding to socket port %d (0x%02X) on %s, got fd: %d\n\n", portno, portno, inet_ntoa(serv_addr.sin_addr), listenSockfd);
+	fprintf( stderr, "\nSuccess binding to socket port %d on %s for fd: %d\n", portno, inet_ntoa(serv_addr.sin_addr), listenSockfd);
 	doLoop = true;
 }
 
-void Listener::doListen() {
+int Listener::doListen() {
 	
-	listen(  listenSockfd, 5 );
+	fprintf( stderr, "\nIn doListen at start\n" );
 	clilen = sizeof( cli_addr );
 	while ( doLoop ) {
+		listen(  listenSockfd, 5 );
 		connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
-		fprintf( stderr, "\nAccepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
 		if ( connectionSockfd < 0 ) {
 			fprintf( stderr, "\nERROR on accept" );
-			return;
+			break;
 		}
-		bzero( buffer, 256 );
-		long n = read( connectionSockfd, buffer, 255 );
-		if (n < 0) {
-			fprintf(  stderr, "\nERROR reading command from socket");
-			return;
+		fprintf( stderr, "\nAccepted connection, clientAddr: %s\n", inet_ntoa( cli_addr.sin_addr ) );
+		
+		threader.queueThread( serverThread, connectionSockfd, 0 );
+		
+//		doLoop = false; // Do once for testing
+	}
+	close( listenSockfd );
+	fprintf( stderr, "\nIn doListen at exit\n" );
+	return connectionSockfd;
+}
+
+void Listener::serviceConnection() {
+	
+	bool localLoop = true;
+	while ( localLoop ) {
+		char	localBuffer[256];
+		bzero( localBuffer, 256 );
+//		fprintf(  stderr, "\nIn serviceConnection waiting for data...\n");
+		long n = read( connectionSockfd, localBuffer, 255 );
+		if (n <= 0) {
+			fprintf(  stderr, "\nERROR reading command from socket\n");
+			break;
 		}
 		
-		printf( "\nHere is the message: %s\n", buffer );
+		fprintf( stderr, "\nHere is a received message: %s", localBuffer );
 		// start thread to service command
 		
-
+		
 		
 		n = write( connectionSockfd, "\nAck\n", 5 );
 		if (n < 0) {
-			fprintf( stderr, "\nERROR writing ack to socket" );
-			return;
+			fprintf( stderr, "\nERROR writing ack to socket\n" );
+			break;
 		}
-		close( connectionSockfd );
 	}
-	close( listenSockfd );
+	close( connectionSockfd );
+	fprintf(  stderr, "\nIn serviceConnection at end\n");
 }
