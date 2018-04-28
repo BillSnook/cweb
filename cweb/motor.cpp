@@ -174,19 +174,3 @@ void Motor::setMtrSpd(int motor, int speed) {
 		setPWMPin( M2En, speed );
 	}
 }
-
-int Motor::getI2CReg( int reg ) {
-	
-	int rdValue = 0;
-#ifdef ON_PI
-	rdValue = wiringPiI2CReadReg16 (pi2c, reg) ;	// On
-#endif  // ON_PI
-	return rdValue;
-}
-
-void Motor::putI2CReg( int reg, int newValue ) {
-	
-#ifdef ON_PI
-	wiringPiI2CWriteReg16 (pi2c, reg, newValue);
-#endif  // ON_PI
-}

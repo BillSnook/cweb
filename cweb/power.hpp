@@ -23,6 +23,9 @@ class Power {
 public:
 	explicit Power();
 	
+	int getI2CReg( int reg );
+	void putI2CReg( int reg, int newValue );
+	
 	char *getUPS2();
 
 };

@@ -55,9 +55,6 @@ public:
 	void setMtrDirSpd(int motor, int direction , int speed);
 	void setMtrSpd(int motor, int speed);
 	
-	int getI2CReg( int reg );
-	void putI2CReg( int reg, int newValue );
-	
 };
 
 #endif /* motor_hpp */

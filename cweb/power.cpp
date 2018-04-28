@@ -22,6 +22,22 @@
 #define DEV "/dev/i2c-1"
 #define ADRS 0x36
 
+int Power::getI2CReg( int reg ) {
+	
+	int rdValue = 0;
+#ifdef ON_PI
+	rdValue = wiringPiI2CReadReg16 (pi2c, reg) ;	// On
+#endif  // ON_PI
+	return rdValue;
+}
+
+void Power::putI2CReg( int reg, int newValue ) {
+	
+#ifdef ON_PI
+	wiringPiI2CWriteReg16 (pi2c, reg, newValue);
+#endif  // ON_PI
+}
+
 char *Power::getUPS2() {
 	
 	char *statsV = (char *)valloc( 128 );
