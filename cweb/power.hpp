@@ -9,6 +9,22 @@
 #ifndef power_hpp
 #define power_hpp
 
-#include <stdio.h>
+#ifdef ON_PI
+
+#include <wiringPi.h>
+#include <linux/i2c-dev.h>
+#include <wiringPiI2C.h>
+
+#endif  // ON_PI
+
+
+class Power {
+	
+public:
+	explicit Power();
+	
+	char *getUPS2();
+
+};
 
 #endif /* power_hpp */
