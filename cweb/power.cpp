@@ -41,9 +41,9 @@ void Power::putI2CReg( int reg, int newValue ) {
 char *Power::getUPS2() {
 	
 	char *statsV = (char *)valloc( 128 );
-	//	char statsC[64];
-	
+
 #ifdef ON_PI
+	char statsC[64];
 	pi2c = wiringPiI2CSetup( ADRS );
 	
 	int v = getI2CReg( VREG );

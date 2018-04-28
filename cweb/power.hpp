@@ -19,7 +19,9 @@
 
 
 class Power {
-	
+
+	int	pi2c;
+
 public:
 	explicit Power();
 	
