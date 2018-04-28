@@ -24,6 +24,11 @@
 #define DEV "/dev/i2c-1"
 #define ADRS 0x36
 
+
+Power::Power() {
+	
+}
+
 int Power::getI2CReg( int reg ) {
 	
 	int rdValue = 0;
