@@ -13,6 +13,9 @@
 		A96D730E208402C200B98679 /* sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730C208402C200B98679 /* sender.cpp */; };
 		A96D7311208BD79600B98679 /* threader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730F208BD79600B98679 /* threader.cpp */; };
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
+		A9ABD7762095078900B64F14 /* hardware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD7742095078900B64F14 /* hardware.cpp */; };
+		A9ABD779209507A400B64F14 /* motor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* motor.cpp */; };
+		A9ABD77C209507D200B64F14 /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,7 +32,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A96D72ED207AFD4500B98679 /* mtrctl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; name = mtrctl; path = ../../../../../../../../Code/RaspberryPi/cweb/cweb/mtrctl; sourceTree = BUILT_PRODUCTS_DIR; };
+		A96D72ED207AFD4500B98679 /* mtrctl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; name = mtrctl; path = cweb; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96D72F0207AFD4500B98679 /* mtrctl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mtrctl.cpp; sourceTree = "<group>"; };
 		A96D72F7207B086900B98679 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		A96D72F8207B0C3700B98679 /* mtrctl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mtrctl.hpp; sourceTree = "<group>"; };
@@ -45,6 +48,12 @@
 		A96D7312208C052B00B98679 /* commands.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = commands.cpp; sourceTree = "<group>"; };
 		A96D7313208C052B00B98679 /* commands.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = commands.hpp; sourceTree = "<group>"; };
 		A96D7315208C05FA00B98679 /* common.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = common.hpp; sourceTree = "<group>"; };
+		A9ABD7742095078900B64F14 /* hardware.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hardware.cpp; sourceTree = "<group>"; };
+		A9ABD7752095078900B64F14 /* hardware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = hardware.hpp; sourceTree = "<group>"; };
+		A9ABD777209507A400B64F14 /* motor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = motor.cpp; sourceTree = "<group>"; };
+		A9ABD778209507A400B64F14 /* motor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = motor.hpp; sourceTree = "<group>"; };
+		A9ABD77A209507D100B64F14 /* power.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = power.cpp; sourceTree = "<group>"; };
+		A9ABD77B209507D100B64F14 /* power.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = power.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +100,12 @@
 				A96D73092083E80A00B98679 /* listen.hpp */,
 				A96D730C208402C200B98679 /* sender.cpp */,
 				A96D730D208402C200B98679 /* sender.hpp */,
+				A9ABD7742095078900B64F14 /* hardware.cpp */,
+				A9ABD7752095078900B64F14 /* hardware.hpp */,
+				A9ABD777209507A400B64F14 /* motor.cpp */,
+				A9ABD778209507A400B64F14 /* motor.hpp */,
+				A9ABD77A209507D100B64F14 /* power.cpp */,
+				A9ABD77B209507D100B64F14 /* power.hpp */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -172,8 +187,11 @@
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
+				A9ABD779209507A400B64F14 /* motor.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
+				A9ABD77C209507D200B64F14 /* power.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
+				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

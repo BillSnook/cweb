@@ -38,6 +38,10 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
+#ifdef DEBUG
+	fprintf( stderr, "\nDebug mode !!\n" );
+#endif
+	
 //	fprintf( stderr, "\nargc = %d\n", argc );
 	if ( argc > 1 ) {	// Should be sender as we pass in host name
 		char buff[32], *buffer = (char *)&buff;

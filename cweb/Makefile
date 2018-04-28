@@ -1,11 +1,14 @@
-#
+# Makefile for mtrctl project - control a motorized robot remotely
 
 CXX = g++
-CXXFLAGS = -std=c++11
+
+CXXFLAGS = -std=c++11 -DDEBUG
+# If on Raspberry Pi (as opposed to being developed on a Mac), enable these two lines instead:
+#CXXFLAGS = -std=c++11 -DDEBUG -DON_PI
 #LDLIBS = -lwiringPi -lpthread
 
-HEADERS = mtrctl.hpp common.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp
-OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o
+HEADERS = mtrctl.hpp common.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp motor.hpp power.hpp
+OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o motor.o power.o
 
 default: mtrctl
 
