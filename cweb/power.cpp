@@ -56,7 +56,7 @@ char *Power::getUPS2() {
 	int v = getI2CReg( VREG );
 	int lo = (v >> 8) & 0x00FF;
 	int hi = (v << 8) & 0xFF00;
-	int w = hi + lo;
+	v = hi + lo;
 	sprintf( statsV, "%fV (%d) ",(((float)v)* 78.125 / 1000000.0), v);
 	
 	int c = getI2CReg( CREG );
@@ -64,7 +64,7 @@ char *Power::getUPS2() {
 	
 	lo = (c >> 8) & 0x00FF;
 	hi = (c << 8) & 0xFF00;
-	int d = hi + lo;
+	c = hi + lo;
 	sprintf( statsC, "%f%% (%d)",(((float)c) / 256.0), c);
 	strcat( statsV, statsC );
 #endif // ON_PI
