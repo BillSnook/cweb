@@ -11,9 +11,9 @@
 //#include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
-//#include <signal.h>
-//#include <sys/types.h>
-//#include <sys/stat.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 
 #include "mtrctl.hpp"
@@ -25,6 +25,8 @@
 
 
 #define	PORT	5555
+
+#define MAKE_DAEMON
 
 extern Threader	threader;
 
