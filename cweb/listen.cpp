@@ -9,8 +9,8 @@
 #include "listen.hpp"
 #include "threader.hpp"
 
-//#include <stdlib.h>
-//#include <string.h>
+#include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 #include <arpa/inet.h>
 

@@ -12,7 +12,8 @@
 
 #include <pthread.h>
 #include <syslog.h>
-
+#include <string.h>
+#include <stdlib.h>
 
 Threader	threader;
 
