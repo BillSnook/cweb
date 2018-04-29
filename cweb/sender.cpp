@@ -8,13 +8,14 @@
 
 #include "sender.hpp"
 
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <syslog.h>
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+//#include <sys/types.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
 #include <arpa/inet.h>
 
 void Sender::setupSender( char *hostName, int portNo) {
@@ -29,12 +30,12 @@ void Sender::setupSender( char *hostName, int portNo) {
 	
 	sockfd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( sockfd < 0 ) {
-		fprintf( stderr, "\nERROR opening socket\n" );
+		syslog(LOG_NOTICE, "ERROR opening socket" );
 		return;
 	}
 	server = gethostbyname( hostName );
 	if ( server == NULL ) {
-		fprintf( stderr,"\nERROR, no such host: %s\n", hostName );
+		syslog(LOG_NOTICE, "ERROR, no such host: %s", hostName );
 		return;
 	}
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
@@ -43,31 +44,30 @@ void Sender::setupSender( char *hostName, int portNo) {
 		  (char *)&serv_addr.sin_addr.s_addr,
 		  server->h_length);
 	serv_addr.sin_port = htons( portNo );
-	fprintf( stderr, "\nFound host %s, ready to connect on socket port %d\n\n", inet_ntoa(serv_addr.sin_addr), portNo );
-	fflush( stderr );
+	syslog(LOG_NOTICE, "Found host %s, ready to connect on socket port %d", inet_ntoa(serv_addr.sin_addr), portNo );
 	int connectResult = connect( sockfd, (struct sockaddr *)&serv_addr,sizeof( serv_addr ) );
 	if ( connectResult < 0 ) {
-		fprintf( stderr, "\nERROR connecting: %d\n", connectResult );
+		syslog(LOG_NOTICE, "ERROR connecting: %d", connectResult );
 		return;
 	}
 	
 	doSenderLoop = true;
 	while ( doSenderLoop ) {
-		fprintf( stderr, "Please enter a message: " );
+		syslog(LOG_NOTICE, "Please enter a message: " );
 		bzero( buffer, 256 );
 		fgets( buffer, 255, stdin );
 		long n = write( sockfd, buffer, strlen( buffer ) );
 		if (n < 0) {
-			fprintf( stderr, "\nERROR writing to socket\n" );
+			syslog(LOG_NOTICE, "ERROR writing to socket" );
 			return;
 		}
 		bzero( buffer, 256 );
 		n = read( sockfd, buffer, 255 );
 		if (n < 0) {
-			fprintf( stderr, "\nERROR reading from socket\n" );
+			syslog(LOG_NOTICE, "ERROR reading from socket" );
 			return;
 		}
-		printf( "%s\n", buffer );
+		printf( "%s", buffer );
 	}
 
 }

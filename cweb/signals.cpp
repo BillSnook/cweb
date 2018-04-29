@@ -18,29 +18,34 @@ case ALRM   = 14
 case TERM   = 15
 */
 
+//#include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
+//#include <unistd.h>
+//#include <signal.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+#include <syslog.h>
 
 
 void signals_setup() {
-	
+
 	signal(SIGINT, sig_handler);
 	signal(SIGKILL, sig_handler);
 }
 
 void sig_handler(int signum) {
-	
+
 	switch ( signum ) {
 		case 2:
-			fprintf( stderr, "\n\nReceived INT signal (ctrl-C), exiting now.\n\n" );
+			syslog(LOG_NOTICE, "Received INT signal (ctrl-C), exiting now." );
 			exit( 0 );
 			break;
 		case 9:
-			fprintf( stderr, "\n\nReceived Kill signal, exiting now.\n\n" );
+			syslog(LOG_NOTICE, "Received Kill signal, exiting now." );
 			leaveGracefully( signum );
 			break;
 		default:
-			fprintf( stderr, "\n\nReceived unhandled signal %d\n", signum );
+			syslog(LOG_NOTICE, "Received unhandled signal %d", signum );
 			break;
 	}
 }

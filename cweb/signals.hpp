@@ -9,8 +9,8 @@
 #ifndef signals_hpp
 #define signals_hpp
 
-#include <stdio.h>
-#include <unistd.h>
+//#include <stdio.h>
+//#include <unistd.h>
 
 
 void signals_setup();

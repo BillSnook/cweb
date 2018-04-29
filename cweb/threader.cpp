@@ -11,6 +11,7 @@
 #include "commands.hpp"
 
 #include <pthread.h>
+#include <syslog.h>
 
 
 Threader	threader;
@@ -87,33 +88,33 @@ bool Threader::areThreadsOnQueue() {
 
 void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	
-	fprintf( stderr, "\nIn queueThread at start\n" );
+	syslog(LOG_NOTICE, "In queueThread at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		threadQueue.push( nextThreadControl );
 	} catch(...) {
-		fprintf( stderr, "\nIn queueThread, thread queue push failure occured\n" );
+		syslog(LOG_NOTICE, "In queueThread, thread queue push failure occured" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 }
 
 void Threader::queueThread( ThreadType threadType, char *command ) {
 	
-	fprintf( stderr, "\nIn queueThread for command at start\n" );
+	syslog(LOG_NOTICE, "In queueThread for command at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		threadQueue.push( nextThreadControl );
 	} catch(...) {
-		fprintf( stderr, "\nIn queueThread, thread queue push failure occured\n" );
+		syslog(LOG_NOTICE, "In queueThread, thread queue push failure occured" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 }
 
 void Threader::createThread() {
 	
-	fprintf( stderr, "\nIn createThread at start\n" );
+	syslog(LOG_NOTICE, "In createThread at start" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -138,20 +139,20 @@ void Threader::runThread( void *arguments ) {
 		if ( ! threadQueue.empty() ) {
 			nextThreadControl = threadQueue.front();
 			threadQueue.pop();
-			fprintf( stderr, "\nIn runThread with entry in threadQueue for thread type %s\n", nextThreadControl.description() );
+			syslog(LOG_NOTICE, "In runThread with entry in threadQueue for thread type %s", nextThreadControl.description() );
 			foundThread = true;
 		} else {
-			fprintf( stderr, "\nIn runThread with no entries in threadQueue\n" );
+			syslog(LOG_NOTICE, "In runThread with no entries in threadQueue" );
 		}
 	} catch(...) {
-		fprintf( stderr, "\nIn runThread and threadQueue pop failure occured\n" );
+		syslog(LOG_NOTICE, "In runThread and threadQueue pop failure occured" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 	if ( !foundThread ) {
 		return;
 	}
 	threadCount += 1;
-	fprintf( stderr, "\nThread count: %d\n", threadCount );
+	syslog(LOG_NOTICE, "Thread count: %d", threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case listenThread:
 			listener.setupListener( nextThreadControl.nextSocket );
@@ -164,11 +165,11 @@ void Threader::runThread( void *arguments ) {
 			commander.serviceCommand( nextThreadControl.nextCommand );
 			break;
 		case testThread:
-			fprintf( stderr, "\nIn runThread with testThreads\n" );
+			syslog(LOG_NOTICE, "In runThread with testThreads" );
 			break;
 		default:
 			break;
 	}
 	threadCount -= 1;
-	fprintf( stderr, "\nIn runThread at exit from thread type %s with %d threads left\n", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "In runThread at exit from thread type %s with %d threads left", nextThreadControl.description(), threadCount );
 }

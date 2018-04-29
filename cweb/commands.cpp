@@ -12,10 +12,10 @@
 #include "threader.hpp"
 #include "hardware.hpp"
 
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-//#include <arpa/inet.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <unistd.h>
+#include <syslog.h>
 
 
 #define bufferSize	256
@@ -32,7 +32,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 
 	bool commandLoop = true;
 	while ( commandLoop ) {
-		fprintf( stderr, "\nIn commandLoop with: %s\n", command );
+		syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 		char first = command[0];	// Get command
 		switch ( first ) {
 			case 'A':

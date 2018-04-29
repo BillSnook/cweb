@@ -8,7 +8,7 @@
 
 #include "motor.hpp"
 
-#include <unistd.h>			// close read write
+#include <syslog.h>			// close read write
 #include <stdio.h>			// printf
 #include <fcntl.h>			// open
 #include <sys/ioctl.h>
@@ -25,10 +25,10 @@ bool Motor::setupForMotor() {
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
-		fprintf( stderr, "Error setting up wiringPi." );
+		syslog(LOG_NOTICE, "Error setting up wiringPi." );
 		return false;
 	}
-	fprintf( stderr, "Pi version: %d\n", setupResult );
+	syslog(LOG_NOTICE, "Pi version: %d", setupResult );
 	
 	pinMode( L1, SOFT_PWM_OUTPUT );
 	softPwmCreate( L1, 0, 100 );
@@ -102,7 +102,7 @@ void Motor::setPWMPin( int pin, int value ) {
 
 void Motor::checkMotor(int motor, int direction , int speed) {
 	
-	fprintf(stderr,"checkMotor motor == %d\n", motor);
+	syslog(LOG_NOTICE, "checkMotor motor == %d", motor);
 	if ( motor == 1 ) {
 		setPWMPin( M1En, 0 );
 		if ( direction == 1 ) {
@@ -141,7 +141,7 @@ void Motor::checkMotor(int motor, int direction , int speed) {
 
 void Motor::setMtrDirSpd(int motor, int direction , int speed) {
 	
-	fprintf(stderr,"setMtrDirSpd m %d, d: %s, s: %d\n", motor, direction ? "f" : "r", speed);
+	syslog(LOG_NOTICE, "setMtrDirSpd m %d, d: %s, s: %d", motor, direction ? "f" : "r", speed);
 	if ( motor == 1 ) {
 		if ( direction == 1 ) {
 			onPin( M1Fw );
@@ -166,7 +166,7 @@ void Motor::setMtrDirSpd(int motor, int direction , int speed) {
 
 void Motor::setMtrSpd(int motor, int speed) {
 	
-	fprintf(stderr,"setMtrSpd m %d, s: %d\n", motor, speed);
+	syslog(LOG_NOTICE, "setMtrSpd m %d, s: %d", motor, speed);
 	if ( motor == 1 ) {
 		setPWMPin( M1En, speed );
 	}

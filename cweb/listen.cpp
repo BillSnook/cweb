@@ -9,9 +9,9 @@
 #include "listen.hpp"
 #include "threader.hpp"
 
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+//#include <stdlib.h>
+//#include <string.h>
+#include <syslog.h>
 #include <arpa/inet.h>
 
 
@@ -24,17 +24,17 @@ void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for lis
 	
 	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( listenSockfd < 0 )
-		fprintf( stderr, "\nERROR opening socket" );
+		syslog(LOG_NOTICE, "ERROR opening socket" );
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
 	portno = rcvPortNo;
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons( portno );
 	if ( bind( listenSockfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr) ) < 0) {
-		fprintf( stderr, "\nERROR on binding"  );
+		syslog(LOG_NOTICE, "ERROR on binding"  );
 		return;
 	}
-	fprintf( stderr, "\nSuccess binding to socket port %d on %s\n", portno, inet_ntoa(serv_addr.sin_addr) );
+	syslog(LOG_NOTICE, "Success binding to socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
 	doListenerLoop = true;
 }
 
@@ -42,21 +42,21 @@ void Listener::acceptConnections() {	// Main listening routine
 	
 	socklen_t clilen = sizeof( cli_addr );
 	while ( doListenerLoop ) {
-		fprintf( stderr, "\nIn acceptConnections, listening\n" );
+		syslog(LOG_NOTICE, "In acceptConnections, listening" );
 		listen(  listenSockfd, 5 );
 		int connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
 		if ( connectionSockfd < 0 ) {
-			fprintf( stderr, "\nERROR on accept" );
+			syslog(LOG_NOTICE, "ERROR on accept" );
 			break;
 		}
-		fprintf( stderr, "\nAccepted connection, clientAddr: %s\n", inet_ntoa( cli_addr.sin_addr ) );
+		syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
 		
 		threader.queueThread( serverThread, connectionSockfd, 0 );
 		
 //		doListenerLoop = false; // Do once for testing
 	}
 	close( listenSockfd );
-	fprintf( stderr, "\nIn acceptConnections at exit\n" );
+	syslog(LOG_NOTICE, "In acceptConnections at exit" );
 }
 
 void Listener::serviceConnection( int connectionSockfd ) {
@@ -66,14 +66,14 @@ void Listener::serviceConnection( int connectionSockfd ) {
 	while ( localLoop ) {
 		char	*buffer = (char *)valloc( bufferSize );
 		bzero( buffer, bufferSize );
-//		fprintf(  stderr, "\nIn serviceConnection waiting for data...\n");
+//		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
 		n = read( connectionSockfd, buffer, bufferSize );
 		if ( n <= 0 ) {
-			fprintf( stderr, "\nERROR reading command from socket\n" );
+			syslog(LOG_NOTICE, "ERROR reading command from socket" );
 			break;
 		}
 		
-		fprintf( stderr, "\nHere is a received message: %s", buffer );
+		syslog(LOG_NOTICE, "Here is a received message: %s", buffer );
 		// start thread to service command
 		
 		threader.queueThread( commandThread, buffer );
@@ -81,10 +81,10 @@ void Listener::serviceConnection( int connectionSockfd ) {
 
 		n = write( connectionSockfd, "\nAck\n", 5 );
 		if ( n < 0 ) {
-			fprintf( stderr, "\nERROR writing ack to socket\n" );
+			syslog(LOG_NOTICE, "ERROR writing ack to socket" );
 			break;
 		}
 	}
 	close( connectionSockfd );
-	fprintf( stderr, "\nIn serviceConnection at end\n\n" );
+	syslog(LOG_NOTICE, "In serviceConnection at end" );
 }
