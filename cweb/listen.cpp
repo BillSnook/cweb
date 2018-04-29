@@ -61,11 +61,10 @@ void Listener::acceptConnections() {	// Main listening routine
 
 void Listener::serviceConnection( int connectionSockfd ) {
 	
-//	char	localBuffer[256];
-	char	*buffer = (char *)valloc( bufferSize );
 	long	n;
 	bool	localLoop = true;
 	while ( localLoop ) {
+		char	*buffer = (char *)valloc( bufferSize );
 		bzero( buffer, bufferSize );
 //		fprintf(  stderr, "\nIn serviceConnection waiting for data...\n");
 		n = read( connectionSockfd, buffer, bufferSize );
@@ -78,6 +77,7 @@ void Listener::serviceConnection( int connectionSockfd ) {
 		// start thread to service command
 		
 		threader.queueThread( commandThread, buffer );
+		free( buffer );
 
 		n = write( connectionSockfd, "\nAck\n", 5 );
 		if ( n < 0 ) {

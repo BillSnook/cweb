@@ -28,7 +28,6 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command ) 
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	memcpy( newThreadControl.nextCommand, command, COMMAND_SIZE );
-	free( command );
 	return newThreadControl;
 }
 
