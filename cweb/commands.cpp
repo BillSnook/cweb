@@ -38,9 +38,53 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'A':
 			case 'a':
 				hardware.setupForDCMotors();
+				hardware.setMtrDirSpd( 0, 1, 40 );
+				usleep( 500000 );
+				hardware.setMtrSpd( 0, 0 );
+				break;
+				
+			case 'B':
+			case 'b':
+				hardware.setupForDCMotors();
+				hardware.setMtrDirSpd( 0, 0, 40 );
+				usleep( 500000 );
+				hardware.setMtrSpd( 0, 0 );
+				break;
+				
+			case 'C':
+			case 'c':
+				hardware.setupForDCMotors();
 				hardware.setMtrDirSpd( 1, 1, 40 );
 				usleep( 500000 );
 				hardware.setMtrSpd( 1, 0 );
+				break;
+				
+			case 'D':
+			case 'd':
+				hardware.setupForDCMotors();
+				hardware.setMtrDirSpd( 1, 0, 40 );
+				usleep( 500000 );
+				hardware.setMtrSpd( 1, 0 );
+				break;
+				
+			case 'X':
+			case 'x':
+				hardware.setupForDCMotors();
+				hardware.setMtrDirSpd( 1, 1, 30 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 1, 1, 0 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 1, 0, 30 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 1, 0, 0 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 0, 1, 30 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 0, 1, 0 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 0, 0, 30 );
+				usleep( 200000 );
+				hardware.setMtrDirSpd( 0, 0, 0 );
 				break;
 				
 			default:

@@ -8,11 +8,11 @@ Threading working
 
 Communication using threads working
 
+Get i2c working
+
 
 Next - ToDo list
 
-Get i2c working
-	
 Get motor speed table working
 	
 Define and implement control api
