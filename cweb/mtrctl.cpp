@@ -59,18 +59,18 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	while ( doLoop ) {
-		usleep( 1000000 );
+		usleep( 100000 );
 		threader.lock();
 		ready = threader.areThreadsOnQueue();
 		threader.unlock();
 		if ( ready ) {
 			threader.createThread();
 		}
-#ifdef ON_PI
-		pStatus = power.getUPS2();
-		fprintf( stderr, "Power status: %s\n", pStatus );
-		free( pStatus );
-#endif
+//#ifdef ON_PI
+//		pStatus = power.getUPS2();
+//		fprintf( stderr, "Power status: %s\n", pStatus );
+//		free( pStatus );
+//#endif
 	}
 	
 	threader.shutdownThreads();
