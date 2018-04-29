@@ -8,6 +8,14 @@
 
 #include <syslog.h>
 
+//#include <stdio.h>
+#include <strings.h>
+//#include <unistd.h>
+//#include <signal.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+
+
 #include "mtrctl.hpp"
 #include "signals.hpp"
 #include "sender.hpp"
