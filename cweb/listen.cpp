@@ -24,14 +24,14 @@ void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for lis
 	
 	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( listenSockfd < 0 )
-		syslog(LOG_NOTICE, "ERROR opening socket" );
+		syslog(LOG_ERR, "ERROR opening socket" );
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
 	portno = rcvPortNo;
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons( portno );
 	if ( bind( listenSockfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr) ) < 0) {
-		syslog(LOG_NOTICE, "ERROR on binding"  );
+		syslog(LOG_ERR, "ERROR on binding"  );
 		return;
 	}
 	syslog(LOG_NOTICE, "Success binding to socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
@@ -46,7 +46,7 @@ void Listener::acceptConnections() {	// Main listening routine
 		listen(  listenSockfd, 5 );
 		int connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
 		if ( connectionSockfd < 0 ) {
-			syslog(LOG_NOTICE, "ERROR on accept" );
+			syslog(LOG_ERR, "ERROR on accept" );
 			break;
 		}
 		syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
@@ -69,7 +69,7 @@ void Listener::serviceConnection( int connectionSockfd ) {
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
 		n = read( connectionSockfd, buffer, bufferSize );
 		if ( n <= 0 ) {
-			syslog(LOG_NOTICE, "ERROR reading command from socket" );
+			syslog(LOG_ERR, "ERROR reading command from socket" );
 			break;
 		}
 		
@@ -81,7 +81,7 @@ void Listener::serviceConnection( int connectionSockfd ) {
 
 		n = write( connectionSockfd, "\nAck\n", 5 );
 		if ( n < 0 ) {
-			syslog(LOG_NOTICE, "ERROR writing ack to socket" );
+			syslog(LOG_ERR, "ERROR writing ack to socket" );
 			break;
 		}
 	}

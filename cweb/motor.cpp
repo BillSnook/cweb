@@ -25,7 +25,7 @@ bool Motor::setupForMotor() {
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
-		syslog(LOG_NOTICE, "Error setting up wiringPi." );
+		syslog(LOG_ERR, "Error setting up wiringPi." );
 		return false;
 	}
 	syslog(LOG_NOTICE, "Pi version: %d", setupResult );

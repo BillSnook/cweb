@@ -33,71 +33,82 @@ extern Threader	threader;
 Listener	listener;
 Sender		sender;
 
+bool		becomeDaemon;
 bool		ready;
 
 int main(int argc, const char * argv[]) {
 
+	becomeDaemon = false;
 #ifdef MAKE_DAEMON
-	
-	pid_t pid;
-	
-	/* Fork off the parent process */
-	pid = fork();
-	
-	/* An error occurred */
-	if (pid < 0)
-		exit(EXIT_FAILURE);
-	
-	/* Success: Let the parent terminate */
-	if (pid > 0)
-		exit(EXIT_SUCCESS);
-	
-	/* On success: The child process becomes session leader */
-	if (setsid() < 0)
-		exit(EXIT_FAILURE);
-	
-	/* Catch, ignore and/or handle signals */
-	signal(SIGCHLD, SIG_IGN);
-	signal(SIGHUP, SIG_IGN);
-	signals_setup();
-	
-	/* Fork off for the second time*/
-	pid = fork();
-	
-	/* An error occurred */
-	if (pid < 0)
-		exit(EXIT_FAILURE);
-	
-	/* Success: Let the parent terminate */
-	if (pid > 0)
-		exit(EXIT_SUCCESS);
-	
-	/* Set new file permissions */
-	umask(0);
-	
-	/* Change the working directory to the root directory */
-	/* or another appropriated directory */
-	chdir("/");
-	
-	/* Close all open file descriptors */
-	long x;
-	for (x = sysconf(_SC_OPEN_MAX); x>=0; x--) {
-		close (x);
-	}
-	/* Open the log file */
-	openlog("mtrctllog", LOG_PID, LOG_DAEMON);
-	syslog(LOG_NOTICE, "Started mtrctl as daemon");
-	
+	becomeDaemon = true;
 #else	// not MAKE_DAEMON
-	
-	signals_setup();
-
-	/* Open the log file */
-//	openlog("mtrctllog", LOG_PID, LOG_USER);
-	syslog(LOG_NOTICE, "Started mtrctl as user");
-	
 #endif	// MAKE_DAEMON
+	if ( argc > 1 ) {
+		becomeDaemon = false;		// Do not become daemon if sender
+	}
+	if ( becomeDaemon ) {
+		
+		pid_t pid;
+		
+		/* Fork off the parent process */
+		pid = fork();
+		
+		/* An error occurred */
+		if (pid < 0)
+			exit(EXIT_FAILURE);
+		
+		/* Success: Let the parent terminate */
+		if (pid > 0)
+			exit(EXIT_SUCCESS);
+		
+		/* On success: The child process becomes session leader */
+		if (setsid() < 0)
+			exit(EXIT_FAILURE);
+		
+		/* Catch, ignore and/or handle signals */
+		signal(SIGCHLD, SIG_IGN);
+		signal(SIGHUP, SIG_IGN);
+		signals_setup();
+		
+		/* Fork off for the second time*/
+		pid = fork();
+		
+		/* An error occurred */
+		if (pid < 0)
+			exit(EXIT_FAILURE);
+		
+		/* Success: Let the parent terminate */
+		if (pid > 0)
+			exit(EXIT_SUCCESS);
+		
+		/* Set new file permissions */
+		umask(0);
+		
+		/* Change the working directory to the root directory */
+		/* or another appropriated directory */
+		chdir("/");
+		
+		/* Close all open file descriptors */
+		long x;
+		for (x = sysconf(_SC_OPEN_MAX); x>=0; x--) {
+			close ( int(x) );
+		}
+		/* Open the log file */
+		openlog("mtrctllog", LOG_PID, LOG_DAEMON);
+		syslog(LOG_NOTICE, "Started mtrctl as daemon");
+		
+	} else {
+		
+		signals_setup();
 
+		/* Open the log file */
+		openlog("mtrctllog", LOG_PID | LOG_PERROR, LOG_USER);	// Also log to stderr
+		syslog(LOG_NOTICE, "Started mtrctl as user - syslog + LOG_PERROR");
+
+//		fprintf( stderr, "\nStarted mtrctl as user\n" );
+	}
+	
+	// Done figuring out whether we are a daemon, running in the background, or not.
 	doLoop = true;
 	ready = true;
 	
@@ -122,7 +133,7 @@ int main(int argc, const char * argv[]) {
 		threader.queueThread( listenThread, PORT, 0 );
 	}
 
-	syslog(LOG_ERR, "Ready to service queue" );
+	syslog(LOG_NOTICE, "Ready to service queue" );
 
 	while ( doLoop ) {
 		usleep( 100000 );

@@ -127,11 +127,11 @@ void PWM::setPWMFrequency( int freq ) {
 void PWM::setPWM( int channel, int on, int off ) {
 	
 	if ( ( channel < 0 ) || ( channel > 15 ) ) {
-		syslog(LOG_NOTICE, "ERROR: PWM:setPWM channel: %d; should be 0 <= channel <= 15", channel);
+		syslog(LOG_ERR, "ERROR: PWM:setPWM channel: %d; should be 0 <= channel <= 15", channel);
 		return;
 	}
 	if ( ( on < 0 ) || ( on > PWM_COUNT ) || ( off < 0 ) || ( off > PWM_COUNT ) ) {
-		syslog(LOG_NOTICE, "ERROR: PWM:setPWM%d on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
+		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
 		return;
 	}
 	
@@ -145,7 +145,7 @@ void PWM::setPWM( int channel, int on, int off ) {
 void PWM::setPWMAll( int on, int off ) {
 	
 	if ( ( on < 0 ) || ( on > PWM_COUNT ) || ( off < 0 ) || ( off > PWM_COUNT ) ) {
-		syslog(LOG_NOTICE, "ERROR: PWM:setPWMAll on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", on, off, PWM_COUNT);
+		syslog(LOG_ERR, "ERROR: PWM:setPWMAll on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", on, off, PWM_COUNT);
 		return;
 	}
 	i2c->i2cWrite( ALLCHANNEL_ON_L, on & 0xFF );
@@ -176,7 +176,7 @@ Hardware::Hardware() {
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
-		syslog(LOG_NOTICE, "Error setting up wiringPi." );
+		syslog(LOG_ERR, "Error setting up wiringPi." );
 		return;
 	}
 //	syslog(LOG_NOTICE, "Pi version: %d", setupResult );
@@ -223,11 +223,11 @@ void Hardware::setPin( int pin, int value ) {
 void Hardware::setPWM( int pin, int value ) {
 	
 	if ( ( pin < 0 ) || ( pin > 15 ) ) {
-		syslog(LOG_NOTICE, "ERROR: Hardware:setPWM pin: %d; should be 0 <= pin <= 15", pin);
+		syslog(LOG_ERR, "ERROR: Hardware:setPWM pin: %d; should be 0 <= pin <= 15", pin);
 		return;
 	}
 	if ( ( value < 0 ) || ( value > PWM_COUNT ) ) {
-		syslog(LOG_NOTICE, "ERROR: Hardware::setPWM value: %d", value);
+		syslog(LOG_ERR, "ERROR: Hardware::setPWM value: %d", value);
 		return;
 	}
 	pwm->setPWM( pin, 0, value );
@@ -243,7 +243,7 @@ void Hardware::setPWM( int pin, int value ) {
 void Hardware::setMtrDirSpd(int motor, int direction , int speed) {
 	
 	if ( ( speed < 0 ) || ( speed > (PWM_COUNT / SPEED_ADJUSTMENT) ) ) {
-		syslog(LOG_NOTICE, "ERROR: Hardware::setMtrDirSpd speed: %d", speed);
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d", speed);
 		return;
 	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speed);
