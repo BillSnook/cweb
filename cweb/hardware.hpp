@@ -120,10 +120,10 @@ public:
 ////};
 
 
-class hardware {
+class Hardware {
 	
 public:
-	explicit hardware();
+	explicit Hardware();
 	
 	I2C     *i2c;
 	PWM     *pwm;

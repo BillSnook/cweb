@@ -168,7 +168,7 @@ int PWM::getPWMResolution() {
 
 
 
-hardware::hardware() {
+Hardware::Hardware() {
 	
 	motor0Setup = false;
 	motor1Setup = false;
@@ -188,12 +188,12 @@ hardware::hardware() {
 	fprintf( stderr, "Speed adjustment: %d\n", SPEED_ADJUSTMENT );
 }
 
-bool hardware::setupForDCMotors() {
+bool Hardware::setupForDCMotors() {
 	
 	return true;
 }
 
-bool hardware::resetForDCMotors() {
+bool Hardware::resetForDCMotors() {
 	
 	setPWM( M0En, 0 );
 	setPin( M0Fw, 0 );
@@ -207,7 +207,7 @@ bool hardware::resetForDCMotors() {
 	return true;
 }
 
-void hardware::setPin( int pin, int value ) {
+void Hardware::setPin( int pin, int value ) {
 	
 	if ( ( pin < 0 ) || ( pin > 15 ) ) {
 		return;
@@ -220,30 +220,30 @@ void hardware::setPin( int pin, int value ) {
 	return;
 }
 
-void hardware::setPWM( int pin, int value ) {
+void Hardware::setPWM( int pin, int value ) {
 	
 	if ( ( pin < 0 ) || ( pin > 15 ) ) {
-		fprintf(stderr,"ERROR: hardware:setPWM pin: %d; should be 0 <= pin <= 15\n", pin);
+		fprintf(stderr,"ERROR: Hardware:setPWM pin: %d; should be 0 <= pin <= 15\n", pin);
 		return;
 	}
 	if ( ( value < 0 ) || ( value > PWM_COUNT ) ) {
-		fprintf(stderr,"ERROR: hardware::setPWM value: %d\n", value);
+		fprintf(stderr,"ERROR: Hardware::setPWM value: %d\n", value);
 		return;
 	}
 	pwm->setPWM( pin, 0, value );
 }
 
-//DCM hardware::getMotor( int motor ) {
+//DCM Hardware::getMotor( int motor ) {
 //    if ( ( motor < 1 ) || ( motor > 4 ) ) {
 //        return nullptr;
 //    }
 //    return motors[motor]
 //}
 
-void hardware::setMtrDirSpd(int motor, int direction , int speed) {
+void Hardware::setMtrDirSpd(int motor, int direction , int speed) {
 	
 	if ( ( speed < 0 ) || ( speed > (PWM_COUNT / SPEED_ADJUSTMENT) ) ) {
-		fprintf(stderr,"ERROR: hardware::setMtrDirSpd speed: %d\n", speed);
+		fprintf(stderr,"ERROR: Hardware::setMtrDirSpd speed: %d\n", speed);
 		return;
 	}
 	fprintf(stderr,"setMtrDirSpd m%d, d: %s, speed: %d\n", motor, direction ? "f" : "r", speed);
@@ -271,7 +271,7 @@ void hardware::setMtrDirSpd(int motor, int direction , int speed) {
 	}
 }
 
-void hardware::setMtrSpd(int motor, int speed) {
+void Hardware::setMtrSpd(int motor, int speed) {
 	
 	fprintf(stderr,"setMtrSpd m%d, speed: %d\n", motor, speed);
 	if ( ( motor == 0 ) && motor0Setup ) {

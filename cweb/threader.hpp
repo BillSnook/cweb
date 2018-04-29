@@ -21,6 +21,8 @@
 #include <queue>
 
 
+#define		COMMAND_SIZE		32
+
 enum ThreadType {
 	listenThread = 0,
 	serverThread = 1,
@@ -33,12 +35,14 @@ enum ThreadType {
 
 class ThreadControl {
 public:
-	ThreadType nextThreadType;
-	int nextSocket;
-	uint newAddress;
+	ThreadType	nextThreadType;
+	int			nextSocket;
+	uint		newAddress;
+	char		nextCommand[ COMMAND_SIZE ];
 	
 public:
 	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
+	static ThreadControl initThread( ThreadType threadType, char *command );
 	const char *description();
 };
 
@@ -60,6 +64,7 @@ public:
 	bool areThreadsOnQueue();
 	
 	void queueThread( ThreadType threadType, int socket, uint address );
+	void queueThread( ThreadType threadType, char *command );
 	void createThread();
 	void runThread(void *arguments);
 };

@@ -8,11 +8,10 @@
 
 #include "threader.hpp"
 #include "listen.hpp"
+#include "commands.hpp"
 
 #include <pthread.h>
 
-
-extern Listener	listener;
 
 Threader	threader;
 
@@ -25,6 +24,14 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint
 	return newThreadControl;
 }
 
+ThreadControl ThreadControl::initThread( ThreadType threadType, char *command ) {
+	ThreadControl newThreadControl = ThreadControl();
+	newThreadControl.nextThreadType = threadType;
+	memcpy( newThreadControl.nextCommand, command, COMMAND_SIZE );
+	free( command );
+	return newThreadControl;
+}
+
 const char *ThreadControl::description() {
 	const char *name;
 	switch (nextThreadType ) {
@@ -33,6 +40,9 @@ const char *ThreadControl::description() {
 			break;
 		case serverThread:
 			name = "serverThread";
+			break;
+		case commandThread:
+			name = "commandThread";
 			break;
 		default:
 			name = "noThread";
@@ -52,7 +62,8 @@ void *runThreads(void *arguments) {
 void Threader::setupThreader() {
 	
 	pthread_mutex_init( &threadArrayMutex, nullptr );
-	
+	commander = Commander();
+	commander.setupCommander();
 }
 
 void Threader::shutdownThreads() {
@@ -79,6 +90,19 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	
 	fprintf( stderr, "\nIn queueThread at start\n" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
+	pthread_mutex_lock( &threadArrayMutex );
+	try {
+		threadQueue.push( nextThreadControl );
+	} catch(...) {
+		fprintf( stderr, "\nIn queueThread, thread queue push failure occured\n" );
+	}
+	pthread_mutex_unlock( &threadArrayMutex );
+}
+
+void Threader::queueThread( ThreadType threadType, char *command ) {
+	
+	fprintf( stderr, "\nIn queueThread for command at start\n" );
+	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		threadQueue.push( nextThreadControl );
@@ -138,6 +162,7 @@ void Threader::runThread( void *arguments ) {
 			listener.serviceConnection( nextThreadControl.nextSocket );
 			break;
 		case commandThread:
+			commander.serviceCommand( nextThreadControl.nextCommand );
 			break;
 		case testThread:
 			fprintf( stderr, "\nIn runThread with testThreads\n" );

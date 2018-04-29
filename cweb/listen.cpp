@@ -14,7 +14,11 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+
+#define bufferSize	256
+
 extern Threader	threader;
+
 
 void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for listening
 	
@@ -57,23 +61,24 @@ void Listener::acceptConnections() {	// Main listening routine
 
 void Listener::serviceConnection( int connectionSockfd ) {
 	
-	char	localBuffer[256];
+//	char	localBuffer[256];
+	char	*buffer = (char *)valloc( bufferSize );
 	long	n;
 	bool	localLoop = true;
 	while ( localLoop ) {
-		bzero( localBuffer, 256 );
+		bzero( buffer, bufferSize );
 //		fprintf(  stderr, "\nIn serviceConnection waiting for data...\n");
-		n = read( connectionSockfd, localBuffer, 255 );
+		n = read( connectionSockfd, buffer, bufferSize );
 		if ( n <= 0 ) {
 			fprintf( stderr, "\nERROR reading command from socket\n" );
 			break;
 		}
 		
-		fprintf( stderr, "\nHere is a received message: %s", localBuffer );
+		fprintf( stderr, "\nHere is a received message: %s", buffer );
 		// start thread to service command
 		
-		
-		
+		threader.queueThread( commandThread, buffer );
+
 		n = write( connectionSockfd, "\nAck\n", 5 );
 		if ( n < 0 ) {
 			fprintf( stderr, "\nERROR writing ack to socket\n" );
