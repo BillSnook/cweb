@@ -109,12 +109,14 @@ void Threader::createThread() {
 void Threader::runThread( void *arguments ) {
 
 	ThreadControl nextThreadControl;
+	bool foundThread = false;
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		if ( ! threadQueue.empty() ) {
 			nextThreadControl = threadQueue.front();
 			threadQueue.pop();
 			fprintf( stderr, "\nIn runThread with entry in threadQueue for thread type %s\n", nextThreadControl.description() );
+			foundThread = true;
 		} else {
 			fprintf( stderr, "\nIn runThread with no entries in threadQueue\n" );
 		}
@@ -122,7 +124,9 @@ void Threader::runThread( void *arguments ) {
 		fprintf( stderr, "\nIn runThread and threadQueue pop failure occured\n" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
-	
+	if ( !foundThread ) {
+		return;
+	}
 	threadCount += 1;
 	fprintf( stderr, "\nThread count: %d\n", threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
@@ -133,11 +137,14 @@ void Threader::runThread( void *arguments ) {
 		case serverThread:
 			listener.serviceConnection( nextThreadControl.nextSocket );
 			break;
+		case commandThread:
+			break;
 		case testThread:
+			fprintf( stderr, "\nIn runThread with testThreads\n" );
 			break;
 		default:
 			break;
 	}
 	threadCount -= 1;
-	fprintf( stderr, "\nIn runThread with %d threads remaining after exit for thread type %s\n", threadCount, nextThreadControl.description() );
+	fprintf( stderr, "\nIn runThread at exit from thread type %s with %d threads left\n", nextThreadControl.description(), threadCount );
 }

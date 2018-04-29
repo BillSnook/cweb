@@ -25,6 +25,7 @@ case TERM   = 15
 void signals_setup() {
 	
 	signal(SIGINT, sig_handler);
+	signal(SIGKILL, sig_handler);
 }
 
 void sig_handler(int signum) {
@@ -34,8 +35,17 @@ void sig_handler(int signum) {
 			fprintf( stderr, "\n\nReceived INT signal (ctrl-C), exiting now.\n\n" );
 			exit( 0 );
 			break;
+		case 9:
+			fprintf( stderr, "\n\nReceived Kill signal, exiting now.\n\n" );
+			leaveGracefully( signum );
+			break;
 		default:
 			fprintf( stderr, "\n\nReceived unhandled signal %d\n", signum );
 			break;
 	}
+}
+
+void leaveGracefully( int signum ) {
+	
+	exit( 0 );
 }

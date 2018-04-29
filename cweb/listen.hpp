@@ -20,7 +20,7 @@ class Listener {
 	int					listenSockfd, portno;
 	char				buffer[256];
 	struct sockaddr_in	serv_addr, cli_addr;
-	bool				doLoop;
+	bool				doListenerLoop;
 
 public:
 	void setupListener( int rcvPortNo );

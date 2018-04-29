@@ -24,7 +24,7 @@
 enum ThreadType {
 	listenThread = 0,
 	serverThread = 1,
-//	senderThread = 2,
+	commandThread = 2,
 //	inputThread = 3,
 //	blinkThread = 4,
 	testThread = 5

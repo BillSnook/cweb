@@ -31,13 +31,13 @@ void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for lis
 		return;
 	}
 	fprintf( stderr, "\nSuccess binding to socket port %d on %s\n", portno, inet_ntoa(serv_addr.sin_addr) );
-	doLoop = true;
+	doListenerLoop = true;
 }
 
 void Listener::acceptConnections() {	// Main listening routine
 	
 	socklen_t clilen = sizeof( cli_addr );
-	while ( doLoop ) {
+	while ( doListenerLoop ) {
 		fprintf( stderr, "\nIn acceptConnections, listening\n" );
 		listen(  listenSockfd, 5 );
 		int connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
@@ -49,7 +49,7 @@ void Listener::acceptConnections() {	// Main listening routine
 		
 		threader.queueThread( serverThread, connectionSockfd, 0 );
 		
-//		doLoop = false; // Do once for testing
+//		doListenerLoop = false; // Do once for testing
 	}
 	close( listenSockfd );
 	fprintf( stderr, "\nIn acceptConnections at exit\n" );

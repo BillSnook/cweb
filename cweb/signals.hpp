@@ -17,4 +17,6 @@ void signals_setup();
 
 void sig_handler(int signum);
 
+void leaveGracefully( int signum );
+
 #endif /* signals_hpp */

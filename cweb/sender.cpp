@@ -25,7 +25,7 @@ void Sender::setupSender( char *hostName, int portNo) {
 	struct hostent *server;
 	
 	char buffer[256];
-	bool doLoop;
+	bool doSenderLoop;
 	
 	sockfd = socket( AF_INET, SOCK_STREAM, 0 );
 	if ( sockfd < 0 ) {
@@ -51,8 +51,8 @@ void Sender::setupSender( char *hostName, int portNo) {
 		return;
 	}
 	
-	doLoop = true;
-	while ( doLoop ) {
+	doSenderLoop = true;
+	while ( doSenderLoop ) {
 		fprintf( stderr, "Please enter a message: " );
 		bzero( buffer, 256 );
 		fgets( buffer, 255, stdin );

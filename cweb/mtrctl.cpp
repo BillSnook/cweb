@@ -28,7 +28,6 @@ extern Threader	threader;
 Listener	listener;
 Sender		sender;
 
-bool		doLoop;
 bool		ready;
 
 int main(int argc, const char * argv[]) {
