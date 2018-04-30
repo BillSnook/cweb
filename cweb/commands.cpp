@@ -70,21 +70,24 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'X':
 			case 'x':
 				hardware.setupForDCMotors();
+				for ( int i = 0; i < 2; i++ ) {
 				hardware.setMtrDirSpd( 1, 1, 30 );
-				usleep( 200000 );
+				usleep( 100000 );
 				hardware.setMtrDirSpd( 1, 1, 0 );
-				usleep( 200000 );
+				usleep( 50000 );
 				hardware.setMtrDirSpd( 1, 0, 30 );
-				usleep( 200000 );
+				usleep( 100000 );
 				hardware.setMtrDirSpd( 1, 0, 0 );
-				usleep( 200000 );
+				usleep( 50000 );
 				hardware.setMtrDirSpd( 0, 1, 30 );
-				usleep( 200000 );
+				usleep( 100000 );
 				hardware.setMtrDirSpd( 0, 1, 0 );
-				usleep( 200000 );
+				usleep( 50000 );
 				hardware.setMtrDirSpd( 0, 0, 30 );
-				usleep( 200000 );
+				usleep( 100000 );
 				hardware.setMtrDirSpd( 0, 0, 0 );
+				usleep( 50000 );
+				}
 				break;
 				
 			default:

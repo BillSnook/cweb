@@ -123,7 +123,7 @@ int main(int argc, const char * argv[]) {
 #endif
 	
 	syslog(LOG_NOTICE, "argc = %d", argc );
-	if ( argc > 1 ) {	// Should be sender as we pass in host name
+	if ( argc == 2 ) {	// Should be sender as we pass in host name
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);
 		sender = Sender();
