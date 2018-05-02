@@ -12,9 +12,6 @@
 #include "threader.hpp"
 #include "hardware.hpp"
 
-//#include <stdlib.h>
-//#include <string.h>
-//#include <unistd.h>
 #include <syslog.h>
 
 
@@ -33,57 +30,86 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 	bool commandLoop = true;
 	while ( commandLoop ) {
 		syslog(LOG_NOTICE, "In commandLoop with: %s", command );
+		int len = int( strlen( command ) );
 		char first = command[0];	// Get command
+		unsigned char speed1 = 0;
+		unsigned char speed2 = 0;
+		if ( len > 2 ) {
+			speed1 = command[1];
+		}
+		if ( len > 3 ) {
+			speed2 = command[2];
+		}
+		hardware.setupForDCMotors();
 		switch ( first ) {
 			case 'A':
 			case 'a':
-				hardware.setupForDCMotors();
-				hardware.setMtrDirSpd( 0, 1, 40 );
+				hardware.setMtrDirSpd( 0, 1, speed1 );
 				usleep( 500000 );
 				hardware.setMtrSpd( 0, 0 );
 				break;
 				
 			case 'B':
 			case 'b':
-				hardware.setupForDCMotors();
-				hardware.setMtrDirSpd( 0, 0, 40 );
+				hardware.setMtrDirSpd( 0, 0, speed1 );
 				usleep( 500000 );
 				hardware.setMtrSpd( 0, 0 );
 				break;
 				
 			case 'C':
 			case 'c':
-				hardware.setupForDCMotors();
-				hardware.setMtrDirSpd( 1, 1, 40 );
+				hardware.setMtrDirSpd( 1, 1, speed1 );
 				usleep( 500000 );
 				hardware.setMtrSpd( 1, 0 );
 				break;
 				
 			case 'D':
 			case 'd':
-				hardware.setupForDCMotors();
-				hardware.setMtrDirSpd( 1, 0, 40 );
+				hardware.setMtrDirSpd( 1, 0, speed1 );
 				usleep( 500000 );
+				hardware.setMtrSpd( 1, 0 );
+				break;
+				
+			case 'E':
+			case 'e':
+				hardware.setMtrDirSpd( 0, 1, speed1 );
+				hardware.setMtrDirSpd( 1, 1, speed2 );
+				usleep( 500000 );
+				hardware.setMtrSpd( 0, 0 );
+				hardware.setMtrSpd( 1, 0 );
+				break;
+				
+			case 'F':
+			case 'f':
+				hardware.setMtrDirSpd( 1, 0, speed1 );
+				hardware.setMtrDirSpd( 1, 0, speed2 );
+				usleep( 500000 );
+				hardware.setMtrSpd( 0, 0 );
+				hardware.setMtrSpd( 1, 0 );
+				break;
+				
+			case 'S':
+			case 's':
+				hardware.setMtrSpd( 0, 0 );
 				hardware.setMtrSpd( 1, 0 );
 				break;
 				
 			case 'X':
 			case 'x':
-				hardware.setupForDCMotors();
 				for ( int i = 0; i < 2; i++ ) {
-				hardware.setMtrDirSpd( 1, 1, 30 );
+				hardware.setMtrDirSpd( 1, 1, speed1 );
 				usleep( 100000 );
 				hardware.setMtrDirSpd( 1, 1, 0 );
 				usleep( 50000 );
-				hardware.setMtrDirSpd( 1, 0, 30 );
+				hardware.setMtrDirSpd( 1, 0, speed1 );
 				usleep( 100000 );
 				hardware.setMtrDirSpd( 1, 0, 0 );
 				usleep( 50000 );
-				hardware.setMtrDirSpd( 0, 1, 30 );
+				hardware.setMtrDirSpd( 0, 1, speed1 );
 				usleep( 100000 );
 				hardware.setMtrDirSpd( 0, 1, 0 );
 				usleep( 50000 );
-				hardware.setMtrDirSpd( 0, 0, 30 );
+				hardware.setMtrDirSpd( 0, 0, speed1 );
 				usleep( 100000 );
 				hardware.setMtrDirSpd( 0, 0, 0 );
 				usleep( 50000 );

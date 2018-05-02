@@ -8,7 +8,6 @@
 
 #include <syslog.h>
 
-//#include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -143,11 +142,6 @@ int main(int argc, const char * argv[]) {
 		if ( ready ) {
 			threader.createThread();
 		}
-//#ifdef ON_PI
-//		pStatus = power.getUPS2();
-//		syslog(LOG_NOTICE, "Power status: %s", pStatus );
-//		free( pStatus );
-//#endif
 	}
 	
 	threader.shutdownThreads();

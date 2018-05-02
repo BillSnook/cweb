@@ -13,7 +13,9 @@
 #define PWM_COUNT               4096
 #define PWM_MAX                 4095
 
-#define SPEED_ADJUSTMENT        32      // Half for now to solve crash if too high
+#define SPEED_ADJUSTMENT        64      // Half for now to solve crash if too high
+
+#include "filer.hpp"
 
 #ifdef ON_PI
 
@@ -125,14 +127,16 @@ class Hardware {
 public:
 	explicit Hardware();
 	
-	I2C     *i2c;
-	PWM     *pwm;
+	I2C     	*i2c;
+	PWM     	*pwm;
 	
-	bool    motor0Setup;
-	bool    motor1Setup;
+	bool    	motor0Setup;
+	bool   		motor1Setup;
 	
-	int     i2cAddress;
-	int     i2cFrequency;
+	int     	i2cAddress;
+	int     	i2cFrequency;
+
+	speed_array speed[SPEED_ARRAY];
 	
 	
 	bool setupForDCMotors();

@@ -7,12 +7,9 @@
 //
 
 #include "hardware.hpp"
+#include "filer.hpp"
 
 #include <syslog.h>			// close read write
-//#include <stdio.h>			// printf
-//#include <fcntl.h>			// open
-//#include <sys/ioctl.h>
-//#include <getopt.h>
 #include <math.h>
 
 
@@ -166,8 +163,6 @@ int PWM::getPWMResolution() {
 ////}}
 
 
-
-
 Hardware::Hardware() {
 	
 	motor0Setup = false;
@@ -240,13 +235,13 @@ void Hardware::setPWM( int pin, int value ) {
 //    return motors[motor]
 //}
 
-void Hardware::setMtrDirSpd(int motor, int direction , int speed) {
+void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speed < 0 ) || ( speed > (PWM_COUNT / SPEED_ADJUSTMENT) ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d", speed);
+	if ( ( speedIndex < 0 ) || ( speedIndex > (PWM_COUNT / SPEED_ADJUSTMENT) ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d", speedIndex);
 		return;
 	}
-	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speed);
+	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);
 	if ( motor == 0 ) {
 		if ( direction == 1 ) {
 			setPin( M0Fw, 1 );
@@ -256,7 +251,7 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speed) {
 			setPin( M0Rv, 1 );
 		}
 		motor0Setup = true;
-		setPWM( M0En, speed * SPEED_ADJUSTMENT );
+		setPWM( M0En, speed[speedIndex].left * SPEED_ADJUSTMENT );
 	}
 	if ( motor == 1 ) {
 		if ( direction == 1 ) {
@@ -267,18 +262,18 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speed) {
 			setPin( M1Rv, 1 );
 		}
 		motor1Setup = true;
-		setPWM( M1En, speed * SPEED_ADJUSTMENT );
+		setPWM( M1En, speed[speedIndex].left * SPEED_ADJUSTMENT );
 	}
 }
 
-void Hardware::setMtrSpd(int motor, int speed) {
+void Hardware::setMtrSpd(int motor, int speedIndex) {
 	
-	syslog(LOG_NOTICE, "setMtrSpd m%d, speed: %d", motor, speed);
+	syslog(LOG_NOTICE, "setMtrSpd m%d, speed: %d", motor, speedIndex);
 	if ( ( motor == 0 ) && motor0Setup ) {
-		setPWM( M0En, speed * SPEED_ADJUSTMENT );
+		setPWM( M0En, speed[speedIndex].left * SPEED_ADJUSTMENT );
 	}
 	if ( ( motor == 1 ) && motor1Setup ) {
-		setPWM( M1En, speed * SPEED_ADJUSTMENT );
+		setPWM( M1En, speed[speedIndex].right * SPEED_ADJUSTMENT );
 	}
 }
 
