@@ -13,7 +13,7 @@
 #include "hardware.hpp"
 
 #include <syslog.h>
-
+#include <string.h>
 
 #define bufferSize	256
 
@@ -32,14 +32,14 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 		syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 		int len = int( strlen( command ) );
 		char first = command[0];	// Get command
-		unsigned char speed1 = 0;
-		unsigned char speed2 = 0;
-		if ( len > 2 ) {
-			speed1 = command[1];
-		}
-		if ( len > 3 ) {
-			speed2 = command[2];
-		}
+		unsigned char speed1 = 40;
+		unsigned char speed2 = 40;
+//		if ( len > 2 ) {
+//			speed1 = command[1];
+//		}
+//		if ( len > 3 ) {
+//			speed2 = command[2];
+//		}
 		hardware.setupForDCMotors();
 		switch ( first ) {
 			case 'A':
