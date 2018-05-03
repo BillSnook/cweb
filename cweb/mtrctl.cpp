@@ -45,6 +45,10 @@ int main(int argc, const char * argv[]) {
 	if ( argc > 1 ) {
 		becomeDaemon = false;		// Do not become daemon if sender
 	}
+#ifdef ON_PI
+#else	// not ON_PI
+	becomeDaemon = false;
+#endif	// ON_PI
 	if ( becomeDaemon ) {
 		
 		pid_t pid;

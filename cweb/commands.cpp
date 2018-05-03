@@ -96,7 +96,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				
 			case 'X':
 			case 'x':
-				for ( int i = 0; i < 2; i++ ) {
+				for ( int i = 0; i < 4; i++ ) {
 				hardware.setMtrDirSpd( 1, 1, speed1 );
 				usleep( 100000 );
 				hardware.setMtrDirSpd( 1, 1, 0 );
