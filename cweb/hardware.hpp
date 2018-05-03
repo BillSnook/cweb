@@ -13,7 +13,7 @@
 #define PWM_COUNT               4096
 #define PWM_MAX                 4095
 
-#define SPEED_ADJUSTMENT        1      // Half for now to solve crash if too high
+#define SPEED_ADJUSTMENT        64      // Half for now to solve crash if too high
 
 #include "filer.hpp"
 
