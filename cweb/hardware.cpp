@@ -132,7 +132,7 @@ void PWM::setPWM( int channel, int on, int off ) {
 		return;
 	}
 	
-	//    syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
+	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
 	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
 	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
 	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
@@ -222,9 +222,10 @@ void Hardware::setPWM( int pin, int value ) {
 		return;
 	}
 	if ( ( value < 0 ) || ( value > PWM_COUNT ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setPWM value: %d", value);
+		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_COUNT);
 		return;
 	}
+	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
 	pwm->setPWM( pin, 0, value );
 }
 
@@ -237,8 +238,8 @@ void Hardware::setPWM( int pin, int value ) {
 
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speedIndex < 0 ) || ( speedIndex > (PWM_COUNT / SPEED_ADJUSTMENT) ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d", speedIndex);
+	if ( ( speedIndex < 0 ) || ( speedIndex > ( PWM_TOP / SPEED_ADJUSTMENT ) ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, PWM_TOP / SPEED_ADJUSTMENT);
 		return;
 	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);

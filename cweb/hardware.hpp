@@ -11,6 +11,7 @@
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096
+#define PWM_TOP					2048	// Max to use - motors seem to be 6V
 #define PWM_MAX                 4095
 
 #define SPEED_ADJUSTMENT        64      // Half for now to solve crash if too high
