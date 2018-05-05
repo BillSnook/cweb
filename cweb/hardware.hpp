@@ -24,14 +24,6 @@
 #include <linux/i2c-dev.h>
 #include <wiringPiI2C.h>
 
-#define SPEED_FILE_NAME         "/home/pi/code/qt/speed.bin"
-
-#else   // ON_PI
-
-#define SPEED_FILE_NAME         "/Users/bill/Code/RaspberryPi/speed.bin"
-
-#endif  // ON_PI
-
 
 class I2C {
 	
