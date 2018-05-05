@@ -24,6 +24,8 @@
 #include <linux/i2c-dev.h>
 #include <wiringPiI2C.h>
 
+#endif  // ON_PI
+
 
 class I2C {
 	
