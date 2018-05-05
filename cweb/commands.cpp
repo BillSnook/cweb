@@ -32,8 +32,8 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 		syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 		int len = int( strlen( command ) );
 		char first = command[0];	// Get command
-		unsigned char speed1 = 20;
-		unsigned char speed2 = 20;
+		unsigned char speed1 = 30;
+		unsigned char speed2 = 30;
 //		if ( len > 2 ) {
 //			speed1 = command[1];
 //		}
