@@ -37,13 +37,13 @@ bool		ready;
 
 int main(int argc, const char * argv[]) {
 
-	becomeDaemon = false;
 #ifdef MAKE_DAEMON
 	becomeDaemon = true;
 #else	// not MAKE_DAEMON
+	becomeDaemon = false;
 #endif	// MAKE_DAEMON
 	if ( argc > 1 ) {
-		becomeDaemon = false;		// Do not become daemon if sender
+		becomeDaemon = false;		// Do not become daemon if sender or by intent
 	}
 #ifdef ON_PI
 #else	// not ON_PI
@@ -125,7 +125,7 @@ int main(int argc, const char * argv[]) {
 	free( pStatus );
 #endif
 	
-	syslog(LOG_NOTICE, "argc = %d", argc );
+	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
 	if ( argc == 2 ) {	// Should be sender as we pass in host name
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);

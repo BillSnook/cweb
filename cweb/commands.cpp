@@ -15,7 +15,12 @@
 #include <syslog.h>
 #include <string.h>
 
+
 #define bufferSize	256
+
+#define aWaitOn		500000
+#define xWaitOn		100000
+#define xWaitOff	50000
 
 Commander	commander;
 Hardware	hardware;
@@ -45,28 +50,28 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'A':
 			case 'a':
 				hardware.setMtrDirSpd( 0, 1, speed1 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 0, 0 );
 				break;
 				
 			case 'B':
 			case 'b':
 				hardware.setMtrDirSpd( 0, 0, speed1 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 0, 0 );
 				break;
 				
 			case 'C':
 			case 'c':
 				hardware.setMtrDirSpd( 1, 1, speed1 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 1, 0 );
 				break;
 				
 			case 'D':
 			case 'd':
 				hardware.setMtrDirSpd( 1, 0, speed1 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 1, 0 );
 				break;
 				
@@ -74,7 +79,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'e':
 				hardware.setMtrDirSpd( 0, 1, speed1 );
 				hardware.setMtrDirSpd( 1, 1, speed2 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 0, 0 );
 				hardware.setMtrSpd( 1, 0 );
 				break;
@@ -83,7 +88,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'f':
 				hardware.setMtrDirSpd( 1, 0, speed1 );
 				hardware.setMtrDirSpd( 1, 0, speed2 );
-				usleep( 500000 );
+				usleep( aWaitOn );
 				hardware.setMtrSpd( 0, 0 );
 				hardware.setMtrSpd( 1, 0 );
 				break;
@@ -96,23 +101,23 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				
 			case 'X':
 			case 'x':
-				for ( int i = 0; i < 4; i++ ) {
+				for ( int i = 0; i < 3; i++ ) {
 				hardware.setMtrDirSpd( 1, 1, speed1 );
-				usleep( 100000 );
+				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 1, 1, 0 );
-				usleep( 50000 );
+				usleep( xWaitOff );
 				hardware.setMtrDirSpd( 1, 0, speed1 );
-				usleep( 100000 );
+				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 1, 0, 0 );
-				usleep( 50000 );
+				usleep( xWaitOff );
 				hardware.setMtrDirSpd( 0, 1, speed1 );
-				usleep( 100000 );
+				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 0, 1, 0 );
-				usleep( 50000 );
+				usleep( xWaitOff );
 				hardware.setMtrDirSpd( 0, 0, speed1 );
-				usleep( 100000 );
+				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 0, 0, 0 );
-				usleep( 50000 );
+				usleep( xWaitOff );
 				}
 				break;
 				
