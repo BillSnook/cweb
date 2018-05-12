@@ -102,23 +102,28 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			case 'X':
 			case 'x':
 				for ( int i = 0; i < 3; i++ ) {
-				hardware.setMtrDirSpd( 1, 1, speed1 );
-				usleep( xWaitOn );
-				hardware.setMtrDirSpd( 1, 1, 0 );
-				usleep( xWaitOff );
-				hardware.setMtrDirSpd( 1, 0, speed1 );
-				usleep( xWaitOn );
-				hardware.setMtrDirSpd( 1, 0, 0 );
-				usleep( xWaitOff );
-				hardware.setMtrDirSpd( 0, 1, speed1 );
-				usleep( xWaitOn );
-				hardware.setMtrDirSpd( 0, 1, 0 );
-				usleep( xWaitOff );
-				hardware.setMtrDirSpd( 0, 0, speed1 );
-				usleep( xWaitOn );
-				hardware.setMtrDirSpd( 0, 0, 0 );
-				usleep( xWaitOff );
+					hardware.setMtrDirSpd( 1, 1, speed1 );
+					usleep( xWaitOn );
+					hardware.setMtrDirSpd( 1, 1, 0 );
+					usleep( xWaitOff );
+					hardware.setMtrDirSpd( 1, 0, speed1 );
+					usleep( xWaitOn );
+					hardware.setMtrDirSpd( 1, 0, 0 );
+					usleep( xWaitOff );
+					hardware.setMtrDirSpd( 0, 1, speed1 );
+					usleep( xWaitOn );
+					hardware.setMtrDirSpd( 0, 1, 0 );
+					usleep( xWaitOff );
+					hardware.setMtrDirSpd( 0, 0, speed1 );
+					usleep( xWaitOn );
+					hardware.setMtrDirSpd( 0, 0, 0 );
+					usleep( xWaitOff );
 				}
+				break;
+
+			case 'Z':
+			case 'z':
+				
 				break;
 				
 			default:
