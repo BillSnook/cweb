@@ -25,6 +25,4 @@ public:
 	bool readData( speed_array *forward, speed_array *reverse );
 };
 
-Filer	filer;
-
 #endif /* filer_hpp */

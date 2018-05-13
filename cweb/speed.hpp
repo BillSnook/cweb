@@ -53,6 +53,8 @@ public:
 	
 	void initializeSpeedArray();
 	void resetSpeedArray();
+	void displaySpeedArray();
+
 	int speedLeft( int speedIndex );
 	int speedRight( int speedIndex );
 

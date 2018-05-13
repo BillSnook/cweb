@@ -10,11 +10,13 @@
 //#include "filer.hpp"
 
 
-//#include <syslog.h>			// close read write
+#include <syslog.h>			// close read write
 //#include <stdio.h>			// printf
 //#include <fcntl.h>			// open
 //#include <sys/ioctl.h>
 //#include <getopt.h>
+
+extern Filer	filer;
 
 // Converts speed index into speeds
 
@@ -54,6 +56,18 @@ void Speed::resetSpeedArray() {
 		forward[i].right = i * SPEED_ADJUSTMENT;
 		reverse[i].left = i * SPEED_ADJUSTMENT;
 		reverse[i].right = i * SPEED_ADJUSTMENT;
+	}
+}
+
+void Speed::displaySpeedArray() {
+	
+	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
+		syslog(LOG_NOTICE, "Speed array, forward:" );
+		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, forward[i].left, forward[i].right );
+	}
+	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
+		syslog(LOG_NOTICE, "Speed array, reverse:" );
+		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, reverse[i].left, reverse[i].right );
 	}
 }
 

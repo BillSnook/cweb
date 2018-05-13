@@ -26,6 +26,8 @@
 Commander	commander;
 Hardware	hardware;
 
+extern Filer	filer;
+
 void Commander::setupCommander() {	// ?
 	
 	hardware = Hardware();
@@ -101,7 +103,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				
 			case 'H':
 			case 'h':
-//				hardware.cmdSpd( speed2 );
+				hardware.speed.displaySpeedArray();
 				break;
 				
 			case 'I':
