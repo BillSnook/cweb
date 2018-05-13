@@ -27,7 +27,7 @@
 
 #define MAKE_DAEMON
 
-extern Threader	threader;
+extern Threader		threader;
 
 Listener	listener;
 Sender		sender;

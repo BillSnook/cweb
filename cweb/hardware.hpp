@@ -9,14 +9,8 @@
 #ifndef hardware_hpp
 #define hardware_hpp
 
-#define PWM_RESOLUTION          4096.0
-#define PWM_COUNT               4096
-#define PWM_TOP					2048	// Max to use - motors seem to be 6V
-#define PWM_MAX                 4095
-
-#define SPEED_ADJUSTMENT        64      // Half for now to solve crash if too high
-
 #include "filer.hpp"
+#include "speed.hpp"
 
 #ifdef ON_PI
 
@@ -131,9 +125,10 @@ public:
 	int     	i2cAddress;
 	int     	i2cFrequency;
 
-	speed_array speed[SPEED_ARRAY];
+	Speed		speed;
 	
 	
+//	void initSpeedArrays();
 	bool setupForDCMotors();
 	bool resetForDCMotors();
 	
@@ -142,7 +137,9 @@ public:
 	
 	void setMtrDirSpd(int motor, int direction , int speed);
 	void setMtrSpd(int motor, int speed);
-	
+
+	void cmdSpd( int speedIndex );
+
 };
 
 #endif /* hardware_hpp */

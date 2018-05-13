@@ -7,6 +7,7 @@
 //
 
 #include "filer.hpp"
+#include "speed.hpp"
 
 #include <stdio.h>
 
@@ -15,26 +16,28 @@ Filer::Filer() {
 	
 }
 
-void Filer::saveData( speed_array *spd ) {
+void Filer::saveData( speed_array *forward, speed_array *reverse ) {
 	
 	FILE *fp;
 	
 	fp = fopen( SPEED_FILE_NAME, "wb" );
 	if ( NULL != fp ) {
-		fwrite( spd, sizeof( speed_array), SPEED_ARRAY, fp );
+		fwrite( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
+		fwrite( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
 		fclose(fp);
 	} else {
 		fprintf(stderr,"saveData failed opening file\n");
 	}
 }
 
-bool Filer::readData( speed_array *spd ) {
+bool Filer::readData( speed_array *forward, speed_array *reverse ) {
 	
 	FILE *fp;
 	
 	fp = fopen( SPEED_FILE_NAME, "rb" );
 	if ( NULL != fp ) {
-		fread( spd, sizeof( speed_array), SPEED_ARRAY, fp );
+		fread( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
+		fread( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
 		fclose(fp);
 		return true;
 	}

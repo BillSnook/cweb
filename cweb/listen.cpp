@@ -17,7 +17,7 @@
 
 #define bufferSize	256
 
-extern Threader	threader;
+extern Threader		threader;
 
 
 void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for listening

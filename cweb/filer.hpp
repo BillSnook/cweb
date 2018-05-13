@@ -9,32 +9,22 @@
 #ifndef filer_hpp
 #define filer_hpp
 
-
-#define SPEED_ARRAY             8      // Number of distinct speeds we can select
-
-#ifdef ON_PI
-
-#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/speed.bin"
-
-#else   // ON_PI
-
-#define SPEED_FILE_NAME         "/Users/bill/Code/RaspberryPi/speed.bin"
-
-#endif  // ON_PI
-
+//#include "speed.hpp"
 
 struct speed_array {
 	int left;
 	int right;
 };
 
+
 class Filer {
 public:
 	explicit Filer();
 	
-	void saveData( speed_array *spd );
-	bool readData( speed_array *spd );
+	void saveData( speed_array *forward, speed_array *reverse );
+	bool readData( speed_array *forward, speed_array *reverse );
 };
 
+Filer	filer;
 
 #endif /* filer_hpp */

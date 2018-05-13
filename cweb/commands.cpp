@@ -12,6 +12,7 @@
 #include "threader.hpp"
 #include "hardware.hpp"
 
+#include <stdlib.h>
 #include <syslog.h>
 #include <string.h>
 
@@ -39,9 +40,9 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 		char first = command[0];	// Get command
 		unsigned char speed1 = 30;
 		unsigned char speed2 = 30;
-//		if ( len > 2 ) {
-//			speed1 = command[1];
-//		}
+		if ( len > 2 ) {
+			speed1 = atoi( &command[1] );
+		}
 //		if ( len > 3 ) {
 //			speed2 = command[2];
 //		}
@@ -93,10 +94,29 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				hardware.setMtrSpd( 1, 0 );
 				break;
 				
+			case 'G':
+			case 'g':
+				hardware.cmdSpd( speed1 );
+				break;
+				
+			case 'H':
+			case 'h':
+//				hardware.cmdSpd( speed2 );
+				break;
+				
+			case 'I':
+			case 'i':
+				hardware.speed.resetSpeedArray();
+				break;
+				
 			case 'S':
 			case 's':
-				hardware.setMtrSpd( 0, 0 );
-				hardware.setMtrSpd( 1, 0 );
+				hardware.cmdSpd( 0 );
+				break;
+				
+			case 'W':
+			case 'w':
+				filer.saveData( hardware.speed.forward, hardware.speed.reverse );
 				break;
 				
 			case 'X':

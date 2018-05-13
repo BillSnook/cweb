@@ -7,10 +7,17 @@
 //
 
 #include "hardware.hpp"
-#include "filer.hpp"
+//#include "filer.hpp"
 
 #include <syslog.h>			// close read write
 #include <math.h>
+
+#define PWM_RESOLUTION          4096.0
+#define PWM_COUNT               4096
+#define PWM_TOP					2048	// Max to use - motors seem to be 6V
+#define PWM_MAX                 4095
+
+extern Filer	filer;
 
 
 //  MARK: i2c interface read and write support
@@ -185,6 +192,9 @@ Hardware::Hardware() {
 
 bool Hardware::setupForDCMotors() {
 	
+	speed = Speed();
+	speed.initializeSpeedArray();
+	
 	return true;
 }
 
@@ -281,4 +291,38 @@ void Hardware::setMtrSpd(int motor, int speedIndex) {
 //		setPWM( M1En, speed[speedIndex].right * SPEED_ADJUSTMENT );
 	}
 }
+
+void Hardware::cmdSpd( int speedIndex ) {
+	
+	if ( speedIndex == 0 ) {
+		setPin( M0Fw, 0 );
+		setPin( M0Rv, 0 );
+		setPWM( M0En, 0 );
+		setPin( M1Fw, 0 );
+		setPin( M1Rv, 0 );
+		setPWM( M1En, 0 );
+		return;
+	}
+	int speedLeft = 0; // speed[speedIndex].left;
+	int speedRight = 0; // speed[speedIndex].right;
+	syslog( LOG_NOTICE, "cmdSpd, sl: %d, sr: %d", speedLeft, speedRight );
+	if ( speedLeft > 0 ) {
+		setPin( M0Fw, 1 );
+		setPin( M0Rv, 0 );
+	} else {
+		setPin( M0Fw, 0 );
+		setPin( M0Rv, 1 );
+		speedLeft = -speedLeft;
+	}
+	setPWM( M0En, speedLeft );
+	if ( speedRight > 0 ) {
+		setPin( M1Fw, 1 );
+		setPin( M1Rv, 0 );
+	} else {
+		setPin( M1Fw, 0 );
+		setPin( M1Rv, 1 );
+	}
+	setPWM( M1En, speedRight );
+}
+
 
