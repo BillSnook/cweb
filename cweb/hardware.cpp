@@ -192,6 +192,7 @@ Hardware::Hardware() {
 
 bool Hardware::setupForDCMotors() {
 	
+	syslog(LOG_NOTICE, "In setupForDCMotors" );
 	speed = Speed();
 	speed.initializeSpeedArray();
 	
