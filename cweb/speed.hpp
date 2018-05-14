@@ -24,7 +24,7 @@
 // They seem to freak out after about 6v. So we keep our count below 2048.
 #define ACTUAL_PWM_COUNT		2048	// For forward AND for reverse
 #define SPEED_ARRAY             8		// Number of distinct speeds we can select - f and r
-#define SPEED_ADJUSTMENT        256      // Half for now to solve crash if too high
+#define SPEED_ADJUSTMENT        128     // Half for now to solve crash if too high
 
 #ifdef ON_PI
 
