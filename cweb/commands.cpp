@@ -31,6 +31,7 @@ extern Filer	filer;
 void Commander::setupCommander() {	// ?
 	
 	hardware = Hardware();
+	hardware.setupForDCMotors();
 }
 
 void Commander::serviceCommand( char *command ) {	// Main listening routine
@@ -40,15 +41,14 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 		syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 		int len = int( strlen( command ) );
 		char first = command[0];	// Get command
-		unsigned char speed1 = 30;
-		unsigned char speed2 = 30;
+		int speed1 = 30;
+		int speed2 = 30;
 		if ( len > 2 ) {
 			speed1 = atoi( &command[1] );
 		}
 //		if ( len > 3 ) {
 //			speed2 = command[2];
 //		}
-		hardware.setupForDCMotors();
 		switch ( first ) {
 			case 'A':
 			case 'a':
@@ -98,17 +98,24 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				
 			case 'G':
 			case 'g':
+				syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpd( %d )", speed1 );
 				hardware.cmdSpd( speed1 );
 				break;
 				
 			case 'H':
 			case 'h':
+				syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 				hardware.speed.displaySpeedArray();
 				break;
 				
 			case 'I':
 			case 'i':
 				hardware.speed.resetSpeedArray();
+				break;
+				
+			case 'R':
+			case 'r':
+				filer.readData( hardware.speed.forward, hardware.speed.reverse );
 				break;
 				
 			case 'S':
@@ -149,7 +156,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 				break;
 				
 			default:
-				usleep( 10000000 ); // 10 second delay
+//				usleep( 10000000 ); // 10 second delay
 				break;
 		}
 		commandLoop = false;

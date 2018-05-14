@@ -303,19 +303,18 @@ void Hardware::cmdSpd( int speedIndex ) {
 		setPWM( M1En, 0 );
 		return;
 	}
-	int speedLeft = 0; // speed[speedIndex].left;
-	int speedRight = 0; // speed[speedIndex].right;
+	int speedLeft = speed.speedLeft( speedIndex );	// Index says f or r but speedL or R is absolute
+	int speedRight = speed.speedRight( speedIndex );
 	syslog( LOG_NOTICE, "cmdSpd, sl: %d, sr: %d", speedLeft, speedRight );
-	if ( speedLeft > 0 ) {
+	if ( speedIndex > 0 ) {
 		setPin( M0Fw, 1 );
 		setPin( M0Rv, 0 );
 	} else {
 		setPin( M0Fw, 0 );
 		setPin( M0Rv, 1 );
-		speedLeft = -speedLeft;
 	}
 	setPWM( M0En, speedLeft );
-	if ( speedRight > 0 ) {
+	if ( speedIndex > 0 ) {
 		setPin( M1Fw, 1 );
 		setPin( M1Rv, 0 );
 	} else {

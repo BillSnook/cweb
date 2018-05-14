@@ -45,7 +45,10 @@ void Speed::initializeSpeedArray() {
 	filer = Filer();
 	bool success = filer.readData( forward, reverse );
 	if ( ! success ) {
+		syslog(LOG_NOTICE, "Failed reading speed array from file; making default one" );
 		resetSpeedArray();
+	} else {
+		syslog(LOG_NOTICE, "Read speed array from file" );
 	}
 }
 
@@ -61,12 +64,12 @@ void Speed::resetSpeedArray() {
 
 void Speed::displaySpeedArray() {
 	
+	syslog(LOG_NOTICE, "Speed array, forward:" );
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
-		syslog(LOG_NOTICE, "Speed array, forward:" );
 		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, forward[i].left, forward[i].right );
 	}
+	syslog(LOG_NOTICE, "Speed array, reverse:" );
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
-		syslog(LOG_NOTICE, "Speed array, reverse:" );
 		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, reverse[i].left, reverse[i].right );
 	}
 }

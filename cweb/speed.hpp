@@ -32,7 +32,7 @@
 
 #else   // ON_PI
 
-#define SPEED_FILE_NAME         "/Users/bill/Code/RaspberryPi/speed.bin"
+#define SPEED_FILE_NAME         "/Users/bill/Code/iOS/rTest/cweb/cweb/speed.bin"
 
 #endif  // ON_PI
 
