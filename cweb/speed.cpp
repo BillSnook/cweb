@@ -11,9 +11,9 @@
 
 
 #include <syslog.h>			// close read write
-//#include <stdio.h>			// printf
-//#include <fcntl.h>			// open
-//#include <sys/ioctl.h>
+#include <stdlib.h>			// malloc
+#include <string.h>			// strcat
+#include <stdio.h>			// sprintf
 //#include <getopt.h>
 
 extern Filer	filer;
@@ -62,16 +62,18 @@ void Speed::resetSpeedArray() {
 	}
 }
 
-void Speed::displaySpeedArray() {
+char * Speed::displaySpeedArray() {
 	
-	syslog(LOG_NOTICE, "Speed array, forward:" );
+	char *displayString = (char *)malloc( 1024 );
+	strcat( displayString, " Speed array, forward:\n" );
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
-		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, forward[i].left, forward[i].right );
+		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, forward[i].left, forward[i].right );
 	}
-	syslog(LOG_NOTICE, "Speed array, reverse:" );
+	strcat( displayString, " Speed array, reverse:\n" );
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
-		syslog(LOG_NOTICE, "i: %d - l: %d, r: %d", i, reverse[i].left, reverse[i].right );
+		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, reverse[i].left, reverse[i].right );
 	}
+	return displayString;
 }
 
 void Speed::setSpeedTestIndex( int newSpeedIndex ) {

@@ -36,11 +36,12 @@ void Commander::setupCommander() {	// ?
 	hardware.setupForDCMotors();
 }
 
-void Commander::serviceCommand( char *command ) {	// Main listening routine
+void Commander::serviceCommand( char *command, int socket ) {	// Main listening routine
 
 	syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 	int len = int( strlen( command ) );
 	char *nextToken[tokenMax];
+	int n = 0;
 	int i = 0;
 	int t = 0;
 	do {
@@ -121,14 +122,19 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			break;
 			
 		case 'H':
-		case 'h':
+		case 'h': {
 			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
-			hardware.speed.displaySpeedArray();
+			char *display = hardware.speed.displaySpeedArray();
+			n = write( socket, display, strlen( display ) );
+			free( display );
+		}
 			break;
 			
 		case 'I':
 		case 'i':
-			hardware.speed.resetSpeedArray();
+			filer.readData( hardware.speed.forward, hardware.speed.reverse );
+//			hardware.speed.resetSpeedArray();
+			n = write( socket, "\nData read\n", 11 );
 			break;
 			
 		case 'J':
@@ -143,7 +149,7 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 			
 		case 'L':
 		case 'l':
-			hardware.speed.setSpeedLeft( token1 );
+			hardware.speed.setSpeedRight( token1 );
 			break;
 			
 		case 'R':
@@ -185,11 +191,15 @@ void Commander::serviceCommand( char *command ) {	// Main listening routine
 
 		case 'Z':
 		case 'z':
-			
+			n = write( socket, "\nStatus pending...\n", 19 );
+
 			break;
 			
 		default:
 //			usleep( 10000000 ); // 10 second delay
 			break;
+	}
+	if ( n < 0 ) {
+		syslog(LOG_ERR, "ERROR writing ack to socket" );
 	}
 }

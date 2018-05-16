@@ -26,9 +26,10 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint
 	return newThreadControl;
 }
 
-ThreadControl ThreadControl::initThread( ThreadType threadType, char *command ) {
+ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, int socket ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
+	newThreadControl.nextSocket = socket;
 	memcpy( newThreadControl.nextCommand, command, COMMAND_SIZE );
 	return newThreadControl;
 }
@@ -100,10 +101,10 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	pthread_mutex_unlock( &threadArrayMutex );
 }
 
-void Threader::queueThread( ThreadType threadType, char *command ) {
+void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 	
 	syslog(LOG_NOTICE, "In queueThread for command at start" );
-	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command );
+	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command, socket );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
 		threadQueue.push( nextThreadControl );
@@ -163,7 +164,7 @@ void Threader::runThread( void *arguments ) {
 			listener.serviceConnection( nextThreadControl.nextSocket );
 			break;
 		case commandThread:
-			commander.serviceCommand( nextThreadControl.nextCommand );
+			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runThread with testThreads" );

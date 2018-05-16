@@ -76,14 +76,14 @@ void Listener::serviceConnection( int connectionSockfd ) {
 		syslog(LOG_NOTICE, "Here is a received message: %s", buffer );
 		// start thread to service command
 		
-		threader.queueThread( commandThread, buffer );
+		threader.queueThread( commandThread, buffer, connectionSockfd );
 		free( buffer );
 
-		n = write( connectionSockfd, "\nAck\n", 5 );
-		if ( n < 0 ) {
-			syslog(LOG_ERR, "ERROR writing ack to socket" );
-			break;
-		}
+//		n = write( connectionSockfd, "\nAck\n", 5 );
+//		if ( n < 0 ) {
+//			syslog(LOG_ERR, "ERROR writing ack to socket" );
+//			break;
+//		}
 	}
 	close( connectionSockfd );
 	syslog(LOG_NOTICE, "In serviceConnection at end" );

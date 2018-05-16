@@ -14,7 +14,7 @@ class Commander {
 	
 public:
 	void setupCommander();
-	void serviceCommand( char *command ) ;
+	void serviceCommand( char *command, int socket ) ;
 
 };
 

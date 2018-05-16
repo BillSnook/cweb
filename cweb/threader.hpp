@@ -36,7 +36,7 @@ public:
 	
 public:
 	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
-	static ThreadControl initThread( ThreadType threadType, char *command );
+	static ThreadControl initThread( ThreadType threadType, char *command, int socket );
 	const char *description();
 };
 
@@ -58,7 +58,7 @@ public:
 	bool areThreadsOnQueue();
 	
 	void queueThread( ThreadType threadType, int socket, uint address );
-	void queueThread( ThreadType threadType, char *command );
+	void queueThread( ThreadType threadType, char *command, int socket );
 	void createThread();
 	void runThread(void *arguments);
 };
