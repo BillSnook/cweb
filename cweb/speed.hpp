@@ -40,6 +40,7 @@
 class Speed {
 	
 	bool    		debug;
+	int				calibrationTestIndex;
 	
 public:
 	explicit Speed();
@@ -54,10 +55,16 @@ public:
 	void initializeSpeedArray();
 	void resetSpeedArray();
 	void displaySpeedArray();
+	void setSpeedTestIndex( int newSpeedIndex );
 
 	int speedLeft( int speedIndex );
 	int speedRight( int speedIndex );
 
+	void setSpeedLeft( int speedIndex, int newSpeed );
+	void setSpeedRight( int speedIndex, int newSpeed );
+	
+	void setSpeedLeft( int newSpeed );
+	void setSpeedRight( int newSpeed );
 };
 
 #endif /* speed_hpp */

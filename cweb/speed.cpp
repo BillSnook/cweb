@@ -74,6 +74,11 @@ void Speed::displaySpeedArray() {
 	}
 }
 
+void Speed::setSpeedTestIndex( int newSpeedIndex ) {
+	calibrationTestIndex = newSpeedIndex;
+}
+
+
 int Speed::speedLeft( int speedIndex ) {
 	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
 		if ( speedIndex > 0 ) {
@@ -94,4 +99,44 @@ int Speed::speedRight( int speedIndex ) {
 		}
 	}
 	return 0;
+}
+
+void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {
+	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+		if ( speedIndex > 0 ) {
+			forward[speedIndex].left = newSpeed;
+		} else {
+			reverse[speedIndex].left = newSpeed;
+		}
+	}
+}
+
+void Speed::setSpeedRight( int speedIndex, int newSpeed ) {
+	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+		if ( speedIndex > 0 ) {
+			forward[speedIndex].right = newSpeed;
+		} else {
+			reverse[speedIndex].right = newSpeed;
+		}
+	}
+}
+
+void Speed::setSpeedLeft( int newSpeed ) {
+	if ( ( calibrationTestIndex > -SPEED_ARRAY ) && ( calibrationTestIndex < SPEED_ARRAY ) ) {
+		if ( calibrationTestIndex > 0 ) {
+			forward[calibrationTestIndex].left = newSpeed;
+		} else {
+			reverse[calibrationTestIndex].left = newSpeed;
+		}
+	}
+}
+
+void Speed::setSpeedRight( int newSpeed ) {
+	if ( ( calibrationTestIndex > -SPEED_ARRAY ) && ( calibrationTestIndex < SPEED_ARRAY ) ) {
+		if ( calibrationTestIndex > 0 ) {
+			forward[calibrationTestIndex].right = newSpeed;
+		} else {
+			reverse[calibrationTestIndex].right = newSpeed;
+		}
+	}
 }
