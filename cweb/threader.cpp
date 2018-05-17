@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-Threader	threader;
+extern Threader	threader;
 
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
@@ -51,13 +51,6 @@ const char *ThreadControl::description() {
 			break;
 	}
 	return name;
-}
-
-
-void *runThreads(void *arguments) {
-
-	threader.runThread( arguments );
-	return nullptr;
 }
 
 
@@ -157,8 +150,7 @@ void Threader::runThread( void *arguments ) {
 	syslog(LOG_NOTICE, "Thread count: %d", threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case listenThread:
-			listener.setupListener( nextThreadControl.nextSocket );
-			listener.acceptConnections();
+			listener.acceptConnections( nextThreadControl.nextSocket );
 			break;
 		case serverThread:
 			listener.serviceConnection( nextThreadControl.nextSocket );
@@ -174,4 +166,10 @@ void Threader::runThread( void *arguments ) {
 	}
 	threadCount -= 1;
 	syslog(LOG_NOTICE, "In runThread at exit from thread type %s with %d threads left", nextThreadControl.description(), threadCount );
+}
+
+void *runThreads(void *arguments) {
+	
+	threader.runThread( arguments );
+	return nullptr;
 }

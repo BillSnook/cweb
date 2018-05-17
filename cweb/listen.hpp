@@ -20,9 +20,9 @@ class Listener {
 	bool				doListenerLoop;
 
 public:
-	void setupListener( int rcvPortNo );
-	void acceptConnections();
+	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd );
+	void writeBack( char *msg, int socket );
 
 };
 

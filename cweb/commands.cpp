@@ -28,6 +28,7 @@ Commander	commander;
 Hardware	hardware;
 
 extern Filer	filer;
+extern Listener	listener;
 
 void Commander::setupCommander() {	// ?
 	
@@ -36,12 +37,11 @@ void Commander::setupCommander() {	// ?
 	hardware.setupForDCMotors();
 }
 
-void Commander::serviceCommand( char *command, int socket ) {	// Main listening routine
+void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 	int len = int( strlen( command ) );
 	char *nextToken[tokenMax];
-	int n = 0;
 	int i = 0;
 	int t = 0;
 	do {
@@ -68,6 +68,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main listening 
 		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 	}
 
+	char *msg = (char *)malloc( 1024 );
+	memcpy( msg, "\nAck\n", 5 );
 	switch ( first ) {
 //		case 'A':
 //		case 'a':
@@ -122,10 +124,11 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main listening 
 			break;
 			
 		case 'H':
-		case 'h': {
+		case 'h':
+		{
 			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 			char *display = hardware.speed.displaySpeedArray();
-			n = write( socket, display, strlen( display ) );
+			memcpy( msg, display, strlen( display ) );
 			free( display );
 		}
 			break;
@@ -134,7 +137,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main listening 
 		case 'i':
 			filer.readData( hardware.speed.forward, hardware.speed.reverse );
 //			hardware.speed.resetSpeedArray();
-			n = write( socket, "\nData read\n", 11 );
+			memcpy( msg, "\nData read\n", 11 );
 			break;
 			
 		case 'J':
@@ -191,15 +194,13 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main listening 
 
 		case 'Z':
 		case 'z':
-			n = write( socket, "\nStatus pending...\n", 19 );
-
+			memcpy( msg, "\nStatus pending...\n", 19 );
 			break;
 			
 		default:
 //			usleep( 10000000 ); // 10 second delay
 			break;
 	}
-	if ( n < 0 ) {
-		syslog(LOG_ERR, "ERROR writing ack to socket" );
-	}
+	listener.writeBack( msg, socket );
+	free( msg );
 }

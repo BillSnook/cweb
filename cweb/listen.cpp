@@ -20,11 +20,14 @@
 extern Threader		threader;
 
 
-void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for listening
+void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
+	doListenerLoop = false;
 	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );
-	if ( listenSockfd < 0 )
+	if ( listenSockfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
+		return;
+	}
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
 	portno = rcvPortNo;
 	serv_addr.sin_family = AF_INET;
@@ -35,11 +38,8 @@ void Listener::setupListener( int rcvPortNo) {	// Create and bind socket for lis
 		return;
 	}
 	syslog(LOG_NOTICE, "Success binding to socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
-	doListenerLoop = true;
-}
 
-void Listener::acceptConnections() {	// Main listening routine
-	
+	doListenerLoop = true;
 	socklen_t clilen = sizeof( cli_addr );
 	while ( doListenerLoop ) {
 		syslog(LOG_NOTICE, "In acceptConnections, listening" );
@@ -87,4 +87,11 @@ void Listener::serviceConnection( int connectionSockfd ) {
 	}
 	close( connectionSockfd );
 	syslog(LOG_NOTICE, "In serviceConnection at end" );
+}
+
+void Listener::writeBack( char *msg, int socket ) {
+	long n = write( socket, msg, strlen( msg ) );
+	if ( n < 0 ) {
+		syslog(LOG_ERR, "ERROR writing ack to socket" );
+	}
 }
