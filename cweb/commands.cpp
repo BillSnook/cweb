@@ -62,13 +62,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	if ( tokenCount > 2 ) {
 		token2 = std::atoi( nextToken[2] );
 	}
-	char first = command[0];	// Get command
+	char first = nextToken[0];	// Get command
 
 	for ( int y = 0; y < tokenCount; y++ ) {
 		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 	}
 
 	char *msg = (char *)malloc( 1024 );
+	memset( msg, 0, 1024 )
 	memcpy( msg, "\nAck\n", 5 );
 	switch ( first ) {
 //		case 'A':
