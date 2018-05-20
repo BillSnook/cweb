@@ -62,14 +62,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	if ( tokenCount > 2 ) {
 		token2 = std::atoi( nextToken[2] );
 	}
-	char first = nextToken[0];	// Get command
+	char first = command[0];	// Get command
 
 	for ( int y = 0; y < tokenCount; y++ ) {
 		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 	}
 
 	char *msg = (char *)malloc( 1024 );
-	memset( msg, 0, 1024 )
+	memset( msg, 0, 1024 );
 	memcpy( msg, "\nAck\n", 5 );
 	switch ( first ) {
 //		case 'A':
@@ -153,7 +153,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'L':
 		case 'l':
-			hardware.speed.setSpeedRight( token1 );
+			hardware.speed.setSpeedLeft( token1 );
 			break;
 			
 		case 'R':
@@ -195,7 +195,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Z':
 		case 'z':
-			memcpy( msg, "\nStatus pending...\n", 19 );
+			sprintf(msg, "@ %d %d %d \n", 8, 512, 256 );
+//			memcpy( msg, "8 256 128\n", 10 ); // SPEED_ADJUSTMENT SPEED_ARRAY
 			break;
 			
 		default:
