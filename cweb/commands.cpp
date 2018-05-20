@@ -13,6 +13,7 @@
 #include "hardware.hpp"
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <syslog.h>
 #include <string.h>
 
