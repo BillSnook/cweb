@@ -130,6 +130,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		{
 			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 			char *display = hardware.speed.displaySpeedArray();
+			syslog(LOG_NOTICE, "displaySpeedArray(): %s", display );
 			memcpy( msg, display, strlen( display ) );
 			free( display );
 		}
