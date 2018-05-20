@@ -28,7 +28,7 @@
 
 #ifdef ON_PI
 
-#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/speed.bin"
+#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/cweb/speed.bin"
 
 #else   // ON_PI
 
