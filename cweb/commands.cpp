@@ -42,7 +42,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 	syslog(LOG_NOTICE, "In commandLoop with: %s", command );
 	int len = int( strlen( command ) );
-	char *nextToken[tokenMax];
+	char *nextToken[tokenMax+1];
 	int i = 0;
 	int t = 0;
 	do {
@@ -50,7 +50,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		t++;
 		do {
 			i++;
-		} while ( ( command[i] != ' ' ) && ( command[i] != '\n' ) );
+		} while ( ( i < len ) && ( command[i] != ' ' ) && ( command[i] != '\n' ) && ( command[i] != 0 ) );
 		command[i] = 0;
 		i++;
 	} while ( ( i < len ) && ( t < tokenMax ) );
@@ -130,7 +130,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		{
 			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 			char *display = hardware.speed.displaySpeedArray();
-			syslog(LOG_NOTICE, "displaySpeedArray(): %s", display );
+			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
 			memcpy( msg, display, strlen( display ) );
 			free( display );
 		}
@@ -167,6 +167,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 's':
 			hardware.cmdSpd( 0 );
 			break;
+		// Test case - send response, wait 5 seconds, send another
+		case 'T':
+		case 't':
+			memcpy( msg, "\nMessage 1...\n", 15 );
+			listener.writeBack( msg, socket );
+			usleep( 5000000 ); // 5 second delay
+			memcpy( msg, "\nMessage 2   \n", 15 );
+			break;
 			
 		case 'W':
 		case 'w':
@@ -197,8 +205,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Z':
 		case 'z':
-			sprintf(msg, "@ %d %d %d \n", 8, 512, 256 );
-//			memcpy( msg, "8 256 128\n", 10 ); // SPEED_ADJUSTMENT SPEED_ARRAY
+			sprintf(msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT * 2, SPEED_ADJUSTMENT );
 			break;
 			
 		default:
