@@ -7,7 +7,7 @@
 //
 
 #include "speed.hpp"
-//#include "filer.hpp"
+//#include "listen.hpp"
 
 
 #include <syslog.h>			// close read write
@@ -19,7 +19,6 @@
 extern Filer	filer;
 
 // Converts speed index into speeds
-
 Speed::Speed() {
 	
 }
@@ -76,8 +75,13 @@ char * Speed::displaySpeedArray() {
 	return displayString;
 }
 
-void Speed::setSpeedTestIndex( int newSpeedIndex ) {
+char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
 	calibrationTestIndex = newSpeedIndex;
+	char *displayString = (char *)malloc( 32 );
+	sprintf( displayString, "i %d %d %d", newSpeedIndex, speedLeft( newSpeedIndex ), speedRight( newSpeedIndex ) );
+//	syslog(LOG_NOTICE, "%s", displayString );
+	return( displayString );
+
 }
 
 
@@ -86,7 +90,7 @@ int Speed::speedLeft( int speedIndex ) {
 		if ( speedIndex > 0 ) {
 			return forward[speedIndex].left;
 		} else {
-			return reverse[speedIndex].left;
+			return reverse[-speedIndex].left;
 		}
 	}
 	return 0;
@@ -97,7 +101,7 @@ int Speed::speedRight( int speedIndex ) {
 		if ( speedIndex > 0 ) {
 			return forward[speedIndex].right;
 		} else {
-			return reverse[speedIndex].right;
+			return reverse[-speedIndex].right;
 		}
 	}
 	return 0;
@@ -108,7 +112,7 @@ void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {
 		if ( speedIndex > 0 ) {
 			forward[speedIndex].left = newSpeed;
 		} else {
-			reverse[speedIndex].left = newSpeed;
+			reverse[-speedIndex].left = newSpeed;
 		}
 	}
 }
@@ -118,7 +122,7 @@ void Speed::setSpeedRight( int speedIndex, int newSpeed ) {
 		if ( speedIndex > 0 ) {
 			forward[speedIndex].right = newSpeed;
 		} else {
-			reverse[speedIndex].right = newSpeed;
+			reverse[-speedIndex].right = newSpeed;
 		}
 	}
 }
@@ -128,7 +132,7 @@ void Speed::setSpeedLeft( int newSpeed ) {
 		if ( calibrationTestIndex > 0 ) {
 			forward[calibrationTestIndex].left = newSpeed;
 		} else {
-			reverse[calibrationTestIndex].left = newSpeed;
+			reverse[-calibrationTestIndex].left = newSpeed;
 		}
 	}
 }
@@ -138,7 +142,7 @@ void Speed::setSpeedRight( int newSpeed ) {
 		if ( calibrationTestIndex > 0 ) {
 			forward[calibrationTestIndex].right = newSpeed;
 		} else {
-			reverse[calibrationTestIndex].right = newSpeed;
+			reverse[-calibrationTestIndex].right = newSpeed;
 		}
 	}
 }

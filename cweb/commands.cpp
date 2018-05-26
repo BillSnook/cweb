@@ -71,7 +71,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
-	memcpy( msg, "\nAck\n", 5 );
+//	memcpy( msg, "\nAck\n", 5 );
 	switch ( first ) {
 //		case 'A':
 //		case 'a':
@@ -128,7 +128,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'H':
 		case 'h':
 		{
-			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
+//			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 			char *display = hardware.speed.displaySpeedArray();
 			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
 			memcpy( msg, display, strlen( display ) );
@@ -145,7 +145,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'J':
 		case 'j':
-			hardware.speed.setSpeedTestIndex( token1 );
+		{
+			char *display = hardware.speed.setSpeedTestIndex( token1 );
+//			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
+			memcpy( msg, display, strlen( display ) );
+			free( display );
+		}
 			break;
 			
 		case 'K':
@@ -205,13 +210,15 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Z':
 		case 'z':
-			sprintf(msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT * 2, SPEED_ADJUSTMENT );
+			sprintf(msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
 			break;
 			
 		default:
 //			usleep( 10000000 ); // 10 second delay
 			break;
 	}
-	listener.writeBack( msg, socket );
+	if ( strlen(msg) > 0 ) {
+		listener.writeBack( msg, socket );
+	}
 	free( msg );
 }

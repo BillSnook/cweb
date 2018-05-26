@@ -55,7 +55,7 @@ public:
 	void initializeSpeedArray();
 	void resetSpeedArray();
 	char * displaySpeedArray();
-	void setSpeedTestIndex( int newSpeedIndex );
+	char * setSpeedTestIndex( int newSpeedIndex );
 
 	int speedLeft( int speedIndex );
 	int speedRight( int speedIndex );
