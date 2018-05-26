@@ -51,7 +51,7 @@ void Speed::initializeSpeedArray() {
 	}
 }
 
-void Speed::resetSpeedArray() {
+void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 	
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
 		forward[i].left = i * SPEED_ADJUSTMENT;
@@ -79,11 +79,9 @@ char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
 	calibrationTestIndex = newSpeedIndex;
 	char *displayString = (char *)malloc( 32 );
 	sprintf( displayString, "i %d %d %d", newSpeedIndex, speedLeft( newSpeedIndex ), speedRight( newSpeedIndex ) );
-//	syslog(LOG_NOTICE, "%s", displayString );
 	return( displayString );
 
 }
-
 
 int Speed::speedLeft( int speedIndex ) {
 	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {

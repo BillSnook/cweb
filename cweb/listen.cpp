@@ -92,6 +92,6 @@ void Listener::serviceConnection( int connectionSockfd ) {
 void Listener::writeBack( char *msg, int socket ) {
 	long n = write( socket, msg, strlen( msg ) );
 	if ( n < 0 ) {
-		syslog(LOG_ERR, "ERROR writing ack to socket" );
+		syslog(LOG_ERR, "ERROR writing back to socket" );
 	}
 }

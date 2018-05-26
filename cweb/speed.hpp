@@ -11,14 +11,6 @@
 
 #include "filer.hpp"
 
-#ifdef ON_PI
-
-//#include <wiringPi.h>
-//#include <linux/i2c-dev.h>
-//#include <wiringPiI2C.h>
-
-#endif  // ON_PI
-
 //  #define PWM_COUNT               4096
 // There are 4096 possible counts per interval. This supplies 12V to the motors.
 // They seem to freak out after about 6v. So we keep our count below 2048.
@@ -26,21 +18,11 @@
 #define SPEED_ARRAY             9		// Number of distinct speeds we can select - f and r
 #define SPEED_ADJUSTMENT        256     // Half for now to solve crash if too high
 
-#ifdef ON_PI
-
-#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/cweb/speed.bin"
-
-#else   // ON_PI
-
-#define SPEED_FILE_NAME         "/Users/bill/Code/iOS/rTest/cweb/cweb/speed.bin"
-
-#endif  // ON_PI
-
 
 class Speed {
 	
 	bool    		debug;
-	int				calibrationTestIndex;
+	int				calibrationTestIndex;	// Keep track of working index
 	
 public:
 	explicit Speed();

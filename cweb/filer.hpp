@@ -9,7 +9,16 @@
 #ifndef filer_hpp
 #define filer_hpp
 
-//#include "speed.hpp"
+#ifdef ON_PI
+
+#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/cweb/speed.bin"
+
+#else   // ON_PI
+
+#define SPEED_FILE_NAME         "/Users/bill/Code/iOS/rTest/cweb/cweb/speed.bin"
+
+#endif  // ON_PI
+
 
 struct speed_array {
 	int left;

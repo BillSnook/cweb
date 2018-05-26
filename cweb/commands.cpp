@@ -20,7 +20,7 @@
 
 #define bufferSize	256
 
-#define aWaitOn		500000
+//#define aWaitOn		500000
 #define xWaitOn		100000
 #define xWaitOff	50000
 #define tokenMax	4
@@ -31,7 +31,7 @@ Hardware	hardware;
 extern Filer	filer;
 extern Listener	listener;
 
-void Commander::setupCommander() {	// ?
+void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware = Hardware();
@@ -128,7 +128,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'H':
 		case 'h':
 		{
-//			syslog(LOG_NOTICE, "Command h calls: hardware.speed.displaySpeedArray()" );
 			char *display = hardware.speed.displaySpeedArray();
 			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
 			memcpy( msg, display, strlen( display ) );
@@ -139,7 +138,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'I':
 		case 'i':
 			filer.readData( hardware.speed.forward, hardware.speed.reverse );
-//			hardware.speed.resetSpeedArray();
 			memcpy( msg, "\nData read\n", 11 );
 			break;
 			
@@ -147,7 +145,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'j':
 		{
 			char *display = hardware.speed.setSpeedTestIndex( token1 );
-//			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
 			memcpy( msg, display, strlen( display ) );
 			free( display );
 		}
@@ -163,16 +160,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.speed.setSpeedLeft( token1 );
 			break;
 			
-		case 'R':
-		case 'r':
-			filer.readData( hardware.speed.forward, hardware.speed.reverse );
-			break;
+//		case 'R':
+//		case 'r':
+//			filer.readData( hardware.speed.forward, hardware.speed.reverse );
+//			break;
 			
 		case 'S':
 		case 's':
 			hardware.cmdSpd( 0 );
 			break;
-		// Test case - send response, wait 5 seconds, send another
+		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
 		case 't':
 			memcpy( msg, "\nMessage 1...\n", 15 );
