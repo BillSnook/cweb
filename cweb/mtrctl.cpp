@@ -139,7 +139,7 @@ int main(int argc, const char * argv[]) {
 	syslog(LOG_NOTICE, "Ready to service queue" );
 
 	while ( doLoop ) {
-		usleep( 100000 );
+		usleep( 200000 );
 		threader.lock();
 		ready = threader.areThreadsOnQueue();
 		threader.unlock();
