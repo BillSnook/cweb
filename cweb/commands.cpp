@@ -178,6 +178,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			memcpy( msg, "\nMessage 2   \n", 15 );
 			break;
 			
+		case 'U':
+		case 'u':	// Set forward array based on index 1 and index 8
+			hardware.speed.setSpeedForward();
+			break;
+			
+		case 'V':
+		case 'v':	// Set reverse array based on index -1 and index -8
+			hardware.speed.setSpeedReverse();
+			break;
+			
 		case 'W':
 		case 'w':
 			filer.saveData( hardware.speed.forward, hardware.speed.reverse );

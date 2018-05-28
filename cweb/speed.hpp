@@ -47,6 +47,9 @@ public:
 	
 	void setSpeedLeft( int newSpeed );
 	void setSpeedRight( int newSpeed );
+	
+	void setSpeedForward();
+	void setSpeedReverse();
 };
 
 #endif /* speed_hpp */

@@ -144,3 +144,43 @@ void Speed::setSpeedRight( int newSpeed ) {
 		}
 	}
 }
+
+void Speed::setSpeedForward() {
+	// Assume index 1 os slowest speed, index 8 is the fastest
+	// Find a pattern so each entry is linear
+	int slowest = forward[1].left;
+	int fastest = forward[SPEED_ARRAY-1].left;
+	int interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
+	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+//		int next = slowest + ( ( i - 1 ) * interval );
+//		syslog(LOG_NOTICE, "%d  %d", i, next );
+		forward[i].left = slowest + ( ( i - 1 ) * interval );
+	}
+	slowest = forward[1].right;
+	fastest = forward[SPEED_ARRAY-1].right;
+	interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+		forward[i].right = slowest + ( ( i - 1 ) * interval );
+	}
+}
+
+void Speed::setSpeedReverse() {
+	// Assume index 1 os slowest speed, index 8 is the fastest
+	// Find a pattern so each entry is linear
+	int slowest = reverse[1].left;
+	int fastest = reverse[SPEED_ARRAY-1].left;
+	int interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
+	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+		//		int next = slowest + ( ( i - 1 ) * interval );
+		//		syslog(LOG_NOTICE, "%d  %d", i, next );
+		reverse[i].left = slowest + ( ( i - 1 ) * interval );
+	}
+	slowest = reverse[1].right;
+	fastest = reverse[SPEED_ARRAY-1].right;
+	interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+		reverse[i].right = slowest + ( ( i - 1 ) * interval );
+	}
+}
