@@ -9,6 +9,7 @@
 #include "filer.hpp"
 #include "speed.hpp"
 
+#include <syslog.h>			// close read write
 #include <stdio.h>
 
 Filer filer;
@@ -27,7 +28,8 @@ void Filer::saveData( speed_array *forward, speed_array *reverse ) {
 		fwrite( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
 		fclose(fp);
 	} else {
-		fprintf(stderr,"saveData failed opening file\n");
+//		fprintf(stderr,"saveData failed opening file\n");
+		syslog(LOG_ERR, "saveData failed opening file\n" );
 	}
 }
 
@@ -42,6 +44,7 @@ bool Filer::readData( speed_array *forward, speed_array *reverse ) {
 		fclose(fp);
 		return true;
 	}
-	fprintf(stderr,"readData failed opening file\n");
+//	fprintf(stderr,"readData failed opening file\n");
+	syslog(LOG_ERR, "readData failed opening file\n" );
 	return false;
 }

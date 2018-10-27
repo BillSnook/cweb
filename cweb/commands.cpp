@@ -215,6 +215,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			}
 			break;
 
+		case 'Y':
+		case 'y':
+			for( i = 0; i < 10; i++ ) {
+				hardware.setPin( 15, 0);
+				usleep( 1000000 );
+				hardware.setPin( 15, 1);
+				usleep( 1000000 );
+			}
+			break;
+			
 		case 'Z':
 		case 'z':
 			sprintf(msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
