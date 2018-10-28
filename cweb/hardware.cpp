@@ -14,9 +14,9 @@
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096
-#define PWM_TOP					2048	// Max to use - motors seem to be 6V
+#define PWM_TOP					4095	// Max to use - tank motors seem to be 6V
 #define PWM_MAX                 4095
-#define PWM_FREQ                60
+#define PWM_FREQ                1600
 
 #define I2C_MOTOR_ADDRESS		0x6F
 
