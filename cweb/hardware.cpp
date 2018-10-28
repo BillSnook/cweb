@@ -14,8 +14,7 @@
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096
-#define PWM_TOP					4095	// Max to use - tank motors seem to be 6V
-#define PWM_MAX                 4095
+#define PWM_MAX                 4095	// Supplys full voltage to motor
 #define PWM_FREQ                60
 
 #define I2C_MOTOR_ADDRESS		0x6F
@@ -252,8 +251,8 @@ void Hardware::setPWM( int pin, int value ) {
 
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speedIndex < 0 ) || ( speedIndex > ( PWM_TOP / SPEED_ADJUSTMENT ) ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, PWM_TOP / SPEED_ADJUSTMENT);
+	if ( ( speedIndex < 0 ) || ( speedIndex > ( PWM_MAX / SPEED_ADJUSTMENT ) ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, PWM_MAX / SPEED_ADJUSTMENT);
 		return;
 	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);

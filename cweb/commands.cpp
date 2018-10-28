@@ -217,11 +217,11 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			for( i = 0; i < SPEED_ARRAY; i++ ) {
-				hardware.setPWM( 15, i * SPEED_ADJUSTMENT);
-				syslog(LOG_NOTICE, "setPWM 15 to %d", i * SPEED_ADJUSTMENT );
-				usleep( 1000000 );
-			}
+//			for( i = 0; i < SPEED_ARRAY; i++ ) {
+//				hardware.setPWM( 15, i * SPEED_ADJUSTMENT);
+//				syslog(LOG_NOTICE, "setPWM 15 to %d", i * SPEED_ADJUSTMENT );
+//				usleep( 1000000 );
+//			}
 			break;
 			
 		case 'Z':
