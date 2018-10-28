@@ -118,7 +118,7 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-#ifdef ON_PIX
+#ifdef ON_PI_X
 	Power power = Power();
 	char *pStatus = power.getUPS2();
 	syslog(LOG_NOTICE, "Power status: %s", pStatus );

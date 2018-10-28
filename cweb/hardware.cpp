@@ -16,6 +16,9 @@
 #define PWM_COUNT               4096
 #define PWM_TOP					2048	// Max to use - motors seem to be 6V
 #define PWM_MAX                 4095
+#define PWM_FREQ                60
+
+#define I2C_MOTOR_ADDRESS		0x6F
 
 extern Filer	filer;
 
@@ -184,10 +187,10 @@ Hardware::Hardware() {
 //	syslog(LOG_NOTICE, "Pi version: %d", setupResult );
 #endif  // ON_PI
 	
-	pwm = new PWM( 0x6F );          // Default for Motor Hat PWM chip
-	pwm->setPWMFrequency( 1600 );
+	pwm = new PWM( I2C_MOTOR_ADDRESS );		// Default for Motor Hat PWM chip
+	pwm->setPWMFrequency( PWM_FREQ );
 	
-//	syslog(LOG_NOTICE, "Speed adjustment: %d", SPEED_ADJUSTMENT );
+	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", I2C_MOTOR_ADDRESS, PWM_FREQ );
 }
 
 bool Hardware::setupForDCMotors() {
