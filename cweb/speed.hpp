@@ -12,9 +12,10 @@
 #include "filer.hpp"
 
 // There are 4096 possible counts per interval. This supplies full voltage to the motors.
-// They seem to freak out after about 6v. So we keep our count below 2048.
+// Micros seem to freak out after about 6v. So we keep our count below 2048 with a 12v supply
+// For the tank we have 9v and the motors can take that.
 #define SPEED_ARRAY             9		// Number of distinct speeds we can select - f and r
-#define SPEED_ADJUSTMENT        256     // Half for now to solve crash if too high
+#define SPEED_ADJUSTMENT        512     // Half for now to solve crash if too high
 
 
 class Speed {
