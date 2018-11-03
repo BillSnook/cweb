@@ -178,7 +178,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'S':
 		case 's':
 			hardware.cmdSpeed( 0 );
-			hardware.centerServo( 15 )
+			hardware.centerServo( 15 );
 			break;
 		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
@@ -228,7 +228,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
 			hardware.servoTest( 15 );
 			break;
 			
