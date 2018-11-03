@@ -18,6 +18,11 @@
 #include <linux/i2c-dev.h>
 #include <wiringPiI2C.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <syslog.h>
+#include <string.h>
+
 #endif  // ON_PI
 
 
@@ -140,6 +145,7 @@ public:
 
 	void cmdSpeed( int speedIndex );	// Both motors
 
+	int angleToPWM( int angle );
 	void cmdAngle( int pin, int angle );
 	
 	void centerServo( int pin );
