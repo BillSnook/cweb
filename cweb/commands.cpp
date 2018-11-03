@@ -25,6 +25,10 @@
 #define xWaitOff	50000
 #define tokenMax	4
 
+#define pwmMin		150
+#define pwmMax		550
+#define	pwmAngle	( pwmMax - pwmMin ) / 180
+
 Commander	commander;
 Hardware	hardware;
 
@@ -217,7 +221,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			for( i = 900; i <= 1000; i += 20 ) {
+			for( i = pwmMin; i < pwmMax; i += 50 ) {
 				hardware.setPWM( 15, i );
 				syslog(LOG_NOTICE, "setPWM 15 to %d", i );
 				usleep( 1000000 );

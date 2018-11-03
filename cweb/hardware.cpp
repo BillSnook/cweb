@@ -15,7 +15,7 @@
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096
 #define PWM_MAX                 4095	// Supplys full voltage to motor
-#define PWM_FREQ                60
+#define PWM_FREQ                50	// For servos, motors seem to not care
 
 #define I2C_MOTOR_ADDRESS		0x6F
 
