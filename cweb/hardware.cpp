@@ -349,13 +349,13 @@ void Hardware::cmdAngle( int pin, int angle ) {
 
 void Hardware::centerServo( int pin ) {
 	
-	cmdAngle( 90 );
+	cmdAngle( pin, 90 );
 }
 
 void Hardware::servoTest( int pin ) {
 	syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
 	for( int angle = 0; angle <= 180; angle += 20 ) {
-		hardware.cmdAngle( pin, angle );
+		cmdAngle( pin, angle );
 		syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
 		usleep( 1000000 );	// 1 second
 	}
