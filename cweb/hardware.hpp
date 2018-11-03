@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <syslog.h>
 #include <string.h>
+#include <unistd.h>
 
 #endif  // ON_PI
 
