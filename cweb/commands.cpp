@@ -26,7 +26,7 @@
 #define tokenMax	4
 
 #define pwmMin		150
-#define pwmMax		500
+#define pwmMax		510
 #define	pwmDegree	( pwmMax - pwmMin ) / 180
 
 Commander	commander;
