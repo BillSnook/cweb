@@ -138,8 +138,15 @@ public:
 	void setMtrDirSpd(int motor, int direction , int speed);
 	void setMtrSpd(int motor, int speed);
 
-	void cmdSpd( int speedIndex );
+	void cmdSpeed( int speedIndex );	// Both motors
 
+	void cmdAngle( int pin, int angle );
+	
+	void centerServo( int pin );
+	void servoTest( int pin );
+
+	void mobileTask( int taskNumber );
+	void mobileAction( int actionNumber );
 };
 
 #endif /* hardware_hpp */

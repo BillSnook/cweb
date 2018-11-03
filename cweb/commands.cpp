@@ -25,10 +25,6 @@
 #define xWaitOff	50000
 #define tokenMax	4
 
-#define pwmMin		150
-#define pwmMax		510
-#define	pwmDegree	( pwmMax - pwmMin ) / 180
-
 Commander	commander;
 Hardware	hardware;
 
@@ -125,8 +121,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'G':
 		case 'g':
-			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpd( %d )", token1 );
-			hardware.cmdSpd( token1 );
+			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
+			hardware.cmdSpeed( token1 );
 			break;
 			
 		case 'H':
@@ -164,6 +160,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.speed.setSpeedLeft( token1 );
 			break;
 			
+		case 'M':
+		case 'm':
+			hardware.mobileTask( token1 );
+			break;
+			
+		case 'N':
+		case 'n':
+			hardware.mobileAction( token1 );
+			break;
+			
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
@@ -171,7 +177,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'S':
 		case 's':
-			hardware.cmdSpd( 0 );
+			hardware.cmdSpeed( 0 );
+			hardware.centerServo( 15 )
 			break;
 		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
@@ -222,11 +229,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'Y':
 		case 'y':
 			syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
-			for( i = pwmMin; i <= pwmMax; i += pwmDegree * 20 ) {
-				hardware.setPWM( 15, i );
-				syslog(LOG_NOTICE, "setPWM 15 to %d", i );
-				usleep( 1000000 );
-			}
+			hardware.servoTest( 15 );
 			break;
 			
 		case 'Z':

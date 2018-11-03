@@ -12,12 +12,17 @@
 #include <syslog.h>			// close read write
 #include <math.h>
 
+#define I2C_MOTOR_ADDRESS		0x6F
+
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096
 #define PWM_MAX                 4095	// Supplys full voltage to motor
 #define PWM_FREQ                50	// For servos, motors seem to not care
 
-#define I2C_MOTOR_ADDRESS		0x6F
+#define pwmMin		150
+#define pwmMax		510
+#define	pwmDegree	( pwmMax - pwmMin ) / 180	// == 2
+
 
 extern Filer	filer;
 
@@ -138,6 +143,11 @@ void PWM::setPWM( int channel, int on, int off ) {
 	}
 	if ( ( on < 0 ) || ( on > PWM_COUNT ) || ( off < 0 ) || ( off > PWM_COUNT ) ) {
 		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
+		return;
+	}
+	
+	if ( on + off > PWM_COUNT ) {
+		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be on + off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
 		return;
 	}
 	
@@ -295,7 +305,7 @@ void Hardware::setMtrSpd(int motor, int speedIndex) {
 	}
 }
 
-void Hardware::cmdSpd( int speedIndex ) {
+void Hardware::cmdSpeed( int speedIndex ) {
 	
 	if ( speedIndex == 0 ) {
 		setPin( M0Fw, 0 );
@@ -308,7 +318,7 @@ void Hardware::cmdSpd( int speedIndex ) {
 	}
 	int speedLeft = speed.speedLeft( speedIndex );	// Index says f or r but speedL or R is absolute
 	int speedRight = speed.speedRight( speedIndex );
-	syslog( LOG_NOTICE, "cmdSpd, sl: %d, sr: %d", speedLeft, speedRight );
+	syslog( LOG_NOTICE, "cmdSpeed, sl: %d, sr: %d", speedLeft, speedRight );
 	if ( speedIndex > 0 ) {
 		setPin( M0Fw, 1 );
 		setPin( M0Rv, 0 );
@@ -326,3 +336,51 @@ void Hardware::cmdSpd( int speedIndex ) {
 	}
 	setPWM( M1En, speedRight );
 }
+
+int Hardware::angleToPWM( int angle ) {
+	
+	return pwmMin + ( angle * pwmDegree );
+}
+
+void Hardware::cmdAngle( int pin, int angle ) {
+	
+	setPWM( pin, angleToPWM( angle ) );
+}
+
+void Hardware::centerServo( int pin ) {
+	
+	cmdAngle( 90 );
+}
+
+void Hardware::servoTest( int pin ) {
+	for( angle = 0; angle <= 180; angle += 20 ) {
+		hardware.cmdAngle( pin, angle );
+		syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
+		usleep( 1000000 );	// 1 second
+	}
+}
+
+void Hardware::mobileTask( int taskNumber ) {
+	
+	switch ( taskNumber ) {
+		case 0:
+			servoTest( 15 );
+			break;
+			
+		default:
+			break;
+	}
+}
+
+void Hardware::mobileAction( int actionNumber ) {
+	
+	switch ( actionNumber ) {
+		case 0:
+			servoTest( 15 );
+			break;
+			
+		default:
+			break;
+	}
+}
+
