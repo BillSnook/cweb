@@ -344,7 +344,7 @@ int Hardware::angleToPWM( int angle ) {
 
 void Hardware::cmdAngle( int pin, int angle ) {
 	
-	setPWM( pin, angleToPWM( angle + 1 ) );
+	setPWM( pin, angleToPWM( angle - 2 ) );
 }
 
 void Hardware::centerServo( int pin ) {
