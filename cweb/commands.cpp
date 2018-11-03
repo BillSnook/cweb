@@ -26,8 +26,8 @@
 #define tokenMax	4
 
 #define pwmMin		150
-#define pwmMax		550
-#define	pwmAngle	( pwmMax - pwmMin ) / 180
+#define pwmMax		500
+#define	pwmDegree	( pwmMax - pwmMin ) / 180
 
 Commander	commander;
 Hardware	hardware;
@@ -221,7 +221,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			for( i = pwmMin; i < pwmMax; i += 50 ) {
+			syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
+			for( i = pwmMin; i <= pwmMax; i += pwmDegree * 20 ) {
 				hardware.setPWM( 15, i );
 				syslog(LOG_NOTICE, "setPWM 15 to %d", i );
 				usleep( 1000000 );
