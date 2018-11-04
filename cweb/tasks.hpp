@@ -29,6 +29,7 @@ public:
 	void killTasks();
 	void taskTest1();
 	void taskTest2();
+	void taskScan();
 };
 
 extern TaskMaster	task;

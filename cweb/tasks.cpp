@@ -77,9 +77,9 @@ void TaskMaster::taskTest2() {
 void TaskMaster::taskScan() {
 	
 	stopLoop = false;
-	hardware.
+	hardware.scanTest( 15 );
 	if ( stopLoop ) {
-		
+		hardware.scanStop( 15 );
 		return;
 	}
 	
