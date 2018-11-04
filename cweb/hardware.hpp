@@ -18,13 +18,13 @@
 #include <linux/i2c-dev.h>
 #include <wiringPiI2C.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <syslog.h>
-#include <string.h>
-#include <unistd.h>
-
 #endif  // ON_PI
+
+#include <stdlib.h>			// malloc
+#include <stdio.h>			// sprintf
+#include <syslog.h>			// close read write
+#include <string.h>			// strcat
+#include <unistd.h>
 
 
 class I2C {

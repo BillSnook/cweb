@@ -12,10 +12,10 @@
 #include "tasks.hpp"
 #include "hardware.hpp"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <syslog.h>
-#include <string.h>
+#include <stdlib.h>			// malloc
+#include <stdio.h>			// sprintf
+#include <syslog.h>			// close read write
+#include <string.h>			// strcat
 
 
 #define bufferSize	256
@@ -59,10 +59,10 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	int token1 = 0;
 	int token2 = 0;
 	if ( tokenCount > 1 ) {
-		token1 = std::atoi( nextToken[1] );
+		token1 = atoi( nextToken[1] );
 	}
 	if ( tokenCount > 2 ) {
-		token2 = std::atoi( nextToken[2] );
+		token2 = atoi( nextToken[2] );
 	}
 	char first = command[0];	// Get command
 

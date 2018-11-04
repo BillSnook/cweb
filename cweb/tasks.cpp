@@ -45,10 +45,13 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 
 void TaskMaster::killTasks() {
 	
+	if ( !stopLoop ) {
+		hardware.scanStop( 15 );
+	}
 	stopLoop = true;
 }
 
-void TaskMaster::taskTest1() {
+void TaskMaster::taskTest1() {	// Print out messages so we know this task is running
 	
 	stopLoop = false;
 	for ( int i = 0; i < 10; i++ ) {
@@ -61,7 +64,7 @@ void TaskMaster::taskTest1() {
 	
 }
 
-void TaskMaster::taskTest2() {
+void TaskMaster::taskTest2() {	// Print out messages so we know this task is running
 	
 	stopLoop = false;
 	for ( int i = 0; i < 10; i++ ) {
@@ -78,9 +81,4 @@ void TaskMaster::taskScan() {
 	
 	stopLoop = false;
 	hardware.scanTest( 15 );
-	if ( stopLoop ) {
-		hardware.scanStop( 15 );
-		return;
-	}
-	
 }
