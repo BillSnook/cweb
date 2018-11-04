@@ -15,7 +15,7 @@ class TaskMaster {
 	bool stopLoop;
 public:
 	void setupTaskMaster();
-	void serviceTaskMaster( char *command, int socket ) ;
+	void serviceTaskMaster( int command, int socket ) ;
 
 	void killTasks();
 	void taskTest1();
