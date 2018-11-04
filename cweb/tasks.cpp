@@ -34,7 +34,7 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 			taskTest2();
 			break;
 		case scanTask:
-			taskScan( param );
+			taskScan();
 			break;
 
 		default:
