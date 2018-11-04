@@ -210,6 +210,8 @@ bool Hardware::setupHardware() {
 	speed = Speed();
 	speed.initializeSpeedArray();
 	
+	scanLoop = false;
+
 	return true;
 }
 
@@ -219,7 +221,6 @@ bool Hardware::resetHardware() {
 	centerServo( 15 );
 	
 	syslog(LOG_NOTICE, "In resetHardware" );
-	
 	
 	setPWM( M0En, 0 );		// Turn off motors
 	setPin( M0Fw, 0 );
@@ -370,24 +371,30 @@ void Hardware::scanStop( int pin ) {
 }
 
 void Hardware::scanTest( int pin ) {
-	syslog(LOG_NOTICE, "In scanTest" );
+	if ( scanLoop ) {
+		syslog(LOG_NOTICE, "Attempting to run scanTest multiple times" );
+		return;				// If this is run multiple times, mayhem!
+	}
 	scanLoop = true;
+
+	syslog(LOG_NOTICE, "In scanTest" );
+	
 	do {
-		for( int angle = 45; angle <= 135; angle += 10 ) {
+		for( int angle = 45; angle < 135; angle += 5 ) {
 			if ( !scanLoop ) {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
 			cmdAngle( pin, angle );
-			usleep( 500000 );	// 1/2 second
+			usleep( 100000 );	// .1 second
 		}
-		for( int angle = 135; angle >= 45; angle -= 10 ) {
+		for( int angle = 135; angle > 45; angle -= 5 ) {
 			if ( !scanLoop ) {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
 			cmdAngle( pin, angle );
-			usleep( 500000 );	// 1/2 second
+			usleep( 100000 );	// .1 second
 		}
 	} while ( scanLoop );
 	centerServo( pin );
