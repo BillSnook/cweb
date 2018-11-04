@@ -70,6 +70,10 @@ void Threader::setupThreader() {
 
 void Threader::shutdownThreads() {
 	
+	syslog(LOG_NOTICE, "In shutdownThreads" );
+	
+	taskMaster.shutdownTaskMaster();
+	commander.shutdownCommander();
 	pthread_mutex_destroy( &threadArrayMutex );
 }
 

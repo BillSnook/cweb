@@ -24,6 +24,7 @@ class TaskMaster {
 	bool stopLoop;
 public:
 	void setupTaskMaster();
+	void shutdownTaskMaster();
 	void serviceTaskMaster( int command, int socket ) ;
 
 	void killTasks();

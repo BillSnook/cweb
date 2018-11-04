@@ -16,6 +16,13 @@ extern Hardware		hardware;
 void TaskMaster::setupTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
+	stopLoop = false;
+}
+
+void TaskMaster::shutdownTaskMaster() {
+	
+	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
+	killTasks();
 }
 
 void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
@@ -79,6 +86,9 @@ void TaskMaster::taskTest2() {	// Print out messages so we know this task is run
 
 void TaskMaster::taskScan() {
 	
+	if ( !stopLoop ) {
+		return;			// This should only run one at a time else mayhem!
+	}
 	stopLoop = false;
 	hardware.scanTest( 15 );
 }

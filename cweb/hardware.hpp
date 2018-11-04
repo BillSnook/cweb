@@ -135,8 +135,8 @@ public:
 	
 	
 //	void initSpeedArrays();
-	bool setupForDCMotors();
-	bool resetForDCMotors();
+	bool setupHardware();
+	bool resetHardware();
 	
 	void setPin( int pin, int value );
 	void setPWM( int pin, int value );

@@ -204,18 +204,24 @@ Hardware::Hardware() {
 	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", I2C_MOTOR_ADDRESS, PWM_FREQ );
 }
 
-bool Hardware::setupForDCMotors() {
+bool Hardware::setupHardware() {
 	
-	syslog(LOG_NOTICE, "In setupForDCMotors" );
+	syslog(LOG_NOTICE, "In setupHardware" );
 	speed = Speed();
 	speed.initializeSpeedArray();
 	
 	return true;
 }
 
-bool Hardware::resetForDCMotors() {
+bool Hardware::resetHardware() {
 	
-	setPWM( M0En, 0 );
+	scanStop( 15 );
+	centerServo( 15 );
+	
+	syslog(LOG_NOTICE, "In resetHardware" );
+	
+	
+	setPWM( M0En, 0 );		// Turn off motors
 	setPin( M0Fw, 0 );
 	setPin( M0Rv, 0 );
 	setPWM( M1En, 0 );
@@ -224,6 +230,9 @@ bool Hardware::resetForDCMotors() {
 	
 	motor0Setup = false;
 	motor1Setup = false;
+	
+	setPWM( 15, 0 );		// Turn off servos
+	
 	return true;
 }
 

@@ -36,7 +36,13 @@ void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware = Hardware();
-	hardware.setupForDCMotors();
+	hardware.setupHardware();
+}
+
+void Commander::shutdownCommander() {
+	
+	syslog(LOG_NOTICE, "In shutdownCommander" );
+	hardware.resetHardware();
 }
 
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
