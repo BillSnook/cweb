@@ -64,8 +64,8 @@ void Threader::setupThreader() {
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
-	task = TaskMaster();
-	task.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
+	taskMaster = TaskMaster();
+	taskMaster.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
 }
 
 void Threader::shutdownThreads() {
