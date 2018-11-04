@@ -11,7 +11,7 @@
 
 enum TaskType {
 	stopTask = 0,
-	testTask1
+	testTask1,
 	testTask2,
 	scanTask,
 	testTask4,
