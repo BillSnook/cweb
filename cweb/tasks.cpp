@@ -23,6 +23,7 @@ void TaskMaster::shutdownTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
 	killTasks();
+	usleep( 200000 );
 }
 
 void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine

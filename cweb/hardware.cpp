@@ -217,8 +217,8 @@ bool Hardware::setupHardware() {
 
 bool Hardware::resetHardware() {
 	
-	scanStop( 15 );
-	centerServo( 15 );
+//	scanStop( 15 );
+//	centerServo( 15 );
 	
 	syslog(LOG_NOTICE, "In resetHardware" );
 	
