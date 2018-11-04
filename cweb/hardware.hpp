@@ -152,8 +152,8 @@ public:
 	void centerServo( int pin );
 	void servoTest( int pin );
 
-	void mobileTask( int taskNumber );
-	void mobileAction( int actionNumber );
+	void mobileTask( int taskNumber, int param );
+	void mobileAction( int actionNumber, int param );
 };
 
 #endif /* hardware_hpp */

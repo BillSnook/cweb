@@ -21,7 +21,7 @@ enum ThreadType {
 	listenThread = 0,
 	serverThread = 1,
 	commandThread = 2,
-//	inputThread = 3,
+	taskThread = 3,
 //	blinkThread = 4,
 	testThread = 5
 };
@@ -37,6 +37,7 @@ public:
 public:
 	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
 	static ThreadControl initThread( ThreadType threadType, char *command, int socket );
+	static ThreadControl initTaskThread( int taskNumber, int param );
 	const char *description();
 };
 

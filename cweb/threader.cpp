@@ -9,6 +9,7 @@
 #include "threader.hpp"
 #include "listen.hpp"
 #include "commands.hpp"
+#include "tasks.hpp"
 
 #include <pthread.h>
 #include <syslog.h>
@@ -46,6 +47,9 @@ const char *ThreadControl::description() {
 		case commandThread:
 			name = "commandThread";
 			break;
+		case taskThread:
+			name = "taskThread";
+			break;
 		default:
 			name = "noThread";
 			break;
@@ -58,7 +62,9 @@ void Threader::setupThreader() {
 	
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 	commander = Commander();
-	commander.setupCommander();
+	commander.setupCommander();		// Manages mostly external commands
+	task = TaskMaster();
+	task.setupTaskMaster(); 		// Manages task queue -
 }
 
 void Threader::shutdownThreads() {
@@ -157,6 +163,9 @@ void Threader::runThread( void *arguments ) {
 			break;
 		case commandThread:
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+			break;
+		case taskThread:
+			task.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runThread with testThreads" );

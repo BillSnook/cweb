@@ -361,19 +361,12 @@ void Hardware::servoTest( int pin ) {
 	}
 }
 
-void Hardware::mobileTask( int taskNumber ) {
+void Hardware::mobileTask( int taskNumber, int param ) {
 	
-	switch ( taskNumber ) {
-		case 0:
-			servoTest( 15 );
-			break;
-			
-		default:
-			break;
-	}
+	threader.queueThread( taskThread, taskNumber, (uint)param );
 }
 
-void Hardware::mobileAction( int actionNumber ) {
+void Hardware::mobileAction( int actionNumber, int param ) {
 	
 	switch ( actionNumber ) {
 		case 0:

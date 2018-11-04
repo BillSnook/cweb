@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
+		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
@@ -35,6 +36,8 @@
 /* Begin PBXFileReference section */
 		A91D0AD4209958DF00EA1DB4 /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
+		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
+		A923017F218E989F00EB2A21 /* tasks.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tasks.hpp; sourceTree = "<group>"; };
 		A96D72ED207AFD4500B98679 /* mtrctl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; name = mtrctl; path = cweb; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96D72F0207AFD4500B98679 /* mtrctl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mtrctl.cpp; sourceTree = "<group>"; };
 		A96D72F7207B086900B98679 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -97,6 +100,8 @@
 				A96D7310208BD79600B98679 /* threader.hpp */,
 				A96D7312208C052B00B98679 /* commands.cpp */,
 				A96D7313208C052B00B98679 /* commands.hpp */,
+				A923017E218E989F00EB2A21 /* tasks.cpp */,
+				A923017F218E989F00EB2A21 /* tasks.hpp */,
 				A96D73082083E80A00B98679 /* listen.cpp */,
 				A96D73092083E80A00B98679 /* listen.hpp */,
 				A96D730C208402C200B98679 /* sender.cpp */,
@@ -177,6 +182,7 @@
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A9ABD77C209507D200B64F14 /* power.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
+				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
 				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,

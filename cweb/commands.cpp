@@ -40,7 +40,7 @@ void Commander::setupCommander() {
 
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
 
-	syslog(LOG_NOTICE, "In commandLoop with: %s", command );
+	syslog(LOG_NOTICE, "In serviceCommand with: %s", command );
 	int len = int( strlen( command ) );
 	char *nextToken[tokenMax+1];
 	int i = 0;
@@ -162,12 +162,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'M':
 		case 'm':
-			hardware.mobileTask( token1 );
+			hardware.mobileTask( token1, token2 );
 			break;
 			
 		case 'N':
 		case 'n':
-			hardware.mobileAction( token1 );
+			hardware.mobileAction( token1, token2 );
 			break;
 			
 //		case 'R':
