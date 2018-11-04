@@ -7,7 +7,7 @@
 //
 
 #include "hardware.hpp"
-//#include "filer.hpp"
+#include "threader.hpp"
 
 #include <syslog.h>			// close read write
 #include <math.h>
@@ -24,6 +24,7 @@
 #define	pwmDegree	( pwmMax - pwmMin ) / 180	// == 2
 
 
+extern Threader	threader;
 extern Filer	filer;
 
 
