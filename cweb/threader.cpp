@@ -166,7 +166,7 @@ void Threader::runThread( void *arguments ) {
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
 		case taskThread:
-			task.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
+			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runThread with testThreads" );
