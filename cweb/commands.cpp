@@ -66,9 +66,9 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	}
 	char first = command[0];	// Get command
 
-	for ( int y = 0; y < tokenCount; y++ ) {
-		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
-	}
+//	for ( int y = 0; y < tokenCount; y++ ) {
+//		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
+//	}
 
 	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
@@ -229,7 +229,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			hardware.servoTest( 15 );
+			hardware.scanTest( 15 );
 			break;
 			
 		case 'Z':

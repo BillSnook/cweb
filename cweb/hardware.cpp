@@ -27,6 +27,7 @@
 extern Threader	threader;
 extern Filer	filer;
 
+bool	scanLoop;
 
 //  MARK: i2c interface read and write support
 I2C::I2C(int addr) {
@@ -353,13 +354,27 @@ void Hardware::centerServo( int pin ) {
 	cmdAngle( pin, 90 );
 }
 
-void Hardware::servoTest( int pin ) {
+void Hardware::scanStop( int pin ) {
+	
+	scanLoop = false;
+}
+
+void Hardware::scanTest( int pin ) {
 	syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
-	for( int angle = 0; angle <= 180; angle += 20 ) {
-		cmdAngle( pin, angle );
-		syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
-		usleep( 1000000 );	// 1 second
-	}
+	scanLoop = true;
+	do {
+		for( int angle = 45; angle <= 135; angle += 10 ) {
+			cmdAngle( pin, angle );
+//			syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
+			usleep( 500000 );	// 1/2 second
+		}
+		for( int angle = 135; angle >= 45; angle += 10 ) {
+			cmdAngle( pin, angle );
+//			syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
+			usleep( 500000 );	// 1/2 second
+		}
+	} while ( scanLoop );
+	centerServo( pin )
 }
 
 void Hardware::mobileTask( int taskNumber, int param ) {
@@ -371,7 +386,7 @@ void Hardware::mobileAction( int actionNumber, int param ) {
 	
 	switch ( actionNumber ) {
 		case 0:
-			servoTest( 15 );
+			scanTest( 15 );
 			break;
 			
 		default:

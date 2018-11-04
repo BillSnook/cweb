@@ -150,7 +150,8 @@ public:
 	void cmdAngle( int pin, int angle );
 	
 	void centerServo( int pin );
-	void servoTest( int pin );
+	void scanStop( int pin );
+	void scanTest( int pin );
 
 	void mobileTask( int taskNumber, int param );
 	void mobileAction( int actionNumber, int param );

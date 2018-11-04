@@ -9,6 +9,15 @@
 #ifndef tasks_hpp
 #define tasks_hpp
 
+enum TaskType {
+	stopTask = 0,
+	testTask1
+	testTask2,
+	scanTask,
+	testTask4,
+	testTaskCount
+};
+
 
 class TaskMaster {
 	

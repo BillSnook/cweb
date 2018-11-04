@@ -7,39 +7,36 @@
 //
 
 #include "tasks.hpp"
-
-//#include "listen.hpp"
-//#include "threader.hpp"
 #include "hardware.hpp"
-//
-//#include <stdlib.h>
-//#include <stdio.h>
-//#include <syslog.h>
-//#include <string.h>
 
-extern Hardware	hardware;
+
+//extern Commander	commander;
+extern Hardware		hardware;
 
 void TaskMaster::setupTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
 }
 
-void TaskMaster::serviceTaskMaster( int command, int socket ) {	// Main command determination routine
+void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
 
-	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", command, socket );
-	
-	switch ( command ) {
-		case 0:
+	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", task, param );
+
+	switch ( task ) {
+		case stopTask:
 			killTasks();
 			break;
 			
-		case 1:
+		case testTask1:
 			taskTest1();
 			break;
-		case 2:
+		case testTask2:
 			taskTest2();
 			break;
-			
+		case scanTask:
+			taskScan( param );
+			break;
+
 		default:
 			killTasks();
 			break;
@@ -73,6 +70,17 @@ void TaskMaster::taskTest2() {
 		if ( stopLoop ) {
 			return;
 		}
+	}
+	
+}
+
+void TaskMaster::taskScan() {
+	
+	stopLoop = false;
+	hardware.
+	if ( stopLoop ) {
+		
+		return;
 	}
 	
 }

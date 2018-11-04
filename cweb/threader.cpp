@@ -90,7 +90,7 @@ bool Threader::areThreadsOnQueue() {
 
 void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	
-	syslog(LOG_NOTICE, "In queueThread at start" );
+//	syslog(LOG_NOTICE, "In queueThread1 at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
@@ -103,7 +103,7 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 
 void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 	
-	syslog(LOG_NOTICE, "In queueThread for command at start" );
+//	syslog(LOG_NOTICE, "In queueThread2 for command at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command, socket );
 	pthread_mutex_lock( &threadArrayMutex );
 	try {
@@ -116,7 +116,7 @@ void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 
 void Threader::createThread() {
 	
-	syslog(LOG_NOTICE, "In createThread at start" );
+//	syslog(LOG_NOTICE, "In createThread at start" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -141,7 +141,6 @@ void Threader::runThread( void *arguments ) {
 		if ( ! threadQueue.empty() ) {
 			nextThreadControl = threadQueue.front();
 			threadQueue.pop();
-			syslog(LOG_NOTICE, "In runThread with entry in threadQueue for thread type %s", nextThreadControl.description() );
 			foundThread = true;
 		} else {
 			syslog(LOG_NOTICE, "In runThread with no entries in threadQueue" );
@@ -154,7 +153,7 @@ void Threader::runThread( void *arguments ) {
 		return;
 	}
 	threadCount += 1;
-	syslog(LOG_NOTICE, "Thread count: %d", threadCount );
+	syslog(LOG_NOTICE, "In runThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case listenThread:
 			listener.acceptConnections( nextThreadControl.nextSocket );
@@ -175,7 +174,7 @@ void Threader::runThread( void *arguments ) {
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "In runThread at exit from thread type %s with %d threads left", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "In runThread exit from %s, thread count %d", nextThreadControl.description(), threadCount );
 }
 
 void *runThreads(void *arguments) {
