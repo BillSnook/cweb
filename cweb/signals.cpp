@@ -21,6 +21,9 @@ case TERM   = 15
 #include <stdlib.h>
 #include <signal.h>
 #include <syslog.h>
+#include <unistd.h>
+
+extern bool doLoop;
 
 
 void signals_setup() {
@@ -34,7 +37,7 @@ void sig_handler(int signum) {
 	switch ( signum ) {
 		case 2:
 			syslog(LOG_NOTICE, "Received INT signal (ctrl-C), exiting now." );
-			exit( 0 );
+			leaveGracefully( signum );
 			break;
 		case 9:
 			syslog(LOG_NOTICE, "Received Kill signal, exiting now." );
@@ -47,6 +50,9 @@ void sig_handler(int signum) {
 }
 
 void leaveGracefully( int signum ) {
+	
+	doLoop = false;
+	usleep( 500000 );
 	
 	exit( 0 );
 }
