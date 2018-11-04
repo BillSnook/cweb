@@ -16,7 +16,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-extern Threader	threader;
+extern Threader		threader;
+extern TaskMaster	taskMaster;
 
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
@@ -64,7 +65,7 @@ void Threader::setupThreader() {
 	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
 	task = TaskMaster();
-	task.setupTaskMaster(); 		// Manages task queue -
+	task.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
 }
 
 void Threader::shutdownThreads() {

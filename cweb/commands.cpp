@@ -9,7 +9,7 @@
 #include "commands.hpp"
 
 #include "listen.hpp"
-//#include "threader.hpp"
+#include "tasks.hpp"
 #include "hardware.hpp"
 
 #include <stdlib.h>
@@ -26,6 +26,7 @@
 #define tokenMax	4
 
 Commander	commander;
+TaskMaster	taskMaster;
 Hardware	hardware;
 
 extern Filer	filer;
