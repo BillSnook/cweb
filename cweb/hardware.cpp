@@ -372,7 +372,7 @@ void Hardware::scanTest( int pin ) {
 			cmdAngle( pin, angle );
 			usleep( 500000 );	// 1/2 second
 		}
-		for( int angle = 135; angle >= 45; angle += 10 ) {
+		for( int angle = 135; angle >= 45; angle -= 10 ) {
 			if ( !scanLoop ) {
 				break;
 			}
