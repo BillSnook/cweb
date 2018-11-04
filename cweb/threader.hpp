@@ -31,7 +31,7 @@ class ThreadControl {
 public:
 	ThreadType	nextThreadType;
 	int			nextSocket;
-	uint		newAddress;
+	uint		nextAddress;
 	char		nextCommand[ COMMAND_SIZE ];
 	
 public:

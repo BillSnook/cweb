@@ -23,7 +23,7 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
-	newThreadControl.newAddress = address;
+	newThreadControl.nextAddress = address;
 	return newThreadControl;
 }
 
