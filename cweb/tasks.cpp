@@ -24,7 +24,7 @@ void TaskMaster::setupTaskMaster() {
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
 }
 
-void TaskMaster::serviceTaskMaster( int command, uint socket ) {	// Main command determination routine
+void TaskMaster::serviceTaskMaster( int command, int socket ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", command, socket );
 	
