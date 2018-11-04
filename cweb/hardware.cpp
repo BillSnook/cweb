@@ -153,7 +153,7 @@ void PWM::setPWM( int channel, int on, int off ) {
 		return;
 	}
 	
-	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
+//	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
 	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
 	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
 	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
@@ -250,7 +250,7 @@ void Hardware::setPWM( int pin, int value ) {
 		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_COUNT);
 		return;
 	}
-	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
+//	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
 	pwm->setPWM( pin, 0, value );
 }
 
@@ -356,21 +356,28 @@ void Hardware::centerServo( int pin ) {
 
 void Hardware::scanStop( int pin ) {
 	
+	syslog(LOG_NOTICE, "In scanStop" );
 	scanLoop = false;
 }
 
 void Hardware::scanTest( int pin ) {
-	syslog(LOG_NOTICE, "pwmDegree is %d", pwmDegree );
+	syslog(LOG_NOTICE, "In scanTest" );
 	scanLoop = true;
 	do {
 		for( int angle = 45; angle <= 135; angle += 10 ) {
+			if ( !scanLoop ) {
+				break;
+			}
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
 			cmdAngle( pin, angle );
-//			syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
 			usleep( 500000 );	// 1/2 second
 		}
 		for( int angle = 135; angle >= 45; angle += 10 ) {
+			if ( !scanLoop ) {
+				break;
+			}
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
 			cmdAngle( pin, angle );
-//			syslog(LOG_NOTICE, "setPWM pin %d to %d", pin, angle );
 			usleep( 500000 );	// 1/2 second
 		}
 	} while ( scanLoop );
