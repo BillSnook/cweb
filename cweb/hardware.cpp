@@ -374,7 +374,7 @@ void Hardware::scanTest( int pin ) {
 			usleep( 500000 );	// 1/2 second
 		}
 	} while ( scanLoop );
-	centerServo( pin )
+	centerServo( pin );
 }
 
 void Hardware::mobileTask( int taskNumber, int param ) {
