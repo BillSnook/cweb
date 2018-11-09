@@ -80,6 +80,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	memset( msg, 0, 1024 );
 //	memcpy( msg, "\nAck\n", 5 );
 	switch ( first ) {
+		case '0':
+			hardware.setMtrDirSpd( 0, token1, token2 );
+			break;
+			
+		case '1':
+			hardware.setMtrDirSpd( 1, token1, token2 );
+			break;
+			
 //		case 'A':
 //		case 'a':
 //			hardware.setMtrDirSpd( 0, 1, token1 );
