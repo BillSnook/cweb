@@ -23,7 +23,7 @@
 //#define aWaitOn		500000
 #define xWaitOn		100000
 #define xWaitOff	50000
-#define tokenMax	4
+#define tokenMax	5
 
 Commander	commander;
 TaskMaster	taskMaster;
@@ -64,13 +64,21 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	int tokenCount = t;
 	int token1 = 0;
 	int token2 = 0;
+	int token3 = 0;
+	int token4 = 0;
 	if ( tokenCount > 1 ) {
 		token1 = atoi( nextToken[1] );
 	}
 	if ( tokenCount > 2 ) {
 		token2 = atoi( nextToken[2] );
 	}
-	char first = command[0];	// Get command
+	if ( tokenCount > 3 ) {
+		token3 = atoi( nextToken[3] );
+	}
+	if ( tokenCount > 4 ) {
+		token4 = atoi( nextToken[4] );
+	}
+	char commandType = command[0];	// Get command
 
 //	for ( int y = 0; y < tokenCount; y++ ) {
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
@@ -79,13 +87,17 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 //	memcpy( msg, "\nAck\n", 5 );
-	switch ( first ) {
+	switch ( commandType ) {
 		case '0':
 			hardware.setMtrDirSpd( 0, token1, token2 );
 			break;
 			
 		case '1':
 			hardware.setMtrDirSpd( 1, token1, token2 );
+			break;
+			
+		case 'A':
+			hardware.setMotors( token1, token2, token3, token4 );
 			break;
 			
 //		case 'A':
