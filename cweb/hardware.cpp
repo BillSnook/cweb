@@ -217,8 +217,8 @@ bool Hardware::setupHardware() {
 
 bool Hardware::resetHardware() {
 	
-//	scanStop( 15 );
-//	centerServo( 15 );
+//	scanStop();
+//	centerServo();
 	
 	syslog(LOG_NOTICE, "In resetHardware" );
 	
@@ -232,7 +232,7 @@ bool Hardware::resetHardware() {
 	motor0Setup = false;
 	motor1Setup = false;
 	
-	setPWM( 15, 0 );		// Turn off servos
+	setPWM( Scanner, 0 );		// Turn off servos
 	
 	return true;
 }
@@ -380,23 +380,23 @@ int Hardware::angleToPWM( int angle ) {
 	return pwmMin + ( angle * pwmDegree );
 }
 
-void Hardware::cmdAngle( int pin, int angle ) {
+void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( pin, angleToPWM( angle - 2 ) );
+	setPWM( Scanner, angleToPWM( angle - 2 ) );
 }
 
-void Hardware::centerServo( int pin ) {
+void Hardware::centerServo() {
 	
-	cmdAngle( pin, 90 );
+	cmdAngle( 90 );
 }
 
-void Hardware::scanStop( int pin ) {
+void Hardware::scanStop() {
 	
 	syslog(LOG_NOTICE, "In scanStop" );
 	scanLoop = false;
 }
 
-void Hardware::scanTest( int pin ) {
+void Hardware::scanTest() {
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanTest multiple times" );
 		return;				// If this is run multiple times, mayhem!
@@ -410,20 +410,25 @@ void Hardware::scanTest( int pin ) {
 			if ( !scanLoop ) {
 				break;
 			}
-			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
-			cmdAngle( pin, angle );
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
 			if ( !scanLoop ) {
 				break;
 			}
-			syslog(LOG_NOTICE, "scanTest pin %d to %d", pin, angle );
-			cmdAngle( pin, angle );
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
 	} while ( scanLoop );
-	centerServo( pin );
+	centerServo();
+}
+
+void Hardware::scanPing() {
+	
+	
 }
 
 void Hardware::mobileTask( int taskNumber, int param ) {
@@ -435,7 +440,7 @@ void Hardware::mobileAction( int actionNumber, int param ) {
 	
 	switch ( actionNumber ) {
 		case 0:
-			scanTest( 15 );
+			scanTest();
 			break;
 			
 		default:

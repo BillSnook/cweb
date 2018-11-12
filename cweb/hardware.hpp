@@ -91,7 +91,8 @@ class PWM {
 #define M3Fw                    5
 #define M3Rv                    6
 #define M3En                    7
-	
+
+#define Scanner					15
 	
 public:
 	explicit PWM( int addr );
@@ -153,6 +154,7 @@ public:
 	void centerServo( int pin );
 	void scanStop( int pin );
 	void scanTest( int pin );
+	void scanPing();
 
 	void mobileTask( int taskNumber, int param );
 	void mobileAction( int actionNumber, int param );

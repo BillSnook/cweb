@@ -26,6 +26,7 @@ void TaskMaster::shutdownTaskMaster() {
 	usleep( 200000 );
 }
 
+// This runs in a seperate thread
 void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", task, param );
@@ -54,7 +55,7 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 void TaskMaster::killTasks() {
 	
 	if ( !stopLoop ) {
-		hardware.scanStop( 15 );
+		hardware.scanStop();
 	}
 	stopLoop = true;
 }
@@ -88,5 +89,5 @@ void TaskMaster::taskTest2() {	// Print out messages so we know this task is run
 void TaskMaster::taskScan() {
 	
 	stopLoop = false;
-	hardware.scanTest( 15 );
+	hardware.scanTest();
 }

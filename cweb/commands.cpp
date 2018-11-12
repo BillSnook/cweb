@@ -206,7 +206,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 's':
 			hardware.cmdSpeed( 0 );
 			hardware.mobileTask( 0, 0 );
-			hardware.centerServo( 15 );
+			hardware.centerServo();
 			break;
 		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
@@ -256,7 +256,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'Y':
 		case 'y':
-			hardware.scanTest( 15 );
+			hardware.scanTest();
 			break;
 			
 		case 'Z':
