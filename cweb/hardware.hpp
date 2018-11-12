@@ -149,11 +149,11 @@ public:
 	void cmdSpeed( int speedIndex );	// Both motors
 
 	int angleToPWM( int angle );
-	void cmdAngle( int pin, int angle );
+	void cmdAngle( int angle );
 	
-	void centerServo( int pin );
-	void scanStop( int pin );
-	void scanTest( int pin );
+	void centerServo();
+	void scanStop();
+	void scanTest();
 	void scanPing();
 
 	void mobileTask( int taskNumber, int param );
