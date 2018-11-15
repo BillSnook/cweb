@@ -8,8 +8,8 @@ LDLIBS = -lpthread
 CXXFLAGS += -DON_PI
 LDLIBS += -lwiringPi
 
-HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp tasks.hpp listen.hpp sender.hpp hardware.hpp speed.hpp power.hpp filer.hpp
-OBJECTS = mtrctl.o signals.o threader.o commands.o tasks.o listen.o sender.o hardware.o speed.o power.o filer.o
+HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp power.hpp tasks.hpp filer.hpp
+OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o power.o tasks.o filer.o
 
 default: mtrctl
 

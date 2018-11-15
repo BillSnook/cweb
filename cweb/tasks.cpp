@@ -8,10 +8,12 @@
 
 #include "tasks.hpp"
 #include "hardware.hpp"
+#include "threader.hpp"
 
 
 //extern Commander	commander;
 extern Hardware		hardware;
+extern Threader		threader;
 
 void TaskMaster::setupTaskMaster() {
 	
@@ -26,6 +28,14 @@ void TaskMaster::shutdownTaskMaster() {
 	usleep( 200000 );
 }
 
+// MARK: Tasks section
+// TODO: move to tasks class
+void TaskMaster::mobileTask( int taskNumber, int param ) {
+	
+	threader.queueThread( taskThread, taskNumber, (uint)param );
+}
+
+// This runs in a seperate thread
 void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", task, param );
@@ -44,6 +54,9 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 		case scanTask:
 			taskScan();
 			break;
+		case pingTask:
+			taskPing();
+			break;
 
 		default:
 			killTasks();
@@ -54,7 +67,7 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 void TaskMaster::killTasks() {
 	
 	if ( !stopLoop ) {
-		hardware.scanStop( 15 );
+		hardware.scanStop();
 	}
 	stopLoop = true;
 }
@@ -88,5 +101,12 @@ void TaskMaster::taskTest2() {	// Print out messages so we know this task is run
 void TaskMaster::taskScan() {
 	
 	stopLoop = false;
-	hardware.scanTest( 15 );
+	hardware.scanTest();
+}
+
+void TaskMaster::taskPing() {
+	
+	syslog(LOG_NOTICE, "In taskPing" );
+	stopLoop = false;
+	hardware.ping();
 }

@@ -25,16 +25,10 @@ Speed::Speed() {
 
 bool Speed::setupForSpeed() {
 	
-#ifdef ON_PI
-#endif  // ON_PI
-	
 	return true;
 }
 
 bool Speed::resetForSpeed() {
-	
-#ifdef ON_PI
-#endif  // ON_PI
 	
 	return false;
 }

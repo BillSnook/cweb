@@ -76,6 +76,7 @@ class PWM {
 	
 	
 	// Address of PWM channels - Fw and Rv expect their on and off values to be 0 to PWM_MAX
+	// If a PWM channel is used as a off or on, the value would be 0  or PWM_COUNT respectively
 #define M0Fw                    9       // Motor 1 Forward enable PWM channel
 #define M0Rv                    10      // Motor 1 Reverse enable - both 0 is safe off
 #define M0En                    8       // Motor 1 enable, values from 0 to PWM_MAX
@@ -91,7 +92,8 @@ class PWM {
 #define M3Fw                    5
 #define M3Rv                    6
 #define M3En                    7
-	
+
+#define Scanner					15
 	
 public:
 	explicit PWM( int addr );
@@ -148,14 +150,14 @@ public:
 	void cmdSpeed( int speedIndex );	// Both motors
 
 	int angleToPWM( int angle );
-	void cmdAngle( int pin, int angle );
+	void cmdAngle( int angle );
 	
-	void centerServo( int pin );
-	void scanStop( int pin );
-	void scanTest( int pin );
-
-	void mobileTask( int taskNumber, int param );
-	void mobileAction( int actionNumber, int param );
+	void centerServo();
+	void scanStop();
+	void scanTest();
+	void scanPing();
+	
+	void ping();
 };
 
 #endif /* hardware_hpp */
