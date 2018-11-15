@@ -7,24 +7,25 @@
 //
 
 #include "hardware.hpp"
-#include "threader.hpp"
 
 #include <syslog.h>			// close read write
 #include <math.h>
 
 #define I2C_MOTOR_ADDRESS		0x6F
+#define CHANNEL_MAX				15
 
 #define PWM_RESOLUTION          4096.0
-#define PWM_COUNT               4096
+#define PWM_COUNT               4096	// Also used as value for PWM pin to be all on
 #define PWM_MAX                 4095	// Supplys full voltage to motor
-#define PWM_FREQ                50	// For servos, motors seem to not care
+#define PWM_FREQ                50		// For servos, motors seem to not care
 
-#define pwmMin		150
-#define pwmMax		510
-#define	pwmDegree	( pwmMax - pwmMin ) / 180	// == 2
+#define SPEED_INDEX_MAX			PWM_COUNT / SPEED_ADJUSTMENT	// 8
+
+#define MIN_PWM					150		// For servos, 1.0 ms
+#define MAX_PWM					510		// to 2.0 ms
+#define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
 
-extern Threader	threader;
 extern Filer	filer;
 
 bool	scanLoop;
@@ -139,17 +140,17 @@ void PWM::setPWMFrequency( int freq ) {
 
 void PWM::setPWM( int channel, int on, int off ) {
 	
-	if ( ( channel < 0 ) || ( channel > 15 ) ) {
-		syslog(LOG_ERR, "ERROR: PWM:setPWM channel: %d; should be 0 <= channel <= 15", channel);
+	if ( ( channel < 0 ) || ( channel > CHANNEL_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: PWM:setPWM channel: %d; should be 0 <= channel <= CHANNEL_MAX", channel);
 		return;
 	}
-	if ( ( on < 0 ) || ( on > PWM_COUNT ) || ( off < 0 ) || ( off > PWM_COUNT ) ) {
-		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
+	if ( ( on < 0 ) || ( on > PWM_MAX ) || ( off < 0 ) || ( off > PWM_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be 0 <= on or off <= %d (PWM_MAX)", channel, on, off, PWM_MAX);
 		return;
 	}
 	
-	if ( on + off > PWM_COUNT ) {
-		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be on + off <= %d (PWM_COUNT)", channel, on, off, PWM_COUNT);
+	if ( on + off > PWM_MAX ) {
+		syslog(LOG_ERR, "ERROR: PWM:setPWM%d on: %d, off: %d; should be on + off <= %d (PWM_MAX)", channel, on, off, PWM_MAX);
 		return;
 	}
 	
@@ -162,8 +163,8 @@ void PWM::setPWM( int channel, int on, int off ) {
 
 void PWM::setPWMAll( int on, int off ) {
 	
-	if ( ( on < 0 ) || ( on > PWM_COUNT ) || ( off < 0 ) || ( off > PWM_COUNT ) ) {
-		syslog(LOG_ERR, "ERROR: PWM:setPWMAll on: %d, off: %d; should be 0 <= on or off <= %d (PWM_COUNT)", on, off, PWM_COUNT);
+	if ( ( on < 0 ) || ( on > PWM_MAX ) || ( off < 0 ) || ( off > PWM_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: PWM:setPWMAll on: %d, off: %d; should be 0 <= on or off <= %d (PWM_MAX)", on, off, PWM_MAX);
 		return;
 	}
 	i2c->i2cWrite( ALLCHANNEL_ON_L, on & 0xFF );
@@ -239,7 +240,7 @@ bool Hardware::resetHardware() {
 
 void Hardware::setPin( int pin, int value ) {
 	
-	if ( ( pin < 0 ) || ( pin > 15 ) ) {
+	if ( ( pin < 0 ) || ( pin > CHANNEL_MAX ) ) {
 		return;
 	}
 	if ( value == 0 ) {
@@ -252,12 +253,12 @@ void Hardware::setPin( int pin, int value ) {
 
 void Hardware::setPWM( int pin, int value ) {
 	
-	if ( ( pin < 0 ) || ( pin > 15 ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware:setPWM pin: %d; should be 0 <= pin <= 15", pin);
+	if ( ( pin < 0 ) || ( pin > CHANNEL_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware:setPWM pin: %d; should be 0 <= pin <= CHANNEL_MAX", pin);
 		return;
 	}
-	if ( ( value < 0 ) || ( value > PWM_COUNT ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_COUNT);
+	if ( ( value < 0 ) || ( value > PWM_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_MAX);
 		return;
 	}
 //	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
@@ -271,10 +272,11 @@ void Hardware::setPWM( int pin, int value ) {
 //    return motors[motor]
 //}
 
+// MARK: Motor section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speedIndex < 0 ) || ( speedIndex > ( PWM_MAX / SPEED_ADJUSTMENT ) ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, PWM_MAX / SPEED_ADJUSTMENT);
+	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, SPEED_INDEX_MAX);
 		return;
 	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);
@@ -318,9 +320,9 @@ void Hardware::setMtrSpd(int motor, int speedIndex) {
 }
 
 void Hardware::setMotors(int direction0, int speedIndex0, int direction1, int speedIndex1) {
-	if ( ( speedIndex0 < 0 ) || ( speedIndex0 > ( PWM_MAX / SPEED_ADJUSTMENT ) ) ||
-		 ( speedIndex1 < 0 ) || ( speedIndex1 > ( PWM_MAX / SPEED_ADJUSTMENT ) ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d - %d; should be 0 <= speed <= %d", speedIndex0, speedIndex1, PWM_MAX / SPEED_ADJUSTMENT);
+	if ( ( speedIndex0 < 0 ) || ( speedIndex0 > SPEED_INDEX_MAX ) ||
+		 ( speedIndex1 < 0 ) || ( speedIndex1 > SPEED_INDEX_MAX ) ) {
+		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d - %d; should be 0 <= speed <= %d", speedIndex0, speedIndex1, SPEED_INDEX_MAX);
 		return;
 	}
 	if ( direction0 == 1 ) {
@@ -375,14 +377,15 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	setPWM( M1En, speedRight );
 }
 
+// MARK: Servo section
 int Hardware::angleToPWM( int angle ) {
 	
-	return pwmMin + ( angle * pwmDegree );
+	return MIN_PWM + ( angle * DEGREE_PER_PWM );
 }
 
 void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( Scanner, angleToPWM( angle - 2 ) );
+	setPWM( Scanner, angleToPWM( angle - 2 ) );	// Calibrated
 }
 
 void Hardware::centerServo() {
@@ -431,20 +434,8 @@ void Hardware::scanPing() {
 	
 }
 
-void Hardware::mobileTask( int taskNumber, int param ) {
+// MARK: Range Finder section
+void Hardware::ping() {
 	
-	threader.queueThread( taskThread, taskNumber, (uint)param );
+	syslog(LOG_NOTICE, "In ping" );
 }
-
-void Hardware::mobileAction( int actionNumber, int param ) {
-	
-	switch ( actionNumber ) {
-		case 0:
-			scanTest();
-			break;
-			
-		default:
-			break;
-	}
-}
-

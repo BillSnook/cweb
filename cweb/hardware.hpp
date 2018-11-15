@@ -76,6 +76,7 @@ class PWM {
 	
 	
 	// Address of PWM channels - Fw and Rv expect their on and off values to be 0 to PWM_MAX
+	// If a PWM channel is used as a off or on, the value would be 0  or PWM_COUNT respectively
 #define M0Fw                    9       // Motor 1 Forward enable PWM channel
 #define M0Rv                    10      // Motor 1 Reverse enable - both 0 is safe off
 #define M0En                    8       // Motor 1 enable, values from 0 to PWM_MAX
@@ -155,9 +156,8 @@ public:
 	void scanStop();
 	void scanTest();
 	void scanPing();
-
-	void mobileTask( int taskNumber, int param );
-	void mobileAction( int actionNumber, int param );
+	
+	void ping();
 };
 
 #endif /* hardware_hpp */

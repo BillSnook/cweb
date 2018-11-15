@@ -8,10 +8,12 @@
 
 #include "tasks.hpp"
 #include "hardware.hpp"
+#include "threader.hpp"
 
 
 //extern Commander	commander;
 extern Hardware		hardware;
+extern Threader		threader;
 
 void TaskMaster::setupTaskMaster() {
 	
@@ -24,6 +26,13 @@ void TaskMaster::shutdownTaskMaster() {
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
 	killTasks();
 	usleep( 200000 );
+}
+
+// MARK: Tasks section
+// TODO: move to tasks class
+void TaskMaster::mobileTask( int taskNumber, int param ) {
+	
+	threader.queueThread( taskThread, taskNumber, (uint)param );
 }
 
 // This runs in a seperate thread
@@ -44,6 +53,9 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 			break;
 		case scanTask:
 			taskScan();
+			break;
+		case pingTask:
+			taskPing();
 			break;
 
 		default:
@@ -90,4 +102,11 @@ void TaskMaster::taskScan() {
 	
 	stopLoop = false;
 	hardware.scanTest();
+}
+
+void TaskMaster::taskPing() {
+	
+	syslog(LOG_NOTICE, "In taskPing" );
+	stopLoop = false;
+	hardware.ping();
 }

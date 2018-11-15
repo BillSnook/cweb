@@ -11,11 +11,11 @@
 
 enum TaskType {
 	stopTask = 0,
-	testTask1,
-	testTask2,
-	scanTask,
-	testTask4,
-	testTaskCount
+	testTask1,		// 1
+	testTask2,		// 2
+	scanTask,		// 3
+	pingTask,		// 4
+	testTaskCount	// 5, size of TaskType enum
 };
 
 
@@ -25,14 +25,17 @@ class TaskMaster {
 public:
 	void setupTaskMaster();
 	void shutdownTaskMaster();
+	void mobileTask( int taskNumber, int param );
+	
 	void serviceTaskMaster( int command, int socket ) ;
 
 	void killTasks();
 	void taskTest1();
 	void taskTest2();
 	void taskScan();
+	void taskPing();
 };
 
-extern TaskMaster	task;
+// extern TaskMaster	task;
 
 #endif /* tasks_hpp */

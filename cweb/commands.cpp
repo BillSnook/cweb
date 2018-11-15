@@ -189,14 +189,9 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'M':
 		case 'm':
-			hardware.mobileTask( token1, token2 );
+			taskMaster.mobileTask( token1, token2 );
 			break;
-			
-		case 'N':
-		case 'n':
-			hardware.mobileAction( token1, token2 );
-			break;
-			
+
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
@@ -205,7 +200,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'S':
 		case 's':
 			hardware.cmdSpeed( 0 );
-			hardware.mobileTask( 0, 0 );
+			taskMaster.mobileTask( 0, 0 );
 			hardware.centerServo();
 			break;
 		// Test case for app feature - send response, wait 5 seconds, send another
