@@ -25,6 +25,8 @@
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
+#define TRIG					8
+#define ECHO					7
 
 extern Filer	filer;
 
@@ -44,7 +46,7 @@ I2C::I2C(int addr) {
 int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8 ( device, reg ) ;	// Read 8 bits from register reg on device
+	return wiringPiI2CReadReg8 ( device, reg );	// Read 8 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
@@ -53,7 +55,7 @@ int I2C::i2cRead(int reg) {
 int I2C::i2cReadReg8(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8 ( device, reg ) ;	// Read 8 bits from register reg on device
+	return wiringPiI2CReadReg8 ( device, reg );	// Read 8 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
@@ -62,7 +64,7 @@ int I2C::i2cReadReg8(int reg) {
 int I2C::i2cReadReg16(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg16 ( device, reg ) ;	// Read 16 bits from register reg on device
+	return wiringPiI2CReadReg16 ( device, reg );	// Read 16 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
@@ -196,7 +198,7 @@ Hardware::Hardware() {
 		syslog(LOG_ERR, "Error setting up wiringPi." );
 		return;
 	}
-//	syslog(LOG_NOTICE, "Pi version: %d", setupResult );
+//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
 #endif  // ON_PI
 	
 	pwm = new PWM( I2C_MOTOR_ADDRESS );		// Default for Motor Hat PWM chip
@@ -205,8 +207,19 @@ Hardware::Hardware() {
 	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", I2C_MOTOR_ADDRESS, PWM_FREQ );
 }
 
+// #define TRIG					8		Brown	Out
+// #define ECHO					7		White	In
+
 bool Hardware::setupHardware() {
 	
+#ifdef ON_PI
+	pinMode( TRIG, OUTPUT );	// Brown
+	pinMode( ECHO, INPUT );		// White
+	
+	digitalWrite(TRIG, LOW);	// Off
+
+#endif  // ON_PI
+
 	syslog(LOG_NOTICE, "In setupHardware" );
 	speed = Speed();
 	speed.initializeSpeedArray();
@@ -434,8 +447,23 @@ void Hardware::scanPing() {
 	
 }
 
+
 // MARK: Range Finder section
 void Hardware::ping() {
 	
 	syslog(LOG_NOTICE, "In ping" );
+	
+#ifdef ON_PI
+//	pinMode( TRIG, OUTPUT );	// Brown
+//	pinMode( ECHO, INPUT );		// White
+	
+	digitalWrite( TRIG, HIGH );	// On
+	usleep( 100000 );
+	digitalWrite( TRIG, LOW );	// Off
+	
+	bool echo = digitalRead( ECHO );		//
+	syslog(LOG_NOTICE, "In ping, read %d", echo );
+
+#endif  // ON_PI
+
 }

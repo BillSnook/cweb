@@ -9,14 +9,6 @@
 #ifndef power_hpp
 #define power_hpp
 
-#ifdef ON_PI
-
-#include <wiringPi.h>
-#include <linux/i2c-dev.h>
-#include <wiringPiI2C.h>
-
-#endif  // ON_PI
-
 
 class Power {
 

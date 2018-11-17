@@ -10,11 +10,14 @@ Communication using threads working
 
 Get i2c working
 
+Got motor speed table working
 
-Next - ToDo list
+Scanning servo working
 
-Get motor speed table working
+Get ultrasonic rangefinder working
+
+Get light ranger working
 	
-Define and implement control api
+Define and implement control api - in process
 
 Profit!

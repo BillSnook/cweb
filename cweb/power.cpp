@@ -16,6 +16,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef ON_PI
+
+#include <wiringPi.h>
+#include <linux/i2c-dev.h>
+#include <wiringPiI2C.h>
+
+#endif  // ON_PI
+
+
 //  SBC HAT - GPIO-controlled
 //  Raspi UPS HAT V1.0
 #define VREG 2
