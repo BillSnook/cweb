@@ -80,8 +80,6 @@ void TIMER_Init()
 	TIMER_registers = (volatile unsigned *)TIMER_map;
 }
 
-
-
 int main(int argc, const char * argv[]) {
 
 	TIMER_Init();
