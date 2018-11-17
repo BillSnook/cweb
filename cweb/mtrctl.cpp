@@ -22,7 +22,7 @@
 #include "threader.hpp"
 #include "power.hpp"
 
-#include <sys/time.h>
+#include <time.h>
 
 
 #define	PORT	5555
@@ -37,6 +37,9 @@ Sender		sender;
 bool		becomeDaemon;
 bool		ready;
 
+//#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 
 #define BCM2708_ST_BASE 0x20003000 /* BCM 2835 System Timer */
 
@@ -71,7 +74,7 @@ void TIMER_Init()
 	
 	if (TIMER_map == MAP_FAILED)
 	{
-		printf("mmap error %d\n", (int)TIMER_map);
+		printf("mmap error %ld\n", (long)TIMER_map);
 		exit(-1);
 	}
 	TIMER_registers = (volatile unsigned *)TIMER_map;
