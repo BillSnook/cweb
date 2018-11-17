@@ -22,7 +22,10 @@
 #include "threader.hpp"
 #include "power.hpp"
 
-#include <time.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
+#define BCM2708_ST_BASE 0x20003000 /* BCM 2835 System Timer */
 
 
 #define	PORT	5555
@@ -37,11 +40,8 @@ Sender		sender;
 bool		becomeDaemon;
 bool		ready;
 
-//#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/mman.h>
+bool		doLoop;
 
-#define BCM2708_ST_BASE 0x20003000 /* BCM 2835 System Timer */
 
 volatile unsigned *TIMER_registers;
 

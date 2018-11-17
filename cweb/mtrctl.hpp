@@ -9,6 +9,6 @@
 #ifndef mtrctl_hpp
 #define mtrctl_hpp
 
-bool		doLoop;
+unsigned int TIMER_GetSysTick();
 
 #endif /* mtrctl_hpp */

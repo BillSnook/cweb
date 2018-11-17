@@ -6,6 +6,7 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
+#include "mtrctl.hpp"
 #include "hardware.hpp"
 
 #include <syslog.h>			// close read write
@@ -469,7 +470,7 @@ void Hardware::ping() {
 	digitalWrite( TRIG, LOW );	// Off
 
 	unsigned int tmr1 = TIMER_GetSysTick();
-	syslog(LOG_NOTICE, "In ping, time interval = %ud", tmr1 - tmr2 );
+	syslog(LOG_NOTICE, "In ping, time interval = %ud", tmr1 - tmr0 );
 
 	bool echo = digitalRead( ECHO );
 	syslog(LOG_NOTICE, "In ping, read %d", echo );
