@@ -454,11 +454,11 @@ void Hardware::ping() {
 	syslog(LOG_NOTICE, "In ping" );
 	
 #ifdef ON_PI
-//	pinMode( TRIG, OUTPUT );	// Brown
-//	pinMode( ECHO, INPUT );		// White
+//	pinMode( TRIG, OUTPUT );	// Brown	8
+//	pinMode( ECHO, INPUT );		// White	7
 	
 	digitalWrite( TRIG, HIGH );	// On
-	usleep( 100000 );
+	usleep( 1000000 );
 	digitalWrite( TRIG, LOW );	// Off
 	
 	bool echo = digitalRead( ECHO );		//
