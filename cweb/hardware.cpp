@@ -466,7 +466,7 @@ void Hardware::ping() {
 	
 	unsigned int tmr0 = micros(); // TIMER_GetSysTick();
 	digitalWrite( TRIG, HIGH );	// On
-	usleep( 10000000 );
+	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
 
 	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
