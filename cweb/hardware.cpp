@@ -247,7 +247,13 @@ bool Hardware::resetHardware() {
 	motor1Setup = false;
 	
 	setPWM( Scanner, 0 );		// Turn off servos
+
+#ifdef ON_PI
 	
+	digitalWrite(TRIG, LOW);	// Off
+	
+#endif  // ON_PI
+
 	return true;
 }
 
@@ -458,10 +464,10 @@ void Hardware::ping() {
 //	pinMode( ECHO, INPUT );		// White	7
 	
 	digitalWrite( TRIG, HIGH );	// On
-	usleep( 1000000 );
+	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
 	
-	bool echo = digitalRead( ECHO );		//
+	bool echo = digitalRead( ECHO );
 	syslog(LOG_NOTICE, "In ping, read %d", echo );
 
 #endif  // ON_PI
