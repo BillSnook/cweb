@@ -466,11 +466,11 @@ void Hardware::ping() {
 	
 	unsigned int tmr0 = TIMER_GetSysTick();
 	digitalWrite( TRIG, HIGH );	// On
-	usleep( 10 );
+	usleep( 1000 );
 	digitalWrite( TRIG, LOW );	// Off
 
 	unsigned int tmr1 = TIMER_GetSysTick();
-	syslog(LOG_NOTICE, "In ping, time interval = %ud", tmr1 - tmr0 );
+	syslog(LOG_NOTICE, "In ping, time interval = %u", tmr1 - tmr0 );
 
 	bool echo = digitalRead( ECHO );
 	syslog(LOG_NOTICE, "In ping, read %d", echo );
