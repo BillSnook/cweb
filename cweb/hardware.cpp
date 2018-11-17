@@ -464,12 +464,12 @@ void Hardware::ping() {
 //	pinMode( TRIG, OUTPUT );	// Brown	8
 //	pinMode( ECHO, INPUT );		// White	7
 	
-	unsigned int tmr0 = TIMER_GetSysTick();
+	unsigned int tmr0 = micros(); // TIMER_GetSysTick();
 	digitalWrite( TRIG, HIGH );	// On
 	usleep( 10000000 );
 	digitalWrite( TRIG, LOW );	// Off
 
-	unsigned int tmr1 = TIMER_GetSysTick();
+	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
 	syslog(LOG_NOTICE, "In ping, time interval = %u", tmr1 - tmr0 );
 
 	bool echo = digitalRead( ECHO );
