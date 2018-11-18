@@ -434,6 +434,7 @@ void Hardware::scanTest() {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
@@ -442,6 +443,7 @@ void Hardware::scanTest() {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
@@ -458,7 +460,7 @@ void Hardware::scanPing() {
 // MARK: Range Finder section
 void Hardware::ping() {
 	
-	syslog(LOG_NOTICE, "In ping" );
+//	syslog(LOG_NOTICE, "In ping" );
 	
 #ifdef ON_PI
 //	pinMode( TRIG, OUTPUT );	// Brown	8
@@ -474,7 +476,7 @@ void Hardware::ping() {
 	while ( HIGH == digitalRead( ECHO ) ) ;
 	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
 	
-	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
+//	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
 
 	unsigned int cm = ((tmr1 - tmr0) * 34300) / 2;
 	cm = cm / 1000000;
