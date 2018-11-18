@@ -466,6 +466,9 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
+			if ( distance == 0 ) {
+				distance = ping();
+			}
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
@@ -475,6 +478,9 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
+			if ( distance == 0 ) {
+				distance = ping();
+			}
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 	} while ( scanLoop );
@@ -495,14 +501,14 @@ unsigned int Hardware::ping() {
 	unsigned int tmr0, tmr1, tmr;
 	unsigned int diff = 0;
 	digitalWrite( TRIG, HIGH );	// On
-	usleep( 10 );
+	usleep( 20 );
 	digitalWrite( TRIG, LOW );	// Off
 	
 	tmr = micros();
 	while ( LOW == digitalRead( ECHO ) ) {
 		tmr0 = micros();
 		diff = tmr0 - tmr;
-		if ( diff > 5000 ) {
+		if ( diff > 50000 ) {
 			syslog(LOG_NOTICE, "In ping, low too long" );
 			usleep( 100000 );
 			break;
