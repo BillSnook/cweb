@@ -492,23 +492,24 @@ unsigned int Hardware::ping() {
 //	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
 //	pinMode( ECHO, INPUT );		// White	2 - pin 13
 	
+	unsigned int tmr0, tmr1, tmr;
+	unsigned int diff = 0;
 	digitalWrite( TRIG, HIGH );	// On
 	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
 	
-	unsigned int tmr0, tmr1, tmr = micros();
-	unsigned int diff = 0;
+	tmr = micros();
 	while ( LOW == digitalRead( ECHO ) ) {
 		tmr0 = micros();
 		diff = tmr0 - tmr;
-		if ( diff > 50000 ) {
+		if ( diff > 100 ) {
 			syslog(LOG_NOTICE, "In ping, low too long" );
 			usleep( 100000 );
 			break;
 		}
-		if ( !scanLoop ) {
-			break;
-		}
+//		if ( !scanLoop ) {
+//			break;
+//		}
 	}
 	
 	diff = 0;
@@ -520,9 +521,9 @@ unsigned int Hardware::ping() {
 			usleep( 100000 );
 			break;
 		}
-		if ( !scanLoop ) {
-			break;
-		}
+//		if ( !scanLoop ) {
+//			break;
+//		}
 	}
 //	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
 
