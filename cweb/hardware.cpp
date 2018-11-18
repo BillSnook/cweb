@@ -475,7 +475,7 @@ void Hardware::ping() {
 	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
 	
 	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
-	insigned int cm = ((tmr1 - tmr0) * 34300) / 2;
+	unsigned int cm = ((tmr1 - tmr0) * 34300) / 2;
 	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
 
 #endif  // ON_PI
