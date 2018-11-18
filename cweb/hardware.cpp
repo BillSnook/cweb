@@ -464,16 +464,19 @@ void Hardware::ping() {
 //	pinMode( TRIG, OUTPUT );	// Brown	8
 //	pinMode( ECHO, INPUT );		// White	7
 	
-	unsigned int tmr0 = micros(); // TIMER_GetSysTick();
 	digitalWrite( TRIG, HIGH );	// On
 	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
-
+	
+	while ( LOW == digitalRead( ECHO ) ) ;
+	unsigned int tmr0 = micros(); // TIMER_GetSysTick();
+	
+	while ( HIGH == digitalRead( ECHO ) ) ;
 	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
-	syslog(LOG_NOTICE, "In ping, time interval = %u", tmr1 - tmr0 );
-
-	bool echo = digitalRead( ECHO );
-	syslog(LOG_NOTICE, "In ping, read %d", echo );
+	
+	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
+	insigned int cm = ((tmr1 - tmr0) * 34300) / 2;
+	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
 
 #endif  // ON_PI
 
