@@ -496,15 +496,23 @@ unsigned int Hardware::ping() {
 	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
 	
-	while ( LOW == digitalRead( ECHO ) ) ;
-	unsigned int tmr0 = micros(); // TIMER_GetSysTick();
+	unsigned int tmr0, tmr1;
+	while ( LOW == digitalRead( ECHO ) ) {
+		tmr0 = micros();
+	}
 	
-	while ( HIGH == digitalRead( ECHO ) ) ;
-	unsigned int tmr1 = micros(); // TIMER_GetSysTick();
-	
+	let diff = 0;
+	while ( HIGH == digitalRead( ECHO ) ) {
+		tmr1 = micros();
+		diff = tmr1 - tmr0;
+		if ( diff > 50000 ) {
+			break;
+		}
+	}
+
 //	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
 
-	cm = ((tmr1 - tmr0) * 34300) / 2;
+	cm = (diff * 34300) / 2;
 	cm = cm / 1000000;
 //	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
 
