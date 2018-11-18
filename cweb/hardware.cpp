@@ -26,8 +26,8 @@
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
-#define TRIG					8
-#define ECHO					7
+#define TRIG					0
+#define ECHO					2
 
 extern Filer	filer;
 
@@ -208,8 +208,8 @@ Hardware::Hardware() {
 	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", I2C_MOTOR_ADDRESS, PWM_FREQ );
 }
 
-// #define TRIG					8		Brown	Out
-// #define ECHO					7		White	In
+// #define TRIG					0		Brown	Out
+// #define ECHO					2		White	In
 
 bool Hardware::setupHardware() {
 	
@@ -486,8 +486,8 @@ void Hardware::ping() {
 //	syslog(LOG_NOTICE, "In ping" );
 	
 #ifdef ON_PI
-//	pinMode( TRIG, OUTPUT );	// Brown	8
-//	pinMode( ECHO, INPUT );		// White	7
+//	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
+//	pinMode( ECHO, INPUT );		// White	2 - pin 13
 	
 	digitalWrite( TRIG, HIGH );	// On
 	usleep( 10 );
