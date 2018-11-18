@@ -502,7 +502,7 @@ unsigned int Hardware::ping() {
 	while ( LOW == digitalRead( ECHO ) ) {
 		tmr0 = micros();
 		diff = tmr0 - tmr;
-		if ( diff > 100 ) {
+		if ( diff > 5000 ) {
 			syslog(LOG_NOTICE, "In ping, low too long" );
 			usleep( 100000 );
 			break;
