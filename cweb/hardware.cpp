@@ -510,7 +510,7 @@ unsigned int Hardware::ping() {
 		}
 	}
 	
-	unsigned int diff = 0;
+	diff = 0;
 	while ( HIGH == digitalRead( ECHO ) ) {
 		tmr1 = micros();
 		diff = tmr1 - tmr0;
