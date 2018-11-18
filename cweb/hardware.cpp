@@ -502,6 +502,7 @@ unsigned int Hardware::ping() {
 		tmr0 = micros();
 		diff = tmr0 - tmr;
 		if ( diff > 50000 ) {
+			syslog(LOG_NOTICE, "In ping, low too long" );
 			usleep( 100000 );
 			break;
 		}
@@ -515,6 +516,7 @@ unsigned int Hardware::ping() {
 		tmr1 = micros();
 		diff = tmr1 - tmr0;
 		if ( diff > 50000 ) {
+			syslog(LOG_NOTICE, "In ping, high too long" );
 			usleep( 100000 );
 			break;
 		}
