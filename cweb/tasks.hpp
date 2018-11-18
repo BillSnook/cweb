@@ -34,6 +34,7 @@ public:
 	void taskTest2();
 	void taskScan();
 	void taskPing();
+	void taskScanPing();
 };
 
 // extern TaskMaster	task;

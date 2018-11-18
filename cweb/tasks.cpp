@@ -110,3 +110,10 @@ void TaskMaster::taskPing() {
 	stopLoop = false;
 	hardware.ping();
 }
+
+void TaskMaster::taskScanPing() {
+	
+	syslog(LOG_NOTICE, "In taskScanPing" );
+	stopLoop = false;
+	hardware.scanPing();
+}

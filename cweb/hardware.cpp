@@ -405,7 +405,7 @@ int Hardware::angleToPWM( int angle ) {
 
 void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( Scanner, angleToPWM( angle - 2 ) );	// Calibrated
+	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated
 }
 
 void Hardware::centerServo() {
@@ -434,7 +434,6 @@ void Hardware::scanTest() {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
-			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
@@ -443,7 +442,6 @@ void Hardware::scanTest() {
 				break;
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
-			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 		}
@@ -452,8 +450,33 @@ void Hardware::scanTest() {
 }
 
 void Hardware::scanPing() {
+	if ( scanLoop ) {
+		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
+		return;				// If this is run multiple times, mayhem!
+	}
+	scanLoop = true;
 	
+	syslog(LOG_NOTICE, "In scanPing" );
 	
+	do {
+		for( int angle = 45; angle < 135; angle += 5 ) {
+			if ( !scanLoop ) {
+				break;
+			}
+			ping();
+			cmdAngle( angle );
+			usleep( 100000 );	// .1 second
+		}
+		for( int angle = 135; angle > 45; angle -= 5 ) {
+			if ( !scanLoop ) {
+				break;
+			}
+			ping();
+			cmdAngle( angle );
+			usleep( 100000 );	// .1 second
+		}
+	} while ( scanLoop );
+	centerServo();
 }
 
 
