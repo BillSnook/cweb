@@ -57,6 +57,9 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 		case pingTask:
 			taskPing();
 			break;
+		case scanpingTask:
+			taskScanPing();
+			break;
 
 		default:
 			killTasks();

@@ -15,7 +15,8 @@ enum TaskType {
 	testTask2,		// 2
 	scanTask,		// 3
 	pingTask,		// 4
-	testTaskCount	// 5, size of TaskType enum
+	scanpingTask,	// 5
+	testTaskCount	// 6, size of TaskType enum
 };
 
 
