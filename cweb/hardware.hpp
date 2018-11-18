@@ -157,7 +157,7 @@ public:
 	void scanTest();
 	void scanPing();
 	
-	void ping();
+	unsigned int ping();
 };
 
 #endif /* hardware_hpp */

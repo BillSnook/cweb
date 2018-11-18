@@ -405,7 +405,7 @@ int Hardware::angleToPWM( int angle ) {
 
 void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated
+	setPWM( Scanner, angleToPWM( angle + 10 ) );	// Calibrated
 }
 
 void Hardware::centerServo() {
@@ -463,17 +463,19 @@ void Hardware::scanPing() {
 			if ( !scanLoop ) {
 				break;
 			}
-			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
+			unsigned int distance = ping();
+			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
 			if ( !scanLoop ) {
 				break;
 			}
-			ping();
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
+			unsigned int distance = ping();
+			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 	} while ( scanLoop );
 	centerServo();
@@ -481,9 +483,10 @@ void Hardware::scanPing() {
 
 
 // MARK: Range Finder section
-void Hardware::ping() {
+unsigned int Hardware::ping() {
 	
 //	syslog(LOG_NOTICE, "In ping" );
+	unsigned int cm = 0;
 	
 #ifdef ON_PI
 //	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
@@ -501,10 +504,11 @@ void Hardware::ping() {
 	
 //	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
 
-	unsigned int cm = ((tmr1 - tmr0) * 34300) / 2;
+	cm = ((tmr1 - tmr0) * 34300) / 2;
 	cm = cm / 1000000;
-	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
+//	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
 
 #endif  // ON_PI
 
+	return cm;
 }
