@@ -496,9 +496,18 @@ unsigned int Hardware::ping() {
 	usleep( 10 );
 	digitalWrite( TRIG, LOW );	// Off
 	
-	unsigned int tmr0, tmr1;
+	unsigned int tmr0, tmr1, tmr = micros();
+	unsigned int diff = 0;
 	while ( LOW == digitalRead( ECHO ) ) {
 		tmr0 = micros();
+		diff = tmr0 - tmr;
+		if ( diff > 50000 ) {
+			usleep( 100000 );
+			break;
+		}
+		if ( !scanLoop ) {
+			break;
+		}
 	}
 	
 	unsigned int diff = 0;
@@ -506,10 +515,13 @@ unsigned int Hardware::ping() {
 		tmr1 = micros();
 		diff = tmr1 - tmr0;
 		if ( diff > 50000 ) {
+			usleep( 100000 );
+			break;
+		}
+		if ( !scanLoop ) {
 			break;
 		}
 	}
-
 //	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
 
 	cm = (diff * 34300) / 2;
