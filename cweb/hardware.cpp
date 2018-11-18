@@ -464,7 +464,7 @@ void Hardware::scanPing() {
 				break;
 			}
 			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
@@ -473,7 +473,7 @@ void Hardware::scanPing() {
 				break;
 			}
 			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
