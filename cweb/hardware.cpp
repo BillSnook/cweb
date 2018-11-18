@@ -466,9 +466,9 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
-			if ( distance == 0 ) {
-				distance = ping();
-			}
+//			if ( distance == 0 ) {
+//				distance = ping();
+//			}
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
@@ -478,10 +478,10 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 200000 );	// .1 second
 			unsigned int distance = ping();
-			if ( distance == 0 ) {
-				distance = ping();
-			}
-			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+//			if ( distance == 0 ) {
+//				distance = ping();
+//			}
+//			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 	} while ( scanLoop );
 	centerServo();
