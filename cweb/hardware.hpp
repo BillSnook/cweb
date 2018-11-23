@@ -110,7 +110,8 @@ public:
 	void scanStop();
 	void scanTest();
 	void scanPing();
-	
+	void pingLoop();
+
 	unsigned int ping();
 };
 

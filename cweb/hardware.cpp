@@ -510,7 +510,7 @@ void Hardware::scanPing() {
 				break;
 			}
 			cmdAngle( angle );
-			usleep( 200000 );	// .1 second
+			usleep( 100000 );	// .1 second
 			unsigned int distance = ping();
 //			if ( distance == 0 ) {
 //				distance = ping();
@@ -522,7 +522,7 @@ void Hardware::scanPing() {
 				break;
 			}
 			cmdAngle( angle );
-			usleep( 200000 );	// .1 second
+			usleep( 100000 );	// .1 second
 			unsigned int distance = ping();
 //			if ( distance == 0 ) {
 //				distance = ping();
@@ -531,6 +531,21 @@ void Hardware::scanPing() {
 		}
 	} while ( scanLoop );
 	centerServo();
+}
+
+void Hardware::pingLoop() {
+	if ( scanLoop ) {
+		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
+		return;				// If this is run multiple times, mayhem!
+	}
+	scanLoop = true;
+	
+	syslog(LOG_NOTICE, "In pingLoop" );
+	
+	do {
+		ping();
+		usleep( 100000 );	// .1 second
+	} while ( scanLoop );
 }
 
 
