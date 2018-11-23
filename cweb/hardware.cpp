@@ -26,6 +26,7 @@
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
+// Pi pins
 #define TRIG					0
 #define ECHO					2
 
@@ -75,7 +76,6 @@
 
 #define Scanner					0
 
-extern Filer	filer;
 
 bool	scanLoop;
 

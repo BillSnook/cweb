@@ -9,7 +9,6 @@
 #ifndef hardware_hpp
 #define hardware_hpp
 
-#include "filer.hpp"
 #include "speed.hpp"
 
 #ifdef ON_PI

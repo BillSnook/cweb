@@ -7,7 +7,6 @@
 //
 
 #include "speed.hpp"
-//#include "listen.hpp"
 
 
 #include <syslog.h>			// close read write
