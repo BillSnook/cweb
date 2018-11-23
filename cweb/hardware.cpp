@@ -29,6 +29,52 @@
 #define TRIG					0
 #define ECHO					2
 
+// Sub-addresses in motor hat i2c address
+#define MODE1                   0x00
+#define MODE2                   0x01
+#define SUBADR1                 0x02
+#define SUBADR2                 0x03
+#define SUBADR3                 0x04
+#define PRESCALE                0xFE
+
+#define CHANNEL0_ON_L           0x06
+#define CHANNEL0_ON_H           0x07
+#define CHANNEL0_OFF_L          0x08
+#define CHANNEL0_OFF_H          0x09
+
+#define ALLCHANNEL_ON_L         0xFA
+#define AllCHANNEL_ON_H         0xFB
+#define ALLCHANNEL_OFF_L        0xFC
+#define ALLCHANNEL_OFF_H        0xFD
+
+// Bits
+#define RESTART                 0x80
+#define SLEEP                   0x10
+#define ALLCALL                 0x01
+#define INVRT                   0x10
+#define OUTDRV                  0x04
+
+
+// Address of PWM channels - Fw and Rv expect their on and off values to be 0 to PWM_MAX
+// If a PWM channel is used as a off or on, the value would be 0  or PWM_COUNT respectively
+#define M0Fw                    9       // Motor 1 Forward enable PWM channel
+#define M0Rv                    10      // Motor 1 Reverse enable - both 0 is safe off
+#define M0En                    8       // Motor 1 enable, values from 0 to PWM_MAX
+
+#define M1Fw                    11
+#define M1Rv                    12
+#define M1En                    13
+
+#define M2Fw                    4
+#define M2Rv                    3
+#define M2En                    2
+
+#define M3Fw                    5
+#define M3Rv                    6
+#define M3En                    7
+
+#define Scanner					0
+
 extern Filer	filer;
 
 bool	scanLoop;
