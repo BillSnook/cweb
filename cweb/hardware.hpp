@@ -93,7 +93,7 @@ class PWM {
 #define M3Rv                    6
 #define M3En                    7
 
-#define Scanner					15
+#define Scanner					0
 	
 public:
 	explicit PWM( int addr );
