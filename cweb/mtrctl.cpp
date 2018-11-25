@@ -20,17 +20,12 @@
 #include "sender.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
-#include "power.hpp"
-
-//#include <fcntl.h>
-//#include <sys/mman.h>
-//
-//#define BCM2708_ST_BASE 0x20003000 /* BCM 2835 System Timer */
+//#include "power.hpp"
 
 
 #define	PORT	5555
 
-//#define MAKE_DAEMON
+#define MAKE_DAEMON
 
 Threader	threader;
 
@@ -43,53 +38,18 @@ bool		ready;
 bool		doLoop;
 
 
-//volatile unsigned *TIMER_registers;
-//
-//unsigned int TIMER_GetSysTick()
-//{
-//	return TIMER_registers[1];
-//}
-//
-//void TIMER_Init()
-//{
-//	/* open /dev/mem */
-//	int TIMER_memFd;
-//	if ((TIMER_memFd = open("/dev/mem", O_RDWR/*|O_SYNC*/) ) < 0)
-//	{
-//		printf("can't open /dev/mem - need root ?\n");
-//		exit(-1);
-//	}
-//
-//	/* mmap BCM System Timer */
-//	void *TIMER_map = mmap(
-//						   NULL,
-//						   4096, /* BLOCK_SIZE */
-//						   PROT_READ /*|PROT_WRITE*/,
-//						   MAP_SHARED,
-//						   TIMER_memFd,
-//						   BCM2708_ST_BASE
-//						   );
-//
-//	close(TIMER_memFd);
-//
-//	if (TIMER_map == MAP_FAILED)
-//	{
-//		printf("mmap error %ld\n", (long)TIMER_map);
-//		exit(-1);
-//	}
-//	TIMER_registers = (volatile unsigned *)TIMER_map;
-//}
-
 int main(int argc, const char * argv[]) {
 
 //	TIMER_Init();
 	
 #ifdef MAKE_DAEMON
-	becomeDaemon = true;
+	if ( argc == 3 ) {
+		becomeDaemon = true;
+	}
 #else	// not MAKE_DAEMON
 	becomeDaemon = false;
 #endif	// MAKE_DAEMON
-	if ( argc > 1 ) {
+	if ( argc == 2 ) {
 		becomeDaemon = false;		// Do not become daemon if sender or by intent
 	}
 #ifdef ON_PI
