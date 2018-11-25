@@ -11,6 +11,18 @@
 #include "threader.hpp"
 
 
+enum TaskType {
+	stopTask = 0,
+	testTask1,		// 1
+	testTask2,		// 2
+	scanTask,		// 3
+	pingTask,		// 4
+	scanpingTask,	// 5
+	huntTask,		// 6
+	testTaskCount	// 7, size of TaskType enum
+};
+
+
 //extern Commander	commander;
 extern Hardware		hardware;
 extern Threader		threader;
@@ -59,6 +71,9 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 			break;
 		case scanpingTask:
 			taskScanPing();
+			break;
+		case huntTask:
+			taskHunt();
 			break;
 
 		default:
@@ -119,4 +134,13 @@ void TaskMaster::taskScanPing() {
 	syslog(LOG_NOTICE, "In taskScanPing" );
 	stopLoop = false;
 	hardware.scanPing();
+}
+
+void TaskMaster::taskHunt() {
+	
+	syslog(LOG_NOTICE, "In taskHunt" );
+	
+	// Fix
+	stopLoop = true;
+	hardware.scanStop();
 }

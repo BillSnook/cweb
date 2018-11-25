@@ -9,16 +9,6 @@
 #ifndef tasks_hpp
 #define tasks_hpp
 
-enum TaskType {
-	stopTask = 0,
-	testTask1,		// 1
-	testTask2,		// 2
-	scanTask,		// 3
-	pingTask,		// 4
-	scanpingTask,	// 5
-	testTaskCount	// 6, size of TaskType enum
-};
-
 
 class TaskMaster {
 	
@@ -36,6 +26,7 @@ public:
 	void taskScan();
 	void taskPing();
 	void taskScanPing();
+	void taskHunt();
 };
 
 // extern TaskMaster	task;
