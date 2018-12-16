@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
+		A958526421BCDD9E001573FA /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
@@ -38,6 +39,8 @@
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
 		A923017F218E989F00EB2A21 /* tasks.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tasks.hpp; sourceTree = "<group>"; };
+		A958526221BCDD9E001573FA /* actions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = actions.cpp; sourceTree = "<group>"; };
+		A958526321BCDD9E001573FA /* actions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = actions.hpp; sourceTree = "<group>"; };
 		A96D72ED207AFD4500B98679 /* mtrctl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; name = mtrctl; path = cweb; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96D72F0207AFD4500B98679 /* mtrctl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mtrctl.cpp; sourceTree = "<group>"; };
 		A96D72F7207B086900B98679 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -114,6 +117,8 @@
 				A9ABD77B209507D100B64F14 /* power.hpp */,
 				A91D0AD4209958DF00EA1DB4 /* filer.cpp */,
 				A91D0AD5209958DF00EA1DB4 /* filer.hpp */,
+				A958526221BCDD9E001573FA /* actions.cpp */,
+				A958526321BCDD9E001573FA /* actions.hpp */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -176,6 +181,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
+				A958526421BCDD9E001573FA /* actions.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,

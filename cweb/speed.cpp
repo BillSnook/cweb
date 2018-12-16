@@ -35,6 +35,7 @@ bool Speed::resetForSpeed() {
 void Speed::initializeSpeedArray() {
 	
 	filer = Filer();
+	filer.setFile( 1 );
 	bool success = filer.readData( forward, reverse );
 	if ( ! success ) {
 		syslog(LOG_NOTICE, "Failed reading speed array from file; making default one" );

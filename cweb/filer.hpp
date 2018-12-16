@@ -9,16 +9,6 @@
 #ifndef filer_hpp
 #define filer_hpp
 
-#ifdef ON_PI
-
-#define SPEED_FILE_NAME         "/home/pi/code/c/cweb/cweb/speed.bin"
-
-#else   // ON_PI
-
-#define SPEED_FILE_NAME         "/Users/bill/Code/iOS/rTest/cweb/cweb/speed.bin"
-
-#endif  // ON_PI
-
 
 struct speed_array {
 	int left;
@@ -27,9 +17,14 @@ struct speed_array {
 
 
 class Filer {
+
+	char fileName[64];
+	char *speedFileName = fileName;
+
 public:
 	explicit Filer();
 	
+	void setFile( int whichFile );
 	void saveData( speed_array *forward, speed_array *reverse );
 	bool readData( speed_array *forward, speed_array *reverse );
 };

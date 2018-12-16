@@ -425,21 +425,18 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	int speedLeft = speed.speedLeft( speedIndex );	// Index says f or r but speedL or R is absolute
 	int speedRight = speed.speedRight( speedIndex );
 	syslog( LOG_NOTICE, "cmdSpeed, sl: %d, sr: %d", speedLeft, speedRight );
-	if ( speedIndex > 0 ) {
+	if ( speedIndex < 0 ) {
 		setPin( M0Fw, 1 );
 		setPin( M0Rv, 0 );
-	} else {
-		setPin( M0Fw, 0 );
-		setPin( M0Rv, 1 );
-	}
-	setPWM( M0En, speedLeft );
-	if ( speedIndex > 0 ) {
 		setPin( M1Fw, 1 );
 		setPin( M1Rv, 0 );
 	} else {
+		setPin( M0Fw, 0 );
+		setPin( M0Rv, 1 );
 		setPin( M1Fw, 0 );
 		setPin( M1Rv, 1 );
 	}
+	setPWM( M0En, speedLeft );
 	setPWM( M1En, speedRight );
 }
 
@@ -451,7 +448,7 @@ int Hardware::angleToPWM( int angle ) {
 
 void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( Scanner, angleToPWM( angle - 8 ) );	// Calibrated
+	setPWM( Scanner, angleToPWM( angle - 8 ) );	// Calibrated - adjust as needed
 }
 
 void Hardware::centerServo() {
