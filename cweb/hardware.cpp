@@ -95,7 +95,7 @@ I2C::I2C(int addr) {
 int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8 ( device, reg );	// Read 8 bits from register reg on device
+	return wiringPiI2CReadReg8( device, reg );	// Read 8 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
@@ -104,7 +104,7 @@ int I2C::i2cRead(int reg) {
 int I2C::i2cReadReg8(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8 ( device, reg );	// Read 8 bits from register reg on device
+	return wiringPiI2CReadReg8( device, reg );	// Read 8 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
@@ -113,7 +113,7 @@ int I2C::i2cReadReg8(int reg) {
 int I2C::i2cReadReg16(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg16 ( device, reg );	// Read 16 bits from register reg on device
+	return wiringPiI2CReadReg16( device, reg );	// Read 16 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI

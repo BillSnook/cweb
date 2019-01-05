@@ -155,7 +155,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'C':
 		case 'c':
 			syslog(LOG_NOTICE, "Command c calls: ard->testWrite( 0x44 )" );
-			hardware.ard->testWrite( 0x44 );
+			hardware.ard->testWrite( token1 );
 			break;
 			
 		case 'G':
