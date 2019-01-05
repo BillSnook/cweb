@@ -631,7 +631,7 @@ int Ard::testRead() {
 void Ard::testWrite(int data) {
 	
 //	putI2CReg(data);
-	ard_i2c->i2cWrite( 0, data );
+	ard_i2c->i2cWrite( 0x43, data );
 	syslog(LOG_NOTICE, "Wrote 0x%X to I2C device", data & 0x0FF);
 
 }
