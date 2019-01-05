@@ -148,13 +148,13 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: hardware.cmdSpeed( %d )", token1 );
+			syslog(LOG_NOTICE, "Command b calls: ard->testRead()" );
 			hardware.ard->testRead();
 			break;
 			
 		case 'C':
 		case 'c':
-			syslog(LOG_NOTICE, "Command c calls: hardware.cmdSpeed( %d )", token1 );
+			syslog(LOG_NOTICE, "Command c calls: ard->testWrite( 0x44 )" );
 			hardware.ard->testWrite( 0x44 );
 			break;
 			

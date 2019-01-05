@@ -622,10 +622,8 @@ Ard::Ard( int addr ) {
 int Ard::testRead() {
 	
 	int got = 0;
-#ifdef ON_PI
 	got = ard_i2c->i2cRead( 0 );
-	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
-#endif // ON_PI
+	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got & 0x0FF);
 	
 	return got;
 }
@@ -634,6 +632,7 @@ void Ard::testWrite(int data) {
 	
 //	putI2CReg(data);
 	ard_i2c->i2cWrite( 0, data );
+	syslog(LOG_NOTICE, "Wrote 0x%X to I2C device", data & 0x0FF);
 
 }
 
