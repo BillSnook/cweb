@@ -146,6 +146,18 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //			hardware.setMtrSpd( 1, 0 );
 //			break;
 //
+		case 'B':
+		case 'b':
+			syslog(LOG_NOTICE, "Command b calls: hardware.cmdSpeed( %d )", token1 );
+			hardware.ard->testRead();
+			break;
+			
+		case 'C':
+		case 'c':
+			syslog(LOG_NOTICE, "Command c calls: hardware.cmdSpeed( %d )", token1 );
+			hardware.ard->testWrite( 0x44 );
+			break;
+			
 		case 'G':
 		case 'g':
 			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
