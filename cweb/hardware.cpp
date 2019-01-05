@@ -256,13 +256,13 @@ Hardware::Hardware() {
 
 bool Hardware::setupHardware() {
 	
-#ifdef ON_PI
-	pinMode( TRIG, OUTPUT );	// Brown
-	pinMode( ECHO, INPUT );		// White
-	
-	digitalWrite(TRIG, LOW);	// Off
-
-#endif  // ON_PI
+//#ifdef ON_PI
+//	pinMode( TRIG, OUTPUT );	// Brown
+//	pinMode( ECHO, INPUT );		// White
+//
+//	digitalWrite(TRIG, LOW);	// Off
+//
+//#endif  // ON_PI
 
 	syslog(LOG_NOTICE, "In setupHardware" );
 	speed = Speed();
@@ -292,11 +292,11 @@ bool Hardware::resetHardware() {
 	
 	setPWM( Scanner, 0 );		// Turn off servos
 
-#ifdef ON_PI
-	
-	digitalWrite(TRIG, LOW);	// Off
-	
-#endif  // ON_PI
+//#ifdef ON_PI
+//
+//	digitalWrite(TRIG, LOW);	// Off
+//
+//#endif  // ON_PI
 
 	return true;
 }
@@ -546,53 +546,53 @@ void Hardware::pingLoop() {
 // MARK: range finder section
 unsigned int Hardware::ping() {
 	
-//	syslog(LOG_NOTICE, "In ping" );
+	syslog(LOG_NOTICE, "In ping" );
 	unsigned int cm = 0;
-	
-#ifdef ON_PI
-//	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
-//	pinMode( ECHO, INPUT );		// White	2 - pin 13
-	
-	unsigned int tmr0, tmr1, tmr;
-	unsigned int diff = 0;
-	digitalWrite( TRIG, HIGH );	// On
-	usleep( 20 );
-	digitalWrite( TRIG, LOW );	// Off
-	
-	tmr = micros();
-	while ( LOW == digitalRead( ECHO ) ) {
-		tmr0 = micros();
-		diff = tmr0 - tmr;
-		if ( diff > 50000 ) {
-			syslog(LOG_NOTICE, "In ping, low too long" );
-			usleep( 100000 );
-			break;
-		}
-//		if ( !scanLoop ) {
+//
+//#ifdef ON_PI
+////	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
+////	pinMode( ECHO, INPUT );		// White	2 - pin 13
+//
+//	unsigned int tmr0, tmr1, tmr;
+//	unsigned int diff = 0;
+//	digitalWrite( TRIG, HIGH );	// On
+//	usleep( 20 );
+//	digitalWrite( TRIG, LOW );	// Off
+//
+//	tmr = micros();
+//	while ( LOW == digitalRead( ECHO ) ) {
+//		tmr0 = micros();
+//		diff = tmr0 - tmr;
+//		if ( diff > 50000 ) {
+//			syslog(LOG_NOTICE, "In ping, low too long" );
+//			usleep( 100000 );
 //			break;
 //		}
-	}
-	
-	diff = 0;
-	while ( HIGH == digitalRead( ECHO ) ) {
-		tmr1 = micros();
-		diff = tmr1 - tmr0;
-		if ( diff > 50000 ) {
-			syslog(LOG_NOTICE, "In ping, high too long" );
-			usleep( 100000 );
-			break;
-		}
-//		if ( !scanLoop ) {
+////		if ( !scanLoop ) {
+////			break;
+////		}
+//	}
+//
+//	diff = 0;
+//	while ( HIGH == digitalRead( ECHO ) ) {
+//		tmr1 = micros();
+//		diff = tmr1 - tmr0;
+//		if ( diff > 50000 ) {
+//			syslog(LOG_NOTICE, "In ping, high too long" );
+//			usleep( 100000 );
 //			break;
 //		}
-	}
-//	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
-
-	cm = (diff * 34300) / 2;
-	cm = cm / 1000000;
-//	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
-
-#endif  // ON_PI
+////		if ( !scanLoop ) {
+////			break;
+////		}
+//	}
+////	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
+//
+//	cm = (diff * 34300) / 2;
+//	cm = cm / 1000000;
+////	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
+//
+//#endif  // ON_PI
 
 	return cm;
 }
@@ -623,7 +623,7 @@ int Ard::testRead() {
 	
 	int got = 0;
 #ifdef ON_PI
-	got = ard_i2c->i2cRead();
+	got = ard_i2c->i2cRead( 0 );
 	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
 #endif // ON_PI
 	
