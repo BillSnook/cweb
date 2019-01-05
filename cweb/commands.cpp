@@ -11,6 +11,7 @@
 #include "listen.hpp"
 #include "tasks.hpp"
 #include "hardware.hpp"
+#include "minion.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -31,6 +32,7 @@ Hardware	hardware;
 
 extern Filer	filer;
 extern Listener	listener;
+extern Minion minion;
 
 void Commander::setupCommander() {
 	
@@ -84,6 +86,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 //	}
 
+	unsigned char buffer[20] = {0};
 	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 //	memcpy( msg, "\nAck\n", 5 );
@@ -148,14 +151,15 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: ard->testRead()" );
-			hardware.ard->testRead();
+			syslog(LOG_NOTICE, "Command b calls: 			minion.testRead()" );
+			minion.testRead();
 			break;
 			
 		case 'C':
 		case 'c':
-			syslog(LOG_NOTICE, "Command c calls: ard->testWrite( %d )", token1 );
-			hardware.ard->testWrite( token1 );
+			syslog(LOG_NOTICE, "Command c calls: minion.testWrite('Test' )" );
+			memcpy( buffer, "Test", 5 );
+			minion.testWrite( buffer );
 			break;
 			
 		case 'G':

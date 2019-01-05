@@ -19,6 +19,7 @@
 		A9ABD7762095078900B64F14 /* hardware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD7742095078900B64F14 /* hardware.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
 		A9ABD77C209507D200B64F14 /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
+		A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF207F21E16F9500DF77E3 /* minion.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +63,8 @@
 		A9ABD778209507A400B64F14 /* speed.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = speed.hpp; sourceTree = "<group>"; };
 		A9ABD77A209507D100B64F14 /* power.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = power.cpp; sourceTree = "<group>"; };
 		A9ABD77B209507D100B64F14 /* power.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = power.hpp; sourceTree = "<group>"; };
+		A9AF207E21E16F9400DF77E3 /* minion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minion.hpp; sourceTree = "<group>"; };
+		A9AF207F21E16F9500DF77E3 /* minion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minion.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				A91D0AD5209958DF00EA1DB4 /* filer.hpp */,
 				A958526221BCDD9E001573FA /* actions.cpp */,
 				A958526321BCDD9E001573FA /* actions.hpp */,
+				A9AF207F21E16F9500DF77E3 /* minion.cpp */,
+				A9AF207E21E16F9400DF77E3 /* minion.hpp */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -186,6 +191,7 @@
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
+				A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */,
 				A9ABD77C209507D200B64F14 /* power.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,

@@ -20,7 +20,7 @@
 #include "sender.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
-//#include "power.hpp"
+#include "minion.hpp"
 
 
 #define	PORT	5555
@@ -31,6 +31,8 @@ Threader	threader;
 
 Listener	listener;
 Sender		sender;
+
+Minion		minion;
 
 bool		becomeDaemon;
 bool		ready;
@@ -125,6 +127,9 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
+	minion = Minion();
+	minion.setupMinion( ArdI2CAddr );
+	
 #ifdef ON_PI_X	// Power not attached to robot tank currently
 	Power power = Power();
 	char *pStatus = power.getUPS2();
@@ -155,6 +160,7 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 	
+	minion.resetMinion();
 	threader.shutdownThreads();
 
     return 0;
