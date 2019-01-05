@@ -12,7 +12,7 @@
 #include <syslog.h>			// close read write
 #include <math.h>
 
-#define I2C_MOTOR_ADDRESS		0x6F
+#define MOTOR_I2C_ADDRESS		0x6F
 #define CHANNEL_MAX				15
 
 #define PWM_RESOLUTION          4096.0
@@ -26,9 +26,11 @@
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
-// Pi pins
-#define TRIG					0
-#define ECHO					2
+//// Pi pins - ultrasonic range-finder
+//#define TRIG					0		// Brown	Out
+//#define ECHO					2		// White	In
+
+#define ArdI2CAddr				8
 
 // Sub-addresses in motor hat i2c address
 #define MODE1                   0x00
@@ -146,6 +148,7 @@ int I2C::i2cWriteReg16(int reg, int data) {
 }
 
 
+// MARK: PWM control
 PWM::PWM( int addr ) {
 	
 	debug = false;
@@ -183,7 +186,7 @@ void PWM::setPWMFrequency( int freq ) {
 	i2c->i2cWrite( MODE1, oldmode );
 	
 #ifdef ON_PI
-	delay( 1 );                         // Millisecond to let oscillator stabileize
+	delay( 1 );                         // Millisecond to let oscillator stabilize
 #endif  // ON_PI
 }
 
@@ -227,12 +230,6 @@ int PWM::getPWMResolution() {
 	return PWM_RESOLUTION;
 }
 
-////DCM::DCM( hardware board, int motor ) {
-
-////    controller = board;
-////    motorNumber = motor;
-////}}
-
 
 Hardware::Hardware() {
 	
@@ -248,14 +245,14 @@ Hardware::Hardware() {
 //	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
 #endif  // ON_PI
 	
-	pwm = new PWM( I2C_MOTOR_ADDRESS );		// Default for Motor Hat PWM chip
+	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+
+	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
 	pwm->setPWMFrequency( PWM_FREQ );
 	
-	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", I2C_MOTOR_ADDRESS, PWM_FREQ );
+	ard = new Ard( ArdI2CAddr );
+	
 }
-
-// #define TRIG					0		Brown	Out
-// #define ECHO					2		White	In
 
 bool Hardware::setupHardware() {
 	
@@ -338,7 +335,7 @@ void Hardware::setPWM( int pin, int value ) {
 //    return motors[motor]
 //}
 
-// MARK: Motor section
+// MARK: motor section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
 	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
@@ -440,7 +437,7 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	setPWM( M1En, speedRight );
 }
 
-// MARK: Servo section
+// MARK: servo section
 int Hardware::angleToPWM( int angle ) {
 	
 	return MIN_PWM + ( angle * DEGREE_PER_PWM );
@@ -546,7 +543,7 @@ void Hardware::pingLoop() {
 }
 
 
-// MARK: Range Finder section
+// MARK: range finder section
 unsigned int Hardware::ping() {
 	
 //	syslog(LOG_NOTICE, "In ping" );
@@ -599,3 +596,44 @@ unsigned int Hardware::ping() {
 
 	return cm;
 }
+
+void Hardware::allStop() {
+	
+}
+
+void Hardware::scanUntilFound( int scanType ) {
+	
+}
+
+void Hardware::turnAndFollow( int followDistance ) {
+	
+}
+
+// MARK: Arduino control
+Ard::Ard( int addr ) {
+	
+	debug = false;
+	address = addr;
+	ard_i2c = new I2C( address );
+	
+}
+
+// MARK: I2C tests
+int Ard::testRead() {
+	
+	int got = 0;
+#ifdef ON_PI
+	got = ard_i2c->i2cRead();
+	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
+#endif // ON_PI
+	
+	return got;
+}
+
+void Ard::testWrite(int data) {
+	
+//	putI2CReg(data);
+	ard_i2c->i2cWrite( 0, data );
+
+}
+

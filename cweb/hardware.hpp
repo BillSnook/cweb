@@ -48,7 +48,6 @@ public:
 
 class PWM {
 	
-	
 public:
 	explicit PWM( int addr );
 	
@@ -62,16 +61,34 @@ public:
 	int getPWMResolution();
 };
 
-////class DCM {
 
-////public:
-////    explicit DCM( hardware board, int motor );
+enum {		// Scan type
+	NoScan,
+	NarrowScan,
+	MediumScan,
+	WideScan
+};
 
-////    bool        debug;
-////    hardware    controller;
-////    int         motorNumber;
-////};
+enum {		// Distance class
+	NoDistance,
+	ShortDistance,
+	MediumDistance,
+	LongDistance
+};
 
+class Ard {
+	
+public:
+	explicit Ard( int addr );
+	
+	bool    debug;
+	int     address;             // I2C address
+	I2C     *ard_i2c;
+	
+	int		testRead();
+	void	testWrite(int data);
+	
+};
 
 class Hardware {
 	
@@ -80,6 +97,7 @@ public:
 	
 	I2C     	*i2c;
 	PWM     	*pwm;
+	Ard			*ard;
 	
 	bool    	motor0Setup;
 	bool   		motor1Setup;
@@ -113,6 +131,10 @@ public:
 	void pingLoop();
 
 	unsigned int ping();
+	void allStop();
+	void scanUntilFound( int scanType );
+	void turnAndFollow( int followDistance );
+
 };
 
 #endif /* hardware_hpp */

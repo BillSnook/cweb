@@ -27,12 +27,15 @@ void Actor::stop() {
 	
 	syslog(LOG_NOTICE, "In stop" );
 	
-	hardware.scanStop();
+	hardware.allStop();
 }
+
 void Actor::runHunt() {
 	
 	syslog(LOG_NOTICE, "In runHunt" );
 	
-	hardware.scanPing();
+	//	hardware.scanPing();
+	
+	hardware.scanUntilFound( WideScan );
+	hardware.turnAndFollow( MediumDistance );
 }
-
