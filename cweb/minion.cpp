@@ -48,7 +48,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
-//	syslog(LOG_NOTICE, "Opened %s on device %d", filename, file_i2c);
+	syslog(LOG_NOTICE, "In setupMinion, opened %s on device %d", filename, file_i2c);
 
 #endif  // ON_PI
 	
@@ -57,6 +57,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 
 bool Minion::resetMinion() {
 	
+	syslog(LOG_NOTICE, "In resetMinion" );
 	return true;
 }
 
