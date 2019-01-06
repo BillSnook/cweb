@@ -86,7 +86,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 //	}
 
-	unsigned char buffer[20] = {0};
+//	unsigned char buffer[20] = {0};
 	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 //	memcpy( msg, "\nAck\n", 5 );
@@ -151,15 +151,15 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: 			minion.testRead()" );
+			syslog(LOG_NOTICE, "Command b calls: minion.testRead()" );
 			minion.testRead();
 			break;
 			
 		case 'C':
 		case 'c':
 			syslog(LOG_NOTICE, "Command c calls: minion.testWrite('Test' )" );
-			memcpy( buffer, "Test", 5 );
-			minion.testWrite( buffer );
+//			memcpy( buffer, "Test", 5 );
+			minion.testWrite( (unsigned char *)"Test" );
 			break;
 			
 		case 'G':

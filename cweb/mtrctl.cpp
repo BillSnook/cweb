@@ -32,7 +32,7 @@ Threader	threader;
 Listener	listener;
 Sender		sender;
 
-//Minion		minion;
+Minion		minion;
 
 bool		becomeDaemon;
 bool		ready;
