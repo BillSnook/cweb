@@ -76,19 +76,19 @@ enum {		// Distance class
 	LongDistance
 };
 
-//class Ard {
-//	
-//public:
-//	explicit Ard( int addr );
-//	
-//	bool    debug;
-//	int     address;             // I2C address
-//	I2C     *ard_i2c;
-//	
-//	int		testRead();
-//	void	testWrite(int data);
-//	
-//};
+class Ard {
+	
+public:
+	explicit Ard( int addr );
+	
+	bool    debug;
+	int     address;             // I2C address
+	I2C     *ard_i2c;
+	
+	int		testRead();
+	void	testWrite(int data);
+	
+};
 
 class Hardware {
 	
@@ -97,7 +97,7 @@ public:
 	
 	I2C     	*i2c;
 	PWM     	*pwm;
-//	Ard			*ard;
+	Ard			*ard;
 	
 	bool    	motor0Setup;
 	bool   		motor1Setup;

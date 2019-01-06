@@ -250,7 +250,7 @@ Hardware::Hardware() {
 	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
 	pwm->setPWMFrequency( PWM_FREQ );
 	
-//	ard = new Ard( ArdI2CAddr );
+	ard = new Ard( ArdI2CAddr );
 	
 }
 
@@ -609,31 +609,31 @@ void Hardware::turnAndFollow( int followDistance ) {
 	
 }
 
-//// MARK: Arduino control
-//Ard::Ard( int addr ) {
-//	
-//	debug = false;
-//	address = addr;
-//	ard_i2c = new I2C( address );
-//	
-//}
-//
-//// MARK: I2C tests
-//int Ard::testRead() {
-//	
-//	int got = 0;
-//	got = ard_i2c->i2cRead( 0 );
-//	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got & 0x0FF);
-//	
-//	return got;
-//}
-//
-//void Ard::testWrite(int data) {
-//	
-////	putI2CReg(data);
-//	ard_i2c->i2cWrite( 0x43, 0x45 );
-//	ard_i2c->i2cWrite( 0x46, 0x47 );
-//	syslog(LOG_NOTICE, "Wrote 0x%X to I2C device", data & 0x0FF);
-//
-//}
-//
+// MARK: Arduino control
+Ard::Ard( int addr ) {
+	
+	debug = false;
+	address = addr;
+	ard_i2c = new I2C( address );
+	
+}
+
+// MARK: I2C tests
+int Ard::testRead() {
+	
+	int got = 0;
+	got = ard_i2c->i2cRead( 0 );
+	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got & 0x0FF);
+	
+	return got;
+}
+
+void Ard::testWrite(int data) {
+	
+//	putI2CReg(data);
+	ard_i2c->i2cWrite( 0x43, 0x45 );
+	ard_i2c->i2cWrite( 0x46, 0x47 );
+	syslog(LOG_NOTICE, "Wrote 0x%X to I2C device", data & 0x0FF);
+
+}
+
