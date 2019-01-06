@@ -86,7 +86,7 @@ int Minion::getI2CReg() {
 unsigned char *Minion::getI2CData() {
 	
 #ifdef ON_PI
-	unsigned char buffer[20] = {0};
+	unsigned char buffer[20];
 	int length;
 	
 	//----- READ BYTES -----
@@ -150,7 +150,7 @@ int Minion::testRead() {
 	int got = 0;
 #ifdef ON_PI
 	unsigned char *result = getI2CData();
-	got = strlen( result );
+	got = strlen( (const char *)result );
 	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
 #endif // ON_PI
 	
