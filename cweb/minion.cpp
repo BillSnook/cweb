@@ -84,27 +84,24 @@ int Minion::getI2CReg() {
 
 }
 
-unsigned char *Minion::getI2CData() {
+bool Minion::getI2CData( unsigned char *buff ) {
 	
 #ifdef ON_PI
-	unsigned char buffer[20];
 	int length;
 	
 	//----- READ BYTES -----
-	length = 4;			// Number of bytes to read
-	if (read(file_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
+	length = 16;			// Number of bytes to read
+	if (read(file_i2c, buff, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		//ERROR HANDLING: i2c transaction failed
 		syslog(LOG_NOTICE, "Failed to read from the i2c bus.\n");
-	} else {
-//		buffer[length] = 0;	// Terminate string?
-		syslog(LOG_NOTICE, "Data read: %s\n", buffer);
+		return false;
 	}
-	return buffer;
-#else	// Else not ON_PI
-	return 0;
+//	buffer[length] = 0;	// Terminate string?
+	syslog(LOG_NOTICE, "Data read: %s\n", buff);
 #endif  // ON_PI
-	
+
+	return true;
 }
 
 void Minion::putI2CReg( int newValue ) {
@@ -151,8 +148,10 @@ int Minion::testRead() {
 	
 	int got = 0;
 #ifdef ON_PI
-	unsigned char *result = getI2CData();
-	got = strlen( (const char *)result );
+	unsigned char buffSpace[20] = {0};
+	unsigned char *buffer = buffSpace;
+	getI2CData( buffer );
+	got = strlen( buffer );
 	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
 #endif // ON_PI
 	

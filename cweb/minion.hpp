@@ -32,7 +32,7 @@ public:
 	bool resetMinion();
 
 	int getI2CReg();
-	unsigned char *getI2CData();
+	bool getI2CData( unsigned char *buff );
 	void putI2CReg( int newValue );
 	bool putI2CData( unsigned char *newData );
 
