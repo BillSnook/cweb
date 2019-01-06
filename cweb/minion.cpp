@@ -24,8 +24,6 @@
 
 #include "minion.hpp"
 
-#define DEV						"/dev/i2c-1"
-
 
 Minion::Minion() {
 	
@@ -38,15 +36,15 @@ bool Minion::setupMinion( int i2cAddr ) {
 #ifdef ON_PI
 	
 	//----- OPEN THE I2C BUS -----
-	char *filename = DEV; // (char*)"/dev/i2c-1";
+	char *filename = (char*)"/dev/i2c-1";
 	if ((file_i2c = open(filename, O_RDWR)) < 0) {
 		//ERROR HANDLING: you can check errno to see what went wrong
-		syslog(LOG_NOTICE, "Failed to open the i2c bus: %d", errno);
+		syslog(LOG_NOTICE, "Failed to open the i2c bus");
 		return false;
 	}
 	
 	if (ioctl(file_i2c, I2C_SLAVE, pi2c) < 0) {
-		syslog(LOG_NOTICE, "Failed to acquire bus access and/or talk to slave: %d.", errno);
+		syslog(LOG_NOTICE, "Failed to acquire bus access and/or talk to slave");
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
@@ -136,7 +134,7 @@ bool Minion::putI2CData( unsigned char *newData ) {
 	//----- WRITE BYTES -----
 //	buffer[0] = 0x01;
 //	buffer[1] = newValue;
-	length = strlen( newData ); // 2;			//  Number of bytes to write
+	length = strlen( (const char *)newData ); // 2;			//  Number of bytes to write
 	if (write(file_i2c, newData, length) != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		/* ERROR HANDLING: i2c transaction failed */
@@ -151,7 +149,8 @@ int Minion::testRead() {
 	
 	int got = 0;
 #ifdef ON_PI
-	got = getI2CData();
+	unsigned char *result = getI2CData();
+	got = strlen( result );
 	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
 #endif // ON_PI
 	
