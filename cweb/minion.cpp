@@ -136,6 +136,7 @@ bool Minion::putI2CData( unsigned char *newData ) {
 //	buffer[0] = 0x01;
 //	buffer[1] = newValue;
 	length = strlen( (const char *)newData ); // 2;			//  Number of bytes to write
+	syslog(LOG_NOTICE, "putI2CData, length: %d, data: %s.", length, newData);
 	if (write(file_i2c, newData, length) != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		/* ERROR HANDLING: i2c transaction failed */
