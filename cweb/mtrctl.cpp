@@ -32,7 +32,7 @@ Threader	threader;
 Listener	listener;
 Sender		sender;
 
-Minion		minion;
+//Minion		minion;
 
 bool		becomeDaemon;
 bool		ready;
@@ -127,8 +127,8 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-	minion = Minion();
-	minion.setupMinion( ArdI2CAddr );
+//	minion = Minion();
+//	minion.setupMinion( ArdI2CAddr );
 	
 #ifdef ON_PI_X	// Power not attached to robot tank currently
 	Power power = Power();
@@ -160,7 +160,7 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 	
-	minion.resetMinion();
+//	minion.resetMinion();
 	threader.shutdownThreads();
 
     return 0;

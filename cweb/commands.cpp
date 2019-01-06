@@ -32,7 +32,7 @@ Hardware	hardware;
 
 extern Filer	filer;
 extern Listener	listener;
-extern Minion minion;
+//extern Minion minion;
 
 void Commander::setupCommander() {
 	
@@ -152,14 +152,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'B':
 		case 'b':
 			syslog(LOG_NOTICE, "Command b calls: 			minion.testRead()" );
-			minion.testRead();
+//			minion.testRead();
 			break;
 			
 		case 'C':
 		case 'c':
 			syslog(LOG_NOTICE, "Command c calls: minion.testWrite('Test' )" );
 			memcpy( buffer, "Test", 5 );
-			minion.testWrite( buffer );
+//			minion.testWrite( buffer );
 			break;
 			
 		case 'G':
