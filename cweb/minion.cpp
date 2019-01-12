@@ -151,7 +151,7 @@ int Minion::testRead() {
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	got = strlen( buffer );
+	got = strlen( (const char *)buffer );
 	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
 #endif // ON_PI
 	
