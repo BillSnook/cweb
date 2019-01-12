@@ -162,6 +162,18 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			minion.testWrite( (unsigned char *)"Test" );
 			break;
 			
+		case 'D':
+		case 'd':
+			syslog(LOG_NOTICE, "Command d calls: minion.testWrite('Test1' )" );
+			minion.testWrite( (unsigned char *)"Test1" );
+			break;
+			
+		case 'E':
+		case 'e':
+			syslog(LOG_NOTICE, "Command e calls: minion.testWrite('Test12' )" );
+			minion.testWrite( (unsigned char *)"Test12" );
+			break;
+			
 		case 'G':
 		case 'g':
 			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
