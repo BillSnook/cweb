@@ -35,16 +35,17 @@ void Manager::shutdownManager() {
 void Manager::monitor( int mode ) {
 	
 	syslog(LOG_NOTICE, "In Manager::monitor, should only run once" );
+	long now = 0;
 	while ( !stopLoop ) {
 		
-		long now = getNowMs();
+//		now = getNowMs();
 //		// Monitor microcontroller
 //		if ( now > lastAnythingTime + heartBeatInterval ) {
 //			lastAnythingTime = now;
 //
 //		}
-//
-//		now = getNowMs();
+
+		now = getNowMs();
 		syslog(LOG_NOTICE, "In Manager::monitor, now is: %ld", now );
 		// Monitor microcontroller
 		if ( now > lastStatusTime + statusCheckInterval ) {
@@ -63,7 +64,9 @@ long Manager::getNowMs() {
 	struct timespec ts;
 	clock_gettime( CLOCK_MONOTONIC, &ts );
 	
-	return ts.tv_nsec / 1000;
+	long ms = ts.tv_nsec / 1000000;
+	long sec = ts.tv_sec * 1000;
+	return sec + ms;
 }
 
 void Manager::getStatus() {
