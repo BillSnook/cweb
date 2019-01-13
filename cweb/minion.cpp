@@ -68,7 +68,7 @@ long Minion::getI2CCmd() {
 	int length;
 
 	//----- READ BYTES -----
-	length = 4;			// Number of bytes to read
+	length = 16;			// Number of bytes to read
 	int len = read(file_i2c, buffer, length);
 	if (len != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
