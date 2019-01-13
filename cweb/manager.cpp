@@ -43,8 +43,9 @@ void Manager::monitor( int mode ) {
 //			lastAnythingTime = now;
 //
 //		}
-//		
+//
 //		now = getNowMs();
+		syslog(LOG_NOTICE, "In Manager::monitor, now is: %ld", now );
 		// Monitor microcontroller
 		if ( now > lastStatusTime + statusCheckInterval ) {
 			lastStatusTime = now;
