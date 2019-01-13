@@ -31,14 +31,15 @@ public:
 	bool setupMinion( int i2CAddr );
 	bool resetMinion();
 
-	int getI2CReg();
+	long getI2CCmd();
 	bool getI2CData( unsigned char *buff );
-	void putI2CReg( int newValue );
+	void putI2CCmd( int newValue );
 	bool putI2CData( unsigned char *newData );
 
 	int	testRead();
 	void testWrite( unsigned char *data );
 
+	long getStatus();
 };
 
 #endif /* minion_hpp */

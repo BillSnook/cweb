@@ -61,21 +61,23 @@ bool Minion::resetMinion() {
 	return true;
 }
 
-int Minion::getI2CReg() {
+long Minion::getI2CCmd() {
 
 #ifdef ON_PI
-	unsigned char buffer[20] = {0};
+	unsigned char buffer[8] = {0};
 	int length;
 
 	//----- READ BYTES -----
 	length = 4;			// Number of bytes to read
-	if (read(file_i2c, buffer, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
+	int len = read(file_i2c, buffer, length);
+	if (len != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		//ERROR HANDLING: i2c transaction failed
-		syslog(LOG_NOTICE, "Failed to read from the i2c bus.\n");
-		return -1;
+		syslog(LOG_NOTICE, "Failed to read from the i2c bus, only read %d bytes.\n", len);
+		return -1L;
 	} else {
-		syslog(LOG_NOTICE, "Data read: %s\n", buffer);
+		syslog(LOG_NOTICE, "Data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+		long resp = ((buffer[0] && 0xFF) << 24) || ((buffer[1] && 0xFF) << 16) || ((buffer[2] && 0xFF) << 8) || (buffer[3] && 0xFF);
 		return buffer[0];
 	}
 #else	// Else not ON_PI
@@ -104,14 +106,14 @@ bool Minion::getI2CData( unsigned char *buff ) {
 	return true;
 }
 
-void Minion::putI2CReg( int newValue ) {
+void Minion::putI2CCmd( int newValue ) {
 
 #ifdef ON_PI
 	unsigned char buffer[20] = {0};
 	int length;
 
 	//----- WRITE BYTES -----
-	buffer[0] = 0x01;
+	buffer[0] = 0xC0;
 	buffer[1] = newValue;
 	length = 2;			//  Number of bytes to write
 	if (write(file_i2c, buffer, length) != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
@@ -162,4 +164,16 @@ void Minion::testWrite(unsigned char *data) {
 	
 	putI2CData(data);
 
+}
+
+// MARK: Command modes
+
+/// At startup, mtrctl should send a startup request to the Arduino
+/// and get back a status report. Thereafter, mtrctl should send a
+/// heartbeat at regular intervals.
+
+long Minion::getStatus() {
+	
+	
+	return 0;
 }

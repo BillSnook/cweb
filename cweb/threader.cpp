@@ -10,6 +10,7 @@
 #include "listen.hpp"
 #include "commands.hpp"
 #include "tasks.hpp"
+#include "manager.hpp"
 
 #include <pthread.h>
 #include <syslog.h>
@@ -18,6 +19,7 @@
 
 extern Threader		threader;
 extern TaskMaster	taskMaster;
+extern Manager		manager;
 
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
@@ -39,6 +41,9 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 const char *ThreadControl::description() {
 	const char *name;
 	switch (nextThreadType ) {
+		case managerThread:
+			name = "managerThread";
+			break;
 		case listenThread:
 			name = "listenThread";
 			break;
@@ -66,12 +71,15 @@ void Threader::setupThreader() {
 	commander.setupCommander();		// Manages mostly external commands
 	taskMaster = TaskMaster();
 	taskMaster.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
+	manager = Manager();
+	manager.setupManager(); 		// Manages task queue - to allow multiple tasks at once
 }
 
 void Threader::shutdownThreads() {
 	
 	syslog(LOG_NOTICE, "In shutdownThreads" );
 	
+	manager.shutdownManager();
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
 	pthread_mutex_destroy( &threadArrayMutex );
@@ -159,6 +167,9 @@ void Threader::runThread( void *arguments ) {
 	threadCount += 1;
 	syslog(LOG_NOTICE, "In runThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
+		case managerThread:
+			manager.monitor( nextThreadControl.nextSocket );
+			break;
 		case listenThread:
 			listener.acceptConnections( nextThreadControl.nextSocket );
 			break;

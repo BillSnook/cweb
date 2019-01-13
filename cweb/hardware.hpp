@@ -35,13 +35,13 @@ public:
 	int     address;            // I2C address
 	int     device;             // File handle to I2C device
 	
-	int i2cRead           (int reg) ;
-	int i2cReadReg8       (int reg) ;
-	int i2cReadReg16      (int reg) ;
+	int i2cRead           (int reg);
+	int i2cReadReg8       (int reg);
+	int i2cReadReg16      (int reg);
 	
-	int i2cWrite          (int reg, int data) ;
-	int i2cWriteReg8      (int reg, int data) ;
-	int i2cWriteReg16     (int reg, int data) ;
+	int i2cWrite          (int reg, int data);
+	int i2cWriteReg8      (int reg, int data);
+	int i2cWriteReg16     (int reg, int data);
 	
 };
 
@@ -76,20 +76,6 @@ enum {		// Distance class
 	LongDistance
 };
 
-class Ard {
-	
-public:
-	explicit Ard( int addr );
-	
-	bool    debug;
-	int     address;             // I2C address
-	I2C     *ard_i2c;
-	
-	int		testRead();
-	void	testWrite(int data);
-	
-};
-
 class Hardware {
 	
 public:
@@ -97,7 +83,6 @@ public:
 	
 	I2C     	*i2c;
 	PWM     	*pwm;
-	Ard			*ard;
 	
 	bool    	motor0Setup;
 	bool   		motor1Setup;

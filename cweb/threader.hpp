@@ -18,11 +18,11 @@
 #define		COMMAND_SIZE		32
 
 enum ThreadType {
-	listenThread = 0,
-	serverThread = 1,
-	commandThread = 2,
-	taskThread = 3,
-//	blinkThread = 4,
+	managerThread = 0,
+	listenThread = 1,
+	serverThread = 2,
+	commandThread = 3,
+	taskThread = 4,
 	testThread = 5
 };
 

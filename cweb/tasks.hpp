@@ -18,7 +18,7 @@ public:
 	void shutdownTaskMaster();
 	void mobileTask( int taskNumber, int param );
 	
-	void serviceTaskMaster( int command, int socket ) ;
+	void serviceTaskMaster( int command, int socket );
 
 	void killTasks();
 	void taskTest1();

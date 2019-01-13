@@ -20,6 +20,7 @@
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
 		A9ABD77C209507D200B64F14 /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 		A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF207F21E16F9500DF77E3 /* minion.cpp */; };
+		A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF208121EAD2A700DF77E3 /* manager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +66,8 @@
 		A9ABD77B209507D100B64F14 /* power.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = power.hpp; sourceTree = "<group>"; };
 		A9AF207E21E16F9400DF77E3 /* minion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minion.hpp; sourceTree = "<group>"; };
 		A9AF207F21E16F9500DF77E3 /* minion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minion.cpp; sourceTree = "<group>"; };
+		A9AF208121EAD2A700DF77E3 /* manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
+		A9AF208221EAD2A700DF77E3 /* manager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = manager.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +127,8 @@
 				A958526321BCDD9E001573FA /* actions.hpp */,
 				A9AF207F21E16F9500DF77E3 /* minion.cpp */,
 				A9AF207E21E16F9400DF77E3 /* minion.hpp */,
+				A9AF208121EAD2A700DF77E3 /* manager.cpp */,
+				A9AF208221EAD2A700DF77E3 /* manager.hpp */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -188,6 +193,7 @@
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A958526421BCDD9E001573FA /* actions.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
+				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,

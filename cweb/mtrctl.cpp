@@ -21,6 +21,7 @@
 #include "listen.hpp"
 #include "threader.hpp"
 #include "minion.hpp"
+#include "manager.hpp"
 
 
 #define	PORT	5555
@@ -33,6 +34,7 @@ Listener	listener;
 Sender		sender;
 
 Minion		minion;
+Manager		manager;
 
 bool		becomeDaemon;
 bool		ready;
