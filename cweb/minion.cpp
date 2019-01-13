@@ -106,10 +106,10 @@ bool Minion::getI2CData( unsigned char *buff ) {
 	return true;
 }
 
-void Minion::putI2CCmd( int newValue ) {
+void Minion::putI2CCmd( char newValue ) {
 
 #ifdef ON_PI
-	unsigned char buffer[20] = {0};
+	unsigned char buffer[4] = {0};
 	int length;
 
 	//----- WRITE BYTES -----
@@ -128,12 +128,9 @@ void Minion::putI2CCmd( int newValue ) {
 bool Minion::putI2CData( unsigned char *newData ) {
 	
 #ifdef ON_PI
-//	unsigned char buffer[20] = {0};
 	int length;
 	
 	//----- WRITE BYTES -----
-//	buffer[0] = 0x01;
-//	buffer[1] = newValue;
 	length = strlen( (const char *)newData ); //  Number of bytes to write
 	syslog(LOG_NOTICE, "putI2CData, length: %d, data: %s.", length, newData);
 	if (write(file_i2c, newData, length) != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)

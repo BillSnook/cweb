@@ -10,8 +10,10 @@
 #include <syslog.h>
 
 #include "manager.hpp"
+#include "minion.hpp"
 #include "hardware.hpp"
 
+extern Minion	minion;
 
 enum CheckTimes {	// milliSecond interval for various checks
 	statusCheckInterval = 5000L,
@@ -70,6 +72,8 @@ long Manager::getNowMs() {
 }
 
 void Manager::getStatus() {
-	syslog(LOG_NOTICE, "In Manager::getStatus" );
 
+	minion.putI2CCmd( 'c' );
+	long result = minion.getI2CCmd();
+	syslog(LOG_NOTICE, "In Manager::getStatus, got: %ld - 0x%08lX", result, result );
 }

@@ -33,7 +33,7 @@ public:
 
 	long getI2CCmd();
 	bool getI2CData( unsigned char *buff );
-	void putI2CCmd( int newValue );
+	void putI2CCmd( char newValue );
 	bool putI2CData( unsigned char *newData );
 
 	int	testRead();
