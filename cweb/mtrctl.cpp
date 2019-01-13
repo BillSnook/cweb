@@ -129,6 +129,10 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
+	manager = Manager();
+	manager.setupManager();
+	threader.queueThread( managerThread, 8, 0 );
+
 	minion = Minion();
 	minion.setupMinion( ArdI2CAddr );
 	

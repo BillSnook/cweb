@@ -71,8 +71,6 @@ void Threader::setupThreader() {
 	commander.setupCommander();		// Manages mostly external commands
 	taskMaster = TaskMaster();
 	taskMaster.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
-	manager = Manager();
-	manager.setupManager(); 		// Manages task queue - to allow multiple tasks at once
 }
 
 void Threader::shutdownThreads() {
