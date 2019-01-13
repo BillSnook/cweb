@@ -64,7 +64,7 @@ bool Minion::resetMinion() {
 long Minion::getI2CCmd() {
 
 #ifdef ON_PI
-	unsigned char buffer[8] = {0};
+	unsigned char buffer[20] = {0};
 	int length;
 
 	//----- READ BYTES -----
