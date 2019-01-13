@@ -73,8 +73,5 @@ long Manager::getNowMs() {
 
 void Manager::getStatus() {
 
-	minion.putI2CCmd( 's' );
-	usleep( 1000 );
-	long result = minion.getI2CCmd();
-	syslog(LOG_NOTICE, "In Manager::getStatus, got: %ld - 0x%08lX", result, result );
+	long result = minion.getStatus();
 }

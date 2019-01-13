@@ -171,6 +171,9 @@ void Minion::testWrite(unsigned char *data) {
 
 long Minion::getStatus() {
 	
-	
-	return 0;
+	putI2CCmd( 's' );
+	usleep( 1000 );
+	long result = getI2CCmd();
+	syslog(LOG_NOTICE, "In Minion::getStatus, got: %ld - 0x%08lX", result, result );
+	return result;
 }
