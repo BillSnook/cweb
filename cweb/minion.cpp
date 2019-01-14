@@ -180,7 +180,7 @@ long Minion::getStatus() {
 	
 	long result = 0;
 #ifdef ON_PI
-	putI2CData( (unsigned char *)"Test" );
+	putI2CData( (unsigned char *)"Test12" );
 
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
