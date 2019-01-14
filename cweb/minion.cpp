@@ -171,9 +171,21 @@ void Minion::testWrite(unsigned char *data) {
 
 long Minion::getStatus() {
 	
-	putI2CCmd( 's' );
-	usleep( 1000 );
-	long result = getI2CCmd();
-	syslog(LOG_NOTICE, "In Minion::getStatus, got: %ld - 0x%08lX", result, result );
+//	putI2CCmd( 's' );
+//	usleep( 1000 );
+//	long result = getI2CCmd();
+//	syslog(LOG_NOTICE, "In Minion::getStatus, got: %ld - 0x%08lX", result, result );
+	
+	putI2CData( (unsigned char *)"Test" );
+
+	long result = 0;
+#ifdef ON_PI
+	unsigned char buffSpace[20] = {0};
+	unsigned char *buffer = buffSpace;
+	getI2CData( buffer );
+	got = strlen( (const char *)buffer );
+	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
+#endif // ON_PI
+
 	return result;
 }
