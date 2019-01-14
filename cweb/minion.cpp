@@ -182,7 +182,7 @@ long Minion::getStatus() {
 #ifdef ON_PI
 	putI2CData( (unsigned char *)"Test12" );
 	
-	usleep( 1000 );
+	usleep( 20000 );	// 20 ms delay before reading
 
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
