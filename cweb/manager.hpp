@@ -21,9 +21,9 @@ class Manager {
 	long status;
 
 	long getNowMs();
-	void getStatus();
 
 public:
+	void getStatus();
 	void setupManager();
 	void shutdownManager();
 	
