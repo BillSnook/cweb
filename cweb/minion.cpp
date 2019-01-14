@@ -183,8 +183,8 @@ long Minion::getStatus() {
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	got = strlen( (const char *)buffer );
-	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
+	result = (int)strlen( (const char *)buffer );
+	syslog(LOG_NOTICE, "Read 0x%08lX from I2C device", result);
 #endif // ON_PI
 
 	return result;
