@@ -11,7 +11,7 @@
 #include "listen.hpp"
 #include "tasks.hpp"
 #include "hardware.hpp"
-#include "minion.hpp"
+#include "manager.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -33,7 +33,7 @@ Hardware	hardware;
 
 extern Filer	filer;
 extern Listener	listener;
-extern Minion minion;
+extern Manager 	manager;
 
 void Commander::setupCommander() {
 	
@@ -152,27 +152,27 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: minion.testRead()" );
-			minion.testRead();
+			syslog(LOG_NOTICE, "Command b calls: manager.testRead()" );
+			manager.testRead();
 			break;
 			
 		case 'C':
 		case 'c':
-			syslog(LOG_NOTICE, "Command c calls: minion.testWrite('Test' )" );
+			syslog(LOG_NOTICE, "Command c calls: manager.testWrite('Test' )" );
 //			memcpy( buffer, "Test", 5 );
-			minion.testWrite( (unsigned char *)"Test" );
+			manager.testWrite( (unsigned char *)"Test" );
 			break;
 			
 		case 'D':
 		case 'd':
-			syslog(LOG_NOTICE, "Command d calls: minion.testWrite('Test1' )" );
-			minion.testWrite( (unsigned char *)"Test1" );
+			syslog(LOG_NOTICE, "Command d calls: manager.testWrite('Test1' )" );
+			manager.testWrite( (unsigned char *)"Test1" );
 			break;
 			
 		case 'E':
 		case 'e':
-			syslog(LOG_NOTICE, "Command e calls: minion.testWrite('Test12' )" );
-			minion.testWrite( (unsigned char *)"Test12" );
+			syslog(LOG_NOTICE, "Command e calls: manager.testWrite('Test12' )" );
+			manager.testWrite( (unsigned char *)"Test12" );
 			break;
 			
 		case 'G':

@@ -13,7 +13,7 @@
 #include "minion.hpp"
 #include "hardware.hpp"
 
-extern Minion	minion;
+Minion	minion;
 
 enum CheckTimes {	// milliSecond interval for various checks
 	statusCheckInterval = 5000L,
@@ -27,10 +27,14 @@ void Manager::setupManager() {
 	lastStatusTime = 0;
 	lastHeartbeatTime = 0;
 	syslog(LOG_NOTICE, "In setupManager" );
+
+	minion = Minion();
+	minion.setupMinion( ArdI2CAddr );
 }
 
 void Manager::shutdownManager() {
 	
+	minion.resetMinion();
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
@@ -75,3 +79,26 @@ void Manager::getStatus() {
 
 	long result = minion.getStatus();
 }
+
+
+// Test
+int Manager::testRead() {
+	
+	int got = 0;
+#ifdef ON_PI
+	unsigned char buffSpace[20] = {0};
+	unsigned char *buffer = buffSpace;
+	minion.getI2CData( buffer );
+	got = strlen( (const char *)buffer );
+	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
+#endif // ON_PI
+	
+	return got;
+}
+
+void Manager::testWrite(unsigned char *data) {
+	
+	minion.putI2CData(data);
+	
+}
+

@@ -28,6 +28,11 @@ public:
 	void shutdownManager();
 	
 	void monitor( int mode );
+	
+	// test
+	int	testRead();
+	void testWrite( unsigned char *data );
+
 };
 
 extern Manager	manager;

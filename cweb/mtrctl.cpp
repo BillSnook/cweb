@@ -20,7 +20,6 @@
 #include "sender.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
-#include "minion.hpp"
 #include "manager.hpp"
 
 
@@ -33,7 +32,6 @@ Threader	threader;
 Listener	listener;
 Sender		sender;
 
-Minion		minion;
 Manager		manager;
 
 bool		becomeDaemon;
@@ -132,9 +130,6 @@ int main(int argc, const char * argv[]) {
 	manager = Manager();
 	manager.setupManager();
 	threader.queueThread( managerThread, 8, 0 );
-
-	minion = Minion();
-	minion.setupMinion( ArdI2CAddr );
 	
 #ifdef ON_PI_X	// Power not attached to robot tank currently
 	Power power = Power();
@@ -166,7 +161,6 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 	
-//	minion.resetMinion();
 	threader.shutdownThreads();
 
     return 0;
