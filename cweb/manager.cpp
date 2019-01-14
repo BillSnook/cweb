@@ -53,7 +53,7 @@ void Manager::monitor( int mode ) {
 		if ( now > lastStatusTime + statusCheckInterval ) {
 			lastStatusTime = now;
 			lastAnythingTime = now;
-			getStatus();
+////			getStatus();
 		}
 		
 
