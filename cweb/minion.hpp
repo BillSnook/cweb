@@ -39,6 +39,7 @@ public:
 	int	testRead();
 	void testWrite( unsigned char *data );
 
+	void setStatus();
 	long getStatus();
 };
 

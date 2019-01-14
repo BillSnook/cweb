@@ -23,12 +23,14 @@ class Manager {
 	long getNowMs();
 
 public:
-	void getStatus();
 	void setupManager();
 	void shutdownManager();
 	
 	void monitor( int mode );
-	
+
+	void setStatus();
+	long getStatus();
+
 	// test
 	int	testRead();
 	void testWrite( unsigned char *data );

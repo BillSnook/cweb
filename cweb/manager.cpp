@@ -41,23 +41,25 @@ void Manager::shutdownManager() {
 void Manager::monitor( int mode ) {
 	
 	syslog(LOG_NOTICE, "In Manager::monitor, should only run once" );
-	long now = 0;
+	setStatus();				// Set mode so reads get status
+	long now = getNowMs();
+	lastStatusTime = now;
 	while ( !stopLoop ) {
 		
-//		now = getNowMs();
+		now = getNowMs();
 //		// Monitor microcontroller
 //		if ( now > lastAnythingTime + heartBeatInterval ) {
 //			lastAnythingTime = now;
 //
 //		}
 
-		now = getNowMs();
+//		now = getNowMs();
 //		syslog(LOG_NOTICE, "In Manager::monitor, now is: %ld", now );
 		// Monitor microcontroller
 		if ( now > lastStatusTime + statusCheckInterval ) {
 			lastStatusTime = now;
 			lastAnythingTime = now;
-////			getStatus();
+			getStatus();
 		}
 		
 
@@ -75,9 +77,14 @@ long Manager::getNowMs() {
 	return sec + ms;
 }
 
-void Manager::getStatus() {
+void Manager::setStatus() {
+	
+	minion.setStatus();
+}
 
-	long result = minion.getStatus();
+long Manager::getStatus() {
+	
+	return minion.getStatus();
 }
 
 

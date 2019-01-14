@@ -113,7 +113,7 @@ void Minion::putI2CCmd( char newValue ) {
 	int length;
 
 	//----- WRITE BYTES -----
-	buffer[0] = 0xC0;
+	buffer[0] = 0x40;
 	buffer[1] = newValue;
 	length = 2;			//  Number of bytes to write
 	int len = write(file_i2c, buffer, length);
@@ -171,18 +171,20 @@ void Minion::testWrite(unsigned char *data) {
 /// and get back a status report. Thereafter, mtrctl should send a
 /// heartbeat at regular intervals.
 
+void Minion::setStatus() {
+	
+	putI2CCmd( 's' );
+}
+
 long Minion::getStatus() {
 	
-//	putI2CCmd( 's' );
 //	usleep( 1000 );
 //	long result = getI2CCmd();
 //	syslog(LOG_NOTICE, "In Minion::getStatus, got: %ld - 0x%08lX", result, result );
 	
 	long result = 0;
 #ifdef ON_PI
-	putI2CData( (unsigned char *)"Test12" );
-	
-	usleep( 20000 );	// 20 ms delay before reading
+//	usleep( 20000 );	// 20 ms delay before reading
 
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
@@ -193,3 +195,4 @@ long Minion::getStatus() {
 
 	return result;
 }
+
