@@ -91,12 +91,12 @@ bool Minion::getI2CData( unsigned char *buff ) {
 	
 #ifdef ON_PI
 	//----- READ BYTES -----
-	int length = 4;			// Number of bytes to read
+	int length = 8;			// Number of bytes to read
 	if (read(file_i2c, buff, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		//ERROR HANDLING: i2c transaction failed
 		char *errStr = strerror( errno );
-		syslog(LOG_NOTICE, "In Minion::getI2CData, failed to read from the i2c bus, %s.\n", errStr );
+		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c error: %s.\n", errStr );
 		return false;
 	}
 //	buffer[length] = 0;	// Terminate string?
