@@ -152,13 +152,13 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'A':
 		case 'a':
-			syslog(LOG_NOTICE, "Command f calls: getStatus()" );
+			syslog(LOG_NOTICE, "Command a calls: getStatus()" );
 			manager.setStatus();
 			break;
 			
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command f calls: getStatus()" );
+			syslog(LOG_NOTICE, "Command b calls: getStatus()" );
 			manager.getStatus();
 			break;
 			
@@ -183,7 +183,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'F':
 		case 'f':
-			syslog(LOG_NOTICE, "Command b calls: manager.testRead()" );
+			syslog(LOG_NOTICE, "Command f calls: manager.testRead()" );
 			manager.testRead();
 			break;
 			
