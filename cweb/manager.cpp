@@ -47,19 +47,11 @@ void Manager::monitor( int mode ) {
 	while ( !stopLoop ) {
 		
 		now = getNowMs();
-//		// Monitor microcontroller
-//		if ( now > lastAnythingTime + heartBeatInterval ) {
-//			lastAnythingTime = now;
-//
-//		}
-
-//		now = getNowMs();
-//		syslog(LOG_NOTICE, "In Manager::monitor, now is: %ld", now );
 		// Monitor microcontroller
 		if ( now > lastStatusTime + statusCheckInterval ) {
 			lastStatusTime = now;
 			lastAnythingTime = now;
-			getStatus();
+//			getStatus();
 		}
 		
 
