@@ -19,13 +19,20 @@
 
 #define ArdI2CAddr				8
 
+struct remoteStatus {
+	int				vInValue;			// Current measured main power supply voltage
+	bool			mainPowerState;		// If power is enabled to the motors and servos
+	bool			otherState;			// TBD
+};
 
 class Minion {
 
-	int	pi2c;
-	int file_i2c;
+	int				pi2c;
+	int 			file_i2c;
 
 public:
+	remoteStatus	status;		// CUrrent status value
+	
 	explicit Minion();
 
 	bool setupMinion( int i2CAddr );

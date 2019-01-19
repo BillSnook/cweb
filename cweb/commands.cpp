@@ -100,7 +100,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			
-		case 'A':
+		case '2':
 			hardware.setMotors( token1, token2, token3, token4 );
 			break;
 			
@@ -150,10 +150,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //			hardware.setMtrSpd( 1, 0 );
 //			break;
 //
+		case 'A':
+		case 'a':
+			syslog(LOG_NOTICE, "Command f calls: getStatus()" );
+			manager.setStatus();
+			break;
+			
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: manager.testRead()" );
-			manager.testRead();
+			syslog(LOG_NOTICE, "Command f calls: getStatus()" );
+			manager.getStatus();
 			break;
 			
 		case 'C':
@@ -177,8 +183,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'F':
 		case 'f':
-			syslog(LOG_NOTICE, "Command f calls: getStatus()" );
-			manager.getStatus();
+			syslog(LOG_NOTICE, "Command b calls: manager.testRead()" );
+			manager.testRead();
 			break;
 			
 		case 'G':
