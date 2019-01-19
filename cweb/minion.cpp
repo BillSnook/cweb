@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <syslog.h>
+#include <errno.h>
 
 #include <unistd.h>				//Needed for I2C port
 #include <fcntl.h>				//Needed for I2C port
@@ -94,7 +95,8 @@ bool Minion::getI2CData( unsigned char *buff ) {
 	if (read(file_i2c, buff, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		//ERROR HANDLING: i2c transaction failed
-		syslog(LOG_NOTICE, "In Minion::getI2CData, failed to read from the i2c bus.\n");
+		char *errStr = strerror( errno );
+		syslog(LOG_NOTICE, "In Minion::getI2CData, failed to read from the i2c bus, %s.\n", errStr );
 		return false;
 	}
 //	buffer[length] = 0;	// Terminate string?
