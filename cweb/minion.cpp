@@ -100,7 +100,7 @@ bool Minion::getI2CData( unsigned char *buff ) {
 		return false;
 	}
 //	buffer[length] = 0;	// Terminate string?
-	syslog(LOG_NOTICE, "Data read: %s. Length: %d\n", buff, length);
+	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
 #endif  // ON_PI
 
 	return true;
@@ -179,10 +179,8 @@ long Minion::getStatus() {
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	int result = (int)strlen( (const char *)buffer );
-	syslog(LOG_NOTICE, "In Minion::getStatus, got: %d bytes", result );
 	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
 
-	return result;
+	return 4;
 }
 
