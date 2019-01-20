@@ -179,7 +179,7 @@ long Minion::getStatus() {
 	unsigned char buffSpace[20] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
 
 	return 4;
 }
