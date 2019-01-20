@@ -71,11 +71,13 @@ long Manager::getNowMs() {
 
 void Manager::setStatus() {
 	
+	syslog(LOG_NOTICE, "In Manager::setStatus()" );
 	minion.setStatus();
 }
 
 long Manager::getStatus() {
 	
+	syslog(LOG_NOTICE, "In Manager::getStatus()" );
 	return minion.getStatus();
 }
 

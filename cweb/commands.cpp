@@ -152,7 +152,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //
 		case 'A':
 		case 'a':
-			syslog(LOG_NOTICE, "Command a calls: getStatus()" );
+			syslog(LOG_NOTICE, "Command a calls: setStatus()" );
 			manager.setStatus();
 			break;
 			
