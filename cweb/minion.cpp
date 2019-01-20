@@ -49,7 +49,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
-	syslog(LOG_NOTICE, "In setupMinion, opened %s on device %d", filename, file_i2c);
+	syslog(LOG_NOTICE, "In setupMinion, opened I2C bus on port %d", filename, file_i2c);
 
 #endif  // ON_PI
 	
@@ -93,7 +93,7 @@ bool Minion::getI2CData( unsigned char *buff ) {
 	
 #ifdef ON_PI
 	//----- READ BYTES -----
-	int length = 8;			// Number of bytes to read
+	int length = 16;			// Number of bytes to read
 	if (read(file_i2c, buff, length) != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
 		//ERROR HANDLING: i2c transaction failed
