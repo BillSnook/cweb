@@ -66,10 +66,9 @@ long Minion::getI2CCmd() {
 
 #ifdef ON_PI
 	unsigned char buffer[20] = {0};
-	int length;
 
 	//----- READ BYTES -----
-	length = 8;			// Number of bytes to read
+	int length = 8;			// Number of bytes to read
 	int response = read(file_i2c, buffer, length);
 	if (response != length) {		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 		
@@ -78,11 +77,11 @@ long Minion::getI2CCmd() {
 		syslog(LOG_NOTICE, "In Minion::getI2CCmd, i2c read error %d: %s.\n", response, errStr );
 //		syslog(LOG_NOTICE, "In Minion::getI2CCmd, failed to read from the i2c bus, only read %d bytes.\n", len);
 		return -1L;
-	} else {
-		syslog(LOG_NOTICE, "Data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-		long resp = ((buffer[0] && 0xFF) << 24) || ((buffer[1] && 0xFF) << 16) || ((buffer[2] && 0xFF) << 8) || (buffer[3] && 0xFF);
-		return buffer[0];
 	}
+	syslog(LOG_NOTICE, "Data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+	long resp = ((buffer[0] && 0xFF) << 24) || ((buffer[1] && 0xFF) << 16) || ((buffer[2] && 0xFF) << 8) || (buffer[3] && 0xFF);
+	return buffer[0];
+
 #else	// Else not ON_PI
 	return 0;
 #endif  // ON_PI
@@ -113,12 +112,11 @@ void Minion::putI2CCmd( char newValue ) {
 
 #ifdef ON_PI
 	unsigned char buffer[4] = {0};
-	int length;
 
 	//----- WRITE BYTES -----
 	buffer[0] = 0x40;		// Signifier that the next byte is a command
 	buffer[1] = newValue;
-	length = 2;			//  Number of bytes to write
+	int length = 2;			//  Number of bytes to write
 	int response = write(file_i2c, buffer, length);
 	if (response != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
 		
@@ -126,6 +124,8 @@ void Minion::putI2CCmd( char newValue ) {
 		char *errStr = strerror( errno );
 		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
 //		syslog(LOG_NOTICE, "In Minion::putI2CCmd, failed to write to the i2c bus, got %d.", len);
+	} else {
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 	}
 #endif  // ON_PI
 
@@ -134,10 +134,8 @@ void Minion::putI2CCmd( char newValue ) {
 bool Minion::putI2CData( unsigned char *newData ) {
 	
 #ifdef ON_PI
-	int length;
-	
 	//----- WRITE BYTES -----
-	length = strlen( (const char *)newData ); //  Number of bytes to write
+	int length = strlen( (const char *)newData ); //  Number of bytes to write
 	syslog(LOG_NOTICE, "putI2CData, length: %d, data: %s.", length, newData);
 	int response = write(file_i2c, newData, length);
 	if ( response != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
@@ -147,6 +145,8 @@ bool Minion::putI2CData( unsigned char *newData ) {
 		syslog(LOG_NOTICE, "In Minion::putI2CData, i2c write error %d: %s.\n", response, errStr );
 //		syslog(LOG_NOTICE, "In Minion::putI2CData, failed to write to the i2c bus, got %d.", len);
 		return false;
+	} else {
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 	}
 #endif  // ON_PI
 	return true;
