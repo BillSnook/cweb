@@ -49,7 +49,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
-	syslog(LOG_NOTICE, "In setupMinion, opened I2C bus on port %d", filename, file_i2c);
+	syslog(LOG_NOTICE, "In setupMinion, opened I2C bus on port %d", file_i2c);
 
 #endif  // ON_PI
 	
