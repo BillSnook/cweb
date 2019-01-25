@@ -83,23 +83,23 @@ long Manager::getStatus() {
 
 
 // Test
-int Manager::testRead() {
-	
-	int got = 0;
-#ifdef ON_PI
-	unsigned char buffSpace[20] = {0};
-	unsigned char *buffer = buffSpace;
-	minion.getI2CData( buffer );
-	got = strlen( (const char *)buffer );
-	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
-#endif // ON_PI
-	
-	return got;
-}
-
-void Manager::testWrite(unsigned char *data) {
-	
-	minion.putI2CData(data);
-	
-}
-
+//int Manager::testRead() {
+//	
+//	int got = 0;
+//#ifdef ON_PI
+//	unsigned char buffSpace[20] = {0};
+//	unsigned char *buffer = buffSpace;
+//	minion.getI2CData( buffer );
+//	got = strlen( (const char *)buffer );
+//	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
+//#endif // ON_PI
+//	
+//	return got;
+//}
+//
+//void Manager::testWrite(unsigned char *data) {
+//	
+//	minion.putI2CData(data);
+//	
+//}
+//

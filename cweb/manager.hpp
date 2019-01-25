@@ -32,8 +32,8 @@ public:
 	long getStatus();
 
 	// test
-	int	testRead();
-	void testWrite( unsigned char *data );
+//	int	testRead();
+//	void testWrite( unsigned char *data );
 
 };
 

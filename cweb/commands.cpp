@@ -162,31 +162,31 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			manager.getStatus();
 			break;
 			
-		case 'C':
-		case 'c':
-			syslog(LOG_NOTICE, "Command c calls: manager.testWrite( 'Test' )" );
-//			memcpy( buffer, "Test", 5 );
-			manager.testWrite( (unsigned char *)"Test" );
-			break;
-			
-		case 'D':
-		case 'd':
-			syslog(LOG_NOTICE, "Command d calls: manager.testWrite( 'Test1' )" );
-			manager.testWrite( (unsigned char *)"Test1" );
-			break;
-			
-		case 'E':
-		case 'e':
-			syslog(LOG_NOTICE, "Command e calls: manager.testWrite( 'Test12' )" );
-			manager.testWrite( (unsigned char *)"Test12" );
-			break;
-			
-		case 'F':
-		case 'f':
-			syslog(LOG_NOTICE, "Command f calls: manager.testRead()" );
-			manager.testRead();
-			break;
-			
+//		case 'C':
+//		case 'c':
+//			syslog(LOG_NOTICE, "Command c calls: manager.testWrite( 'Test' )" );
+////			memcpy( buffer, "Test", 5 );
+//			manager.testWrite( (unsigned char *)"Test" );
+//			break;
+//			
+//		case 'D':
+//		case 'd':
+//			syslog(LOG_NOTICE, "Command d calls: manager.testWrite( 'Test1' )" );
+//			manager.testWrite( (unsigned char *)"Test1" );
+//			break;
+//			
+//		case 'E':
+//		case 'e':
+//			syslog(LOG_NOTICE, "Command e calls: manager.testWrite( 'Test12' )" );
+//			manager.testWrite( (unsigned char *)"Test12" );
+//			break;
+//			
+//		case 'F':
+//		case 'f':
+//			syslog(LOG_NOTICE, "Command f calls: manager.testRead()" );
+//			manager.testRead();
+//			break;
+//			
 		case 'G':
 		case 'g':
 			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );

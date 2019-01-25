@@ -112,14 +112,11 @@ void Minion::putI2CCmd( char newValue ) {
 
 #ifdef ON_PI
 	unsigned char buffer[4] = {0};
-
-	//----- WRITE BYTES -----
 	buffer[0] = 0x40;		// Signifier that the next byte is a command
 	buffer[1] = newValue;
 	int length = 2;			//  Number of bytes to write
 	int response = write(file_i2c, buffer, length);
 	if (response != length) {		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
-		
 		/* ERROR HANDLING: i2c transaction failed */
 		char *errStr = strerror( errno );
 		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
@@ -134,7 +131,6 @@ void Minion::putI2CCmd( char newValue ) {
 bool Minion::putI2CData( unsigned char *newData ) {
 	
 #ifdef ON_PI
-	//----- WRITE BYTES -----
 	int length = strlen( (const char *)newData ); //  Number of bytes to write
 	syslog(LOG_NOTICE, "putI2CData, length: %d, data: %s.", length, newData);
 	int response = write(file_i2c, newData, length);
@@ -143,7 +139,6 @@ bool Minion::putI2CData( unsigned char *newData ) {
 		/* ERROR HANDLING: i2c transaction failed */
 		char *errStr = strerror( errno );
 		syslog(LOG_NOTICE, "In Minion::putI2CData, i2c write error %d: %s.\n", response, errStr );
-//		syslog(LOG_NOTICE, "In Minion::putI2CData, failed to write to the i2c bus, got %d.", len);
 		return false;
 	} else {
 		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
@@ -152,21 +147,21 @@ bool Minion::putI2CData( unsigned char *newData ) {
 	return true;
 }
 
-int Minion::testRead() {
-	
-	unsigned char buffSpace[20] = {0};
-	unsigned char *buffer = buffSpace;
-	getI2CData( buffer );
-	int got = (int)strlen( (const char *)buffer );
-	syslog(LOG_NOTICE, "In Minion::testRead, %d bytes from I2C device", got);
-	
-	return got;
-}
-
-void Minion::testWrite(unsigned char *data) {
-	
-	putI2CData(data);
-}
+//int Minion::testRead() {
+//	
+//	unsigned char buffSpace[20] = {0};
+//	unsigned char *buffer = buffSpace;
+//	getI2CData( buffer );
+//	int got = (int)strlen( (const char *)buffer );
+//	syslog(LOG_NOTICE, "In Minion::testRead, %d bytes from I2C device", got);
+//	
+//	return got;
+//}
+//
+//void Minion::testWrite(unsigned char *data) {
+//	
+//	putI2CData(data);
+//}
 
 // MARK: Command modes
 

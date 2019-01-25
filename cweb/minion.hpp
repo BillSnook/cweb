@@ -43,9 +43,9 @@ public:
 	void putI2CCmd( char newValue );
 	bool putI2CData( unsigned char *newData );
 
-	int	testRead();
-	void testWrite( unsigned char *data );
-
+//	int	testRead();
+//	void testWrite( unsigned char *data );
+//
 	void setStatus();
 	long getStatus();
 };
