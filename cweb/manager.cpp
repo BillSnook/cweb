@@ -98,7 +98,7 @@ long Manager::getRange() {
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
 	unsigned int last = result & 0x0FFFF;		// Used to track value of range
 	if ( last != rangeIndex ) {
-		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %ud, got %ud", last, rangeIndex );
+		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", last, rangeIndex );
 	}
 	return range;
 }
