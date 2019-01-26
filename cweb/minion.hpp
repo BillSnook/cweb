@@ -40,7 +40,7 @@ public:
 
 	long getI2CCmd();
 	bool getI2CData( unsigned char *buff );
-	void putI2CCmd( char newValue );
+	void putI2CCmd( unsigned char command, unsigned char parameter );
 	bool putI2CData( unsigned char *newData );
 
 //	int	testRead();
@@ -48,6 +48,9 @@ public:
 //
 	void setStatus();
 	long getStatus();
+	
+	void setRange( unsigned char index );
+	long getRange();
 };
 
 #endif /* minion_hpp */

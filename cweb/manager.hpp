@@ -19,6 +19,7 @@ class Manager {
 	long lastStatusTime;
 	long lastHeartbeatTime;
 	long status;
+	unsigned int rangeIndex;
 
 	long getNowMs();
 
@@ -30,7 +31,10 @@ public:
 
 	void setStatus();
 	long getStatus();
-
+	
+	void setRange();
+	long getRange();
+	
 	// test
 //	int	testRead();
 //	void testWrite( unsigned char *data );
