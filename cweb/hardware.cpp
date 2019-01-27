@@ -6,11 +6,12 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "mtrctl.hpp"
-#include "hardware.hpp"
-
 #include <syslog.h>			// close read write
 #include <math.h>
+
+#include "mtrctl.hpp"
+#include "hardware.hpp"
+#include "manager.hpp"
 
 #define MOTOR_I2C_ADDRESS		0x6F
 #define CHANNEL_MAX				15
@@ -504,9 +505,6 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 			unsigned int distance = ping();
-//			if ( distance == 0 ) {
-//				distance = ping();
-//			}
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
@@ -516,9 +514,6 @@ void Hardware::scanPing() {
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
 			unsigned int distance = ping();
-//			if ( distance == 0 ) {
-//				distance = ping();
-//			}
 			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 	} while ( scanLoop );
@@ -545,7 +540,13 @@ void Hardware::pingLoop() {
 unsigned int Hardware::ping() {
 	
 	syslog(LOG_NOTICE, "In ping" );
-	unsigned int cm = 0;
+	
+	manager.setRange();
+	usleep( 50000 );		// Allow 50ms for pulse to return
+	unsigned int range = (unsigned int)manager.getRange();
+	unsigned int cm = range/29/2;
+	return cm;
+
 //
 //#ifdef ON_PI
 ////	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
@@ -592,7 +593,7 @@ unsigned int Hardware::ping() {
 //
 //#endif  // ON_PI
 
-	return cm;
+//	return cm;
 }
 
 void Hardware::allStop() {

@@ -27,7 +27,7 @@ public:
 	void setupManager();
 	void shutdownManager();
 	
-	void monitor( int mode );
+	void monitor();
 
 	void setStatus();
 	long getStatus();

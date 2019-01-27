@@ -166,7 +166,7 @@ void Threader::runThread( void *arguments ) {
 	syslog(LOG_NOTICE, "In runThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:
-			manager.monitor( nextThreadControl.nextSocket );
+			manager.monitor();
 			break;
 		case listenThread:
 			listener.acceptConnections( nextThreadControl.nextSocket );

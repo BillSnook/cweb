@@ -39,7 +39,7 @@ void Manager::shutdownManager() {
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
-void Manager::monitor( int mode ) {
+void Manager::monitor() {
 	
 	syslog(LOG_NOTICE, "In Manager::monitor, should only run once" );
 	setStatus();				// Set mode so reads get status
@@ -83,7 +83,7 @@ long Manager::getStatus() {
 }
 
 // These routines need to manage the freshness of the range data
-// They could compare the index to a copy of the timestamp wen it was sent
+// They could compare the index to a copy of the timestamp when it was sent
 void Manager::setRange() {
 
 	rangeIndex += 1;
@@ -98,31 +98,8 @@ long Manager::getRange() {
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
 	unsigned int last = result & 0x0FFFF;		// Used to track value of range
 	if ( last != rangeIndex ) {
-		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", last, rangeIndex );
+		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", rangeIndex, last );
+		return -1;
 	}
 	return range;
 }
-
-
-
-// Test
-//int Manager::testRead() {
-//
-//	int got = 0;
-//#ifdef ON_PI
-//	unsigned char buffSpace[20] = {0};
-//	unsigned char *buffer = buffSpace;
-//	minion.getI2CData( buffer );
-//	got = strlen( (const char *)buffer );
-//	syslog(LOG_NOTICE, "Read 0x%X from I2C device", got);
-//#endif // ON_PI
-//
-//	return got;
-//}
-//
-//void Manager::testWrite(unsigned char *data) {
-//
-//	minion.putI2CData(data);
-//
-//}
-//
