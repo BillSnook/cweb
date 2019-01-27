@@ -96,10 +96,10 @@ unsigned int Manager::getRange() {
 	long result = minion.getRange();
 //	syslog(LOG_NOTICE, "In Manager::getRange(): 0x%08lX", result );
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
-	unsigned int last = result & 0x0FFFF;		// Used to track value of range
-	if ( last != rangeIndex ) {
-		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", rangeIndex, last );
-		return 0;
-	}
+//	unsigned int last = result & 0x0FFFF;		// Used to track value of range
+//	if ( last != rangeIndex ) {
+//		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", rangeIndex, last );
+//		return 0;
+//	}
 	return range;
 }
