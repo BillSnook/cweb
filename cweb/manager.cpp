@@ -87,14 +87,14 @@ long Manager::getStatus() {
 void Manager::setRange() {
 
 	rangeIndex += 1;
-	syslog(LOG_NOTICE, "In Manager::setRange( %ud )", rangeIndex );
+//	syslog(LOG_NOTICE, "In Manager::setRange( %u )", rangeIndex );
 	return minion.setRange( rangeIndex );
 }
 
 unsigned int Manager::getRange() {
 	
 	long result = minion.getRange();
-	syslog(LOG_NOTICE, "In Manager::getRange(): 0x%08lX", result );
+//	syslog(LOG_NOTICE, "In Manager::getRange(): 0x%08lX", result );
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
 	unsigned int last = result & 0x0FFFF;		// Used to track value of range
 	if ( last != rangeIndex ) {

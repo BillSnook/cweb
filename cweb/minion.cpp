@@ -103,8 +103,7 @@ bool Minion::getI2CData( unsigned char *buff ) {
 		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c read error %d: %s.\n", response, errStr );
 		return false;
 	}
-//	buffer[length] = 0;	// Terminate string?
-	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
+//	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
 #endif  // ON_PI
 	return true;
 }
@@ -124,8 +123,8 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 		char *errStr = strerror( errno );
 		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
 //		syslog(LOG_NOTICE, "In Minion::putI2CCmd, failed to write to the i2c bus, got %d.", len);
-	} else {
-		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
+//	} else {
+//		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 	}
 #endif  // ON_PI
 
@@ -194,7 +193,7 @@ long Minion::getStatus() {
 void Minion::setRange( unsigned char index ) {
 	
 	putI2CCmd( 'p', index );
-	syslog(LOG_NOTICE, "In Minion::setRange" );
+//	syslog(LOG_NOTICE, "In Minion::setRange" );
 }
 
 long Minion::getRange() {
@@ -204,10 +203,10 @@ long Minion::getRange() {
 	unsigned char buffSpace[10] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	syslog(LOG_NOTICE, "In Minion::getRange data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
-	long range = buffSpace[3] | ( buffSpace[2] << 8 );
-//	| ( buffSpace[1] << 16 )
-//	| ( buffSpace[0] << 24 );
+//	syslog(LOG_NOTICE, "In Minion::getRange data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
+	long range = buffSpace[3] | ( buffSpace[2] << 8 )
+					| ( buffSpace[1] << 16 )
+					| ( buffSpace[0] << 24 );
 	return range;
 }
 
