@@ -131,7 +131,7 @@ void TaskMaster::taskPing() {
 	
 	syslog(LOG_NOTICE, "In taskPing" );
 	stopLoop = false;
-	hardware.ping();
+	hardware.ping( 0 );
 }
 
 void TaskMaster::taskScanPing() {

@@ -84,11 +84,10 @@ long Manager::getStatus() {
 
 // These routines need to manage the freshness of the range data
 // They could compare the index to a copy of the timestamp when it was sent
-void Manager::setRange() {
+void Manager::setRange( unsigned int index) {
 
-	rangeIndex += 1;
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", rangeIndex );
-	return minion.setRange( rangeIndex );
+	return minion.setRange( index );
 }
 
 unsigned int Manager::getRange() {

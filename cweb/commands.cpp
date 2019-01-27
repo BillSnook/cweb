@@ -164,7 +164,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 
 		case 'C':
 		case 'c':
-			manager.setRange();
+			manager.setRange( 0 );
 			syslog(LOG_NOTICE, "Command c calls: setRange()" );
 			break;
 			

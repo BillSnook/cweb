@@ -504,7 +504,7 @@ void Hardware::scanPing() {
 			}
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
-			unsigned int distance = ping();
+			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
@@ -513,7 +513,7 @@ void Hardware::scanPing() {
 			}
 			cmdAngle( angle );
 			usleep( 100000 );	// .1 second
-			unsigned int distance = ping();
+			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 	} while ( scanLoop );
@@ -530,18 +530,18 @@ void Hardware::pingLoop() {
 	syslog(LOG_NOTICE, "In pingLoop" );
 	
 	do {
-		ping();
+		ping( 0 );
 		usleep( 100000 );	// .1 second
 	} while ( scanLoop );
 }
 
 
 // MARK: range finder section
-unsigned int Hardware::ping() {
+unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
 	
-	manager.setRange();
+	manager.setRange( angle );
 	usleep( 75000 );		// Allow 75ms for pulse to return
 	unsigned int range = (unsigned int)manager.getRange();
 	unsigned int cm = range/29/2;

@@ -32,7 +32,7 @@ public:
 	void setStatus();
 	long getStatus();
 	
-	void setRange();
+	void setRange( unsigned int index );
 	unsigned int getRange();
 	
 	// test

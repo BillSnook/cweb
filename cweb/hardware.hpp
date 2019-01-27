@@ -115,7 +115,7 @@ public:
 	void scanPing();
 	void pingLoop();
 
-	unsigned int ping();
+	unsigned int ping( unsigned int angle );
 	void allStop();
 	void scanUntilFound( int scanType );
 	void turnAndFollow( int followDistance );
