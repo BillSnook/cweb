@@ -91,7 +91,7 @@ void Manager::setRange() {
 	return minion.setRange( rangeIndex );
 }
 
-long Manager::getRange() {
+unsigned int Manager::getRange() {
 	
 	long result = minion.getRange();
 	syslog(LOG_NOTICE, "In Manager::getRange(): 0x%08lX", result );
@@ -99,7 +99,7 @@ long Manager::getRange() {
 	unsigned int last = result & 0x0FFFF;		// Used to track value of range
 	if ( last != rangeIndex ) {
 		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", rangeIndex, last );
-		return -1;
+		return 0;
 	}
 	return range;
 }

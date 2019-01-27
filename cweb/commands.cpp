@@ -171,8 +171,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'D':
 		case 'd':
 		{
-			long range = manager.getRange();
-			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %ld (0x%0lX)", range, range );
+			unsigned int range = manager.getRange();
+			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%0X)", range, range );
 		}
 			break;
 

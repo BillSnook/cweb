@@ -33,7 +33,7 @@ public:
 	long getStatus();
 	
 	void setRange();
-	long getRange();
+	unsigned int getRange();
 	
 	// test
 //	int	testRead();
