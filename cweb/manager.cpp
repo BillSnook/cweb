@@ -27,7 +27,7 @@ SearchPattern::SearchPattern() {
 	startAngle = 0;
 	endAngle = 180;
 	incrementAngle = 20;
-	indexCount = ( endAngle - startAngle ) / incrementAngle;
+	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
 }
 
 SearchPattern::SearchPattern( int start, int end, int inc ) {
@@ -35,7 +35,7 @@ SearchPattern::SearchPattern( int start, int end, int inc ) {
 	startAngle = start;
 	endAngle = end;
 	incrementAngle = inc;
-	indexCount = ( endAngle - startAngle ) / incrementAngle;
+	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
 }
 
 
@@ -75,6 +75,9 @@ void SitMap::updateEntry( long entry ) {
 
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
+		if ( ( index < 0 ) || ( index >= pattern.indexCount ) ) {
+			
+		}
 		distanceMap[ index ].range = range;
 		distanceMap[ index ].angle = angle;
 	}
@@ -175,7 +178,7 @@ long Manager::getRangeResult() {
 	busy = true;
 	long result = minion.getRange();	// This will wait for a response to an I2C read
 	busy = false;
-//	updateMap( result );
+	updateMap( result );
 //	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;
 }
