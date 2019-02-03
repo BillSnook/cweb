@@ -511,7 +511,7 @@ void Hardware::scanPing() {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
 		return;				// If this is run multiple times, mayhem!
 	}
-	scanLoop = false;
+	scanLoop = true;
 	
 	syslog(LOG_NOTICE, "In scanPing" );
 	
@@ -534,6 +534,7 @@ void Hardware::scanPing() {
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
+		scanLoop = false;	// Do once - test
 	} while ( scanLoop );
 	centerServo();
 }
