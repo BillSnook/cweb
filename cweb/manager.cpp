@@ -65,8 +65,8 @@ void SitMap::shutdownSitMap() {
 
 void SitMap::updateEntry( long entry ) {
 	
-	unsigned int range = (entry >> 16) & 0x0FFFF;		// Actual range value
-	unsigned int angle = entry & 0x0FFFF;				// Angle used to track value of range
+	unsigned int angle = (entry >> 16) & 0x0FFFF;		// Actual range value
+	unsigned int range = entry & 0x0FFFF;				// Angle used to track value of range
 	
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
