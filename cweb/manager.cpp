@@ -129,7 +129,7 @@ void Manager::monitor() {
 		now = getNowMs();
 		// Monitor microcontroller
 		if ( now > lastStatusTime + statusCheckInterval ) {
-			long tempStatus = getStatus();	// return 0 if busy, else ask minion to read status
+			long tempStatus = 0; // getStatus();	// return 0 if busy, else ask minion to read status
 			if ( tempStatus ) {
 				lastStatusTime = now;
 				lastAnythingTime = now;
