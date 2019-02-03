@@ -52,6 +52,10 @@ SitMap::SitMap( SearchPattern newPattern ) {
 void SitMap::setupSitMap() {
 	
 	distanceMap = new DistanceEntry[pattern.indexCount];
+	for ( int i = 0; i < pattern.indexCount; i++ ) {
+		distanceMap[ i ].angle = 0;
+		distanceMap[ i ].range = 0;
+	}
 }
 
 void SitMap::resetSitMap() {
@@ -67,7 +71,8 @@ void SitMap::updateEntry( long entry ) {
 	
 	unsigned int angle = (entry >> 16) & 0x0FFFF;		// Actual range value
 	unsigned int range = entry & 0x0FFFF;				// Angle used to track value of range
-	
+	syslog(LOG_NOTICE, "In SitMap::updateEntry(), angle: %u, range: %u", angle, range );
+
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
 		distanceMap[ index ].range = range;
@@ -88,7 +93,7 @@ char *SitMap::returnMap( char *buffer ) {
 	
 	sprintf( buffer, "Range map:\n" );
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
-		sprintf( buffer, "%s%3d %3d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
+		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
 	sprintf( buffer, "%s\n", buffer );
 	return buffer;
