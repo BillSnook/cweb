@@ -59,6 +59,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 bool Minion::resetMinion() {
 	
 	syslog(LOG_NOTICE, "In resetMinion" );
+	close( file_i2c );
 	return true;
 }
 

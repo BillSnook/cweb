@@ -458,6 +458,7 @@ void Hardware::scanStop() {
 	scanLoop = false;
 }
 
+// Just scan through angle range
 void Hardware::scanTest() {
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanTest multiple times" );
@@ -488,6 +489,23 @@ void Hardware::scanTest() {
 	centerServo();
 }
 
+// just ping repeatedly
+void Hardware::pingLoop() {
+	if ( scanLoop ) {
+		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
+		return;				// If this is run multiple times, mayhem!
+	}
+	scanLoop = true;
+	
+	syslog(LOG_NOTICE, "In pingLoop" );
+	
+	do {
+		ping( 0 );
+		usleep( 100000 );	// .1 second
+	} while ( scanLoop );
+}
+
+// Scan and ping through angle range
 void Hardware::scanPing() {
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
@@ -518,21 +536,6 @@ void Hardware::scanPing() {
 		}
 	} while ( scanLoop );
 	centerServo();
-}
-
-void Hardware::pingLoop() {
-	if ( scanLoop ) {
-		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
-		return;				// If this is run multiple times, mayhem!
-	}
-	scanLoop = true;
-	
-	syslog(LOG_NOTICE, "In pingLoop" );
-	
-	do {
-		ping( 0 );
-		usleep( 100000 );	// .1 second
-	} while ( scanLoop );
 }
 
 

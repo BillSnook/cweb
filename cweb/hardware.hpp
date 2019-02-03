@@ -76,6 +76,7 @@ enum {		// Distance class
 	LongDistance
 };
 
+
 class Hardware {
 	
 public:

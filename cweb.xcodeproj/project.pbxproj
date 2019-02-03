@@ -100,38 +100,70 @@
 		A96D72EF207AFD4500B98679 /* cweb */ = {
 			isa = PBXGroup;
 			children = (
-				A96D72F7207B086900B98679 /* Makefile */,
-				A96D72F0207AFD4500B98679 /* mtrctl.cpp */,
-				A96D72F8207B0C3700B98679 /* mtrctl.hpp */,
-				A96D72F92083DE8600B98679 /* signals.cpp */,
-				A96D72FA2083DE8600B98679 /* signals.hpp */,
-				A96D730F208BD79600B98679 /* threader.cpp */,
-				A96D7310208BD79600B98679 /* threader.hpp */,
-				A96D7312208C052B00B98679 /* commands.cpp */,
-				A96D7313208C052B00B98679 /* commands.hpp */,
-				A923017E218E989F00EB2A21 /* tasks.cpp */,
-				A923017F218E989F00EB2A21 /* tasks.hpp */,
-				A96D73082083E80A00B98679 /* listen.cpp */,
-				A96D73092083E80A00B98679 /* listen.hpp */,
-				A96D730C208402C200B98679 /* sender.cpp */,
-				A96D730D208402C200B98679 /* sender.hpp */,
+				A97126AD220639AD00AC5AC7 /* infrastructure */,
+				A97126AE220639E500AC5AC7 /* communication */,
+				A97126AB2206394A00AC5AC7 /* hardware */,
+				A97126AF22063A7A00AC5AC7 /* control */,
+				A96D730B2083F34700B98679 /* README.md */,
+			);
+			path = cweb;
+			sourceTree = "<group>";
+		};
+		A97126AB2206394A00AC5AC7 /* hardware */ = {
+			isa = PBXGroup;
+			children = (
 				A9ABD7742095078900B64F14 /* hardware.cpp */,
 				A9ABD7752095078900B64F14 /* hardware.hpp */,
 				A9ABD777209507A400B64F14 /* speed.cpp */,
 				A9ABD778209507A400B64F14 /* speed.hpp */,
-				A9ABD77A209507D100B64F14 /* power.cpp */,
-				A9ABD77B209507D100B64F14 /* power.hpp */,
-				A91D0AD4209958DF00EA1DB4 /* filer.cpp */,
-				A91D0AD5209958DF00EA1DB4 /* filer.hpp */,
-				A958526221BCDD9E001573FA /* actions.cpp */,
-				A958526321BCDD9E001573FA /* actions.hpp */,
 				A9AF207F21E16F9500DF77E3 /* minion.cpp */,
 				A9AF207E21E16F9400DF77E3 /* minion.hpp */,
+				A9ABD77A209507D100B64F14 /* power.cpp */,
+				A9ABD77B209507D100B64F14 /* power.hpp */,
+			);
+			name = hardware;
+			sourceTree = "<group>";
+		};
+		A97126AD220639AD00AC5AC7 /* infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				A96D72F7207B086900B98679 /* Makefile */,
+				A96D72F0207AFD4500B98679 /* mtrctl.cpp */,
+				A96D72F8207B0C3700B98679 /* mtrctl.hpp */,
+				A96D730F208BD79600B98679 /* threader.cpp */,
+				A96D7310208BD79600B98679 /* threader.hpp */,
+				A96D72F92083DE8600B98679 /* signals.cpp */,
+				A96D72FA2083DE8600B98679 /* signals.hpp */,
+				A91D0AD4209958DF00EA1DB4 /* filer.cpp */,
+				A91D0AD5209958DF00EA1DB4 /* filer.hpp */,
+			);
+			name = infrastructure;
+			sourceTree = "<group>";
+		};
+		A97126AE220639E500AC5AC7 /* communication */ = {
+			isa = PBXGroup;
+			children = (
+				A96D73082083E80A00B98679 /* listen.cpp */,
+				A96D73092083E80A00B98679 /* listen.hpp */,
+				A96D730C208402C200B98679 /* sender.cpp */,
+				A96D730D208402C200B98679 /* sender.hpp */,
+			);
+			name = communication;
+			sourceTree = "<group>";
+		};
+		A97126AF22063A7A00AC5AC7 /* control */ = {
+			isa = PBXGroup;
+			children = (
+				A96D7312208C052B00B98679 /* commands.cpp */,
+				A96D7313208C052B00B98679 /* commands.hpp */,
 				A9AF208121EAD2A700DF77E3 /* manager.cpp */,
 				A9AF208221EAD2A700DF77E3 /* manager.hpp */,
-				A96D730B2083F34700B98679 /* README.md */,
+				A923017E218E989F00EB2A21 /* tasks.cpp */,
+				A923017F218E989F00EB2A21 /* tasks.hpp */,
+				A958526221BCDD9E001573FA /* actions.cpp */,
+				A958526321BCDD9E001573FA /* actions.hpp */,
 			);
-			path = cweb;
+			name = control;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

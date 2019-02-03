@@ -95,3 +95,10 @@ void Listener::writeBack( char *msg, int socket ) {
 		syslog(LOG_ERR, "ERROR writing back to socket" );
 	}
 }
+
+void Listener::writeBlock( char *msg, int length, int socket ) {
+	long n = write( socket, msg, length );
+	if ( n < 0 ) {
+		syslog(LOG_ERR, "ERROR writing block to socket" );
+	}
+}

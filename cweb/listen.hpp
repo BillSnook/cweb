@@ -23,7 +23,7 @@ public:
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd );
 	void writeBack( char *msg, int socket );
-
+	void writeBlock( char *msg, int length, int socket );
 };
 
 extern Listener	listener;

@@ -12,13 +12,16 @@
 #include "actions.hpp"
 
 
+// The purpose of this class is to allow a task to run independently
+// in a separate thread and allow the rest of the program to run normally.
+
 enum TaskType {
 	stopTask = 0,
 	testTask1,		// 1
 	testTask2,		// 2
-	scanTask,		// 3
-	pingTask,		// 4
-	scanpingTask,	// 5
+	scanTask,		// 3	// Just scan
+	pingTask,		// 4	// Just ping
+	scanpingTask,	// 5	// Ping and scan
 	huntTask,		// 6
 	testTaskCount	// 7, size of TaskType enum
 };

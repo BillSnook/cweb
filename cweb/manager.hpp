@@ -12,18 +12,56 @@
 // This class manages interations with the
 // Arduino microcontroller over I2C
 
+struct DistanceEntry {
+	unsigned int	range;
+	unsigned int	angle;
+};
+
+class SearchPattern {
+public:
+	explicit SearchPattern();
+	explicit SearchPattern( int start, int end, int inc );
+
+	int	startAngle;
+	int	endAngle;
+	int	incrementAngle;
+	int indexCount;
+};
+
+class SitMap {
+	
+	SearchPattern		pattern;
+	DistanceEntry		*distanceMap;
+	
+public:
+
+	explicit SitMap();
+	explicit SitMap( SearchPattern newPattern );
+
+	void setupSitMap();
+	void resetSitMap();
+	void shutdownSitMap();
+	
+	void updateEntry( long entry );
+	char *returnMap( char *buffer );
+};
+
+
 class Manager {
 	
 	bool stopLoop;
 	long lastAnythingTime;
 	long lastStatusTime;
-	long lastHeartbeatTime;
 	long status;
-	unsigned int rangeIndex;
+	bool busy;
 
 	long getNowMs();
 
 public:
+	SearchPattern	pattern;
+	SitMap			sitMap;
+	
+	
 	void setupManager();
 	void shutdownManager();
 	
@@ -33,12 +71,10 @@ public:
 	long getStatus();
 	
 	void setRange( unsigned int index );
+	long getRangeResult();
 	unsigned int getRange();
-	
-	// test
-//	int	testRead();
-//	void testWrite( unsigned char *data );
 
+	void updateMap( long reading );
 };
 
 extern Manager	manager;

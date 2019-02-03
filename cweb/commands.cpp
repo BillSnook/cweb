@@ -17,6 +17,7 @@
 #include <stdio.h>			// sprintf
 #include <syslog.h>			// close read write
 #include <string.h>			// strcat
+#include <strings.h>		// strlen
 
 
 #define bufferSize	256
@@ -175,7 +176,16 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%0X)", range, range );
 		}
 			break;
-
+			
+		case 'E':
+		case 'e':
+		{
+			char *display = (char *)manager.sitMap.returnMap( msg );
+			syslog(LOG_NOTICE, "Command e calls: returnMap(), got: %s", display );
+//			listener.writeBlock( msg, int( strlen( (char *)msg ) ), socket );
+		}
+			break;
+			
 //		case 'C':
 //		case 'c':
 //			syslog(LOG_NOTICE, "Command c calls: manager.testWrite( 'Test' )" );
@@ -210,10 +220,10 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'H':
 		case 'h':
 		{
-			char *display = hardware.speed.displaySpeedArray();
+			char *display = hardware.speed.displaySpeedArray( (char *)msg );
 			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
-			memcpy( msg, display, strlen( display ) );
-			free( display );
+//			memcpy( msg, display, strlen( display ) );
+//			free( display );
 		}
 			break;
 			
@@ -262,7 +272,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'T':
 		case 't':
 			memcpy( msg, "\nMessage 1...\n", 15 );
-			listener.writeBack( msg, socket );
+			listener.writeBack( (char *)msg, socket );
 			usleep( 5000000 ); // 5 second delay
 			memcpy( msg, "\nMessage 2   \n", 15 );
 			break;
@@ -311,15 +321,15 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'Z':
 		case 'z':
-			sprintf(msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
+			sprintf((char *)msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
 			break;
 			
 		default:
 //			usleep( 10000000 ); // 10 second delay
 			break;
 	}
-	if ( strlen(msg) > 0 ) {
-		listener.writeBack( msg, socket );
+	if ( strlen((char *)msg) > 0 ) {
+		listener.writeBack( (char *)msg, socket );
 	}
 	free( msg );
 }

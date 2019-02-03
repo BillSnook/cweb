@@ -55,9 +55,9 @@ void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 	}
 }
 
-char * Speed::displaySpeedArray() {
+char * Speed::displaySpeedArray( char *displayString ) {
 	
-	char *displayString = (char *)malloc( 1024 );
+//	char *displayString = (char *)malloc( 1024 );
 	strcat( displayString, " Speed array, forward:\n" );
 	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, forward[i].left, forward[i].right );
