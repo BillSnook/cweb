@@ -179,7 +179,7 @@ long Manager::getRangeResult() {
 	busy = true;
 	long result = minion.getRange();	// This will wait for a response to an I2C read
 	busy = false;
-//	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
+	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	updateMap( result );
 	return result;
 }
