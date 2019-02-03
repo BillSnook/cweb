@@ -88,10 +88,9 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 //	}
 
-//	unsigned char buffer[20] = {0};
-	char *msg = (char *)malloc( 1024 );
+	char msg[ 1024 ];
+//	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
-//	memcpy( msg, "\nAck\n", 5 );
 	switch ( commandType ) {
 		case '0':
 			hardware.setMtrDirSpd( 0, token1, token2 );
