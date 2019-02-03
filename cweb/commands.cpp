@@ -335,5 +335,5 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	if ( strlen((char *)msg) > 0 ) {
 		listener.writeBack( (char *)msg, socket );
 	}
-	free( msg );
+//	free( msg );
 }
