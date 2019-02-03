@@ -544,60 +544,11 @@ void Hardware::scanPing() {
 unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
-	
 	manager.setRange( angle );
 	usleep( 75000 );		// Allow 75ms for pulse to return
 	unsigned int range = (unsigned int)manager.getRange();
-	unsigned int cm = range/29/2;
+	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return cm;
-
-//
-//#ifdef ON_PI
-////	pinMode( TRIG, OUTPUT );	// Brown	0 - pin 11
-////	pinMode( ECHO, INPUT );		// White	2 - pin 13
-//
-//	unsigned int tmr0, tmr1, tmr;
-//	unsigned int diff = 0;
-//	digitalWrite( TRIG, HIGH );	// On
-//	usleep( 20 );
-//	digitalWrite( TRIG, LOW );	// Off
-//
-//	tmr = micros();
-//	while ( LOW == digitalRead( ECHO ) ) {
-//		tmr0 = micros();
-//		diff = tmr0 - tmr;
-//		if ( diff > 50000 ) {
-//			syslog(LOG_NOTICE, "In ping, low too long" );
-//			usleep( 100000 );
-//			break;
-//		}
-////		if ( !scanLoop ) {
-////			break;
-////		}
-//	}
-//
-//	diff = 0;
-//	while ( HIGH == digitalRead( ECHO ) ) {
-//		tmr1 = micros();
-//		diff = tmr1 - tmr0;
-//		if ( diff > 50000 ) {
-//			syslog(LOG_NOTICE, "In ping, high too long" );
-//			usleep( 100000 );
-//			break;
-//		}
-////		if ( !scanLoop ) {
-////			break;
-////		}
-//	}
-////	syslog(LOG_NOTICE, "In ping, time interval = %u uS", tmr1 - tmr0 );
-//
-//	cm = (diff * 34300) / 2;
-//	cm = cm / 1000000;
-////	syslog(LOG_NOTICE, "In ping, distance: %u cm", cm );
-//
-//#endif  // ON_PI
-
-//	return cm;
 }
 
 void Hardware::allStop() {

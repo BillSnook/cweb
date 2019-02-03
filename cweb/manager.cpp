@@ -76,21 +76,12 @@ void SitMap::updateEntry( long entry ) {
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
 		distanceMap[ index ].range = range;
-		distanceMap[ index ].angle = angle;	// ??
+		distanceMap[ index ].angle = angle;
 	}
 }
 
 char *SitMap::returnMap( char *buffer ) {
-	
-//	unsigned int range = (entry >> 16) & 0x0FFFF;		// Actual range value
-//	unsigned int angle = entry & 0x0FFFF;				// Angle used to track value of range
-//
-//	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
-//		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
-//		distanceMap[ index ].range = range;
-//		distanceMap[ index ].angle = angle;	// ??
-//	}
-	
+
 	sprintf( buffer, "Range map:\n" );
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
 		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
@@ -184,8 +175,8 @@ long Manager::getRangeResult() {
 	busy = true;
 	long result = minion.getRange();	// This will wait for a response to an I2C read
 	busy = false;
-	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	updateMap( result );
+//	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;
 }
 
@@ -205,8 +196,3 @@ void Manager::updateMap( long reading )  {
 	
 	sitMap.updateEntry( reading );
 }
-
-//unsigned char Manager::returnMap( unsigned char *buffer ) {
-//
-//
-//}

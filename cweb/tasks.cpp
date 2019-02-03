@@ -91,10 +91,10 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 
 void TaskMaster::killTasks() {
 	
-	if ( !stopLoop ) {
-		hardware.scanStop();
-//		actor.stop();	// Duplicates scanStop
-	}
+//	if ( !stopLoop ) {
+//		hardware.scanStop();
+////		actor.stop();	// Duplicates scanStop
+//	}
 	stopLoop = true;
 }
 

@@ -264,9 +264,14 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'S':
 		case 's':
+			hardware.scanStop();
+			syslog(LOG_NOTICE, "Did scanStop" );
 			hardware.cmdSpeed( 0 );
-			taskMaster.mobileTask( 0, 0 );
+			syslog(LOG_NOTICE, "Did cmdSpeed" );
+//			taskMaster.mobileTask( 0, 0 );
+//			syslog(LOG_NOTICE, "Did mobiletask" );
 			hardware.centerServo();
+			syslog(LOG_NOTICE, "Did centerservo" );
 			break;
 		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
