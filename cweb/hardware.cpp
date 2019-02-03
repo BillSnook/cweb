@@ -534,7 +534,7 @@ void Hardware::scanPing() {
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
-		scanLoop = false;	// Do once - test
+//		scanLoop = false;	// Do once - test
 	} while ( scanLoop );
 	centerServo();
 }
