@@ -205,9 +205,10 @@ long Minion::getRange() {
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
 //	syslog(LOG_NOTICE, "In Minion::getRange data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
-	long range = buffSpace[3] | ( buffSpace[2] << 8 )
-					| ( buffSpace[1] << 16 )
-					| ( buffSpace[0] << 24 );
+	long range =	( buffSpace[3] << 24 )
+					| ( buffSpace[2] << 16 )
+					| ( buffSpace[1] << 8 )
+					| buffSpace[0];
 	return range;
 }
 
