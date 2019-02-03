@@ -511,7 +511,7 @@ void Hardware::scanPing() {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
 		return;				// If this is run multiple times, mayhem!
 	}
-	scanLoop = true;
+	scanLoop = false;
 	
 	syslog(LOG_NOTICE, "In scanPing" );
 	
