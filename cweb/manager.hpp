@@ -46,6 +46,12 @@ public:
 	char *returnMap( char *buffer );
 };
 
+enum ControllerMode {
+	initialMode = 0,
+	statusMode,
+	rangeMode
+};
+
 
 class Manager {
 	
@@ -61,6 +67,7 @@ public:
 	SearchPattern	pattern;
 	SitMap			sitMap;
 	
+	ControllerMode	expectedControllerMode;
 	
 	void setupManager();
 	void shutdownManager();
@@ -73,8 +80,6 @@ public:
 	void setRange( unsigned int index );
 	long getRangeResult();
 	unsigned int getRange();
-
-	void updateMap( long reading );
 };
 
 extern Manager	manager;

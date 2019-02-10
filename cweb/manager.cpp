@@ -100,6 +100,7 @@ void Manager::setupManager() {
 	busy = false;
 	lastAnythingTime = 0;
 	lastStatusTime = 0;
+	expectedControllerMode = initialMode;
 	syslog(LOG_NOTICE, "In setupManager" );
 
 	minion = Minion();
@@ -162,6 +163,7 @@ long Manager::getStatus() {
 	if ( busy ) {
 		return 0;
 	}
+	expectedControllerMode = statusMode;
 	return minion.getStatus();
 }
 
@@ -170,6 +172,7 @@ long Manager::getStatus() {
 void Manager::setRange( unsigned int index) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
+	expectedControllerMode = rangeMode;
 	return minion.setRange( index );
 }
 
@@ -177,8 +180,9 @@ long Manager::getRangeResult() {
 	
 	busy = true;
 	long result = minion.getRange();	// This will wait for a response to an I2C read
+	expectedControllerMode = statusMode;
 	busy = false;
-	updateMap( result );
+	sitMap.updateEntry( result );
 //	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;
 }
@@ -187,15 +191,5 @@ unsigned int Manager::getRange() {
 	
 	long result = getRangeResult();
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
-//	unsigned int index = result & 0x0FFFF;		// Used to track value of range
-//	if ( last != rangeIndex ) {
-//		syslog(LOG_NOTICE, "In Manager::getRange() index error, expected %u, got %u", rangeIndex, last );
-//		return 0;
-//	}
 	return range;
-}
-
-void Manager::updateMap( long reading )  {
-	
-	sitMap.updateEntry( reading );
 }
