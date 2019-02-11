@@ -93,6 +93,16 @@ char *SitMap::returnMap( char *buffer ) {
 	return buffer;
 }
 
+unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 1024 bytes
+
+//	for ( int i = 0; i < pattern.indexCount; i++ ) {
+//		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
+//	}
+//	sprintf( buffer, "%s\n", buffer );
+	memcpy( buffer, &pattern, sizeof( pattern ) );
+	memcpy( buffer + sizeof( pattern ), distanceMap, sizeof( distanceMap ) );
+	return buffer;
+}
 
 // Manager
 void Manager::setupManager() {

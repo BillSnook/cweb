@@ -44,6 +44,7 @@ public:
 	
 	void updateEntry( long entry );
 	char *returnMap( char *buffer );
+	unsigned char *returnMapData( unsigned char *buffer );
 };
 
 enum ControllerMode {
