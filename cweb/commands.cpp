@@ -92,6 +92,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 	switch ( commandType ) {
+			// Motor control for direct screen
 		case '0':
 			hardware.setMtrDirSpd( 0, token1, token2 );
 			break;
@@ -150,6 +151,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //			hardware.setMtrSpd( 1, 0 );
 //			break;
 //
+			// Controller commands
 		case 'A':
 		case 'a':
 			syslog(LOG_NOTICE, "Command a calls: setStatus()" );
@@ -185,6 +187,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		}
 			break;
 			
+		case 'F':
+		case 'f':
+			syslog(LOG_NOTICE, "Command f calls: manager.setMotorPower( token1 )" );
+			manager.setMotorPower( token1 );
+			break;
+			
 //		case 'C':
 //		case 'c':
 //			syslog(LOG_NOTICE, "Command c calls: manager.testWrite( 'Test' )" );
@@ -210,6 +218,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 //			manager.testRead();
 //			break;
 //
+			// Motor/speed commands
 		case 'G':
 		case 'g':
 			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );

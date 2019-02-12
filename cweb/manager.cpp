@@ -203,3 +203,7 @@ unsigned int Manager::getRange() {
 	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
 	return range;
 }
+
+void Manager::setMotorPower( bool On ) {
+	minion.setRelay( 0, On );
+}

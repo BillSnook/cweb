@@ -81,6 +81,8 @@ public:
 	void setRange( unsigned int index );
 	long getRangeResult();
 	unsigned int getRange();
+	
+	void setMotorPower( bool On );
 };
 
 extern Manager	manager;

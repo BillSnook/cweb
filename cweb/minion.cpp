@@ -212,3 +212,10 @@ long Minion::getRange() {
 	return range;
 }
 
+void Minion::setRelay( int relay, bool On ) {
+	if ( 0 == relay ) {
+		putI2CCmd( 'v', On );
+//	syslog(LOG_NOTICE, "In Minion::setRange" );
+	} else {	// 1 == relay
+	}
+}

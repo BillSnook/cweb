@@ -51,6 +51,8 @@ public:
 	
 	void setRange( unsigned char index );
 	long getRange();
+	
+	void setRelay( int relay, bool On );
 };
 
 #endif /* minion_hpp */
