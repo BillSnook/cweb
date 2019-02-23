@@ -79,6 +79,7 @@
 
 #define Scanner					0
 
+#define PingWaitTime			100000
 
 bool	scanLoop;
 
@@ -475,7 +476,7 @@ void Hardware::scanTest() {
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
 			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+			usleep( PingWaitTime );	// .1 second
 		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
 			if ( !scanLoop ) {
@@ -483,7 +484,7 @@ void Hardware::scanTest() {
 			}
 			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
 			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+			usleep( PingWaitTime );	// .1 second
 		}
 	} while ( scanLoop );
 	centerServo();
@@ -501,7 +502,7 @@ void Hardware::pingLoop() {
 	
 	do {
 		ping( 0 );
-		usleep( 100000 );	// .1 second
+		usleep( PingWaitTime );	// .1 second
 	} while ( scanLoop );
 }
 
