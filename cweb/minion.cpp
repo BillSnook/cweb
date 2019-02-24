@@ -186,8 +186,8 @@ long Minion::getStatus() {
 	unsigned char buffSpace[10] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	long status = ((buffSpace[0] << 24) & 0xFF000000) || ((buffSpace[1] << 16) & 0xFF0000) || ((buffSpace[2] << 8) & 0xFF00) || (buffSpace[3] & 0xFF);
-	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X    0x%08X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
+	long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
+	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
 
 	return status;
 }
