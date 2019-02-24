@@ -160,8 +160,11 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'B':
 		case 'b':
-			syslog(LOG_NOTICE, "Command b calls: getStatus()" );
-			manager.getStatus();
+		{
+			long response = manager.getStatus();
+			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
+			sprintf((char *)msg, "Status: 0x%08lX \n", response );
+		}
 			break;
 
 		case 'C':
@@ -174,7 +177,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'd':
 		{
 			unsigned int range = manager.getRange();
-			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%0X)", range, range );
+			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%04X)", range, range );
 		}
 			break;
 			

@@ -81,7 +81,7 @@ long Minion::getI2CCmd() {
 		return -1L;
 	}
 	syslog(LOG_NOTICE, "Data read: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-	long resp = ((buffer[0] && 0xFF) << 24) || ((buffer[1] && 0xFF) << 16) || ((buffer[2] && 0xFF) << 8) || (buffer[3] && 0xFF);
+	long resp = ((buffer[0] & 0xFF) << 24) || ((buffer[1] & 0xFF) << 16) || ((buffer[2] & 0xFF) << 8) || (buffer[3] & 0xFF);
 	return resp;
 
 #else	// Else not ON_PI
@@ -186,9 +186,10 @@ long Minion::getStatus() {
 	unsigned char buffSpace[10] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
+	long status = ((buffSpace[0] >> 24) & 0xFF) || ((buffSpace[1] >> 16) & 0xFF) || ((buffSpace[2] >> 8) & 0xFF) || (buffSpace[3] & 0xFF);
+	syslog(LOG_NOTICE, "In Minion::getStatus data read: %02X %02X %02X %02X    0x%08X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
 
-	return 4;
+	return status;
 }
 
 void Minion::setRange( unsigned char index ) {
