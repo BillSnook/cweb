@@ -545,7 +545,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
 	manager.setRange( angle );
-	usleep( 100000 );		// Allow 100ms (0.1 sec) for pulse to return
+	usleep( 200000 );		// Allow time for servo to move and pulse to return
 	unsigned int range = (unsigned int)manager.getRange();
 	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return cm;
