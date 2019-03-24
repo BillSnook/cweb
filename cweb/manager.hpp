@@ -78,7 +78,7 @@ public:
 	void setStatus();
 	long getStatus();
 	
-	void setRange( unsigned int index );
+	void setRange( unsigned int angle );
 	long getRangeResult();
 	unsigned int getRange();
 	

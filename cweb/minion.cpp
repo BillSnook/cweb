@@ -114,7 +114,7 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 #ifdef ON_PI
 	unsigned char buffer[4] = {0};
 	buffer[0] = command;	// Send this command
-	buffer[1] = parameter;	// With this ptional parameter
+	buffer[1] = parameter;	// With this optional parameter
 	int length = 2;			//  Number of bytes to write
 	int response = write(file_i2c, buffer, length);
 	if (response != length) {	// write() returns the number of bytes actually written,
@@ -145,7 +145,7 @@ bool Minion::putI2CData( unsigned char *newData ) {
 		syslog(LOG_NOTICE, "In Minion::putI2CData, i2c write error %d: %s.\n", response, errStr );
 		return false;
 	} else {
-		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
+		syslog(LOG_NOTICE, "In Minion::putI2CData, success" );
 	}
 #endif  // ON_PI
 	return true;
@@ -192,10 +192,10 @@ long Minion::getStatus() {
 	return status;
 }
 
-void Minion::setRange( unsigned char index ) {
+void Minion::setRange( unsigned char angle ) {
 	
-	putI2CCmd( 'p', index );
-//	syslog(LOG_NOTICE, "In Minion::setRange" );
+	putI2CCmd( 'p', angle );
+//	syslog(LOG_NOTICE, "In Minion::setRange, angle 0x%02X", angle );
 }
 
 long Minion::getRange() {

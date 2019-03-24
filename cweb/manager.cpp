@@ -75,11 +75,10 @@ void SitMap::updateEntry( long entry ) {
 
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
-		if ( ( index < 0 ) || ( index >= pattern.indexCount ) ) {
-			
+		if ( ( index >= 0 ) && ( index < pattern.indexCount ) ) {
+			distanceMap[ index ].range = range;
+			distanceMap[ index ].angle = angle;
 		}
-		distanceMap[ index ].range = range;
-		distanceMap[ index ].angle = angle;
 	}
 }
 
@@ -146,6 +145,7 @@ void Manager::monitor() {
 				status = tempStatus;
 			}
 		}
+		sleep( 1 );
 
 //		lastAnythingTime = getNowMs();
 	}
@@ -179,11 +179,11 @@ long Manager::getStatus() {
 
 // These routines need to manage the freshness of the range data
 // They could compare the index to a copy of the timestamp when it was sent
-void Manager::setRange( unsigned int index) {
+void Manager::setRange( unsigned int angle) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
-	return minion.setRange( index );
+	return minion.setRange( angle );
 }
 
 long Manager::getRangeResult() {
@@ -193,7 +193,7 @@ long Manager::getRangeResult() {
 	expectedControllerMode = statusMode;
 	busy = false;
 	sitMap.updateEntry( result );
-//	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
+	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;
 }
 

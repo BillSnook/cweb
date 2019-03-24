@@ -49,7 +49,7 @@ public:
 	void setStatus();
 	long getStatus();
 	
-	void setRange( unsigned char index );
+	void setRange( unsigned char angle );
 	long getRange();
 	
 	void setRelay( int relay, bool On );

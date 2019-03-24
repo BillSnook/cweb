@@ -521,8 +521,8 @@ void Hardware::scanPing() {
 			if ( !scanLoop ) {
 				break;
 			}
-			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+//			cmdAngle( angle );	// Done on Arduino now, in ping( angle )
+//			usleep( 100000 );	// .1 second
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
@@ -530,8 +530,8 @@ void Hardware::scanPing() {
 			if ( !scanLoop ) {
 				break;
 			}
-			cmdAngle( angle );
-			usleep( 100000 );	// .1 second
+//			cmdAngle( angle );
+//			usleep( 100000 );	// .1 second
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}

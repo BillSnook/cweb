@@ -164,8 +164,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			long response = manager.getStatus();
 			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
 			long vIn = ( response >> 16 ) & 0x0FFFF;
-			double Voltage = ( vIn / 1024.0 ) * 5;
-			sprintf((char *)msg, "vIn: %0.2F", Voltage * 3.0 );	// vIn is 1/3 of input voltage
+			double voltage = ( vIn * 15 ) / 1024.0;			// vIn is 1/3 of input voltage
+			sprintf((char *)msg, "vIn: %0.2F", voltage );
 		}
 			break;
 
