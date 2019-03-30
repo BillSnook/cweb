@@ -24,10 +24,12 @@ enum CheckTimes {	// milliSecond interval for various checks
 
 SearchPattern::SearchPattern() {
 
-	startAngle = 0;
-	endAngle = 180;
-	incrementAngle = 20;
-	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
+//	startAngle = 0;
+//	endAngle = 180;
+//	incrementAngle = 20;
+//	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
+	
+	SearchPattern( 0, 180, 1 );
 }
 
 SearchPattern::SearchPattern( int start, int end, int inc ) {
@@ -60,6 +62,10 @@ void SitMap::setupSitMap() {
 
 void SitMap::resetSitMap() {
 	
+	for ( int i = 0; i < pattern.indexCount; i++ ) {
+		distanceMap[ i ].angle = 0;
+		distanceMap[ i ].range = 0;
+	}
 }
 
 void SitMap::shutdownSitMap() {
@@ -116,7 +122,7 @@ void Manager::setupManager() {
 	minion.setupMinion( ArdI2CAddr );
 	
 	pattern = SearchPattern( 45, 135, 5 );
-	sitMap = SitMap( pattern );
+	sitMap = SitMap; // ( pattern );
 	sitMap.setupSitMap();
 }
 
