@@ -124,7 +124,7 @@ void Manager::setupManager() {
 	minion.setupMinion( ArdI2CAddr );
 	
 	pattern = SearchPattern( 45, 135, 5 );
-	sitMap = SitMap(); // ( pattern );
+	sitMap = SitMap( pattern );
 	sitMap.setupSitMap();
 }
 
