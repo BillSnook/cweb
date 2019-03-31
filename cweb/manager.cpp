@@ -29,7 +29,7 @@ SearchPattern::SearchPattern() {
 //	incrementAngle = 20;
 //	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
 	
-	SearchPattern( 0, 180, 1 );
+	SearchPattern( 0, 180, 10 );
 }
 
 SearchPattern::SearchPattern( int start, int end, int inc ) {
