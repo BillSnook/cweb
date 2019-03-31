@@ -53,7 +53,9 @@ SitMap::SitMap( SearchPattern newPattern ) {
 
 void SitMap::setupSitMap() {
 	
+	syslog(LOG_NOTICE, "In SitMap::setupSitMap(), before distanceMap" );
 	distanceMap = new DistanceEntry[pattern.indexCount];
+	syslog(LOG_NOTICE, "In SitMap::setupSitMap(), after distanceMap" );
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
 		distanceMap[ i ].angle = 0;
 		distanceMap[ i ].range = 0;
