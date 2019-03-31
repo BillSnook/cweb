@@ -67,16 +67,17 @@ void Listener::serviceConnection( int connectionSockfd ) {
 		char	*buffer = (char *)valloc( bufferSize );
 		bzero( buffer, bufferSize );
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
-		n = read( connectionSockfd, buffer, bufferSize );
+		n = read( connectionSockfd, buffer, bufferSize );	// Blocks waiting for incoming data from WiFi
 		if ( n <= 0 ) {
 			syslog(LOG_ERR, "ERROR reading command from socket" );
+			free( buffer );
 			break;
 		}
 		
 		syslog(LOG_NOTICE, "Here is a received message: %s", buffer );
 		// start thread to service command
 		
-		threader.queueThread( commandThread, buffer, connectionSockfd );
+		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread
 		free( buffer );
 
 //		n = write( connectionSockfd, "\nAck\n", 5 );

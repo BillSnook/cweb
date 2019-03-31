@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "mtrctl.hpp"
+#include "listen.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
 
@@ -493,7 +494,7 @@ void Hardware::scanTest() {
 // just ping repeatedly
 void Hardware::pingLoop() {
 	if ( scanLoop ) {
-		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
+		syslog(LOG_NOTICE, "Attempting to run pingLoop multiple times" );
 		return;				// If this is run multiple times, mayhem!
 	}
 	scanLoop = true;
@@ -507,7 +508,7 @@ void Hardware::pingLoop() {
 }
 
 // Scan and ping through angle range
-void Hardware::scanPing() {
+void Hardware::scanPing( int socket ) {
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
 		return;				// If this is run multiple times, mayhem!
@@ -516,6 +517,9 @@ void Hardware::scanPing() {
 	
 	syslog(LOG_NOTICE, "In scanPing" );
 	
+	char	*buffer = (char *)valloc( 1024 );
+	bzero( buffer, 1024 );
+
 	do {
 		for( int angle = 45; angle < 135; angle += 5 ) {
 			if ( !scanLoop ) {
@@ -526,6 +530,12 @@ void Hardware::scanPing() {
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
+		// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
+		if ( 0 != socket ) {
+			buffer = manager.sitMap.returnMap( buffer );
+			listener.writeBack( buffer, socket );
+			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+		}
 		for( int angle = 135; angle > 45; angle -= 5 ) {
 			if ( !scanLoop ) {
 				break;
@@ -535,8 +545,16 @@ void Hardware::scanPing() {
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
+		// Range newly scanned, sitmap updated - contact mother ship with ping map
+		if ( 0 != socket ) {
+			buffer = manager.sitMap.returnMap( buffer );
+			listener.writeBack( buffer, socket );
+			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+		}
 	} while ( scanLoop );
 	centerServo();
+
+	free( buffer );
 }
 
 
@@ -545,7 +563,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
 	manager.setRange( angle );
-	usleep( 200000 );		// Allow time for servo to move and pulse to return
+	usleep( 200000 );		// Allow time for servo to move and pulse to propagate and return
 	unsigned int range = (unsigned int)manager.getRange();
 	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return cm;

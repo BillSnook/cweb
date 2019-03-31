@@ -21,7 +21,7 @@ enum CheckTimes {	// milliSecond interval for various checks
 	heartBeatInterval = 1000L
 };
 
-
+// MARK: SearchPattern
 SearchPattern::SearchPattern() {
 
 //	startAngle = 0;
@@ -40,7 +40,7 @@ SearchPattern::SearchPattern( int start, int end, int inc ) {
 	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
 }
 
-
+// MARK: SitMap
 SitMap::SitMap() {
 	
 	pattern = SearchPattern();
@@ -94,7 +94,7 @@ char *SitMap::returnMap( char *buffer ) {
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
 		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
-	sprintf( buffer, "%s\n", buffer );
+	sprintf( buffer, "%s\n%c", buffer, (char)0 );	// Terminate string
 	return buffer;
 }
 
@@ -105,11 +105,11 @@ unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 102
 //	}
 //	sprintf( buffer, "%s\n", buffer );
 	memcpy( buffer, &pattern, sizeof( pattern ) );
-	memcpy( buffer + sizeof( pattern ), distanceMap, sizeof( distanceMap ) );
+	memcpy( buffer + sizeof( pattern ), distanceMap, sizeof( distanceMap ) * pattern.indexCount );
 	return buffer;
 }
 
-// Manager
+// MARK: Manager
 void Manager::setupManager() {
 	stopLoop = false;
 	busy = false;
@@ -122,7 +122,7 @@ void Manager::setupManager() {
 	minion.setupMinion( ArdI2CAddr );
 	
 	pattern = SearchPattern( 45, 135, 5 );
-	sitMap = SitMap; // ( pattern );
+	sitMap = SitMap(); // ( pattern );
 	sitMap.setupSitMap();
 }
 

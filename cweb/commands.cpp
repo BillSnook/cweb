@@ -33,7 +33,7 @@ Hardware	hardware;
 
 
 extern Filer	filer;
-extern Listener	listener;
+//extern Listener	listener;
 extern Manager 	manager;
 
 void Commander::setupCommander() {
@@ -55,17 +55,17 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	int len = int( strlen( command ) );
 	char *nextToken[tokenMax+1];
 	int i = 0;
-	int t = 0;
+	int tokenCount = 0;
 	do {
-		nextToken[t] = &command[i];
-		t++;
+		nextToken[tokenCount] = &command[i];
+		tokenCount++;
 		do {
 			i++;
 		} while ( ( i < len ) && ( command[i] != ' ' ) && ( command[i] != '\n' ) && ( command[i] != 0 ) );
 		command[i] = 0;
 		i++;
-	} while ( ( i < len ) && ( t < tokenMax ) );
-	int tokenCount = t;
+	} while ( ( i < len ) && ( tokenCount < tokenMax ) );
+//	int tokenCount = t;
 	int token1 = 0;
 	int token2 = 0;
 	int token3 = 0;
@@ -270,6 +270,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			taskMaster.mobileTask( token1, token2 );
 			break;
 
+// Testing for Map page
+		case 'N':
+		case 'n':
+			hardware.scanPing( socket );
+			break;
+			
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
@@ -291,8 +297,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 't':
 			memcpy( msg, "\nMessage 1...\n", 15 );
 			listener.writeBack( (char *)msg, socket );
-			usleep( 5000000 ); // 5 second delay
-			memcpy( msg, "\nMessage 2   \n", 15 );
+			usleep( 5000000 ); // 5 second delay as test
+			memcpy( msg, "\nMessage 2   \n", 15 );	// msg gets written at end of this routine
 			break;
 			
 		case 'U':
