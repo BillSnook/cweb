@@ -96,7 +96,7 @@ char *SitMap::returnMap( char *buffer ) {
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
 		sprintf( buffer, "%s %4d  %5d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
-	sprintf( buffer, "%s\n%c", buffer, (char)0 );	// Terminate string
+	sprintf( buffer, "%s\n", buffer );	// Terminate string
 	return buffer;
 }
 
