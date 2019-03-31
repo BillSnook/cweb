@@ -92,9 +92,9 @@ void SitMap::updateEntry( long entry ) {
 
 char *SitMap::returnMap( char *buffer ) {
 
-	sprintf( buffer, "Range map:\n" );
+	sprintf( buffer, "@Map\n" );
 	for ( int i = 0; i < pattern.indexCount; i++ ) {
-		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
+		sprintf( buffer, "%s %4d  %5d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
 	sprintf( buffer, "%s\n%c", buffer, (char)0 );	// Terminate string
 	return buffer;
