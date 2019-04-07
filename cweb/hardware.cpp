@@ -530,7 +530,7 @@ void Hardware::scanPing( int socket ) {
 	bzero( buffer, 1024 );
 	
 	do {
-		for( int angle = start; angle < end; angle += inc ) {
+		for( int angle = start; angle <= end; angle += inc ) {
 			if ( !scanLoop ) {
 				break;
 			}
@@ -545,7 +545,7 @@ void Hardware::scanPing( int socket ) {
 			listener.writeBack( buffer, socket );
 			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
-		for( int angle = end; angle > start; angle -= inc ) {
+		for( int angle = end - inc; angle > start; angle -= inc ) {
 			if ( !scanLoop ) {
 				break;
 			}
