@@ -543,7 +543,7 @@ void Hardware::scanPing( int socket ) {
 		if ( 0 != socket ) {
 			buffer = manager.sitMap.returnMap( buffer );
 			listener.writeBack( buffer, socket );
-			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+//			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
 		for( int angle = end - inc; angle > start; angle -= inc ) {
 			if ( !scanLoop ) {
@@ -558,7 +558,7 @@ void Hardware::scanPing( int socket ) {
 		if ( 0 != socket ) {
 			buffer = manager.sitMap.returnMap( buffer );
 			listener.writeBack( buffer, socket );
-			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+//			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
 	} while ( scanLoop );
 	centerServo();
