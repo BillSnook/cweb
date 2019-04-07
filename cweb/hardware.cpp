@@ -551,7 +551,7 @@ void Hardware::scanPing( int socket ) {
 			}
 //			cmdAngle( angle );
 //			usleep( 100000 );	// .1 second
-			unsigned int distance = ping( angle - inc );	// Test
+			unsigned int distance = ping( angle + inc );	// Test
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		// Range newly scanned, sitmap updated - contact mother ship with ping map
