@@ -551,7 +551,7 @@ void Hardware::scanPing( int socket ) {
 			}
 //			cmdAngle( angle );
 //			usleep( 100000 );	// .1 second
-			unsigned int distance = ping( angle );
+			unsigned int distance = ping( angle - inc );	// Test
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		// Range newly scanned, sitmap updated - contact mother ship with ping map
@@ -572,7 +572,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
 	manager.setRange( angle );
-	usleep( 400000 );		// Allow time for servo to move and pulse to propagate and return
+	usleep( 100000 );		// Allow time for servo to move and pulse to propagate and return
 	unsigned int range = (unsigned int)manager.getRange();
 	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return cm;
