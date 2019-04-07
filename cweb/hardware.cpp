@@ -507,6 +507,11 @@ void Hardware::pingLoop() {
 	} while ( scanLoop );
 }
 
+void Hardware::prepPing( int start, int end, int inc ) {
+	
+	
+}
+
 // Scan and ping through angle range
 void Hardware::scanPing( int socket ) {
 	if ( scanLoop ) {
@@ -519,9 +524,13 @@ void Hardware::scanPing( int socket ) {
 	
 	char	*buffer = (char *)valloc( 1024 );
 	bzero( buffer, 1024 );
+	
+	int start = manager.pattern.startAngle;
+	int end = manager.pattern.endAngle;
+	int inc = manager.pattern.incrementAngle;
 
 	do {
-		for( int angle = 45; angle < 135; angle += 5 ) {
+		for( int angle = start; angle < end; angle += inc ) {
 			if ( !scanLoop ) {
 				break;
 			}
@@ -536,7 +545,7 @@ void Hardware::scanPing( int socket ) {
 			listener.writeBack( buffer, socket );
 			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
-		for( int angle = 135; angle > 45; angle -= 5 ) {
+		for( int angle = end; angle > start; angle -= inc ) {
 			if ( !scanLoop ) {
 				break;
 			}

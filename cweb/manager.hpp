@@ -71,6 +71,7 @@ public:
 	ControllerMode	expectedControllerMode;
 	
 	void setupManager();
+	void resetPattern( int start, int end, int inc );
 	void shutdownManager();
 	
 	void monitor();

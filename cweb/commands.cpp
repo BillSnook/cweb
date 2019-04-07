@@ -273,6 +273,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 // Testing for Map page
 		case 'N':
 		case 'n':
+			hardware.prepPing( token1, token2, token3 );
 			hardware.scanPing( socket );
 			break;
 			

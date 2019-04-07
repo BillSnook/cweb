@@ -113,6 +113,7 @@ public:
 	void centerServo();
 	void scanStop();
 	void scanTest();
+	void prepPing( int start, int end, int inc );
 	void scanPing( int socket );
 	void pingLoop();
 

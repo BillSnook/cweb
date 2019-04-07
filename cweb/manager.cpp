@@ -29,7 +29,7 @@ SearchPattern::SearchPattern() {
 //	incrementAngle = 20;
 //	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
 	
-	SearchPattern( 0, 180, 10 );
+	SearchPattern( 45, 135, 5 );
 }
 
 SearchPattern::SearchPattern( int start, int end, int inc ) {
@@ -128,8 +128,16 @@ void Manager::setupManager() {
 	sitMap.setupSitMap();
 }
 
+void Manager::resetPattern( int start, int end, int inc ) {
+
+	sitMap.shutdownSitMap();
+	pattern = SearchPattern( start, end, inc );
+	sitMap = SitMap( pattern );
+	sitMap.setupSitMap();
+}
+
 void Manager::shutdownManager() {
-	
+
 	minion.resetMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
