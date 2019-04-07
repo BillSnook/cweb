@@ -509,7 +509,7 @@ void Hardware::pingLoop() {
 
 void Hardware::prepPing( int start, int end, int inc ) {
 	
-	manager.resetPattern( int start, int end, int inc );
+	manager.resetPattern( start, end, inc );
 }
 
 // Scan and ping through angle range
