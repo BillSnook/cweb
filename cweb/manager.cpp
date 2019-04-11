@@ -79,11 +79,11 @@ void SitMap::updateEntry( long entry ) {
 	
 	unsigned int range = (entry >> 16) & 0x0FFFF;		// Actual range value
 	unsigned int angle = entry & 0x0FFFF;				// Angle used to track value of range
-	syslog(LOG_NOTICE, "In SitMap::updateEntry(), angle: %u, range: %u", angle, range );
+//	syslog(LOG_NOTICE, "In SitMap::updateEntry(), angle: %u, range: %u", angle, range );
 
 	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
 		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
-		syslog(LOG_NOTICE, "In SitMap::updateEntry(), index: %u", index );
+//		syslog(LOG_NOTICE, "In SitMap::updateEntry(), index: %u", index );
 		if ( ( index >= 0 ) && ( index < pattern.indexCount ) ) {
 			distanceMap[ index ].range = range;
 			distanceMap[ index ].angle = angle;
@@ -98,7 +98,7 @@ char *SitMap::returnMap( char *buffer ) {
 		sprintf( buffer, "%s %4d  %5d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
 	sprintf( buffer, "%s\n", buffer );	// Terminate string
-	syslog(LOG_NOTICE, "In SitMap::returnMap()\n%s", buffer );
+//	syslog(LOG_NOTICE, "In SitMap::returnMap()\n%s", buffer );
 	return buffer;
 }
 

@@ -539,15 +539,15 @@ void Hardware::scanPing( int socket ) {
 			unsigned int distance = ping( angle );
 //			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
-		cmdAngle( start );	// Start return sweep before returning map -
+		cmdAngle( start );	// Start return sweep before returning map
+		// 180º in .9 seconds = .005 sec / degree
+		usleep( ( end - start ) * 4000 );	// .004 second / degree
 		// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
 		if ( 0 != socket ) {
 			buffer = manager.sitMap.returnMap( buffer );
 			listener.writeBack( buffer, socket );
 //			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
-		// 180º in .9 seconds = .005 sec / degree
-		usleep( ( end - start ) * 4000 );	// .004 second / degree
 //		for( int angle = end - inc; angle > start; angle -= inc ) {
 //			if ( !scanLoop ) {
 //				break;
