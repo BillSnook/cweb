@@ -97,6 +97,7 @@ char *SitMap::returnMap( char *buffer ) {
 		sprintf( buffer, "%s %4d  %5d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
 	}
 	sprintf( buffer, "%s\n", buffer );	// Terminate string
+	syslog(LOG_NOTICE, "In SitMap::returnMap()\n%s", buffer );
 	return buffer;
 }
 
