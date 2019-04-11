@@ -546,7 +546,8 @@ void Hardware::scanPing( int socket ) {
 //			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
 		cmdAngle( start );
-		usleep( 500000 );	// .5 second
+		// 180º in .9 seconds = .005 sec / degree
+		usleep( ( end - start ) * 5000 );	// .005 second / degree
 //		for( int angle = end - inc; angle > start; angle -= inc ) {
 //			if ( !scanLoop ) {
 //				break;
