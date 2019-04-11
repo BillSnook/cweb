@@ -545,7 +545,7 @@ void Hardware::scanPing( int socket ) {
 			listener.writeBack( buffer, socket );
 //			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
-		cmdAngle( start )
+		cmdAngle( start );
 		usleep( 500000 );	// .5 second
 //		for( int angle = end - inc; angle > start; angle -= inc ) {
 //			if ( !scanLoop ) {
