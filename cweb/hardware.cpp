@@ -545,21 +545,23 @@ void Hardware::scanPing( int socket ) {
 			listener.writeBack( buffer, socket );
 //			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
-		for( int angle = end - inc; angle > start; angle -= inc ) {
-			if ( !scanLoop ) {
-				break;
-			}
-//			cmdAngle( angle );
-//			usleep( 100000 );	// .1 second
-			unsigned int distance = ping( angle );	// Test
-//			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
-		}
-		// Range newly scanned, sitmap updated - contact mother ship with ping map
-		if ( 0 != socket ) {
-			buffer = manager.sitMap.returnMap( buffer );
-			listener.writeBack( buffer, socket );
-//			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
-		}
+		cmdAngle( start )
+		usleep( 500000 );	// .5 second
+//		for( int angle = end - inc; angle > start; angle -= inc ) {
+//			if ( !scanLoop ) {
+//				break;
+//			}
+////			cmdAngle( angle );
+////			usleep( 100000 );	// .1 second
+//			unsigned int distance = ping( angle );	// Test
+////			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+//		}
+//		// Range newly scanned, sitmap updated - contact mother ship with ping map
+//		if ( 0 != socket ) {
+//			buffer = manager.sitMap.returnMap( buffer );
+//			listener.writeBack( buffer, socket );
+////			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+//		}
 	} while ( scanLoop );
 	centerServo();
 
