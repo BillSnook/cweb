@@ -29,6 +29,7 @@ class Minion {
 
 	int				pi2c;
 	int 			file_i2c;
+	unsigned char	lastAngle;
 
 public:
 	remoteStatus	status;		// CUrrent status value

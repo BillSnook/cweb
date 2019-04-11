@@ -195,6 +195,7 @@ long Minion::getStatus() {
 void Minion::setRange( unsigned char angle ) {
 	
 	putI2CCmd( 'p', angle );
+	lastAngle = angle;
 //	syslog(LOG_NOTICE, "In Minion::setRange, angle 0x%02X", angle );
 }
 
@@ -205,7 +206,7 @@ long Minion::getRange() {
 	unsigned char buffSpace[10] = {0};
 	unsigned char *buffer = buffSpace;
 	getI2CData( buffer );
-//	syslog(LOG_NOTICE, "In Minion::getRange data read: %02X %02X %02X %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3]);
+	syslog(LOG_NOTICE, "In Minion::getRange data read: %02X %02X %02X %02X, last angle: %02X\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], lastAngle);
 	long range =	( buffSpace[3] << 16 )
 					| ( buffSpace[2] << 24 )
 					| buffSpace[1]
