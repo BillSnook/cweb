@@ -446,7 +446,7 @@ int Hardware::angleToPWM( int angle ) {
 
 void Hardware::cmdAngle( int angle ) {
 	
-	setPWM( Scanner, angleToPWM( angle - 8 ) );	// Calibrated - adjust as needed
+	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
 void Hardware::centerServo() {
