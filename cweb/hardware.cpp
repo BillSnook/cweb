@@ -537,7 +537,7 @@ void Hardware::scanPing( int socket ) {
 //			cmdAngle( angle );	// Done on Arduino now, in ping( angle )
 //			usleep( 100000 );	// .1 second
 			unsigned int distance = ping( angle );
-//			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 //		cmdAngle( start );	// Start return sweep before returning map
 //		// 180º in .9 seconds = .005 sec / degree
@@ -546,7 +546,7 @@ void Hardware::scanPing( int socket ) {
 		if ( 0 != socket ) {
 			buffer = manager.sitMap.returnMap( buffer );
 			listener.writeBack( buffer, socket );
-//			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
 		for( int angle = end; angle > start; angle -= inc ) {
 			if ( !scanLoop ) {
@@ -555,13 +555,13 @@ void Hardware::scanPing( int socket ) {
 //			cmdAngle( angle );
 //			usleep( 100000 );	// .1 second
 			unsigned int distance = ping( angle );	// Test
-//			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 		}
 		// Range newly scanned, sitmap updated - contact mother ship with ping map
 		if ( 0 != socket ) {
 			buffer = manager.sitMap.returnMap( buffer );
 			listener.writeBack( buffer, socket );
-//			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+			syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 		}
 	} while ( scanLoop );
 	centerServo();
