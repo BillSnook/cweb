@@ -211,7 +211,7 @@ long Manager::getRangeResult() {
 	expectedControllerMode = statusMode;
 	busy = false;
 	sitMap.updateEntry( result );
-//	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
+	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;
 }
 
