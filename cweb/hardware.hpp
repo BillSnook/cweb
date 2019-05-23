@@ -87,6 +87,7 @@ public:
 	
 	bool    	motor0Setup;
 	bool   		motor1Setup;
+	bool		sweepOneWay;
 	
 	int     	i2cAddress;
 	int     	i2cFrequency;
