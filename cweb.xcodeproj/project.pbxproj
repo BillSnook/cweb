@@ -101,7 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				A97126AD220639AD00AC5AC7 /* infrastructure */,
-				A97126AE220639E500AC5AC7 /* communication */,
+				A97126AE220639E500AC5AC7 /* socket_comm */,
 				A97126AB2206394A00AC5AC7 /* hardware */,
 				A97126AF22063A7A00AC5AC7 /* control */,
 				A96D730B2083F34700B98679 /* README.md */,
@@ -140,7 +140,7 @@
 			name = infrastructure;
 			sourceTree = "<group>";
 		};
-		A97126AE220639E500AC5AC7 /* communication */ = {
+		A97126AE220639E500AC5AC7 /* socket_comm */ = {
 			isa = PBXGroup;
 			children = (
 				A96D73082083E80A00B98679 /* listen.cpp */,
@@ -148,7 +148,7 @@
 				A96D730C208402C200B98679 /* sender.cpp */,
 				A96D730D208402C200B98679 /* sender.hpp */,
 			);
-			name = communication;
+			name = socket_comm;
 			sourceTree = "<group>";
 		};
 		A97126AF22063A7A00AC5AC7 /* control */ = {
