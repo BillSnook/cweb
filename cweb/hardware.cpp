@@ -535,14 +535,14 @@ void Hardware::scanPing( int socket ) {
 	bzero( buffer, 1024 );
 	
 	do {
-		for( int angle = start; angle < end; angle += inc ) {
-			if ( !scanLoop ) {
-				break;
-			}
-			unsigned int distance = ping( angle );
-			syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
-		}
 		if ( sweepOneWay ) {
+			for( int angle = start; angle <= end; angle += inc ) {
+				if ( !scanLoop ) {
+					break;
+				}
+				unsigned int distance = ping( angle );
+				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+			}
 			cmdAngle( start );	// Start return sweep before returning map
 			// 180º in .9 seconds = .005 sec / degree
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
@@ -553,6 +553,18 @@ void Hardware::scanPing( int socket ) {
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 		} else {
+			for( int angle = start; angle < end; angle += inc ) {
+				if ( !scanLoop ) {
+					break;
+				}
+				unsigned int distance = ping( angle );
+				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
+			}
+			if ( 0 != socket ) {
+				buffer = manager.sitMap.returnMap( buffer );
+				listener.writeBack( buffer, socket );
+				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
+			}
 			for( int angle = end; angle > start; angle -= inc ) {
 				if ( !scanLoop ) {
 					break;
