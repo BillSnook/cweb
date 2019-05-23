@@ -239,6 +239,8 @@ Hardware::Hardware() {
 	motor0Setup = false;
 	motor1Setup = false;
 	sweepOneWay = false;
+	upsideDownScanner = false;
+
 	
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
@@ -511,7 +513,8 @@ void Hardware::pingLoop() {
 void Hardware::prepPing( int start, int end, int inc ) {
 	
 	manager.resetPattern( start, end, inc );
-	sweepOneWay = true;
+	sweepOneWay = true;			// For greater consistency
+	upsideDownScanner = true;	// For dev32, not for dev31!!
 }
 
 // Scan and ping through angle range
@@ -575,6 +578,9 @@ void Hardware::scanPing( int socket ) {
 unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
+	if ( upsideDownScanner ) {
+		angle = 180 - angle;
+	}
 	manager.setRange( angle );
 	usleep( 200000 );		// Allow time for servo to move and pulse to propagate and return
 	unsigned int range = (unsigned int)manager.getRange();
