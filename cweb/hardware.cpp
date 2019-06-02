@@ -14,6 +14,14 @@
 #include "hardware.hpp"
 #include "manager.hpp"
 
+
+#define VERSION_REQUIRED_MAJOR 1
+#define VERSION_REQUIRED_MINOR 0
+#define VERSION_REQUIRED_BUILD 1
+
+
+
+
 #define MOTOR_I2C_ADDRESS		0x6F
 #define CHANNEL_MAX				15
 
@@ -273,6 +281,7 @@ bool Hardware::setupHardware() {
 	speed.initializeSpeedArray();
 	
 	scanLoop = false;
+
 
 	return true;
 }
