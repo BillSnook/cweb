@@ -30,22 +30,25 @@ Minion::Minion() {
 	
 }
 
-bool Minion::setupMinion( int i2cAddr ) {
+bool Minion::setupMinion( int i2cAddr, int fp ) {
 	
 	pi2c = i2cAddr;
 	
 #ifdef ON_PI
 	
-	//----- OPEN THE I2C BUS -----
-	char *filename = (char*)"/dev/i2c-1";
-	if ((file_i2c = open(filename, O_RDWR)) < 0) {
-		//ERROR HANDLING: you can check errno to see what went wrong
-		syslog(LOG_NOTICE, "Failed to open the i2c bus");
-		return false;
+	if ( fp > 0 ) {
+		file_i2c = fp;
+	} else {
+		//----- OPEN THE I2C BUS -----
+		char *filename = (char*)"/dev/i2c-1";
+		if ((file_i2c = open(filename, O_RDWR)) < 0) {
+			//ERROR HANDLING: you can check errno to see what went wrong
+			syslog(LOG_NOTICE, "Failed to open the i2c bus");
+			return false;
+		}
 	}
-	
 	if (ioctl(file_i2c, I2C_SLAVE, pi2c) < 0) {
-		syslog(LOG_NOTICE, "Failed to acquire bus access and/or talk to slave");
+		syslog(LOG_NOTICE, "Failed to acquire bus access and/or setup remote as slave");
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
