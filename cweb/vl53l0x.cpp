@@ -8,6 +8,12 @@
 
 #include "vl53l0x.hpp"
 
+#include <stdlib.h>			// malloc
+#include <stdio.h>			// sprintf
+#include <syslog.h>			// close read write
+#include <string.h>			// strcat
+#include <unistd.h>
+
 
 #define VERSION_REQUIRED_MAJOR 1
 #define VERSION_REQUIRED_MINOR 0
@@ -119,7 +125,7 @@ void VL53L0X::measureRun() {
 	
 	syslog(LOG_NOTICE, "In VL53L0X::measureRun" );
 	
-	stopLoop = false
+	stopLoop = false;
 	if(status == VL53L0X_ERROR_NONE)
 	{
 		status = rangingTest( pMyDevice );
