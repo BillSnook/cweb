@@ -10,9 +10,10 @@
 #include <syslog.h>
 #include <stdio.h>			// sprintf
 
-#include "manager.hpp"
-#include "minion.hpp"
 #include "hardware.hpp"
+#include "minion.hpp"
+#include "vl53l0x.hpp"
+#include "manager.hpp"
 
 Minion	minion;
 
@@ -122,8 +123,11 @@ void Manager::setupManager() {
 	expectedControllerMode = initialMode;
 	syslog(LOG_NOTICE, "In setupManager" );
 
-	minion = Minion();
+	minion = Minion();					// Minions talk to the arduino to relay commands
 	minion.setupMinion( ArdI2CAddr );
+	
+	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
+	vl53l0x.setupVL53L0X();
 	
 	pattern = SearchPattern( 45, 135, 5 );
 	sitMap = SitMap( pattern );
@@ -140,6 +144,7 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
+	vl53l0x.shutdownVL53L0X();
 	minion.resetMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
@@ -194,6 +199,19 @@ long Manager::getStatus() {
 	expectedControllerMode = statusMode;
 	return minion.getStatus();
 }
+
+void Manager::startVL() {
+	
+	syslog(LOG_NOTICE, "In Manager::startVL()" );
+	vl53l0x.measureRun();
+}
+
+void Manager::stopVL() {
+	
+	syslog(LOG_NOTICE, "In Manager::stopVL()" );
+	vl53l0x.measureStop();
+}
+
 
 // These routines need to manage the freshness of the range data
 // They could compare the index to a copy of the timestamp when it was sent

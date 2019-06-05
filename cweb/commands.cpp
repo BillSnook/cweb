@@ -277,6 +277,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.scanPing( socket );
 			break;
 			
+		case 'O':
+		case 'o':
+			syslog(LOG_NOTICE, "startVL" );
+			manager.startVL();
+			break;
+			
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
@@ -284,6 +290,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
 		case 'S':
 		case 's':
+			manager.stopVL();
+			syslog(LOG_NOTICE, "Did stopVL" );
 			hardware.scanStop();
 			syslog(LOG_NOTICE, "Did scanStop" );
 			hardware.cmdSpeed( 0 );

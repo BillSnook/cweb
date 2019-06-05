@@ -8,8 +8,8 @@ LDLIBS = -lpthread
 CXXFLAGS += -DON_PI
 LDLIBS += -lwiringPi
 
-HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp power.hpp tasks.hpp filer.hpp actions.hpp minion.hpp manager.hpp
-OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o power.o tasks.o filer.o actions.o minion.o manager.o
+HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp power.hpp tasks.hpp filer.hpp actions.hpp minion.hpp manager.hpp vl53l0x.hpp
+OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o power.o tasks.o filer.o actions.o minion.o manager.o vl53l0x.cpp
 
 INCLUDES = -I. -I/home/pi/code/c/cweb/vl53l0x/Api/core/inc -I/home/pi/code/c/cweb/vl53l0x/VL53L0X_rasp/platform/inc
 LIB_DIR = -L/home/pi/code/c/cweb/lib

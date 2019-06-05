@@ -84,6 +84,9 @@ public:
 	unsigned int getRange();
 	
 	void setMotorPower( bool On );
+	
+	void startVL();
+	long stopVL();
 };
 
 extern Manager	manager;
