@@ -33,8 +33,6 @@ void VL53L0X::setupVL53L0X() {
 	char ifc[] = "/dev/i2c-1";
 	char *interface = (char *)&ifc;
 	
-	printf ("VL53L0X PAL Continuous Ranging example\n\n");
-	
 	// Initialize Comms
 	pMyDevice->I2cDevAddr      = 0x29;
 	
@@ -76,6 +74,7 @@ void VL53L0X::setupVL53L0X() {
 	{
 		printf ("Call of VL53L0X_DataInit\n");
 		status = VL53L0X_DataInit(&myDevice); // Data initialization
+		printf ("Called VL53L0X_DataInit, got %d\n", status);
 		print_pal_error(status);
 	}
 	
