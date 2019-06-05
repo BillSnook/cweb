@@ -123,8 +123,8 @@ void Manager::setupManager() {
 	expectedControllerMode = initialMode;
 	syslog(LOG_NOTICE, "In setupManager" );
 
-	minion = Minion();					// Minions talk to the arduino to relay commands
-	minion.setupMinion( ArdI2CAddr );
+//	minion = Minion();					// Minions talk to the arduino to relay commands
+//	minion.setupMinion( ArdI2CAddr );
 	
 	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 	vl53l0x.setupVL53L0X();
@@ -145,7 +145,7 @@ void Manager::resetPattern( int start, int end, int inc ) {
 void Manager::shutdownManager() {
 
 	vl53l0x.shutdownVL53L0X();
-	minion.resetMinion();
+//	minion.resetMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
@@ -187,7 +187,7 @@ long Manager::getNowMs() {
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
-	minion.setStatus();
+//	minion.setStatus();
 }
 
 long Manager::getStatus() {
@@ -197,7 +197,7 @@ long Manager::getStatus() {
 		return 0;
 	}
 	expectedControllerMode = statusMode;
-	return minion.getStatus();
+	return 0; // minion.getStatus();
 }
 
 void Manager::startVL() {
@@ -219,13 +219,13 @@ void Manager::setRange( unsigned int angle) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
-	return minion.setRange( angle );
+//	minion.setRange( angle );
 }
 
 long Manager::getRangeResult() {
 	
 	busy = true;
-	long result = minion.getRange();	// This will wait for a response to an I2C read
+	long result = 0; // minion.getRange();	// This will wait for a response to an I2C read
 	expectedControllerMode = statusMode;
 	busy = false;
 	sitMap.updateEntry( result );
@@ -241,5 +241,5 @@ unsigned int Manager::getRange() {
 }
 
 void Manager::setMotorPower( bool On ) {
-	minion.setRelay( 0, On );
+//	minion.setRelay( 0, On );
 }
