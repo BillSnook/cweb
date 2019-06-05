@@ -86,7 +86,7 @@ public:
 	void setMotorPower( bool On );
 	
 	void startVL();
-	long stopVL();
+	void stopVL();
 };
 
 extern Manager	manager;
