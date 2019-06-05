@@ -27,8 +27,6 @@ class VL53L0X {
 	VL53L0X_Version_t		*pVersion   = &version;
 
 public:
-	int  i2cFilePtr;
-	
 	void setupVL53L0X();
 	void shutdownVL53L0X();
 	

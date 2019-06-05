@@ -42,7 +42,6 @@ void VL53L0X::setupVL53L0X() {
 		printf ("Failed to init\n");
 	}
 	
-	i2cFilePtr = myDevice.fd;
 	/*
 	 *  Get the version of the VL53L0X API running in the firmware
 	 */

@@ -36,7 +36,7 @@ public:
 	
 	explicit Minion();
 
-	bool setupMinion( int i2cAddr, int fp );
+	bool setupMinion( int i2cAddr );
 	bool resetMinion();
 
 	long getI2CCmd();

@@ -123,11 +123,11 @@ void Manager::setupManager() {
 	expectedControllerMode = initialMode;
 	syslog(LOG_NOTICE, "In setupManager" );
 
+	minion = Minion();					// Minions talk to the arduino to relay commands
+	minion.setupMinion( ArdI2CAddr );
+	
 	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 	vl53l0x.setupVL53L0X();
-	
-	minion = Minion();					// Minions talk to the arduino to relay commands
-	minion.setupMinion( ArdI2CAddr, vl53l0x.i2cFilePtr );
 	
 	pattern = SearchPattern( 45, 135, 5 );
 	sitMap = SitMap( pattern );
