@@ -100,8 +100,8 @@ VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev) {
 
     return Status;
 }
-    
-    
+
+
 VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
 {
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
@@ -142,7 +142,7 @@ VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
         Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING); // Setup in single ranging mode
         print_pal_error(Status);
     }
-    
+	
     if(Status == VL53L0X_ERROR_NONE)
     {
 		printf ("Call of VL53L0X_StartMeasurement\n");
@@ -153,7 +153,7 @@ VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
     if(Status == VL53L0X_ERROR_NONE)
     {
         uint32_t measurement;
-        uint32_t no_of_measurements = 5000;
+        uint32_t no_of_measurements = 50;
 
         uint16_t* pResults = (uint16_t*)malloc(sizeof(uint16_t) * no_of_measurements);
 
@@ -188,7 +188,7 @@ VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
         free(pResults);
     }
 
-    
+	
     if(Status == VL53L0X_ERROR_NONE)
     {
         printf ("Call of VL53L0X_StopMeasurement\n");
@@ -265,7 +265,7 @@ int mainTest() {
         Status = VL53L0X_DataInit(&MyDevice); // Data initialization
         print_pal_error(Status);
     }
-    
+	
     if(Status == VL53L0X_ERROR_NONE)
     {
         Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
@@ -292,7 +292,7 @@ int mainTest() {
     }
 
     print_pal_error(Status);
-    
+	
     // Implementation specific
 
     /*
@@ -304,7 +304,7 @@ int mainTest() {
 
 
     print_pal_error(Status);
-    
+	
     return (0);
 }
 

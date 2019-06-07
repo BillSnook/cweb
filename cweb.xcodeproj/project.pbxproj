@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
-		A949BB4F22A8158C006383AE /* vl53l0x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A949BB4D22A8158C006383AE /* vl53l0x.cpp */; };
 		A949BB5C22AA2425006383AE /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 		A958526421BCDD9E001573FA /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
@@ -235,7 +234,6 @@
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */,
-				A949BB4F22A8158C006383AE /* vl53l0x.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
