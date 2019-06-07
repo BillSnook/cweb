@@ -39,14 +39,14 @@ extern Manager 	manager;
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
-	hardware = Hardware();
-	hardware.setupHardware();
+//	hardware = Hardware();
+//	hardware.setupHardware();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-	hardware.resetHardware();
+//	hardware.resetHardware();
 }
 
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
