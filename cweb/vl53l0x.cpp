@@ -72,9 +72,9 @@ void VL53L0X::setupVL53L0X() {
 	// End of implementation specific
 	if(status == VL53L0X_ERROR_NONE)
 	{
-		printf ("Call of VL53L0X_DataInit\n");
+//		printf ("Call of VL53L0X_DataInit\n");
 		status = VL53L0X_DataInit(&myDevice); // Data initialization
-		printf ("Called VL53L0X_DataInit, got %d\n", status);
+//		printf ("Called VL53L0X_DataInit, got %d\n", status);
 		print_pal_error(status);
 	}
 	

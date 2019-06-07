@@ -10,6 +10,7 @@
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A949BB4F22A8158C006383AE /* vl53l0x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A949BB4D22A8158C006383AE /* vl53l0x.cpp */; };
+		A949BB5C22AA2425006383AE /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 		A958526421BCDD9E001573FA /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
@@ -19,7 +20,6 @@
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
 		A9ABD7762095078900B64F14 /* hardware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD7742095078900B64F14 /* hardware.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
-		A9ABD77C209507D200B64F14 /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 		A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF207F21E16F9500DF77E3 /* minion.cpp */; };
 		A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF208121EAD2A700DF77E3 /* manager.cpp */; };
 /* End PBXBuildFile section */
@@ -236,12 +236,12 @@
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */,
 				A949BB4F22A8158C006383AE /* vl53l0x.cpp in Sources */,
-				A9ABD77C209507D200B64F14 /* power.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
 				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,
+				A949BB5C22AA2425006383AE /* power.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
