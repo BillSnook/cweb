@@ -266,7 +266,7 @@ bool Hardware::setupHardware() {
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
 		syslog(LOG_ERR, "Error setting up wiringPi." );
-		return;
+		return false;
 	}
 	//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
 #endif  // ON_PI
