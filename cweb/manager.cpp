@@ -127,7 +127,7 @@ void Manager::setupManager() {
 	minion.setupMinion( ArdI2CAddr );
 	
 	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
-	vl53l0x.setupVL53L0X();
+	vl53l0x.setupVL53L0X( minion.file_i2c );
 	
 	pattern = SearchPattern( 45, 135, 5 );
 	sitMap = SitMap( pattern );

@@ -25,7 +25,7 @@ extern Hardware		hardware;
 
 Actor				actor;
 
-
+/*
 void print_pal_error(VL53L0X_Error Status){
     char buf[VL53L0X_MAX_STRING_LENGTH];
     VL53L0X_GetPalErrorString(Status, buf);
@@ -307,7 +307,7 @@ int mainTest() {
 	
     return (0);
 }
-
+*/
 
 void Actor::setupActor() {
 	
@@ -338,3 +338,127 @@ void Actor::runHunt() {
 	hardware.turnAndFollow( MediumDistance );
 }
 
+
+
+/*
+ 
+ mtrctllog[1267]: Started mtrctl as user - syslog + LOG_PERROR
+ mtrctllog[1267]: In setupCommander
+ mtrctllog[1267]: I2C address: 0x6F, PWM freq: 50
+ mtrctllog[1267]: In setupHardware
+ mtrctllog[1267]: readData failed opening file
+ mtrctllog[1267]: Failed reading speed array from file; making default one
+ mtrctllog[1267]: In setupTaskMaster
+ mtrctllog[1267]: In setupActor
+ VL53L0X PAL Continuous Ranging example
+ 
+ VL53L0X API Version Error: Your firmware has 1.0.2 (revision 4823). This example requires 1.0.1.
+ Call of VL53L0X_DataInit
+ mtrctllog[1267]: Setting I2C standard mode
+ mtrctllog[1267]: Setting up calibration
+ mtrctllog[1267]: Getting device params
+ mtrctllog[1267]: Sigma estimating variable
+ mtrctllog[1267]: Use internal defualt settings
+ mtrctllog[1267]: Setting stop variable
+ mtrctllog[1267]: Checks
+ API Status: 0 : No Error
+ VL53L0X_GetDeviceInfo:
+ Device Name : VL53L0X ES1 or later
+ Device Type : VL53L0X
+ Device ID : VL53L0CBV0DH/1$1
+ ProductRevisionMajor : 1
+ ProductRevisionMinor : 1
+ Call of VL53L0X_StaticInit
+ API Status: 0 : No Error
+ Call of VL53L0X_PerformRefCalibration
+ API Status: 0 : No Error
+ Call of VL53L0X_PerformRefSpadManagement
+ API Status: 0 : No Error
+ Call of VL53L0X_SetDeviceMode
+ API Status: 0 : No Error
+ Call of VL53L0X_StartMeasurement
+ API Status: 0 : No Error
+ In loop measurement 0: 8190
+
+ ...
+ 
+ measurement 4999: 8190
+ Call of VL53L0X_StopMeasurement
+ Wait Stop to be competed
+ API Status: 0 : No Error
+ Close Comms
+ VL53L0X_i2c_close
+ API Status: 0 : No Error
+ mtrctllog[1267]: In setupManager
+ mtrctllog[1267]: In setupMinion, opened I2C bus on port 8
+ mtrctllog[1267]: In setupVL53L0X
+ mtrctllog[1267]: Setting I2C standard mode
+ ?mtrctllog[1267]: Setting up calibration
+ mtrctllog[1267]: Getting device params
+ ?
+ Failed to read from the i2c bus.
+ mtrctllog[1267]: Sigma estimating variable
+ mtrctllog[1267]: Use internal defualt settings
+ ???
+ mtrctllog[1267]: Setting stop variable
+ ??mtrctllog[1267]: Checks
+ API Status: -20 : Control Interface Error
+ mtrctllog[1267]: In SitMap::setupSitMap(), before distanceMap, size: 19
+ mtrctllog[1267]: In SitMap::setupSitMap(), after distanceMap
+ mtrctllog[1267]: mtrctl argc = 1
+ mtrctllog[1267]: Ready to service queue
+ mtrctllog[1267]: In shutdownThreads
+ mtrctllog[1267]: In shutdownVL53L0X
+ VL53L0X_i2c_close
+ mtrctllog[1267]: In resetMinion
+ mtrctllog[1267]: In shutdownManager
+ mtrctllog[1267]: In shutdownTaskMaster
+ mtrctllog[1267]: In shutdownActor
+ mtrctllog[1267]: In shutdownCommander
+ mtrctllog[1267]: In resetHardware
+ pi@Develop00:~/code/c/cweb/cweb $
+
+ 
+ Versus
+ 
+ 
+ mtrctllog[1210]: Started mtrctl as user - syslog + LOG_PERROR
+ mtrctllog[1210]: In setupCommander
+ mtrctllog[1210]: In setupTaskMaster
+ mtrctllog[1210]: In setupActor
+ mtrctllog[1210]: In setupManager
+ mtrctllog[1210]: In setupVL53L0X
+ mtrctllog[1210]: Setting I2C standard mode
+ ?mtrctllog[1210]: Setting up calibration
+ mtrctllog[1210]: Getting device params
+ ?
+ Failed to read from the i2c bus.
+ mtrctllog[1210]: Sigma estimating variable
+ mtrctllog[1210]: Use internal defualt settings
+ ???
+ mtrctllog[1210]: Setting stop variable
+ ??mtrctllog[1210]: Checks
+ API Status: -20 : Control Interface Error
+ mtrctllog[1210]: In SitMap::setupSitMap(), before distanceMap, size: 19
+ mtrctllog[1210]: In SitMap::setupSitMap(), after distanceMap
+ mtrctllog[1210]: mtrctl argc = 1
+ mtrctllog[1210]: Ready to service queue
+ mtrctllog[1210]: In runThread with managerThread, thread count 1
+ mtrctllog[1210]: In Manager::monitor, should only start once
+ mtrctllog[1210]: In Manager::setStatus()
+ mtrctllog[1210]: In runThread with listenThread, thread count 2
+ mtrctllog[1210]: Success binding to socket port 5555 on 0.0.0.0
+ mtrctllog[1210]: In acceptConnections, listening
+ 
+ ^Cmtrctllog[1210]: Received INT signal (ctrl-C), exiting now.
+ mtrctllog[1210]: In shutdownThreads
+ mtrctllog[1210]: In shutdownVL53L0X
+ VL53L0X_i2c_close
+ mtrctllog[1210]: In shutdownManager
+ mtrctllog[1210]: In shutdownTaskMaster
+ mtrctllog[1210]: In shutdownActor
+ mtrctllog[1210]: In shutdownCommander
+
+ 
+ 
+*/

@@ -23,20 +23,20 @@
 VL53L0X		vl53l0x;
 
 
-void VL53L0X::setupVL53L0X() {
+void VL53L0X::setupVL53L0X( int i2cFile ) {
 	
 	syslog(LOG_NOTICE, "In setupVL53L0X" );
 
 	VL53L0X_DeviceInfo_t	deviceInfo;
 
-	int32_t status_int;
-	char ifc[] = "/dev/i2c-1";
-	char *interface = (char *)&ifc;
-	
+//	int32_t status_int;
+//	char ifc[] = "/dev/i2c-1";
+//	char *interface = (char *)&ifc;
+//
 	// Initialize Comms
 	pMyDevice->I2cDevAddr      = 0x29;
 	
-	pMyDevice->fd = VL53L0X_i2c_init(interface, pMyDevice->I2cDevAddr); //choose between i2c-0 and i2c-1; On the raspberry pi zero, i2c-1 are pins 2 and 3
+	pMyDevice->fd = VL53L0X_i2c_init(i2cFile, pMyDevice->I2cDevAddr);
 	if (pMyDevice->fd < 0) {
 		status = VL53L0X_ERROR_CONTROL_INTERFACE;
 		printf ("Failed to init\n");

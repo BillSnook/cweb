@@ -250,20 +250,6 @@ Hardware::Hardware() {
 	upsideDownScanner = false;
 
 	
-#ifdef ON_PI
-	int setupResult = wiringPiSetup();
-	if ( setupResult == -1 ) {
-		syslog(LOG_ERR, "Error setting up wiringPi." );
-		return;
-	}
-//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
-#endif  // ON_PI
-	
-	syslog(LOG_NOTICE, "I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-
-	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-	pwm->setPWMFrequency( PWM_FREQ );
-
 }
 
 bool Hardware::setupHardware() {
@@ -276,7 +262,20 @@ bool Hardware::setupHardware() {
 //
 //#endif  // ON_PI
 
-	syslog(LOG_NOTICE, "In setupHardware" );
+#ifdef ON_PI
+	int setupResult = wiringPiSetup();
+	if ( setupResult == -1 ) {
+		syslog(LOG_ERR, "Error setting up wiringPi." );
+		return;
+	}
+	//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
+#endif  // ON_PI
+	
+	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+	pwm->setPWMFrequency( PWM_FREQ );
+	
+	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
 	speed.initializeSpeedArray();
 	
