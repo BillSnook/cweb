@@ -36,10 +36,7 @@ void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementDat
     char buf[VL53L0X_MAX_STRING_LENGTH];
     uint8_t RangeStatus;
 
-    /*
-     * New Range Status: data is valid when pRangingMeasurementData->RangeStatus = 0
-     */
-
+    // New Range Status: data is valid when pRangingMeasurementData->RangeStatus = 0
     RangeStatus = pRangingMeasurementData->RangeStatus;
 
     VL53L0X_GetRangeStatusString(RangeStatus, buf);
@@ -231,10 +228,7 @@ int mainTest() {
         printf ("Failed to init\n");
     }
 
-    /*
-     *  Get the version of the VL53L0X API running in the firmware
-     */
-
+    //  Get the version of the VL53L0X API running in the firmware
     if(Status == VL53L0X_ERROR_NONE)
     {
         status_int = VL53L0X_GetVersion(pVersion);
@@ -242,10 +236,7 @@ int mainTest() {
             Status = VL53L0X_ERROR_CONTROL_INTERFACE;
     }
 
-    /*
-     *  Verify the version of the VL53L0X API running in the firmrware
-     */
-
+    //  Verify the version of the VL53L0X API running in the firmrware
     if(Status == VL53L0X_ERROR_NONE)
     {
         if( pVersion->major != VERSION_REQUIRED_MAJOR ||
@@ -295,10 +286,7 @@ int mainTest() {
 	
     // Implementation specific
 
-    /*
-     *  Disconnect comms - part of VL53L0X_platform.c
-     */
-
+    //  Disconnect comms - part of VL53L0X_platform.c
     printf ("Close Comms\n");
     VL53L0X_i2c_close();
 
