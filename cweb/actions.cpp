@@ -301,7 +301,7 @@ void Actor::setupActor() {
 	
 	syslog(LOG_NOTICE, "In setupActor" );
 
-	mainTest();
+//	mainTest();
 }
 
 void Actor::shutdownActor() {
