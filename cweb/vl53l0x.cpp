@@ -48,7 +48,7 @@ void VL53L0X::setupVL53L0X( int i2cFile ) {
 	
 	if(status == VL53L0X_ERROR_NONE)
 	{
-		status_int = VL53L0X_GetVersion(pVersion);
+		int32_t status_int = VL53L0X_GetVersion(pVersion);
 		if (status_int != 0)
 			status = VL53L0X_ERROR_CONTROL_INTERFACE;
 	}
