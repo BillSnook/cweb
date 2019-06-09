@@ -126,8 +126,8 @@ void Manager::setupManager() {
 	minion = Minion();					// Minions talk to the arduino to relay commands
 	minion.setupMinion( ArdI2CAddr );
 	
-	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
-	vl53l0x.setupVL53L0X( minion.file_i2c );
+//	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
+//	vl53l0x.setupVL53L0X( minion.file_i2c );
 	
 	pattern = SearchPattern( 45, 135, 5 );
 	sitMap = SitMap( pattern );
@@ -144,7 +144,9 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-	vl53l0x.shutdownVL53L0X();
+	if ( vl53l0x ) {
+		vl53l0x.shutdownVL53L0X();
+	}
 	minion.resetMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
@@ -203,13 +205,17 @@ long Manager::getStatus() {
 void Manager::startVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::startVL()" );
-	vl53l0x.measureRun();
+	if ( vl53l0x ) {
+		vl53l0x.measureRun();
+	}
 }
 
 void Manager::stopVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-	vl53l0x.measureStop();
+	if ( vl53l0x ) {
+		vl53l0x.measureStop();
+	}
 }
 
 
