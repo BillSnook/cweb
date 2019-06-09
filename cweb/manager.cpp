@@ -189,7 +189,7 @@ long Manager::getNowMs() {
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
-//	minion.setStatus();
+	minion.setStatus();
 }
 
 long Manager::getStatus() {
@@ -225,13 +225,13 @@ void Manager::setRange( unsigned int angle) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
-//	minion.setRange( angle );
+	minion.setRange( angle );
 }
 
 long Manager::getRangeResult() {
 	
 	busy = true;
-	long result = 0; // minion.getRange();	// This will wait for a response to an I2C read
+	long result = minion.getRange();	// This will wait for a response to an I2C read
 	expectedControllerMode = statusMode;
 	busy = false;
 	sitMap.updateEntry( result );
