@@ -199,7 +199,7 @@ long Manager::getStatus() {
 		return 0;
 	}
 	expectedControllerMode = statusMode;
-	return 0; // minion.getStatus();
+	return minion.getStatus();
 }
 
 void Manager::startVL() {
