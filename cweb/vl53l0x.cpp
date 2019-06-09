@@ -113,8 +113,7 @@ void VL53L0X::measure() {
 	
 	syslog(LOG_NOTICE, "In VL53L0X::measure" );
 	
-	if(status == VL53L0X_ERROR_NONE)
-	{
+	if(status == VL53L0X_ERROR_NONE) {
 		status = rangingTest( pMyDevice );
 	}
 	
@@ -127,10 +126,9 @@ void VL53L0X::measureRun() {
 	syslog(LOG_NOTICE, "In VL53L0X::measureRun" );
 	
 	stopLoop = false;
-	if(status == VL53L0X_ERROR_NONE)
-	{
+//	if(status == VL53L0X_ERROR_NONE) {
 		status = rangingTest( pMyDevice );
-	}
+//	}
 	
 	print_pal_error(status);
 	
@@ -273,7 +271,7 @@ VL53L0X_Error VL53L0X::rangingTest(VL53L0X_Dev_t *pMyDevice)
 	if(status == VL53L0X_ERROR_NONE)
 	{
 		uint32_t measurement;
-		uint32_t no_of_measurements = 5000;
+		uint32_t no_of_measurements = 50;
 		
 		uint16_t* pResults = (uint16_t*)malloc(sizeof(uint16_t) * no_of_measurements);
 		
