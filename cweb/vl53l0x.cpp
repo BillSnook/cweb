@@ -29,14 +29,14 @@ void VL53L0X::setupVL53L0X( int i2cFile ) {
 
 	VL53L0X_DeviceInfo_t	deviceInfo;
 
-//	int32_t status_int;
-//	char ifc[] = "/dev/i2c-1";
-//	char *interface = (char *)&ifc;
-//
+	int32_t status_int;
+	char ifc[] = "/dev/i2c-1";
+	char *interface = (char *)&ifc;
+
 	// Initialize Comms
 	pMyDevice->I2cDevAddr      = 0x29;
 	
-	pMyDevice->fd = VL53L0X_i2c_init(i2cFile, pMyDevice->I2cDevAddr);
+	pMyDevice->fd = VL53L0X_i2c_init(interface, pMyDevice->I2cDevAddr);
 	if (pMyDevice->fd < 0) {
 		status = VL53L0X_ERROR_CONTROL_INTERFACE;
 		printf ("Failed to init\n");
