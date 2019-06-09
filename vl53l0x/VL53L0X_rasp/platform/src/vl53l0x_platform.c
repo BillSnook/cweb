@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <syslog.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <time.h>
