@@ -43,13 +43,14 @@ bool Minion::setupMinion( int i2cAddr ) {
 		syslog(LOG_NOTICE, "Failed to open the i2c bus");
 		return false;
 	}
-	
+	syslog(LOG_NOTICE, "In setupMinion, opened I2C bus on port %d", file_i2c);
+
 	if (ioctl(file_i2c, I2C_SLAVE, pi2c) < 0) {
 		syslog(LOG_NOTICE, "Failed to acquire bus access and/or talk to slave");
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return false;
 	}
-	syslog(LOG_NOTICE, "In setupMinion, opened I2C bus on port %d", file_i2c);
+	syslog(LOG_NOTICE, "In setupMinion, attached to slave address %d", pi2c);
 
 #endif  // ON_PI
 	

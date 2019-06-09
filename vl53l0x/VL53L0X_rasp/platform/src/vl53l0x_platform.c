@@ -16,11 +16,13 @@ int VL53L0X_i2c_init(char * devPath, int devAddr)
         perror("Failed to open the i2c bus");
         return -1;
     }
+	syslog(LOG_NOTICE, "In VL53L0X_i2c_init, opened I2C bus on port %d", file);
     if (ioctl(file, I2C_SLAVE, devAddr) < 0) {
         printf("Failed to acquire bus access and/or talk to slave.\n");
         /* ERROR HANDLING; you can check errno to see what went wrong */
         return -1;
     }
+	syslog(LOG_NOTICE, "In VL53L0X_i2c_init, attached to slave address %d", devAddr);
     return file;
 }
 
