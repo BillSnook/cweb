@@ -97,7 +97,9 @@ void VL53L0X::setupVL53L0X( int i2cFile ) {
 			status = VL53L0X_ERROR_NOT_SUPPORTED;
 		}
 	}
-
+	if(status == VL53L0X_ERROR_NONE) {
+		isSetup = true;
+	}
 }
 
 void VL53L0X::shutdownVL53L0X() {

@@ -144,7 +144,7 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-	if ( vl53l0x != nil ) {
+	if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
 	minion.resetMinion();
@@ -205,7 +205,7 @@ long Manager::getStatus() {
 void Manager::startVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::startVL()" );
-	if ( vl53l0x != nil ) {
+	if ( vl53l0x.isSetup ) {
 		vl53l0x.measureRun();
 	}
 }
@@ -213,7 +213,7 @@ void Manager::startVL() {
 void Manager::stopVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-	if ( vl53l0x != nil ) {
+	if ( vl53l0x.isSetup ) {
 		vl53l0x.measureStop();
 	}
 }
