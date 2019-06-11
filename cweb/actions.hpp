@@ -13,6 +13,7 @@
 class Actor {
 	
 public:
+	
 	void setupActor();
 
 	void shutdownActor();
@@ -20,6 +21,8 @@ public:
 	void stop();
 
 	void runHunt();
+	
+	void doTest();
 
 };
 #endif /* actions_hpp */

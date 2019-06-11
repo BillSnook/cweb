@@ -31,6 +31,8 @@ Commander	commander;
 TaskMaster	taskMaster;
 Hardware	hardware;
 
+extern Actor				actor;
+
 
 extern Filer	filer;
 //extern Listener	listener;
@@ -280,7 +282,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'O':
 		case 'o':
 			syslog(LOG_NOTICE, "startVL" );
-			manager.startVL();
+//			manager.startVL();
+			actor.doTest();
 			break;
 			
 //		case 'R':

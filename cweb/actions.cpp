@@ -328,6 +328,13 @@ void Actor::runHunt() {
 	hardware.turnAndFollow( MediumDistance );
 }
 
+void Actor::doTest() {
+	
+	syslog(LOG_NOTICE, "In mainTest" );
+	
+	mainTest();
+}
+
 
 
 /*
