@@ -29,7 +29,7 @@ class VL53L0X {
 public:
 	bool					isSetup = false;
 
-	void setupVL53L0X( int i2cFile );
+	void setupVL53L0X( int i2cAddr );
 	void shutdownVL53L0X();
 	
 	void measure();

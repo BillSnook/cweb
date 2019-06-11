@@ -23,7 +23,7 @@
 VL53L0X		vl53l0x;
 
 
-void VL53L0X::setupVL53L0X( int i2cFile ) {
+void VL53L0X::setupVL53L0X( int i2cAddr ) {
 	
 	syslog(LOG_NOTICE, "In setupVL53L0X" );
 
@@ -34,7 +34,7 @@ void VL53L0X::setupVL53L0X( int i2cFile ) {
 	char *interface = (char *)&ifc;
 
 	// Initialize Comms
-	pMyDevice->I2cDevAddr      = 0x29;
+	pMyDevice->I2cDevAddr      = i2cAddr;
 	
 	pMyDevice->fd = VL53L0X_i2c_init(interface, pMyDevice->I2cDevAddr);
 	if (pMyDevice->fd < 0) {
