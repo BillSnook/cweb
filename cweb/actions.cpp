@@ -312,7 +312,6 @@ void Actor::shutdownActor() {
 	syslog(LOG_NOTICE, "In shutdownActor" );
 	
 	shutdownTest();
-	mainTest();
 }
 
 void Actor::stop() {
