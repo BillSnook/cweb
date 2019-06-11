@@ -12,6 +12,7 @@
 #include "tasks.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
+#include "actions.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
