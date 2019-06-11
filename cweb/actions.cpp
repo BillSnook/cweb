@@ -207,7 +207,7 @@ VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
     return Status;
 }
 
-int mainTest() {
+int setupTest() {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     VL53L0X_Dev_t MyDevice;
     VL53L0X_Dev_t *pMyDevice = &MyDevice;
@@ -278,6 +278,9 @@ int mainTest() {
         	Status = VL53L0X_ERROR_NOT_SUPPORTED;
         }
     }
+}
+
+int mainTest() {
 
     if(Status == VL53L0X_ERROR_NONE)
     {
@@ -288,6 +291,9 @@ int mainTest() {
 	
     // Implementation specific
 
+}
+
+int shutdownTest() {
     //  Disconnect comms - part of VL53L0X_platform.c
     printf ("Close Comms\n");
     VL53L0X_i2c_close();
@@ -303,12 +309,15 @@ void Actor::setupActor() {
 	
 	syslog(LOG_NOTICE, "In setupActor" );
 
-	mainTest();
+	setupTest();
 }
 
 void Actor::shutdownActor() {
 	
 	syslog(LOG_NOTICE, "In shutdownActor" );
+	
+	shutdownTest();
+	mainTest();
 }
 
 void Actor::stop() {
