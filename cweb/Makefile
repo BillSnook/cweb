@@ -21,7 +21,7 @@ mtrctl: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LIB_DIR) $(LDLIBS) -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -g -Wall -c -o $@ $<
 
 $(OBJECTS): $(HEADERS)
 
