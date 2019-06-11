@@ -176,13 +176,13 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
             }
         }
 
-        if(Status == VL53L0X_ERROR_NONE)
-        {
-            for(measurement=0; measurement<no_of_measurements; measurement++)
-            {
-                printf("measurement %d: %d\n", measurement, *(pResults + measurement));
-            }
-        }
+//        if(Status == VL53L0X_ERROR_NONE)
+//        {
+//            for(measurement=0; measurement<no_of_measurements; measurement++)
+//            {
+//                printf("measurement %d: %d\n", measurement, *(pResults + measurement));
+//            }
+//        }
 
         free(pResults);
     }
