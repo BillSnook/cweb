@@ -9,11 +9,25 @@
 #ifndef actions_hpp
 #define actions_hpp
 
+#include "vl53l0x.hpp"
 
 class Actor {
 	
 public:
-	
+	VL53L0X_Error Status = VL53L0X_ERROR_NONE;
+	VL53L0X_Dev_t MyDevice;
+	VL53L0X_Dev_t *pMyDevice = &MyDevice;
+	VL53L0X_Version_t                   Version;
+	VL53L0X_Version_t                  *pVersion   = &Version;
+
+	void print_pal_error(VL53L0X_Error Status);
+	VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev);
+	VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev);
+	VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice);
+	int setupTest();
+	int mainTest();
+	int shutdownTest();
+
 	void setupActor();
 
 	void shutdownActor();

@@ -28,26 +28,26 @@ extern Hardware		hardware;
 Actor				actor;
 
 /* */
-void print_pal_error(VL53L0X_Error Status){
+void Actor::print_pal_error(VL53L0X_Error Status){
     char buf[VL53L0X_MAX_STRING_LENGTH];
     VL53L0X_GetPalErrorString(Status, buf);
     printf("API Status: %i : %s\n", Status, buf);
 }
 
-void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData){
-    char buf[VL53L0X_MAX_STRING_LENGTH];
-    uint8_t RangeStatus;
+//void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData){
+//    char buf[VL53L0X_MAX_STRING_LENGTH];
+//    uint8_t RangeStatus;
+//
+//    // New Range Status: data is valid when pRangingMeasurementData->RangeStatus = 0
+//    RangeStatus = pRangingMeasurementData->RangeStatus;
+//
+//    VL53L0X_GetRangeStatusString(RangeStatus, buf);
+//    printf("Range Status: %i : %s\n", RangeStatus, buf);
+//
+//}
 
-    // New Range Status: data is valid when pRangingMeasurementData->RangeStatus = 0
-    RangeStatus = pRangingMeasurementData->RangeStatus;
 
-    VL53L0X_GetRangeStatusString(RangeStatus, buf);
-    printf("Range Status: %i : %s\n", RangeStatus, buf);
-
-}
-
-
-VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev) {
+VL53L0X_Error Actor::WaitMeasurementDataReady(VL53L0X_DEV Dev) {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     uint8_t NewDatReady=0;
     uint32_t LoopNb;
@@ -73,7 +73,7 @@ VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev) {
     return Status;
 }
 
-VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev) {
+VL53L0X_Error Actor::WaitStopCompleted(VL53L0X_DEV Dev) {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     uint32_t StopCompleted=0;
     uint32_t LoopNb;
@@ -101,7 +101,7 @@ VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev) {
 }
 
 
-VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
+VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
 {
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
@@ -207,12 +207,7 @@ VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice)
     return Status;
 }
 
-int setupTest() {
-    VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-    VL53L0X_Dev_t MyDevice;
-    VL53L0X_Dev_t *pMyDevice = &MyDevice;
-    VL53L0X_Version_t                   Version;
-    VL53L0X_Version_t                  *pVersion   = &Version;
+int Actor::setupTest() {
     VL53L0X_DeviceInfo_t                DeviceInfo;
 
     int32_t status_int;
@@ -280,7 +275,7 @@ int setupTest() {
     }
 }
 
-int mainTest() {
+int Actor::mainTest() {
 
     if(Status == VL53L0X_ERROR_NONE)
     {
@@ -293,7 +288,7 @@ int mainTest() {
 
 }
 
-int shutdownTest() {
+int Actor::shutdownTest() {
     //  Disconnect comms - part of VL53L0X_platform.c
     printf ("Close Comms\n");
     VL53L0X_i2c_close();
