@@ -14,6 +14,8 @@
 #include "vl53l0x_api.h"
 #include "vl53l0x_platform.h"
 
+#include "vl53l0x.hpp"
+
 
 #define VERSION_REQUIRED_MAJOR 1
 #define VERSION_REQUIRED_MINOR 0
@@ -301,7 +303,10 @@ void Actor::setupActor() {
 	
 	syslog(LOG_NOTICE, "In setupActor" );
 
-//	mainTest();
+	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
+	vl53l0x.setupVL53L0X( 0x29 );
+
+	//	mainTest();
 }
 
 void Actor::shutdownActor() {
