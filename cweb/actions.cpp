@@ -27,7 +27,7 @@ extern Hardware		hardware;
 
 Actor				actor;
 
-/*
+/* */
 void print_pal_error(VL53L0X_Error Status){
     char buf[VL53L0X_MAX_STRING_LENGTH];
     VL53L0X_GetPalErrorString(Status, buf);
@@ -297,16 +297,13 @@ int mainTest() {
 	
     return (0);
 }
-*/
+/* */
 
 void Actor::setupActor() {
 	
 	syslog(LOG_NOTICE, "In setupActor" );
 
-	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
-	vl53l0x.setupVL53L0X( 0x29 );
-
-	//	mainTest();
+	mainTest();
 }
 
 void Actor::shutdownActor() {
