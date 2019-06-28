@@ -12,7 +12,7 @@
 #include "tasks.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
-#include "actions.hpp"
+// #include "actions.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -32,7 +32,7 @@ Commander	commander;
 TaskMaster	taskMaster;
 Hardware	hardware;
 
-extern Actor				actor;
+//extern Actor				actor;
 
 
 extern Filer	filer;
@@ -284,7 +284,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'o':
 			syslog(LOG_NOTICE, "startVL" );
 //			manager.startVL();
-			actor.doTest();
+//			actor.doTest();
 			break;
 			
 //		case 'R':

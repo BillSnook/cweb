@@ -5,20 +5,19 @@ CXX = g++
 CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
 # If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
-CXXFLAGS += -DON_PI
-LDLIBS += -lwiringPi
+# CXXFLAGS += -DON_PI
+# LDLIBS += -lwiringPi
+OBJ_DIR = obj
 
-HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp minion.hpp manager.hpp vl53l0x.hpp
-OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o tasks.o filer.o actions.o minion.o manager.o vl53l0x.o
+HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp minion.hpp manager.hpp
+OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o tasks.o filer.o minion.o manager.o
 
-INCLUDES = -I. -I/home/pi/code/c/cweb/vl53l0x/Api/core/inc -I/home/pi/code/c/cweb/vl53l0x/VL53L0X_rasp/platform/inc
-LIB_DIR = -L/home/pi/code/c/cweb/lib
-LDLIBS += -lVL53L0X_Rasp
+INCLUDES = -I.
 
 default: mtrctl
 
 mtrctl: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ $(LIB_DIR) $(LDLIBS) -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<

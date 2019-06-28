@@ -12,7 +12,7 @@
 
 #include "hardware.hpp"
 #include "minion.hpp"
-#include "vl53l0x.hpp"
+//#include "vl53l0x.hpp"
 #include "manager.hpp"
 
 Minion	minion;
@@ -144,9 +144,9 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-	if ( vl53l0x.isSetup ) {
-		vl53l0x.shutdownVL53L0X();
-	}
+//	if ( vl53l0x.isSetup ) {
+//		vl53l0x.shutdownVL53L0X();
+//	}
 	minion.resetMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
@@ -205,17 +205,17 @@ long Manager::getStatus() {
 void Manager::startVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::startVL()" );
-	if ( vl53l0x.isSetup ) {
-		vl53l0x.measureRun();
-	}
+//	if ( vl53l0x.isSetup ) {
+//		vl53l0x.measureRun();
+//	}
 }
 
 void Manager::stopVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-	if ( vl53l0x.isSetup ) {
-		vl53l0x.measureStop();
-	}
+//	if ( vl53l0x.isSetup ) {
+//		vl53l0x.measureStop();
+//	}
 }
 
 
