@@ -4,9 +4,6 @@ CXX = g++
 
 CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
-# If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
-# CXXFLAGS += -DON_PI
-# LDLIBS += -lwiringPi
 OBJ_DIR = obj
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp minion.hpp manager.hpp
@@ -17,7 +14,7 @@ INCLUDES = -I.
 default: mtrctl
 
 mtrctl: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<
