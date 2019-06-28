@@ -130,14 +130,7 @@ int main(int argc, const char * argv[]) {
 	manager = Manager();
 	manager.setupManager();
 	threader.queueThread( managerThread, 8, 0 );
-	
-//#ifdef ON_PI_X	// Power not attached to robot tank currently
-//	Power power = Power();
-//	char *pStatus = power.getUPS2();
-//	syslog(LOG_NOTICE, "Power status: %s", pStatus );
-//	free( pStatus );
-//#endif
-	
+
 	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
 	if ( argc == 2 ) {	// Should be sender as we pass in host name
 		char buff[32], *buffer = (char *)&buff;

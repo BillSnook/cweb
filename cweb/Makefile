@@ -25,6 +25,7 @@ mtrctl: $(OBJECTS)
 
 $(OBJECTS): $(HEADERS)
 
+.PHONY: clean
 clean:
 	-rm -f $(OBJECTS)
 	-rm -f mtrctl

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
-		A949BB5C22AA2425006383AE /* power.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD77A209507D100B64F14 /* power.cpp */; };
 		A958526421BCDD9E001573FA /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
@@ -64,8 +63,6 @@
 		A9ABD7752095078900B64F14 /* hardware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = hardware.hpp; sourceTree = "<group>"; };
 		A9ABD777209507A400B64F14 /* speed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = speed.cpp; sourceTree = "<group>"; };
 		A9ABD778209507A400B64F14 /* speed.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = speed.hpp; sourceTree = "<group>"; };
-		A9ABD77A209507D100B64F14 /* power.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = power.cpp; sourceTree = "<group>"; };
-		A9ABD77B209507D100B64F14 /* power.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = power.hpp; sourceTree = "<group>"; };
 		A9AF207E21E16F9400DF77E3 /* minion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minion.hpp; sourceTree = "<group>"; };
 		A9AF207F21E16F9500DF77E3 /* minion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minion.cpp; sourceTree = "<group>"; };
 		A9AF208121EAD2A700DF77E3 /* manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
@@ -103,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				A97126AD220639AD00AC5AC7 /* infrastructure */,
-				A97126AE220639E500AC5AC7 /* socket_comm */,
+				A97126AE220639E500AC5AC7 /* sockets */,
 				A97126AB2206394A00AC5AC7 /* hardware */,
 				A97126AF22063A7A00AC5AC7 /* control */,
 				A96D730B2083F34700B98679 /* README.md */,
@@ -120,8 +117,6 @@
 				A9ABD778209507A400B64F14 /* speed.hpp */,
 				A9AF207F21E16F9500DF77E3 /* minion.cpp */,
 				A9AF207E21E16F9400DF77E3 /* minion.hpp */,
-				A9ABD77A209507D100B64F14 /* power.cpp */,
-				A9ABD77B209507D100B64F14 /* power.hpp */,
 				A949BB4D22A8158C006383AE /* vl53l0x.cpp */,
 				A949BB4E22A8158C006383AE /* vl53l0x.hpp */,
 			);
@@ -144,7 +139,7 @@
 			name = infrastructure;
 			sourceTree = "<group>";
 		};
-		A97126AE220639E500AC5AC7 /* socket_comm */ = {
+		A97126AE220639E500AC5AC7 /* sockets */ = {
 			isa = PBXGroup;
 			children = (
 				A96D73082083E80A00B98679 /* listen.cpp */,
@@ -152,7 +147,7 @@
 				A96D730C208402C200B98679 /* sender.cpp */,
 				A96D730D208402C200B98679 /* sender.hpp */,
 			);
-			name = socket_comm;
+			name = sockets;
 			sourceTree = "<group>";
 		};
 		A97126AF22063A7A00AC5AC7 /* control */ = {
@@ -239,7 +234,6 @@
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
 				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,
-				A949BB5C22AA2425006383AE /* power.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
