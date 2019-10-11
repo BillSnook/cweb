@@ -6,8 +6,6 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "signals.hpp"
-
 /*
 case HUP    = 1
 case INT    = 2		// ^C
@@ -17,6 +15,8 @@ case KILL   = 9
 case ALRM   = 14
 case TERM   = 15
 */
+
+#include "signals.hpp"
 
 #include <stdlib.h>
 #include <signal.h>
