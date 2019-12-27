@@ -277,7 +277,7 @@ bool Hardware::setupHardware() {
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
-	speed.initializeSpeedArray();
+// WFS	speed.initializeSpeedArray();
 	
 	scanLoop = false;
 
