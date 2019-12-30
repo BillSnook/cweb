@@ -280,13 +280,22 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.scanPing( socket );
 			break;
 			
-		case 'O':
-		case 'o':
-			syslog(LOG_NOTICE, "startVL" );
-//			manager.startVL();
-			actor.doTest();
-			break;
-			
+        case 'O':
+        case 'o':
+            syslog(LOG_NOTICE, "Test o" );  // Send setPin so wiringPi i2cwrite commands are tested
+//            manager.startVL();
+// WFS           actor.doTest();
+            // Available
+            break;
+                    
+        case 'P':
+        case 'p':
+            syslog(LOG_NOTICE, "Test p" );  // Send minion type command to test my command and buffer send code
+//            manager.startVL();
+//            actor.doTest();
+            // Available
+            break;
+            
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );

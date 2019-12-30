@@ -35,14 +35,14 @@ extern Actor		actor;
 void TaskMaster::setupTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
-	actor.setupActor();
+//	actor.setupActor();
 	stopLoop = false;
 }
 
 void TaskMaster::shutdownTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
-	actor.shutdownActor();
+//	actor.shutdownActor();
 	killTasks();
 	usleep( 200000 );
 }
@@ -148,5 +148,5 @@ void TaskMaster::taskHunt() {
 	
 	syslog(LOG_NOTICE, "In taskHunt" );
 	
-	actor.runHunt();
+// WFS	actor.runHunt();
 }

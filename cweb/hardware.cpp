@@ -277,7 +277,7 @@ bool Hardware::setupHardware() {
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
-	speed.initializeSpeedArray();
+// WFS	speed.initializeSpeedArray();
 	
 	scanLoop = false;
 
@@ -336,7 +336,7 @@ void Hardware::setPWM( int pin, int value ) {
 		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_MAX);
 		return;
 	}
-//	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
+	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
 	pwm->setPWM( pin, 0, value );
 }
 
