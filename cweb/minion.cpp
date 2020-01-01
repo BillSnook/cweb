@@ -19,26 +19,25 @@
 #include <unistd.h>				//Needed for I2C port
 #include <fcntl.h>				//Needed for I2C port
 #include <sys/ioctl.h>			//Needed for I2C port
-//#ifdef ON_PI
-//#include "/usr/include/linux/i2c-dev.h"		//Needed for I2C port
-//#endif  // ON_PI
 
 #include "minion.hpp"
 
 // Structures used in the ioctl() calls
 
-union i2c_smbus_data {
-  uint8_t  byte;
-  uint16_t word;
-  uint8_t  block [I2C_SMBUS_BLOCK_MAX + 2];    // block [0] is used for length + one more for PEC
-};
+//union i2c_smbus_data {
+//  int  byte;
+//  uint16_t word;
+//  uint8_t  block [I2C_SMBUS_BLOCK_MAX + 2];    // block [0] is used for length + one more for PEC
+//};
+//
+//struct i2c_smbus_ioctl_data {
+//  char read_write;
+//  uint8_t command;
+//  int size;
+//  union i2c_smbus_data *data;
+//};
 
-struct i2c_smbus_ioctl_data {
-  char read_write;
-  uint8_t command;
-  int size;
-  union i2c_smbus_data *data;
-};
+#ifdef ON_PI
 
 static inline int i2c_smbus_access( int fd, char rw, uint8_t command, int size, union i2c_smbus_data *data ) {
     
@@ -50,6 +49,9 @@ static inline int i2c_smbus_access( int fd, char rw, uint8_t command, int size, 
   args.data       = data;
   return ioctl( fd, I2C_SMBUS, &args );
 }
+
+#endif  // ON_PI
+
 
 Minion::Minion() {
 	
@@ -121,19 +123,18 @@ long Minion::getI2CCmd() {
 bool Minion::getI2CData( unsigned char *buff ) {
 	
 #ifdef ON_PI
-	//----- READ BYTES -----
-	int length = 8;			// Number of bytes to read
-	int response = read(file_i2c, buff, length);
-	if (response != length) {	// read() returns the number of bytes actually read,
-								// if it doesn't match then an error occurred
-								// (e.g. no response from the device)
-		//ERROR HANDLING: i2c transaction failed
-		char *errStr = strerror( errno );
-		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c read error %d: %s.\n", response, errStr );
-		return false;
-	}
-//	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
-#endif  // ON_PI
+//	//----- READ BYTES -----
+//	int length = 8;			// Number of bytes to read
+//	int response = read(file_i2c, buff, length);
+//	if (response != length) {	// read() returns the number of bytes actually read,
+//								// if it doesn't match then an error occurred
+//								// (e.g. no response from the device)
+//		//ERROR HANDLING: i2c transaction failed
+//		char *errStr = strerror( errno );
+//		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c read error %d: %s.\n", response, errStr );
+//		return false;
+//	}
+////	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
 
     union i2c_smbus_data data;
     int i, err;
@@ -148,6 +149,8 @@ bool Minion::getI2CData( unsigned char *buff ) {
 
     syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
 
+#endif  // ON_PI
+    
     return true;
 }
 
@@ -169,10 +172,10 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 ////	} else {
 ////		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 //	}
-#endif  // ON_PI
     union i2c_smbus_data data;
     data.word = ( parameter << 8 ) || command;
     i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_WORD_DATA, &data );
+#endif  // ON_PI
 }
 
 //bool Minion::putI2CData( unsigned char *newData ) {
