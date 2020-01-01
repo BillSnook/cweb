@@ -40,8 +40,8 @@
 
 // SMBus messages
 
-#define I2C_SMBUS_BLOCK_MAX    32    /* As specified in SMBus standard */
-#define I2C_SMBUS_I2C_BLOCK_MAX    32    /* Not specified but we use same structure */
+//#define I2C_SMBUS_BLOCK_MAX    32    /* As specified in SMBus standard */
+//#define I2C_SMBUS_I2C_BLOCK_MAX    32    /* Not specified but we use same structure */
 
 
 struct remoteStatus {

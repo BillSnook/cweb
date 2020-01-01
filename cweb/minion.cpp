@@ -39,7 +39,7 @@
 
 #ifdef ON_PI
 
-static inline int i2c_smbus_access( int fd, char rw, uint8_t command, int size, union i2c_smbus_data *data ) {
+static inline int i2c_smbus_access( int fd, char rw, __u8 command, int size, union i2c_smbus_data *data ) {
     
   struct i2c_smbus_ioctl_data args;
 
