@@ -13,6 +13,7 @@
 #include "hardware.hpp"
 #include "manager.hpp"
 #include "actions.hpp"
+#include "minion.hpp"       // For testing smb/i2c upgrades
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -32,7 +33,7 @@ Commander	commander;
 TaskMaster	taskMaster;
 Hardware	hardware;
 
-extern Actor				actor;
+//extern Actor				actor;
 
 
 extern Filer	filer;
@@ -290,7 +291,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
                     
         case 'P':
         case 'p':
-            syslog(LOG_NOTICE, "Test p" );  // Send minion type command to test my command and buffer send code
+            syslog(LOG_NOTICE, "Test p" );  // Send propriatery type command to test my command and buffer send code
 //            manager.startVL();
 //            actor.doTest();
             // Available

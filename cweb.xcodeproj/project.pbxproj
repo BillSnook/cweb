@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
-		A958526421BCDD9E001573FA /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
@@ -222,7 +221,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
-				A958526421BCDD9E001573FA /* actions.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
 				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,

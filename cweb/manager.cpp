@@ -147,7 +147,7 @@ void Manager::shutdownManager() {
 	if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
-	minion.resetMinion();
+	minion.shutdownMinion();
 	sitMap.shutdownSitMap();
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
