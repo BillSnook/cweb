@@ -291,7 +291,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
                     
         case 'P':
         case 'p':
-            syslog(LOG_NOTICE, "Test p" );  // Send propriatery type command to test my command and buffer send code
+            syslog(LOG_NOTICE, "Test p" );  // Send command to test my command and buffer send code
 //            manager.startVL();
 //            actor.doTest();
             // Available

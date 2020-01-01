@@ -9,7 +9,7 @@
 #include "tasks.hpp"
 #include "hardware.hpp"
 #include "threader.hpp"
-//#include "actions.hpp"
+#include "actions.hpp"
 
 
 // The purpose of this class is to allow a task to run independently
@@ -30,7 +30,7 @@ enum TaskType {
 //extern Commander	commander;
 extern Hardware		hardware;
 extern Threader		threader;
-extern Actor		actor;
+//extern Actor		actor;
 
 void TaskMaster::setupTaskMaster() {
 	
