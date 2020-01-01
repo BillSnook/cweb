@@ -285,8 +285,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         case 'o':
             syslog(LOG_NOTICE, "Test o" );  // Send setPin so wiringPi i2cwrite commands are tested
 //            manager.startVL();
-// WFS           actor.doTest();
-            // Available
+// WFS           actor.doTest();            // Available
             break;
                     
         case 'P':
