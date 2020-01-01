@@ -173,9 +173,9 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 ////		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 //	}
     union i2c_smbus_data data;
-    data.block[0] = 1;
+    data.block[0] = 2;
     data.block[1] = command;
-    data.block[2] = 0x52;
+    data.block[2] = parameter;
     data.block[3] = 0x55;
     i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data );
 #endif  // ON_PI
