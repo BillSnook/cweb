@@ -196,6 +196,8 @@ long Manager::getStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::getStatus()" );
 	if ( busy ) {
+        syslog(LOG_NOTICE, "Busy" );
+        busy = false;
 		return 0;
 	}
 	expectedControllerMode = statusMode;
