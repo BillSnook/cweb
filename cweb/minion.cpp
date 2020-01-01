@@ -139,6 +139,7 @@ bool Minion::getI2CData( unsigned char *buff ) {
     union i2c_smbus_data data;
     int i, err;
 
+    syslog(LOG_NOTICE, "In Minion::getStatus smbus access");
     err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0,
                    I2C_SMBUS_BLOCK_DATA, &data );
     if (err < 0)
