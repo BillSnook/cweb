@@ -33,7 +33,7 @@ Commander	commander;
 TaskMaster	taskMaster;
 Hardware	hardware;
 
-//extern Actor				actor;
+extern Minion   minion;
 
 
 extern Filer	filer;
@@ -283,17 +283,25 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			
         case 'O':
         case 'o':
-            syslog(LOG_NOTICE, "Test o" );  // Send setPin so wiringPi i2cwrite commands are tested
-//            manager.startVL();
 // WFS           actor.doTest();            // Available
+
+            putI2CCmd( 's', angle );
+            unsigned char buffSpace[10] = {0};
+            unsigned char *buffer = buffSpace;
+            minion.getI2CData( buffer );
+            syslog(LOG_NOTICE, "Test o, got response: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3] );
             break;
                     
         case 'P':
         case 'p':
             syslog(LOG_NOTICE, "Test p" );  // Send command to test my command and buffer send code
-//            manager.startVL();
 //            actor.doTest();
             // Available
+            putI2CCmd( 'p', angle );
+            unsigned char buffSpace[10] = {0};
+            unsigned char *buffer = buffSpace;
+            minion.getI2CData( buffer );
+            syslog(LOG_NOTICE, "Test o, got response: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3] );
             break;
             
 //		case 'R':
