@@ -143,8 +143,8 @@ bool Minion::getI2CData( unsigned char *buff ) {
                    I2C_SMBUS_I2C_BLOCK_DATA, &data );
     if (err < 0) {
         syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
-        return err
-    };
+        return err;
+    }
 
     __u8 length = data.block[0];
     if ( length > 32 ) {
