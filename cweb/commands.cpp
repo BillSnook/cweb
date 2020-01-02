@@ -285,7 +285,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         case 'o':
 // WFS           actor.doTest();            // Available
         {
-            putI2CCmd( 's', 0x66 );
+            minion.putI2CCmd( 's', 0x66 );
             unsigned char buffSpace[10] = {0};
             unsigned char *buffer = buffSpace;
             minion.getI2CData( buffer );
@@ -296,7 +296,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         case 'p':
 //            actor.doTest();
         {
-            putI2CCmd( 'p', 0x99 );
+            minion.putI2CCmd( 'p', 0x99 );
             unsigned char buffSpace[10] = {0};
             unsigned char *buffer = buffSpace;
             minion.getI2CData( buffer );
