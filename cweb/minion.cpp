@@ -140,7 +140,7 @@ bool Minion::getI2CData( unsigned char *buff ) {
     int i, err;
 
     err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0,
-                   I2C_SMBUS_I2C_BLOCK_DATA, &data );
+                   I2C_SMBUS_BLOCK_DATA, &data );
     if (err < 0) {
         syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
         return err;
@@ -150,8 +150,9 @@ bool Minion::getI2CData( unsigned char *buff ) {
     if ( length > 32 ) {
         length = 32;
     }
-    for (i = 1; i <= length; i++)
+    for (i = 1; i <= length; i++) {
         buff[i-1] = data.block[i];
+    }
 
     syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
 
