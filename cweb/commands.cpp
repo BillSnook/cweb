@@ -284,26 +284,25 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         case 'O':
         case 'o':
 // WFS           actor.doTest();            // Available
-
-            putI2CCmd( 's', angle );
+        {
+            putI2CCmd( 's', 0x66 );
             unsigned char buffSpace[10] = {0};
             unsigned char *buffer = buffSpace;
             minion.getI2CData( buffer );
             syslog(LOG_NOTICE, "Test o, got response: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3] );
             break;
-                    
+        }
         case 'P':
         case 'p':
-            syslog(LOG_NOTICE, "Test p" );  // Send command to test my command and buffer send code
 //            actor.doTest();
-            // Available
-            putI2CCmd( 'p', angle );
+        {
+            putI2CCmd( 'p', 0x99 );
             unsigned char buffSpace[10] = {0};
             unsigned char *buffer = buffSpace;
             minion.getI2CData( buffer );
-            syslog(LOG_NOTICE, "Test o, got response: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3] );
+            syslog(LOG_NOTICE, "Test p, got response: %02X %02X %02X %02X\n", buffer[0], buffer[1], buffer[2], buffer[3] );
             break;
-            
+        }
 //		case 'R':
 //		case 'r':
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
