@@ -12,7 +12,7 @@
 #ifdef ON_PI
 
 #include <wiringPi.h>
-//#include <linux/i2c.h>
+#include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 //#include <wiringPiI2C.h>
 
