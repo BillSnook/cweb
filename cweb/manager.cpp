@@ -10,7 +10,6 @@
 #include <syslog.h>
 #include <stdio.h>			// sprintf
 
-#include "hardware.hpp"
 #include "minion.hpp"
 #include "vl53l0x.hpp"
 #include "manager.hpp"
