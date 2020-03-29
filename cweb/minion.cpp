@@ -188,10 +188,7 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 //    data.block[1] = parameter;
 //    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data );
 
-#ifdef ON_PI
     wiringPiI2CWriteReg8( device, command, parameter );
-#endif  // ON_PI
-
 
 //    union i2c_smbus_data data;
 //    data.byte = parameter;
