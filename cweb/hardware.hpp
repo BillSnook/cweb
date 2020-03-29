@@ -25,6 +25,8 @@
 #include <string.h>			// strcat
 #include <unistd.h>
 
+#define ArdI2CAddr                0x10    // 16 now, and needs to match value on Arduino controller
+
 
 class I2C {
 	
