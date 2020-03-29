@@ -63,6 +63,9 @@ bool Minion::setupMinion( int i2cAddr ) {
 	
 #ifdef ON_PI
 	
+    device = wiringPiI2CSetup( pi2c );
+
+    
 	//----- OPEN THE I2C BUS -----
 	char *filename = (char*)"/dev/i2c-1";
 	if ((file_i2c = open(filename, O_RDWR)) < 0) {
@@ -87,7 +90,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 bool Minion::shutdownMinion() {
 	
 	syslog(LOG_NOTICE, "In shutdownMinion" );
-	close( file_i2c );
+//	close( file_i2c );
 	return true;
 }
 
@@ -184,9 +187,15 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 //    data.block[0] = 1;
 //    data.block[1] = parameter;
 //    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data );
-    union i2c_smbus_data data;
-    data.byte = parameter;
-    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_BYTE_DATA, &data );
+
+#ifdef ON_PI
+    wiringPiI2CWriteReg8( device, command, parameter );
+#endif  // ON_PI
+
+
+//    union i2c_smbus_data data;
+//    data.byte = parameter;
+//    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_BYTE_DATA, &data );
 #endif  // ON_PI
 }
 
