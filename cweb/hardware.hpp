@@ -26,7 +26,7 @@
 #include <string.h>			// strcat
 #include <unistd.h>
 
-#define ArdI2CAddr          0x61    // Needs to match value on Arduino controller
+#define ArdI2CAddr          0x60    // Needs to match value on Arduino controller
 
 
 class I2C {
