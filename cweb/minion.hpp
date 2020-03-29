@@ -12,13 +12,13 @@
 #ifdef ON_PI
 
 #include <wiringPi.h>
-#include <linux/i2c.h>
+//#include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-#include <wiringPiI2C.h>
+//#include <wiringPiI2C.h>
 
 #endif  // ON_PI
 
-#define ArdI2CAddr				8
+//#define ArdI2CAddr				16
 
 //#define I2C_SLAVE    0x0703
 //#define I2C_SMBUS    0x0720    /* SMBus-level access */
