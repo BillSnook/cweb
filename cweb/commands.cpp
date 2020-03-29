@@ -10,7 +10,6 @@
 
 #include "listen.hpp"
 #include "tasks.hpp"
-#include "hardware.hpp"
 #include "manager.hpp"
 //#include "actions.hpp"
 #include "minion.hpp"       // For testing smb/i2c upgrades
