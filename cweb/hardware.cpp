@@ -22,7 +22,7 @@
 
 
 
-#define MOTOR_I2C_ADDRESS		0x5F
+#define MOTOR_I2C_ADDRESS		0x6F
 #define CHANNEL_MAX				15
 
 #define PWM_RESOLUTION          4096.0
