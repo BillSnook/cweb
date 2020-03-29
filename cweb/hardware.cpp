@@ -40,8 +40,6 @@
 //#define TRIG					0		// Brown	Out
 //#define ECHO					2		// White	In
 
-#define ArdI2CAddr				0x10    // 16 now, and needs to match value on Arduino controller
-
 
 // Sub-addresses in motor hat i2c address
 #define MODE1                   0x00
