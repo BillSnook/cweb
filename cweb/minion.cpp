@@ -150,8 +150,8 @@ bool Minion::getI2CData( unsigned char *buff ) {
     }
 
     __u8 length = data.block[0];
-    if ( length > 32 ) {
-        length = 32;
+    if ( length > I2C_SMBUS_I2C_BLOCK_MAX ) {
+        length = I2C_SMBUS_I2C_BLOCK_MAX;
     }
     for (i = 1; i <= length; i++) {
         buff[i-1] = data.block[i];
