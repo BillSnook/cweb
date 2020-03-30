@@ -26,7 +26,8 @@
 #include <string.h>			// strcat
 #include <unistd.h>
 
-#define ArdI2CAddr          0x67    // Needs to match value on Arduino controller
+#define ArdI2CAddr          0x67    // Needs to match value set in Arduino controller code
+#define MOTOR_I2C_ADDRESS   0x6F    // Hard coded (literally) on motor controller board
 
 
 class I2C {
