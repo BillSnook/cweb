@@ -143,7 +143,7 @@ int Minion::getI2CData( unsigned char *buff ) {
     int i, err;
 
     err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0x04,
-                   I2C_SMBUS_I2C_BLOCK_DATA, &data );
+                   I2C_SMBUS_BLOCK_DATA, &data );
     if (err < 0) {
         syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
         return err;
