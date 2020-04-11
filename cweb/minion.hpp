@@ -66,7 +66,7 @@ public:
 	bool shutdownMinion();
 
 	long getI2CCmd();
-	bool getI2CData( unsigned char *buff );
+	int getI2CData( unsigned char *buff );
 	void putI2CCmd( unsigned char command, unsigned char parameter );
 //	bool putI2CData( unsigned char *newData );
 
