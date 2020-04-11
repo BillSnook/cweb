@@ -157,11 +157,9 @@ int Minion::getI2CData( unsigned char *buff ) {
         buff[i-1] = data.block[i];
     }
 
-    
-    
 //    int value = wiringPiI2CReadReg16( device, 0x05 );
 //    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X\n", value >> 8, value & 0xFF);
-    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
+    syslog(LOG_NOTICE, "In Minion::getI2CData data length: %02X read: %02X %02X %02X %02X\n", length, buff[0], buff[1], buff[2], buff[3]);
 
     return (int)length;
 #else
