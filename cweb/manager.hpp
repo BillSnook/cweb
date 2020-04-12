@@ -64,14 +64,14 @@ enum I2CType {
 
 class I2CControl {
 public:
-    I2CType     i2cType;
-    int         i2cCommand;
-    int         i2cParam;
-    char        i2cData[ 32 ];
+    I2CType         i2cType;
+    int             i2cCommand;
+    int             i2cParam;
+    unsigned char   *i2cData;
     
 public:
     static I2CControl initControl( I2CType type, int command, int param );
-    static I2CControl initControl( I2CType type, int command, char *data );
+    static I2CControl initControl( I2CType type, int command, char *buffer );
     const char *description();
 };
 

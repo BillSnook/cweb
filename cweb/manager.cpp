@@ -126,11 +126,11 @@ I2CControl I2CControl::initControl( I2CType type, int command, int param ) {
     return newI2CControl;
 }
 
-I2CControl I2CControl::initControl( I2CType type, int command, char *data ) {
+I2CControl I2CControl::initControl( I2CType type, int command, char *buffer ) {
     I2CControl newI2CControl = I2CControl();
     newI2CControl.i2cType = type;
     newI2CControl.i2cCommand = command;
-    memcpy( newI2CControl.i2cData, data, 32 );
+    newI2CControl.i2cData = buffer;
     return newI2CControl;
 }
 
@@ -253,6 +253,13 @@ void Manager::execute( I2CControl i2cControl ) {
             }
             break;
 
+        case readI2C:
+            {
+                read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
+                i2cControl.i2cCommand = 0;  // Signal completion
+            }
+            break;
+
         default:
             break;
     }
@@ -303,7 +310,21 @@ long Manager::getStatus() {
 		return 0;
 	}
 	expectedControllerMode = statusMode;
-	return minion.getStatus();
+//	return minion.getStatus();
+    
+    char buffSpace[10] = {0};
+    char *buffer = buffSpace;
+
+    I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
+    request( i2cControl );
+
+    while ( 0 != i2cControl.i2cCommand ) {
+        usleep( 100 );
+    }
+    
+    long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
+
+    return status
 }
 
 void Manager::startVL() {
