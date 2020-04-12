@@ -172,28 +172,28 @@ int Minion::getI2CData( unsigned char *buff ) {
 void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 
 #ifdef ON_PI
-//	unsigned char buffer[4] = {0};
-//	buffer[0] = command;	// Send this command
-//	buffer[1] = parameter;	// With this optional parameter
-//	int length = 2;			//  Number of bytes to write
-//	int response = write(file_i2c, buffer, length);
-//	if (response != length) {	// write() returns the number of bytes actually written,
-//								// if it doesn't match then an error occurred
-//								// (e.g. no response from the device)
-//		/* ERROR HANDLING: i2c transaction failed */
-//		char *errStr = strerror( errno );
-//		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
-////		syslog(LOG_NOTICE, "In Minion::putI2CCmd, failed to write to the i2c bus, got %d.", len);
-////	} else {
-////		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
-//	}
+	unsigned char buffer[4] = {0};
+	buffer[0] = command;	// Send this command
+	buffer[1] = parameter;	// With this optional parameter
+	int length = 2;			//  Number of bytes to write
+	int response = write(file_i2c, buffer, length);
+	if (response != length) {	// write() returns the number of bytes actually written,
+								// if it doesn't match then an error occurred
+								// (e.g. no response from the device)
+		/* ERROR HANDLING: i2c transaction failed */
+		char *errStr = strerror( errno );
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
+//		syslog(LOG_NOTICE, "In Minion::putI2CCmd, failed to write to the i2c bus, got %d.", len);
+	} else {
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
+	}
     
 //    union i2c_smbus_data data;
 //    data.block[0] = 1;
 //    data.block[1] = parameter;
 //    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data );
 
-    wiringPiI2CWriteReg8( device, command, parameter );
+//    wiringPiI2CWriteReg8( device, command, parameter );
 
 //    union i2c_smbus_data data;
 //    data.byte = parameter;
