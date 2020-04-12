@@ -135,14 +135,14 @@ void Threader::createThread() {
 
 	pthread_create(threadPtr,
 				   attrPtr,
-				   runThreads,
+				   startThread,
 				   nullptr);
 
 	free( attrPtr );
 	free( threadPtr );
 }
 
-void Threader::runThread( void *arguments ) {
+void Threader::runNextThread( void *arguments ) {
 
 	ThreadControl nextThreadControl;
 	bool foundThread = false;
@@ -153,17 +153,17 @@ void Threader::runThread( void *arguments ) {
 			threadQueue.pop();
 			foundThread = true;
 		} else {
-			syslog(LOG_NOTICE, "In runThread with no entries in threadQueue" );
+			syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
 		}
 	} catch(...) {
-		syslog(LOG_NOTICE, "In runThread and threadQueue pop failure occured" );
+		syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
 	}
 	pthread_mutex_unlock( &threadArrayMutex );
 	if ( !foundThread ) {
 		return;
 	}
 	threadCount += 1;
-	syslog(LOG_NOTICE, "In runThread with %s, thread count %d", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:
 			manager.monitor();
@@ -181,17 +181,17 @@ void Threader::runThread( void *arguments ) {
 			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
 		case testThread:
-			syslog(LOG_NOTICE, "In runThread with testThreads" );
+			syslog(LOG_NOTICE, "In runNextThread with testThreads" );
 			break;
 		default:
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "In runThread exit from %s, thread count %d", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "In runNextThread, exiting from %s, thread count %d", nextThreadControl.description(), threadCount );
 }
 
-void *runThreads(void *arguments) {
+void *startThread(void *arguments) {
 	
-	threader.runThread( arguments );
+	threader.runNextThread( arguments );
 	return nullptr;
 }

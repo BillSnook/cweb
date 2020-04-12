@@ -41,7 +41,7 @@ public:
 	const char *description();
 };
 
-void *runThreads(void *arguments);
+void *startThread(void *arguments);
 
 class Threader {
 	
@@ -61,7 +61,7 @@ public:
 	void queueThread( ThreadType threadType, int socket, uint address );
 	void queueThread( ThreadType threadType, char *command, int socket );
 	void createThread();
-	void runThread(void *arguments);
+	void runNextThread(void *arguments);
 };
 
 #endif /* threader_hpp */

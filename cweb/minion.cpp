@@ -140,24 +140,6 @@ int Minion::getI2CData( unsigned char *buff ) {
 	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
     return 0;
 
-//    union i2c_smbus_data data;
-//    int i, err;
-//
-//    err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0x04,
-//                   I2C_SMBUS_BLOCK_DATA, &data );
-//    if (err < 0) {
-//        syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
-//        return err;
-//    }
-//
-//    __u8 length = data.block[0];
-//    if ( length > I2C_SMBUS_I2C_BLOCK_MAX ) {
-//        length = I2C_SMBUS_I2C_BLOCK_MAX;
-//    }
-//    for (i = 1; i <= length; i++) {
-//        buff[i-1] = data.block[i];
-//    }
-//
 ////    int value = wiringPiI2CReadReg16( device, 0x05 );
 ////    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X\n", value >> 8, value & 0xFF);
 //    syslog(LOG_NOTICE, "In Minion::getI2CData data length: %02X read: %02X %02X %02X %02X\n", length, buff[0], buff[1], buff[2], buff[3]);
@@ -172,31 +154,22 @@ int Minion::getI2CData( unsigned char *buff ) {
 void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 
 #ifdef ON_PI
-//	unsigned char buffer[4] = {0};
-//	buffer[0] = command;	// Send this command
-//	buffer[1] = parameter;	// With this optional parameter
-//	int length = 2;			//  Number of bytes to write
-//	int response = write(file_i2c, buffer, length);
-//	if (response != length) {	// write() returns the number of bytes actually written,
-//								// if it doesn't match then an error occurred
-//								// (e.g. no response from the device)
-//		/* ERROR HANDLING: i2c transaction failed */
-//		char *errStr = strerror( errno );
-//		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
-//	} else {
-//		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
-//	}
-    
-//    union i2c_smbus_data data;
-//    data.block[0] = 1;
-//    data.block[1] = parameter;
-//    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data );
+	unsigned char buffer[4] = {0};
+	buffer[0] = command;	// Send this command
+	buffer[1] = parameter;	// With this optional parameter
+	int length = 2;			//  Number of bytes to write
+	int response = write(file_i2c, buffer, length);
+	if (response != length) {	// write() returns the number of bytes actually written,
+								// if it doesn't match then an error occurred
+								// (e.g. no response from the device)
+		/* ERROR HANDLING: i2c transaction failed */
+		char *errStr = strerror( errno );
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, i2c write error %d: %s.\n", response, errStr );
+	} else {
+		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
+	}
 
-    wiringPiI2CWriteReg8( device, command, parameter );
-
-//    union i2c_smbus_data data;
-//    data.byte = parameter;
-//    i2c_smbus_access( file_i2c, I2C_SMBUS_WRITE, command, I2C_SMBUS_BYTE_DATA, &data );
+//    wiringPiI2CWriteReg8( device, command, parameter );
 #endif  // ON_PI
 }
 
