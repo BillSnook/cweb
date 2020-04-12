@@ -14,6 +14,9 @@
 #include "vl53l0x.hpp"
 #include "manager.hpp"
 
+#include <pthread.h>
+
+
 Minion	minion;
 
 enum CheckTimes {	// milliSecond interval for various checks
@@ -170,8 +173,8 @@ void Manager::setupManager() {
 	sitMap = SitMap( pattern );
 	sitMap.setupSitMap();
 
-    pthread_mutex_init(&i2cMutex, NULL);
-    pthread_cond_init (&i2cCond, NULL);
+    pthread_mutex_init( &i2cMutex, NULL );
+    pthread_cond_init( &i2cCond, NULL );
 
 }
 
@@ -185,8 +188,8 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-    pthread_mutex_destroy(&i2cMutex);
-    pthread_cond_destroy(&i2cCond);
+    pthread_mutex_destroy( &i2cMutex );
+    pthread_cond_destroy( &i2cCond );
 
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
@@ -238,7 +241,7 @@ void Manager::execute( I2CControl i2cControl ) {
 //                write( file_i2c, buffer, 2 );
 //            }
 //            break;
-//            
+//
 //        default:
 //            break;
 //    }
