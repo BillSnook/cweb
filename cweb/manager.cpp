@@ -256,7 +256,7 @@ void Manager::execute( I2CControl i2cControl ) {
         case readI2C:
             {
                 read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
-                syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
+                syslog(LOG_NOTICE, "In Manager::execute data read: %02X %02X %02X %02X    0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
                 i2cControl.i2cCommand = 0;  // Signal completion
             }
             break;
@@ -319,7 +319,7 @@ long Manager::getStatus() {
     I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
     request( i2cControl );
 
-    sleep( 1 );
+    usleep( 1000 );
     
 //    while ( 0 != i2cControl.i2cCommand ) {
 //        usleep( 100 );
