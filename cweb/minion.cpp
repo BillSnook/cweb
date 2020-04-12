@@ -126,42 +126,43 @@ long Minion::getI2CCmd() {
 int Minion::getI2CData( unsigned char *buff ) {
 	
 #ifdef ON_PI
-//	//----- READ BYTES -----
-//	int length = 8;			// Number of bytes to read
-//	int response = read(file_i2c, buff, length);
-//	if (response != length) {	// read() returns the number of bytes actually read,
-//								// if it doesn't match then an error occurred
-//								// (e.g. no response from the device)
-//		//ERROR HANDLING: i2c transaction failed
-//		char *errStr = strerror( errno );
-//		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c read error %d: %s.\n", response, errStr );
-//		return false;
-//	}
-////	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
+	//----- READ BYTES -----
+	int length = 8;			// Number of bytes to read
+	int response = read(file_i2c, buff, length);
+	if (response != length) {	// read() returns the number of bytes actually read,
+								// if it doesn't match then an error occurred
+								// (e.g. no response from the device)
+		//ERROR HANDLING: i2c transaction failed
+		char *errStr = strerror( errno );
+		syslog(LOG_NOTICE, "In Minion::getI2CData, i2c read error %d: %s.\n", response, errStr );
+		return false;
+	}
+	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
+    return 0;
 
-    union i2c_smbus_data data;
-    int i, err;
-
-    err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0x04,
-                   I2C_SMBUS_BLOCK_DATA, &data );
-    if (err < 0) {
-        syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
-        return err;
-    }
-
-    __u8 length = data.block[0];
-    if ( length > I2C_SMBUS_I2C_BLOCK_MAX ) {
-        length = I2C_SMBUS_I2C_BLOCK_MAX;
-    }
-    for (i = 1; i <= length; i++) {
-        buff[i-1] = data.block[i];
-    }
-
-//    int value = wiringPiI2CReadReg16( device, 0x05 );
-//    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X\n", value >> 8, value & 0xFF);
-    syslog(LOG_NOTICE, "In Minion::getI2CData data length: %02X read: %02X %02X %02X %02X\n", length, buff[0], buff[1], buff[2], buff[3]);
-
-    return (int)length;
+//    union i2c_smbus_data data;
+//    int i, err;
+//
+//    err = i2c_smbus_access( file_i2c, I2C_SMBUS_READ, 0x04,
+//                   I2C_SMBUS_BLOCK_DATA, &data );
+//    if (err < 0) {
+//        syslog( LOG_NOTICE, "In Minion::getI2CData with error: %d", err );
+//        return err;
+//    }
+//
+//    __u8 length = data.block[0];
+//    if ( length > I2C_SMBUS_I2C_BLOCK_MAX ) {
+//        length = I2C_SMBUS_I2C_BLOCK_MAX;
+//    }
+//    for (i = 1; i <= length; i++) {
+//        buff[i-1] = data.block[i];
+//    }
+//
+////    int value = wiringPiI2CReadReg16( device, 0x05 );
+////    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X\n", value >> 8, value & 0xFF);
+//    syslog(LOG_NOTICE, "In Minion::getI2CData data length: %02X read: %02X %02X %02X %02X\n", length, buff[0], buff[1], buff[2], buff[3]);
+//
+//    return (int)length;
 #else
     return 0;
 #endif  // ON_PI
