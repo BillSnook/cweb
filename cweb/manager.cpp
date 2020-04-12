@@ -237,6 +237,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
             execute( i2cControl );
         }
 	}
+    syslog(LOG_NOTICE, "In Manager::monitor, exiting" );
 }
 
 void Manager::execute( I2CControl i2cControl ) {

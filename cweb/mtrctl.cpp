@@ -158,5 +158,7 @@ int main(int argc, const char * argv[]) {
 	
 	threader.shutdownThreads();
 
+//    pthread_exit( NULL );
+
     return 0;
 }
