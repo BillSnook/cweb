@@ -319,9 +319,7 @@ long Manager::getStatus() {
     I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
     request( i2cControl );
     
-    while ( 0 != i2cControl.i2cCommand ) {
-        ;
-    }
+    sleep( 1 );
     
     long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
     syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
