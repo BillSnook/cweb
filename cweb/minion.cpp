@@ -217,8 +217,8 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 
 void Minion::setStatus() {
 	
+    syslog(LOG_NOTICE, "In Minion::setStatus" );
 	putI2CCmd( 's', 0 );
-	syslog(LOG_NOTICE, "In Minion::setStatus" );
 }
 
 long Minion::getStatus() {
@@ -236,9 +236,9 @@ long Minion::getStatus() {
 
 void Minion::setRange( unsigned char angle ) {
 	
+//    syslog(LOG_NOTICE, "In Minion::setRange, angle 0x%02X", angle );
 	putI2CCmd( 'p', angle );
 	lastAngle = angle;
-//	syslog(LOG_NOTICE, "In Minion::setRange, angle 0x%02X", angle );
 }
 
 long Minion::getRange() {

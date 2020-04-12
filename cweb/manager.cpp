@@ -230,21 +230,21 @@ void Manager::execute( I2CControl i2cControl ) {
     
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c started", i2cControl.i2cType, i2cControl.i2cCommand );
     
-    sleep( 5 );
+    sleep( 1 );
     
-//    switch ( i2cControl.i2cType ) {
-//        case writeI2C:
-//            {
-//                unsigned char buffer[4] = {0};
-//                buffer[0] = i2cControl.i2cCommand;  // Send this command
-//                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
-//                write( file_i2c, buffer, 2 );
-//            }
-//            break;
-//
-//        default:
-//            break;
-//    }
+    switch ( i2cControl.i2cType ) {
+        case writeI2C:
+            {
+                unsigned char buffer[4] = {0};
+                buffer[0] = i2cControl.i2cCommand;  // Send this command
+                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
+                write( file_i2c, buffer, 2 );
+            }
+            break;
+
+        default:
+            break;
+    }
     
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c completed", i2cControl.i2cType, i2cControl.i2cCommand );
 }
@@ -277,7 +277,7 @@ long Manager::getNowMs() {
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
-    minion.setStatus();
+//    minion.setStatus();
     
     I2CControl i2cControl = I2CControl::initControl( writeI2C, 's', 0 );
     request( i2cControl );
@@ -318,9 +318,9 @@ void Manager::setRange( unsigned int angle) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
-	minion.setRange( angle );
+//	minion.setRange( angle );
     
-    I2CControl i2cControl = I2CControl::initControl( writeI2C, 'p', 0 );
+    I2CControl i2cControl = I2CControl::initControl( writeI2C, 'p', angle );
     request( i2cControl );
 }
 
