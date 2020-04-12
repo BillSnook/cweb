@@ -324,7 +324,7 @@ long Manager::getStatus() {
     
     long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
 
-    return status
+    return status;
 }
 
 void Manager::startVL() {
