@@ -155,6 +155,8 @@ int main(int argc, const char * argv[]) {
             usleep( 200000 );
 		}
 	}
+    
+    listener.doListenerLoop = false;
 	
 	threader.shutdownThreads();
 

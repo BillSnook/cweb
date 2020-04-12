@@ -17,9 +17,10 @@ class Listener {
 	int					listenSockfd, portno;
 	char				buffer[256];
 	struct sockaddr_in	serv_addr, cli_addr;
-	bool				doListenerLoop;
 
 public:
+    bool                doListenerLoop;
+    
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd );
 	void writeBack( char *msg, int socket );
