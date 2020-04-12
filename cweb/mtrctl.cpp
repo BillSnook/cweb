@@ -150,6 +150,7 @@ int main(int argc, const char * argv[]) {
 		threader.unlock();
 		if ( ready ) {
 			threader.createThread();
+            usleep( 1000 );
         } else {
             usleep( 200000 );
 		}

@@ -188,14 +188,22 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-    pthread_mutex_destroy( &i2cMutex );
-    pthread_cond_destroy( &i2cCond );
-
+    stopLoop = true;
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
 	minion.shutdownMinion();
 	sitMap.shutdownSitMap();
+
+    pthread_mutex_lock( &i2cMutex );
+    pthread_cond_signal( &i2cCond );
+    pthread_mutex_unlock( &i2cMutex );
+    
+    usleep( 1000 );
+
+    pthread_mutex_destroy( &i2cMutex );
+    pthread_cond_destroy( &i2cCond );
+    
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
@@ -209,20 +217,25 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
         pthread_mutex_lock( &i2cMutex );
         
-        while ( i2cQueue.empty() ) {    // Until there is a queue entry
+        while ( i2cQueue.empty() && !stopLoop ) {    // Until there is a queue entry
             pthread_cond_wait( &i2cCond, &i2cMutex ); // Free mutex and wait
         }
-        try {
-            i2cControl = i2cQueue.front();
-            i2cQueue.pop();
-            syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
-        } catch(...) {
-            syslog(LOG_NOTICE, "In Manager::monitor, i2c queue pop failure occured" );
+        if ( !stopLoop ) {
+            try {
+                i2cControl = i2cQueue.front();
+                i2cQueue.pop();
+                syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
+            } catch(...) {
+                stopLoop = true;    // Error, we're done
+                syslog(LOG_NOTICE, "In Manager::monitor, i2c queue pop failure occured" );
+            }
         }
         
         pthread_mutex_unlock( &i2cMutex );
         
-        execute( i2cControl );
+        if ( !stopLoop ) {
+            execute( i2cControl );
+        }
 	}
 }
 
