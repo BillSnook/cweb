@@ -15,6 +15,7 @@
 #include "manager.hpp"
 
 #include <pthread.h>
+#include <sched.h>
 
 
 Minion	minion;
@@ -319,7 +320,9 @@ long Manager::getStatus() {
     I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
     request( i2cControl );
 
-    usleep( 1000 );
+    sched_yield();
+    
+//    usleep( 1000 );
     
 //    while ( 0 != i2cControl.i2cCommand ) {
 //        usleep( 100 );
