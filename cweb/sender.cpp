@@ -24,7 +24,7 @@ void Sender::setupSender( char *hostName, int portNo) {
 	char buffer[256];
 	bool doSenderLoop;
 	
-	sockfd = socket( AF_INET, SOCK_STREAM, 0 );
+	sockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
 	if ( sockfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;

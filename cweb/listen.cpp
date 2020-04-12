@@ -23,7 +23,7 @@ extern Threader		threader;
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
 	doListenerLoop = false;
-	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );
+	listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
 	if ( listenSockfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
@@ -44,7 +44,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 	while ( doListenerLoop ) {
 		syslog(LOG_NOTICE, "In acceptConnections, listening" );
 		listen(  listenSockfd, 5 );
-		int connectionSockfd = accept(  listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
+		int connectionSockfd = accept( listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
 		if ( connectionSockfd < 0 ) {
 			syslog(LOG_ERR, "ERROR on accept" );
 			break;

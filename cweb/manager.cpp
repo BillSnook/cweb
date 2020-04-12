@@ -113,7 +113,44 @@ unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 102
 	return buffer;
 }
 
-// MARK: Manager
+// MARK: - I2C Queue
+
+I2CControl I2CControl::initControl( I2CType type, int command, int param ) {
+    I2CControl newI2CControl = I2CControl();
+    newI2CControl.i2cType = type;
+    newI2CControl.i2cCommand = command;
+    newI2CControl.i2cParam = param;
+    return newI2CControl;
+}
+
+I2CControl I2CControl::initControl( I2CType type, int command, char *data ) {
+    I2CControl newI2CControl = I2CControl();
+    newI2CControl.i2cType = type;
+    newI2CControl.i2cCommand = command;
+    memcpy( newI2CControl.i2cData, data, 32 );
+    return newI2CControl;
+}
+
+const char *I2CControl::description() {
+    const char *name;
+    switch (i2cType ) {
+        case writeI2C:
+            name = "writeI2C";
+            break;
+        case readI2C:
+            name = "readI2C";
+            break;
+        case otherI2C:
+            name = "otherI2C";
+            break;
+        default:
+            name = "noI2C";
+            break;
+    }
+    return name;
+}
+
+// MARK: - Manager
 void Manager::setupManager() {
 	stopLoop = false;
 	busy = false;
@@ -127,10 +164,15 @@ void Manager::setupManager() {
 	
 	minion = Minion();					// Minions talk to the arduino to relay commands
 	minion.setupMinion( ArdI2CAddr );
+    file_i2c = minion.file_i2c;
 	
 	pattern = SearchPattern( 45, 135, 5 );
 	sitMap = SitMap( pattern );
 	sitMap.setupSitMap();
+
+    pthread_mutex_init(&i2cMutex, NULL);
+    pthread_cond_init (&i2cCond, NULL);
+
 }
 
 void Manager::resetPattern( int start, int end, int inc ) {
@@ -143,7 +185,10 @@ void Manager::resetPattern( int start, int end, int inc ) {
 
 void Manager::shutdownManager() {
 
-	if ( vl53l0x.isSetup ) {
+    pthread_mutex_destroy(&i2cMutex);
+    pthread_cond_destroy(&i2cCond);
+
+    if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
 	minion.shutdownMinion();
@@ -151,28 +196,69 @@ void Manager::shutdownManager() {
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
-void Manager::monitor() {
+void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	
 	syslog(LOG_NOTICE, "In Manager::monitor, should only start once" );
-	setStatus();				// Set mode so reads get status
-	long now = getNowMs();
-	lastAnythingTime = now;
-	while ( !stopLoop ) {
-		
-		now = getNowMs();
-		// Monitor microcontroller
-		if ( now > lastStatusTime + statusCheckInterval ) {
-			long tempStatus = 0; // getStatus();	// return 0 if busy, else ask minion to read status
-			if ( tempStatus ) {
-				lastStatusTime = now;
-				lastAnythingTime = now;
-				status = tempStatus;
-			}
-		}
-		sleep( 1 );
 
-//		lastAnythingTime = getNowMs();
+
+    while ( !stopLoop ) {
+        I2CControl i2cControl;
+
+        pthread_mutex_lock( &i2cMutex );
+        
+        while ( i2cQueue.empty() ) {    // Until there is a queue entry
+            pthread_cond_wait( &i2cCond, &i2cMutex ); // Free mutex and wait
+        }
+        try {
+            i2cControl = i2cQueue.front();
+            i2cQueue.pop();
+            syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
+        } catch(...) {
+            syslog(LOG_NOTICE, "In Manager::monitor, i2c queue pop failure occured" );
+        }
+        
+        pthread_mutex_unlock( &i2cMutex );
+        
+        execute( i2cControl );
 	}
+}
+
+void Manager::execute( I2CControl i2cControl ) {
+    
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c started", i2cControl.i2cType, i2cControl.i2cCommand );
+    
+    sleep( 5 );
+    
+//    switch ( i2cControl.i2cType ) {
+//        case writeI2C:
+//            {
+//                unsigned char buffer[4] = {0};
+//                buffer[0] = i2cControl.i2cCommand;  // Send this command
+//                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
+//                write( file_i2c, buffer, 2 );
+//            }
+//            break;
+//            
+//        default:
+//            break;
+//    }
+    
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c completed", i2cControl.i2cType, i2cControl.i2cCommand );
+}
+
+void Manager::request( I2CControl i2cControl ) {
+    
+    pthread_mutex_lock( &i2cMutex );
+    try {
+        i2cQueue.push( i2cControl );
+        pthread_cond_signal( &i2cCond );
+        syslog(LOG_NOTICE, "In In Manager::request, i2c command put on queue" );
+    } catch(...) {
+        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+    }
+    pthread_mutex_unlock( &i2cMutex );
+
+
 }
 
 long Manager::getNowMs() {
@@ -188,7 +274,10 @@ long Manager::getNowMs() {
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
-	minion.setStatus();
+    minion.setStatus();
+    
+    I2CControl i2cControl = I2CControl::initControl( writeI2C, 's', 0 );
+    request( i2cControl );
 }
 
 long Manager::getStatus() {
@@ -227,6 +316,9 @@ void Manager::setRange( unsigned int angle) {
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
 	minion.setRange( angle );
+    
+    I2CControl i2cControl = I2CControl::initControl( writeI2C, 'p', 0 );
+    request( i2cControl );
 }
 
 long Manager::getRangeResult() {

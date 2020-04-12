@@ -41,7 +41,7 @@ public:
 	const char *description();
 };
 
-void *startThread(void *arguments);
+void *startThread(void *arguments); // Works best with pthread create as wrapper for c++ method
 
 class Threader {
 	

@@ -81,6 +81,8 @@ void Threader::shutdownThreads() {
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
 	pthread_mutex_destroy( &threadArrayMutex );
+    
+    pthread_exit( NULL );
 }
 
 void Threader::lock() {
