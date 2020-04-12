@@ -241,7 +241,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c started", i2cControl.i2cType, i2cControl.i2cCommand );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d started", i2cControl.i2cType, i2cControl.i2cCommand );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -273,7 +273,7 @@ void Manager::request( I2CControl i2cControl ) {
     try {
         i2cQueue.push( i2cControl );
         pthread_cond_signal( &i2cCond );
-        syslog(LOG_NOTICE, "In In Manager::request, i2c command put on queue" );
+        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
     }
@@ -323,6 +323,7 @@ long Manager::getStatus() {
     }
     
     long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
+    syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
 
     return status;
 }
