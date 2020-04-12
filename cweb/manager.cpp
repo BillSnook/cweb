@@ -256,6 +256,7 @@ void Manager::execute( I2CControl i2cControl ) {
         case readI2C:
             {
                 read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
+                syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
                 i2cControl.i2cCommand = 0;  // Signal completion
             }
             break;
@@ -264,7 +265,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
     }
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c completed", i2cControl.i2cType, i2cControl.i2cCommand );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed", i2cControl.i2cType, i2cControl.i2cCommand );
 }
 
 void Manager::request( I2CControl i2cControl ) {
@@ -312,7 +313,7 @@ long Manager::getStatus() {
 	expectedControllerMode = statusMode;
 //	return minion.getStatus();
     
-    char buffSpace[10] = {0};
+    char buffSpace[] = {0};
     char *buffer = buffSpace;
 
     I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
