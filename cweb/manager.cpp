@@ -237,14 +237,11 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
             execute( i2cControl );
         }
 	}
-    syslog(LOG_NOTICE, "In Manager::monitor, exiting" );
 }
 
 void Manager::execute( I2CControl i2cControl ) {
     
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %c started", i2cControl.i2cType, i2cControl.i2cCommand );
-    
-    sleep( 1 );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:

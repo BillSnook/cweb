@@ -152,8 +152,8 @@ void Threader::runNextThread( void *arguments ) {
 			nextThreadControl = threadQueue.front();
 			threadQueue.pop();
 			foundThread = true;
-		} else {
-			syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
+//		} else {
+//			syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
 		}
 	} catch(...) {
 		syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
