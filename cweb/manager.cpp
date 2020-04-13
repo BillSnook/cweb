@@ -335,9 +335,9 @@ long Manager::getStatus() {
     syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readCond" );
     
     pthread_mutex_lock( &readMutex );
-    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a queue entry
+//    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a queue entry
         pthread_cond_wait( &readCond, &readMutex ); // Free mutex and wait
-    }
+//    }
     pthread_mutex_unlock( &readMutex );
 
     long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
