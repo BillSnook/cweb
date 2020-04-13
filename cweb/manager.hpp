@@ -87,6 +87,9 @@ class Manager {
     pthread_mutex_t             i2cMutex;
     pthread_cond_t              i2cCond;
 
+    pthread_mutex_t             readMutex;
+    pthread_cond_t              readCond;
+
     int     file_i2c;
 
 	long getNowMs();

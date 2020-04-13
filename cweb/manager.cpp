@@ -176,6 +176,9 @@ void Manager::setupManager() {
     pthread_mutex_init( &i2cMutex, NULL );
     pthread_cond_init( &i2cCond, NULL );
 
+    pthread_mutex_init( &readMutex, NULL );
+    pthread_cond_init( &readCond, NULL );
+
 }
 
 void Manager::resetPattern( int start, int end, int inc ) {
@@ -195,15 +198,22 @@ void Manager::shutdownManager() {
 	minion.shutdownMinion();
 	sitMap.shutdownSitMap();
 
+    pthread_mutex_lock( &readMutex );
+    pthread_cond_signal( &readCond );
+    pthread_mutex_unlock( &readMutex );
+    
     pthread_mutex_lock( &i2cMutex );
     pthread_cond_signal( &i2cCond );
     pthread_mutex_unlock( &i2cMutex );
     
     usleep( 1000 );
-
+    
+    pthread_mutex_destroy( &readMutex );
+    pthread_cond_destroy( &readCond );
+    
     pthread_mutex_destroy( &i2cMutex );
     pthread_cond_destroy( &i2cCond );
-    
+
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
@@ -257,7 +267,10 @@ void Manager::execute( I2CControl i2cControl ) {
             {
                 read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
                 syslog(LOG_NOTICE, "In Manager::execute data read: %02X %02X %02X %02X    0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
+                pthread_mutex_lock( &readMutex );
                 i2cControl.i2cCommand = 0;  // Signal completion
+                pthread_cond_signal( &readCond );
+                pthread_mutex_unlock( &readMutex );
             }
             break;
 
@@ -319,8 +332,12 @@ long Manager::getStatus() {
     I2CControl i2cControl = I2CControl::initControl( readI2C, 4, buffer );
     request( i2cControl );
     
-    sleep( 1 );
-    
+    pthread_mutex_lock( &readMutex );
+    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a queue entry
+        pthread_cond_wait( &readCond, &readMutex ); // Free mutex and wait
+    }
+    pthread_mutex_unlock( &readMutex );
+
     long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
     syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
 
