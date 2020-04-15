@@ -272,11 +272,6 @@ void Manager::execute( I2CControl i2cControl ) {
             }
             break;
 
-        case read8I2C:
-            {
-            }
-            break;
-
         case readI2C:
             {
                 read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
@@ -288,6 +283,11 @@ void Manager::execute( I2CControl i2cControl ) {
             }
             break;
 
+        case readReg8I2C:
+            {
+            }
+            break;
+            
         default:
             break;
     }
