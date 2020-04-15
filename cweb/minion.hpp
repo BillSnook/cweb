@@ -53,11 +53,10 @@ struct remoteStatus {
 class Minion {
 
 	int				pi2c;
-    int             file_i2c;           // File handle to I2C device
     unsigned char   lastAngle;
 
 public:
-	int 			file_i2c;
+	int 			file_i2c;           // File handle to I2C device
 	remoteStatus	status;		        // CUrrent status value
 	
 	explicit Minion();
