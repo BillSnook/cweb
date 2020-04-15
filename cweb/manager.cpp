@@ -300,7 +300,7 @@ void Manager::request( I2CControl i2cControl ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        pthread_cond_signal( &i2cQueueCondi2cQueueCond );
+        pthread_cond_signal( &i2cQueueCond );
         syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
