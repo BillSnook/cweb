@@ -63,7 +63,7 @@ bool Minion::setupMinion( int i2cAddr ) {
 	
 #ifdef ON_PI
 	
-    device = wiringPiI2CSetup( pi2c );
+    file_i2c = wiringPiI2CSetup( pi2c );
 
     
 	//----- OPEN THE I2C BUS -----
@@ -140,7 +140,7 @@ int Minion::getI2CData( unsigned char *buff ) {
 	syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X %02X %02X\n", buff[0], buff[1], buff[2], buff[3]);
     return 0;
 
-////    int value = wiringPiI2CReadReg16( device, 0x05 );
+////    int value = wiringPiI2CReadReg16( file_i2c, 0x05 );
 ////    syslog(LOG_NOTICE, "In Minion::getI2CData data read: %02X %02X\n", value >> 8, value & 0xFF);
 //    syslog(LOG_NOTICE, "In Minion::getI2CData data length: %02X read: %02X %02X %02X %02X\n", length, buff[0], buff[1], buff[2], buff[3]);
 //
@@ -169,7 +169,7 @@ void Minion::putI2CCmd( unsigned char command, unsigned char parameter ) {
 		syslog(LOG_NOTICE, "In Minion::putI2CCmd, success" );
 	}
 
-//    wiringPiI2CWriteReg8( device, command, parameter );
+//    wiringPiI2CWriteReg8( file_i2c, command, parameter );
 #endif  // ON_PI
 }
 

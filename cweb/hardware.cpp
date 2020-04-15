@@ -14,6 +14,16 @@
 #include "hardware.hpp"
 #include "manager.hpp"
 
+#ifdef ON_PI
+
+#include <wiringPi.h>
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
+#include <wiringPiI2C.h>
+
+#endif  // ON_PI
+
+
 
 #define VERSION_REQUIRED_MAJOR 1
 #define VERSION_REQUIRED_MINOR 0
@@ -95,64 +105,64 @@ I2C::I2C(int addr) {
 	address = addr;
 	
 #ifdef ON_PI
-	device = wiringPiI2CSetup( addr );
+	file_i2c = wiringPiI2CSetup( addr );
 #endif  // ON_PI
 }
 
 int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8( device, reg );	// Read 8 bits from register reg on device
+	return wiringPiI2CReadReg8( file_i2c, reg );	// Read 8 bits from register reg on device
 #else
 	return reg;
 #endif  // ON_PI
 }
 
-int I2C::i2cReadReg8(int reg) {
-	
-#ifdef ON_PI
-	return wiringPiI2CReadReg8( device, reg );	// Read 8 bits from register reg on device
-#else
-	return reg;
-#endif  // ON_PI
-}
-
-int I2C::i2cReadReg16(int reg) {
-	
-#ifdef ON_PI
-	return wiringPiI2CReadReg16( device, reg );	// Read 16 bits from register reg on device
-#else
-	return reg;
-#endif  // ON_PI
-}
+//int I2C::i2cReadReg8(int reg) {
+//
+//#ifdef ON_PI
+//	return wiringPiI2CReadReg8( file_i2c, reg );	// Read 8 bits from register reg on device
+//#else
+//	return reg;
+//#endif  // ON_PI
+//}
+//
+//int I2C::i2cReadReg16(int reg) {
+//
+//#ifdef ON_PI
+//	return wiringPiI2CReadReg16( file_i2c, reg );	// Read 16 bits from register reg on device
+//#else
+//	return reg;
+//#endif  // ON_PI
+//}
 
 
 int I2C::i2cWrite(int reg, int data) {
 	
 #ifdef ON_PI
-	return wiringPiI2CWriteReg8(device, reg, data);
+	return wiringPiI2CWriteReg8(file_i2c, reg, data);
 #else
 	return reg + data;
 #endif  // ON_PI
 }
 
-int I2C::i2cWriteReg8(int reg, int data) {
-	
-#ifdef ON_PI
-	return wiringPiI2CWriteReg8(device, reg, data);
-#else
-	return reg + data;
-#endif  // ON_PI
-}
-
-int I2C::i2cWriteReg16(int reg, int data) {
-	
-#ifdef ON_PI
-	return wiringPiI2CWriteReg16(device, reg, data);
-#else
-	return reg + data;
-#endif  // ON_PI
-}
+//int I2C::i2cWriteReg8(int reg, int data) {
+//	
+//#ifdef ON_PI
+//	return wiringPiI2CWriteReg8(file_i2c, reg, data);
+//#else
+//	return reg + data;
+//#endif  // ON_PI
+//}
+//
+//int I2C::i2cWriteReg16(int reg, int data) {
+//	
+//#ifdef ON_PI
+//	return wiringPiI2CWriteReg16(file_i2c, reg, data);
+//#else
+//	return reg + data;
+//#endif  // ON_PI
+//}
 
 
 // MARK: PWM control

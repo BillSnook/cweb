@@ -56,8 +56,10 @@ enum ControllerMode {
 };
 
 enum I2CType {
-    writeI2C = 0,
-    readI2C = 1,
+    writeReg8I2C = 0,
+    readReg8I2C = 1,
+    writeI2C = 2,
+    readI2C = 3,
     otherI2C = 2
 };
 
@@ -65,13 +67,14 @@ enum I2CType {
 class I2CControl {
 public:
     I2CType     i2cType;
-    int         i2cCommand;
+    int         i2cFile;
+    int         i2cCommand;     // Also, passed in as length, test for zero for done
     int         i2cParam;
     char        *i2cData;
     
 public:
-    static I2CControl initControl( I2CType type, int command, int param );
-    static I2CControl initControl( I2CType type, int command, char *buffer );
+    static I2CControl initControl( I2CType type, int file, int command, int param );
+    static I2CControl initControl( I2CType type, int file, int command, char *buffer );
     const char *description();
 };
 
@@ -84,13 +87,11 @@ class Manager {
 	bool busy;
     
     std::queue<I2CControl>      i2cQueue;
-    pthread_mutex_t             i2cMutex;
-    pthread_cond_t              i2cCond;
+    pthread_mutex_t             i2cQueueMutex;
+    pthread_cond_t              i2cQueueCond;
 
-    pthread_mutex_t             readMutex;
-    pthread_cond_t              readCond;
-
-    int     file_i2c;
+    pthread_mutex_t             readWaitMutex;
+    pthread_cond_t              readWaitCond;
 
 	long getNowMs();
 
@@ -100,11 +101,13 @@ public:
 	
 	ControllerMode	expectedControllerMode;
 	
+    int     file_i2c;
+    
 	void setupManager();
 	void resetPattern( int start, int end, int inc );
 	void shutdownManager();
 	
-	void monitor();
+	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
     void request( I2CControl i2cControl );
 

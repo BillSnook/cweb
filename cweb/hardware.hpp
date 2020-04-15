@@ -11,14 +11,6 @@
 
 #include "speed.hpp"
 
-#ifdef ON_PI
-
-#include <wiringPi.h>
-#include <linux/i2c.h>
-#include <linux/i2c-dev.h>
-#include <wiringPiI2C.h>
-
-#endif  // ON_PI
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -37,15 +29,15 @@ public:
 	
 	bool    debug;
 	int     address;            // I2C address
-	int     device;             // File handle to I2C device
+	int     file_i2c;           // File handle to I2C device
 	
 	int i2cRead           (int reg);
-	int i2cReadReg8       (int reg);
-	int i2cReadReg16      (int reg);
+//	int i2cReadReg8       (int reg);
+//	int i2cReadReg16      (int reg);
 	
 	int i2cWrite          (int reg, int data);
-	int i2cWriteReg8      (int reg, int data);
-	int i2cWriteReg16     (int reg, int data);
+//	int i2cWriteReg8      (int reg, int data);
+//	int i2cWriteReg16     (int reg, int data);
 	
 };
 
