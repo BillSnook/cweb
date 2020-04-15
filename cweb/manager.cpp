@@ -138,7 +138,13 @@ I2CControl I2CControl::initControl( I2CType type, int file, int command, char *b
 
 const char *I2CControl::description() {
     const char *name;
-    switch (i2cType ) {
+    switch ( i2cType ) {
+        case writeReg8I2C:
+            name = "writeReg8I2C";
+            break;
+        case readReg8I2C:
+            name = "readReg8I2C";
+            break;
         case writeI2C:
             name = "writeI2C";
             break;

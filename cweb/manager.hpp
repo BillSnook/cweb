@@ -57,10 +57,10 @@ enum ControllerMode {
 
 enum I2CType {
     writeReg8I2C = 0,
-    readReg8I2C = 1,
-    writeI2C = 2,
-    readI2C = 3,
-    otherI2C = 2
+    readReg8I2C,
+    writeI2C,
+    readI2C,
+    otherI2C
 };
 
 
