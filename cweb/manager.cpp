@@ -287,7 +287,7 @@ void Manager::execute( I2CControl i2cControl ) {
                 int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
 
                 pthread_mutex_lock( &readWaitMutex );
-                i2cControl.i2cCommand = 0;  // Signal completion
+                i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cParam = rdByte;  // Return result
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
@@ -345,9 +345,9 @@ long Manager::getStatus() {
     char *buffer = buffSpace;
 
     I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
-    
-    pthread_mutex_lock( &readWaitMutex );
     request( i2cControl );
+
+    pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response
         syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readWaitCond" );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait

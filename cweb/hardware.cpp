@@ -113,19 +113,19 @@ int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
 
-    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
+//    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
 
-/*
-    char buffSpace[] = {0};
+/* */
+    char buffSpace[2] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, 0 );
+    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, buffer );
     request( i2cControl );
     
     syslog(LOG_NOTICE, "In I2C::i2cRead( %d ), wait for readWaitCond", reg );
     
     pthread_mutex_lock( &readWaitMutex );
-    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a response ready
+    while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
     }
     pthread_mutex_unlock( &readWaitMutex );
@@ -133,7 +133,7 @@ int I2C::i2cRead(int reg) {
     int result = i2cControl.i2cParam
     syslog(LOG_NOTICE, "In I2C::i2cRead data read: %04X\n", result );
 
-    return status;
+    return result;
 /* */
 #else
 	return reg;
