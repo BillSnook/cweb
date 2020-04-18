@@ -342,12 +342,11 @@ int Manager::readReg8( int reg ) {
     }
     pthread_mutex_unlock( &readWaitMutex );
 
-    int result = i2cControl.i2cParam
+    int result = i2cControl.i2cParam;
     syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
 
     return result;
 }
-
 
 void Manager::setStatus() {
 	
