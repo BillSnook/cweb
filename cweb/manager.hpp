@@ -73,8 +73,8 @@ public:
     char        *i2cData;
     
 public:
-    static I2CControl initControl( I2CType type, int file, int command, int param );
-    static I2CControl initControl( I2CType type, int file, int command, char *buffer );
+    I2CControl initControl( I2CType type, int file, int command, int param );
+    I2CControl initControl( I2CType type, int file, int command, char *buffer );
     const char *description();
 };
 

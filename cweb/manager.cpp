@@ -413,11 +413,29 @@ void Manager::setRange( unsigned int angle) {
 
 long Manager::getRangeResult() {
 	
-	long result = minion.getRange();	// This will wait for a response to an I2C read
-	expectedControllerMode = statusMode;
-	sitMap.updateEntry( result );
-	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
-	return result;
+//	long result = minion.getRange();	// This will wait for a response to an I2C read
+
+    char buffSpace[8] = {0};
+    char *buffer = buffSpace;
+
+    I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
+    request( i2cControl );
+
+    pthread_mutex_lock( &readWaitMutex );
+    while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response
+        syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readWaitCond" );
+        pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
+        syslog(LOG_NOTICE, "In Manager::getStatus(), got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
+    }
+    pthread_mutex_unlock( &readWaitMutex );
+
+    long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
+    syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
+
+    expectedControllerMode = statusMode;    // Controller should drop back to this too
+	sitMap.updateEntry( status );
+	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", status );
+	return status;
 }
 
 unsigned int Manager::getRange() {
