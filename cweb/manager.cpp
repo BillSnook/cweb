@@ -344,7 +344,7 @@ long Manager::getStatus() {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
+    volatile I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
     pthread_mutex_lock( &readWaitMutex );
     request( i2cControl );
     while ( 0 != i2cControl.i2cCommand ) {    // Until there is a response

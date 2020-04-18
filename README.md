@@ -64,3 +64,15 @@ mtrctllog[1325]: In Manager::execute, command type: 3, 4 started
 mtrctllog[1325]: In Manager::execute, data read: 17 AA 55 CC    0x0004
 mtrctllog[1325]: In Manager::execute, command type: 3, 0 completed, 0 returned
 mtrctllog[1325]: In Manager::getStatus(), wait for readWaitCond
+
+
+mtrctllog[1350]: In serviceCommand with: b
+mtrctllog[1350]: In Manager::getStatus()
+mtrctllog[1350]: In Manager::request, i2c command put on queue
+mtrctllog[1350]: In Manager::monitor, i2c command from queue
+mtrctllog[1350]: In Manager::execute, command type: 3, 4 started
+mtrctllog[1350]: In Manager::getStatus(), wait for readWaitCond
+mtrctllog[1350]: In Manager::execute, data read: 17 AA 55 CC    0x0004
+mtrctllog[1350]: In Manager::execute, command type: 3, 0 completed, 0 returned
+mtrctllog[1350]: In Manager::getStatus(), got readWaitCond: 4 - 0x17
+mtrctllog[1350]: In Manager::getStatus(), wait for readWaitCond
