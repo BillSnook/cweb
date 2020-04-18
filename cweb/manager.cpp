@@ -136,10 +136,6 @@ I2CControl I2CControl::initControl( I2CType type, int file, int command, char *b
     return newI2CControl;
 }
 
-bool I2CControl::isComplete() {
-    return 0 == i2cCommand;
-}
-
 const char *I2CControl::description() {
     const char *name;
     switch ( i2cType ) {
@@ -349,14 +345,13 @@ long Manager::getStatus() {
     char *buffer = buffSpace;
 
     I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
+    
     pthread_mutex_lock( &readWaitMutex );
     request( i2cControl );
-    int completed = i2cControl.isComplete();
-    while ( !completed ) {    // Until there is a response
+    while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response
         syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readWaitCond" );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
-        completed = i2cControl.isComplete();
-        syslog(LOG_NOTICE, "In Manager::getStatus(), got readWaitCond: %d - 0x%02X", completed, i2cControl.i2cData[0] );
+        syslog(LOG_NOTICE, "In Manager::getStatus(), got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 
