@@ -119,7 +119,7 @@ int I2C::i2cRead(int reg) {
     char buffSpace[2] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, buffer );
+    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, reg, buffer );
     request( i2cControl );
     
     syslog(LOG_NOTICE, "In I2C::i2cRead( %d ), wait for readWaitCond", reg );
