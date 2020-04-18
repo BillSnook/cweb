@@ -109,8 +109,10 @@ public:
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
     void request( I2CControl i2cControl );
-
-	void setStatus();
+    
+    int readReg8( int reg );
+    
+    void setStatus();
 	long getStatus();
 	
 	void setRange( unsigned int angle );

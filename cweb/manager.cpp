@@ -326,6 +326,29 @@ long Manager::getNowMs() {
 	return sec + ms;
 }
 
+int Manager::readReg8( int reg ) {
+    
+    char buffSpace[2] = {0};
+    char *buffer = buffSpace;
+
+    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, reg, buffer );
+    request( i2cControl );
+    
+    syslog(LOG_NOTICE, "In Manager::readReg8( %d ), wait for readWaitCond", reg );
+    
+    pthread_mutex_lock( &readWaitMutex );
+    while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
+        pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
+    }
+    pthread_mutex_unlock( &readWaitMutex );
+
+    int result = i2cControl.i2cParam
+    syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
+
+    return result;
+}
+
+
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
