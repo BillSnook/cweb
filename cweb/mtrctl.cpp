@@ -127,10 +127,6 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-	manager = Manager();
-	manager.setupManager();
-	threader.queueThread( managerThread, 8, 0 );
-
 	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
 	if ( argc == 2 ) {	// Should be sender as we pass in host name
 		char buff[32], *buffer = (char *)&buff;

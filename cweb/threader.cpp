@@ -67,19 +67,24 @@ const char *ThreadControl::description() {
 void Threader::setupThreader() {
 	
 	pthread_mutex_init( &threadArrayMutex, nullptr );
+    manager = Manager();
+    manager.setupManager();         // Manages i2c queue and controller communication
+    threader.queueThread( managerThread, 8, 0 );
+
 	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
-	taskMaster = TaskMaster();
-	taskMaster.setupTaskMaster(); 		// Manages task queue - to allow multiple tasks at once
+
+    taskMaster = TaskMaster();
+	taskMaster.setupTaskMaster(); 	// Manages task queue - to allow multiple tasks at once
 }
 
 void Threader::shutdownThreads() {
 	
 	syslog(LOG_NOTICE, "In shutdownThreads" );
 	
-	manager.shutdownManager();
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
+    manager.shutdownManager();
 	pthread_mutex_destroy( &threadArrayMutex );
 }
 
