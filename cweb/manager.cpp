@@ -300,7 +300,7 @@ void Manager::execute( I2CControl i2cControl ) {
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, %d returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
-I2CControl Manager::request( I2CType type, int file, int command, int param )(  ) {
+I2CControl Manager::request( I2CType type, int file, int command, int param ) {
     
     I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
     pthread_mutex_lock( &i2cQueueMutex );
