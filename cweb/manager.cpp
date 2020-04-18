@@ -284,9 +284,8 @@ void Manager::execute( I2CControl i2cControl ) {
 
         case readReg8I2C:
             {
-                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
-
                 pthread_mutex_lock( &readWaitMutex );
+                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cParam = rdByte;  // Return result
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
@@ -333,12 +332,12 @@ int Manager::readReg8( int reg ) {
 
     I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, reg, buffer );
     request( i2cControl );
-    
-    syslog(LOG_NOTICE, "In Manager::readReg8( %d ), wait for readWaitCond", reg );
-    
+
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
+        syslog(LOG_NOTICE, "In Manager::readReg8, wait for readWaitCond", reg );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
+        syslog(LOG_NOTICE, "In Manager::readReg8, got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 
