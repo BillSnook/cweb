@@ -75,6 +75,7 @@ public:
 public:
     static I2CControl initControl( I2CType type, int file, int command, int param );
     static I2CControl initControl( I2CType type, int file, int command, char *buffer );
+    bool isComplete();
     const char *description();
 };
 
