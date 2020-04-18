@@ -344,13 +344,15 @@ long Manager::getStatus() {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
 
-    volatile I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
+    I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
     pthread_mutex_lock( &readWaitMutex );
     request( i2cControl );
-    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a response
+    int cmd = i2cControl.i2cCommand;
+    while ( 0 != cmd ) {    // Until there is a response
         syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readWaitCond" );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
-        syslog(LOG_NOTICE, "In Manager::getStatus(), got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
+        cmd = i2cControl.i2cCommand;
+        syslog(LOG_NOTICE, "In Manager::getStatus(), got readWaitCond: %d - 0x%02X", cmd, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 
