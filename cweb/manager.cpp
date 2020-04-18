@@ -345,10 +345,10 @@ long Manager::getStatus() {
     char *buffer = buffSpace;
 
     I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
-    request( i2cControl );
-    
+
 
     pthread_mutex_lock( &readWaitMutex );
+        request( i2cControl );
         while ( 0 != i2cControl.i2cCommand ) {    // Until there is a queue entry
             syslog(LOG_NOTICE, "In Manager::getStatus(), wait for readWaitCond" );
             pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
