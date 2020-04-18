@@ -118,7 +118,7 @@ unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 102
 
 // MARK: - I2C Queue
 
-I2CControl initControl( I2CType type, int file, int command, int param ) {
+I2CControl I2CControl::initControl( I2CType type, int file, int command, int param ) {
     I2CControl newI2CControl = I2CControl();
     newI2CControl.i2cType = type;
     newI2CControl.i2cFile = file;
@@ -127,7 +127,7 @@ I2CControl initControl( I2CType type, int file, int command, int param ) {
     return newI2CControl;
 }
 
-I2CControl initControl( I2CType type, int file, int command, char *buffer ) {
+I2CControl I2CControl::initControl( I2CType type, int file, int command, char *buffer ) {
     I2CControl newI2CControl = I2CControl();
     newI2CControl.i2cType = type;
     newI2CControl.i2cFile = file;
@@ -300,8 +300,9 @@ void Manager::execute( I2CControl i2cControl ) {
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, %d returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
-void Manager::request( I2CControl i2cControl ) {
+I2CControl Manager::request( I2CType type, int file, int command, int param )(  ) {
     
+    I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
@@ -311,8 +312,22 @@ void Manager::request( I2CControl i2cControl ) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
     }
     pthread_mutex_unlock( &i2cQueueMutex );
+    return i2cControl;
+}
 
-
+I2CControl Manager::request( I2CType type, int file, int command, char *buffer ) {
+        
+    I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
+    pthread_mutex_lock( &i2cQueueMutex );
+    try {
+        i2cQueue.push( i2cControl );
+        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+        pthread_cond_signal( &i2cQueueCond );
+    } catch(...) {
+        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+    }
+    pthread_mutex_unlock( &i2cQueueMutex );
+    return i2cControl;
 }
 
 long Manager::getNowMs() {
@@ -330,8 +345,7 @@ int Manager::readReg8( int reg ) {
     char buffSpace[2] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = initControl( readReg8I2C, file_i2c, reg, buffer );
-    request( i2cControl );
+    I2CControl i2cControl = request( readReg8I2C, file_i2c, reg, buffer );
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
@@ -352,8 +366,7 @@ void Manager::setStatus() {
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
 //    minion.setStatus();
     
-    I2CControl i2cControl = initControl( writeI2C, file_i2c, 's', 0 );
-    request( i2cControl );
+    I2CControl i2cControl = request( writeI2C, file_i2c, 's', 0 );
 }
 
 long Manager::getStatus() {
@@ -365,8 +378,7 @@ long Manager::getStatus() {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = initControl( readI2C, file_i2c, 4, buffer );
-    request( i2cControl );
+    I2CControl i2cControl = request( readI2C, file_i2c, 4, buffer );
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response
@@ -407,8 +419,7 @@ void Manager::setRange( unsigned int angle) {
 	expectedControllerMode = rangeMode;
 //	minion.setRange( angle );
     
-    I2CControl i2cControl = initControl( writeI2C, file_i2c, 'p', angle );
-    request( i2cControl );
+    I2CControl i2cControl = request( writeI2C, file_i2c, 'p', angle );
 }
 
 long Manager::getRangeResult() {
@@ -418,8 +429,7 @@ long Manager::getRangeResult() {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
 
-    I2CControl i2cControl = initControl( readI2C, file_i2c, 4, buffer );
-    request( i2cControl );
+    I2CControl i2cControl = request( readI2C, file_i2c, 4, buffer );
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response

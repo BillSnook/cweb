@@ -68,13 +68,13 @@ class I2CControl {
 public:
     I2CType     i2cType;
     int         i2cFile;
-    int         i2cCommand;     // Also, passed in as length, test for zero for done
+    int         i2cCommand;     // Passed in as register or length, test for zero for done?
     int         i2cParam;
     char        *i2cData;
     
 public:
-    I2CControl initControl( I2CType type, int file, int command, int param );
-    I2CControl initControl( I2CType type, int file, int command, char *buffer );
+    static I2CControl initControl( I2CType type, int file, int command, int param );
+    static I2CControl initControl( I2CType type, int file, int command, char *buffer );
     const char *description();
 };
 
@@ -108,8 +108,9 @@ public:
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
-    void request( I2CControl i2cControl );
-    
+    I2CControl request( I2CType type, int file, int command, int param );
+    I2CControl request( I2CType type, int file, int command, char *buffer );
+
     int readReg8( int reg );
     
     void setStatus();
