@@ -112,57 +112,45 @@ I2C::I2C(int addr) {
 int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
-	return wiringPiI2CReadReg8( file_i2c, reg );	// Read 8 bits from register reg on device
+
+    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
+
+/*
+    char buffSpace[] = {0};
+    char *buffer = buffSpace;
+
+    I2CControl i2cControl = I2CControl::initControl( readReg8I2C, file_i2c, 0 );
+    request( i2cControl );
+    
+    syslog(LOG_NOTICE, "In I2C::i2cRead( %d ), wait for readWaitCond", reg );
+    
+    pthread_mutex_lock( &readWaitMutex );
+    while ( 0 != i2cControl.i2cCommand ) {    // Until there is a response ready
+        pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
+    }
+    pthread_mutex_unlock( &readWaitMutex );
+
+    int result = i2cControl.i2cParam
+    syslog(LOG_NOTICE, "In I2C::i2cRead data read: %04X\n", result );
+
+    return status;
+/* */
 #else
 	return reg;
 #endif  // ON_PI
 }
 
-//int I2C::i2cReadReg8(int reg) {
-//
-//#ifdef ON_PI
-//	return wiringPiI2CReadReg8( file_i2c, reg );	// Read 8 bits from register reg on device
-//#else
-//	return reg;
-//#endif  // ON_PI
-//}
-//
-//int I2C::i2cReadReg16(int reg) {
-//
-//#ifdef ON_PI
-//	return wiringPiI2CReadReg16( file_i2c, reg );	// Read 16 bits from register reg on device
-//#else
-//	return reg;
-//#endif  // ON_PI
-//}
-
 
 int I2C::i2cWrite(int reg, int data) {
 	
 #ifdef ON_PI
+    
+    
 	return wiringPiI2CWriteReg8(file_i2c, reg, data);
 #else
 	return reg + data;
 #endif  // ON_PI
 }
-
-//int I2C::i2cWriteReg8(int reg, int data) {
-//	
-//#ifdef ON_PI
-//	return wiringPiI2CWriteReg8(file_i2c, reg, data);
-//#else
-//	return reg + data;
-//#endif  // ON_PI
-//}
-//
-//int I2C::i2cWriteReg16(int reg, int data) {
-//	
-//#ifdef ON_PI
-//	return wiringPiI2CWriteReg16(file_i2c, reg, data);
-//#else
-//	return reg + data;
-//#endif  // ON_PI
-//}
 
 
 // MARK: PWM control
@@ -197,8 +185,9 @@ void PWM::setPWMFrequency( int freq ) {
 	}
 	
 	int oldmode = i2c->i2cRead( MODE1 );
+    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
 	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
-	i2c->i2cWrite( MODE1, newmode );             // go to sleep
+	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );
 	i2c->i2cWrite( MODE1, oldmode );
 	

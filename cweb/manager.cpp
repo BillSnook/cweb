@@ -164,7 +164,6 @@ const char *I2CControl::description() {
 // MARK: - Manager
 void Manager::setupManager() {
 	stopLoop = false;
-	busy = false;
 	lastAnythingTime = 0;
 	lastStatusTime = 0;
 	expectedControllerMode = initialMode;
@@ -285,6 +284,13 @@ void Manager::execute( I2CControl i2cControl ) {
 
         case readReg8I2C:
             {
+                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
+
+                pthread_mutex_lock( &readWaitMutex );
+                i2cControl.i2cCommand = 0;  // Signal completion
+                i2cControl.i2cParam = rdByte;  // Return result
+                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
+                pthread_mutex_unlock( &readWaitMutex );
             }
             break;
             
@@ -300,8 +306,8 @@ void Manager::request( I2CControl i2cControl ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        pthread_cond_signal( &i2cQueueCond );
         syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+        pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
     }
@@ -332,15 +338,10 @@ void Manager::setStatus() {
 long Manager::getStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::getStatus()" );
-	if ( busy ) {
-        syslog(LOG_NOTICE, "Busy" );
-        busy = false;
-		return 0;
-	}
 	expectedControllerMode = statusMode;
 //	return minion.getStatus();
     
-    char buffSpace[] = {0};
+    char buffSpace[8] = {0};
     char *buffer = buffSpace;
 
     I2CControl i2cControl = I2CControl::initControl( readI2C, file_i2c, 4, buffer );
@@ -391,10 +392,8 @@ void Manager::setRange( unsigned int angle) {
 
 long Manager::getRangeResult() {
 	
-	busy = true;
 	long result = minion.getRange();	// This will wait for a response to an I2C read
 	expectedControllerMode = statusMode;
-	busy = false;
 	sitMap.updateEntry( result );
 	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", result );
 	return result;

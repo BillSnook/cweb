@@ -84,7 +84,6 @@ class Manager {
 	long lastAnythingTime;
 	long lastStatusTime;
 	long status;
-	bool busy;
     
     std::queue<I2CControl>      i2cQueue;
     pthread_mutex_t             i2cQueueMutex;

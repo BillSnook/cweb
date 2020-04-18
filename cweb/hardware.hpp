@@ -31,13 +31,8 @@ public:
 	int     address;            // I2C address
 	int     file_i2c;           // File handle to I2C device
 	
-	int i2cRead           (int reg);
-//	int i2cReadReg8       (int reg);
-//	int i2cReadReg16      (int reg);
-	
+    int i2cRead           (int reg);
 	int i2cWrite          (int reg, int data);
-//	int i2cWriteReg8      (int reg, int data);
-//	int i2cWriteReg16     (int reg, int data);
 	
 };
 
