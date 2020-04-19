@@ -12,7 +12,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "../inc/vl53l0x_api.h"
+#include "vl53l0x/Api/core/inc/vl53l0x_api.h"
 #include "../inc/vl53l0x_platform.h"
 
 
