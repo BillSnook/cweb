@@ -52,7 +52,7 @@ mtrctl: $(OBJECTS) $(VLOBJECTS)
 
 $(OBJECTS): $(HEADERS)
 
-$(VLOBJECTS): $(VLHEADERS)
+# $(VLOBJECTS): $(VLHEADERS)
 
 $(OBJ_DIR)/%.o:%.c
 	mkdir -p $(dir $@)
