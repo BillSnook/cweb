@@ -108,8 +108,8 @@ public:
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
-    I2CControl request( I2CType type, int file, int command, int param );
-    I2CControl request( I2CType type, int file, int command, char *buffer );
+    void request( I2CType type, int file, int command, int param );     // Writes
+    long request( I2CType type, int file, int command );                // Reads with long result values
 
     int readReg8( int reg );
     
