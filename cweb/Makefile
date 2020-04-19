@@ -49,17 +49,17 @@ default: mtrctl
 mtrctl: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
-$(OBJ_DIR)/%.o: %.cpp
+obj/%.o: %.cpp
 	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $(OBJ_DIR)/$@ $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<
 
 #$(OBJECTS): $(HEADERS)
 
-$(OBJ_DIR)/%.o: ${CORE_DIR}/src/%.c
+obj/%.o: ${CORE_DIR}/src/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 
-$(OBJ_DIR)/%.o: ${RASP_DIR}/src/%.c
+obj/%.o: ${RASP_DIR}/src/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 
