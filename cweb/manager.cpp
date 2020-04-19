@@ -12,6 +12,7 @@
 
 //#include "minion.hpp"
 #include "vl53l0x.hpp"
+#include "hardware.hpp"
 #include "manager.hpp"
 
 #include <pthread.h>
