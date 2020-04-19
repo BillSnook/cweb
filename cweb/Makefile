@@ -29,7 +29,8 @@ RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform
 
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp manager.hpp vl53l0x.hpp
-VLHEADERS = ${CORE_DIR}/inc/vl53l0x_api.h ${CORE_DIR}/inc/vl53l0x_api_core.h ${CORE_DIR}/inc/vl53l0x_api_calibration.h ${CORE_DIR}/inc/vl53l0x_api_ranging.h ${CORE_DIR}/inc/vl53l0x_api_strings.h ${CORE_DIR}/inc/vl53l0x_def.h ${CORE_DIR}/inc/vl53l0x_device.h ${CORE_DIR}/inc/vl53l0x_tuning.h ${CORE_DIR}/inc/vl53l0x_interrupt_threshold_settings.h ${RASP_DIR}/inc/platform.h ${RASP_DIR}/inc/platform_log.h ${RASP_DIR}/inc/types.h
+
+#VLHEADERS = ${CORE_DIR}/inc/vl53l0x_api.h ${CORE_DIR}/inc/vl53l0x_api_core.h ${CORE_DIR}/inc/vl53l0x_api_calibration.h ${CORE_DIR}/inc/vl53l0x_api_ranging.h ${CORE_DIR}/inc/vl53l0x_api_strings.h ${CORE_DIR}/inc/vl53l0x_def.h ${CORE_DIR}/inc/vl53l0x_device.h ${CORE_DIR}/inc/vl53l0x_tuning.h ${CORE_DIR}/inc/vl53l0x_interrupt_threshold_settings.h ${RASP_DIR}/inc/platform.h ${RASP_DIR}/inc/platform_log.h ${RASP_DIR}/inc/types.h
 
 #OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o tasks.o filer.o actions.o manager.o vl53l0x.o
 OBJECTS = $(wildcard ${OBJ_DIR}/*)
@@ -66,6 +67,9 @@ $(OBJ_DIR)/%.o: ${RASP_DIR}/src/%.c
 
 info:
 	pwd
+	echo "Object directory: "
+	echo ${OBJ_DIR}
+	echo "Objects :"
 	echo ${OBJECTS}
 
 clean:
