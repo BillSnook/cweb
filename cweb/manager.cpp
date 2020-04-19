@@ -379,7 +379,7 @@ long Manager::request( I2CControl writeList[] ) {
         
     pthread_mutex_lock( &i2cQueueMutex );
     try {
-        for ( int i = 0; i < writeList.size; i++ ) {
+        for ( int i = 0; i < writeList.size(); i++ ) {
             i2cQueue.push( writeList[i] );
         }
         syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
