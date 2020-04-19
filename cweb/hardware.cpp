@@ -134,15 +134,6 @@ void I2C::i2cWrite(int reg, int data) {
 #endif  // ON_PI
 }
 
-void I2C::i2cWriteX(int reg, int data) {
-    
-#ifdef ON_PI
-    
-    manager.request( writeI2C, file_i2c, reg, data );
-#else
-#endif  // ON_PI
-}
-
 
 // MARK: PWM control
 PWM::PWM( int addr ) {
@@ -204,10 +195,10 @@ void PWM::setPWM( int channel, int on, int off ) {
 	}
 	
 //	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
-	i2c->i2cWriteX( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_ON_H + (4 * channel), on >> 8 );
-	i2c->i2cWriteX( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
+	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
+	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
+	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
+	i2c->i2cWrite( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
 }
 
 void PWM::setPWMAll( int on, int off ) {
