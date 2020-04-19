@@ -11,13 +11,13 @@ LDLIBS += -lwiringPi
 CC = gcc
 CFLAGS = -O0 -g -Wall -c
 
-DIR = /home/pi/code/c/cweb/cweb
+DIR = ./
+OBJ_DIR = ${DIR}/obj
 API_DIR = ${DIR}/vl53l0x
 CORE_DIR = ${API_DIR}/Api/core
 RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform
-OBJ_DIR = ./obj
 
-LIB_SRCS = \
+#LIB_SRCS = \
 	vl53l0x_api_calibration.c \
 	vl53l0x_api_core.c \
 	vl53l0x_api_ranging.c \
@@ -25,7 +25,7 @@ LIB_SRCS = \
 	vl53l0x_api.c \
 	vl53l0x_platform.c
 
-LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
+#LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp manager.hpp vl53l0x.hpp
@@ -45,24 +45,27 @@ VPATH = ${CORE_DIR}/src ${RASP_DIR}/src
 
 default: mtrctl
 
-mtrctl: $(OBJECTS) $(VLOBJECTS)
+mtrctl: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $(OBJ_DIR)/$@ $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<
 
 $(OBJECTS): $(HEADERS)
 
-# $(VLOBJECTS): $(VLHEADERS)
+$(OBJ_DIR)/%.o: ${CORE_DIR}/src/%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 
-$(OBJ_DIR)/%.o:%.c
+$(OBJ_DIR)/%.o: ${RASP_DIR}/src/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 
 info:
 	pwd
+	echo $(DIR)
 
 clean:
-	-rm -f $(OBJECTS)
-	-rm -rf $(OBJ_DIR)/*
+#	-rm -f $(OBJECTS)
+	-rm -rf $(OBJ_DIR)
 	-rm -f mtrctl
