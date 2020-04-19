@@ -11,7 +11,7 @@ LDLIBS += -lwiringPi
 CC = gcc
 CFLAGS = -O0 -g -Wall -c
 
-DIR = ./
+DIR = /home/pi/code/c/cweb/cweb
 OBJ_DIR = ${DIR}/obj
 API_DIR = ${DIR}/vl53l0x
 CORE_DIR = ${API_DIR}/Api/core
