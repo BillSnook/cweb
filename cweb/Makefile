@@ -2,6 +2,19 @@
 
 CXX = g++
 
+OBJ_DIR = obj
+
+LIB_SRCS = \
+	vl53l0x_api_calibration.c \
+	vl53l0x_api_core.c \
+	vl53l0x_api_ranging.c \
+	vl53l0x_api_strings.c \
+	vl53l0x_api.c \
+	vl53l0x_platform.c
+
+LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
+
+
 CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
 # If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
@@ -25,7 +38,12 @@ mtrctl: $(OBJECTS)
 
 $(OBJECTS): $(HEADERS)
 
+$(OBJ_DIR)/%.o:%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+
 .PHONY: clean
 clean:
 	-rm -f $(OBJECTS)
+	-rm -r ./$(OBJ_DIR)/*
 	-rm -f mtrctl
