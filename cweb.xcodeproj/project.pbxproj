@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B2FD2AB244CE1AC00BAC739 /* vl53l0x_api_calibration.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2A6244CE1AC00BAC739 /* vl53l0x_api_calibration.c */; };
+		6B2FD2AC244CE1AC00BAC739 /* vl53l0x_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2A7244CE1AC00BAC739 /* vl53l0x_api.c */; };
+		6B2FD2AD244CE1AC00BAC739 /* vl53l0x_api_ranging.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2A8244CE1AC00BAC739 /* vl53l0x_api_ranging.c */; };
+		6B2FD2AE244CE1AC00BAC739 /* vl53l0x_api_core.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2A9244CE1AC00BAC739 /* vl53l0x_api_core.c */; };
+		6B2FD2AF244CE1AC00BAC739 /* vl53l0x_api_strings.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */; };
+		6B2FD2B1244CE1CA00BAC739 /* vl53l0x_platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */; };
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
@@ -34,6 +40,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6B2FD2A6244CE1AC00BAC739 /* vl53l0x_api_calibration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_calibration.c; path = vl53l0x/Api/core/src/vl53l0x_api_calibration.c; sourceTree = "<group>"; };
+		6B2FD2A7244CE1AC00BAC739 /* vl53l0x_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api.c; path = vl53l0x/Api/core/src/vl53l0x_api.c; sourceTree = "<group>"; };
+		6B2FD2A8244CE1AC00BAC739 /* vl53l0x_api_ranging.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_ranging.c; path = vl53l0x/Api/core/src/vl53l0x_api_ranging.c; sourceTree = "<group>"; };
+		6B2FD2A9244CE1AC00BAC739 /* vl53l0x_api_core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_core.c; path = vl53l0x/Api/core/src/vl53l0x_api_core.c; sourceTree = "<group>"; };
+		6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_strings.c; path = vl53l0x/Api/core/src/vl53l0x_api_strings.c; sourceTree = "<group>"; };
+		6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_platform.c; path = vl53l0x/VL53L0X_rasp/platform/src/vl53l0x_platform.c; sourceTree = "<group>"; };
 		A91D0AD4209958DF00EA1DB4 /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
@@ -76,6 +88,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B2FD2A5244CE12A00BAC739 /* lidar */ = {
+			isa = PBXGroup;
+			children = (
+				6B2FD2A6244CE1AC00BAC739 /* vl53l0x_api_calibration.c */,
+				6B2FD2A9244CE1AC00BAC739 /* vl53l0x_api_core.c */,
+				6B2FD2A8244CE1AC00BAC739 /* vl53l0x_api_ranging.c */,
+				6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */,
+				6B2FD2A7244CE1AC00BAC739 /* vl53l0x_api.c */,
+				6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */,
+			);
+			name = lidar;
+			sourceTree = "<group>";
+		};
 		A96D72E4207AFD4500B98679 = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +124,7 @@
 				A97126AE220639E500AC5AC7 /* sockets */,
 				A97126AB2206394A00AC5AC7 /* hardware */,
 				A97126AF22063A7A00AC5AC7 /* control */,
+				6B2FD2A5244CE12A00BAC739 /* lidar */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
@@ -215,13 +241,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B2FD2AE244CE1AC00BAC739 /* vl53l0x_api_core.c in Sources */,
+				6B2FD2AC244CE1AC00BAC739 /* vl53l0x_api.c in Sources */,
+				6B2FD2AB244CE1AC00BAC739 /* vl53l0x_api_calibration.c in Sources */,
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
+				6B2FD2AD244CE1AC00BAC739 /* vl53l0x_api_ranging.c in Sources */,
+				6B2FD2AF244CE1AC00BAC739 /* vl53l0x_api_strings.c in Sources */,
 				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
+				6B2FD2B1244CE1CA00BAC739 /* vl53l0x_platform.c in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
 				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
