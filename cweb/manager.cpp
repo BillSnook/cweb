@@ -118,7 +118,7 @@ unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 102
 
 // MARK: - I2C Queue
 
-I2CControl I2CControl::initControl( I2CType type, int file, int command, long param ) {
+I2CControl I2CControl::initControl( I2CType type, int file, int command, int param ) {
     I2CControl newI2CControl = I2CControl();
     newI2CControl.i2cType = type;
     newI2CControl.i2cFile = file;
@@ -276,11 +276,11 @@ void Manager::execute( I2CControl i2cControl ) {
         case readI2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
-                syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
-                i2cControl.i2cParam = (i2cControl.i2cData[0] << 24) | (i2cControl.i2cData[1] << 16) | (i2cControl.i2cData[2] << 8) | i2cControl.i2cData[3];
-                i2cControl.i2cData[0] = 1;  // Signal done
-                i2cControl.i2cCommand = 0;  // Signal completion
+                read( file_i2c, i2cControl.i2cData[2], i2cControl.i2cCommand );
+                syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
+//                i2cControl.i2cParam = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
+                i2cControl.i2cData[0] = 1;  // Signal completion
+                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }
@@ -290,8 +290,9 @@ void Manager::execute( I2CControl i2cControl ) {
             {
                 pthread_mutex_lock( &readWaitMutex );
                 int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
+                i2cControl.i2cData[2] = rdByte;  // Return result
                 i2cControl.i2cData[0] = 1;  // Signal completion
-                i2cControl.i2cParam = rdByte;  // Return result
+                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }
@@ -301,7 +302,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
     }
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, %ld returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
 void Manager::request( I2CType type, int file, int command, int param ) {
@@ -342,7 +343,7 @@ long Manager::request( I2CType type, int file, int command ) {
     }
     pthread_mutex_unlock( &readWaitMutex );
 
-    long result = i2cControl.i2cParam;
+    long result = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
     syslog(LOG_NOTICE, "In Manager::request data read: %04X\n", result );
 
     return result;

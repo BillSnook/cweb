@@ -69,11 +69,11 @@ public:
     I2CType     i2cType;
     int         i2cFile;
     int         i2cCommand;     // Passed in as register or length, test for zero for done?
-    long        i2cParam;
+    int         i2cParam;
     char        *i2cData;
     
 public:
-    static I2CControl initControl( I2CType type, int file, int command, long param );
+    static I2CControl initControl( I2CType type, int file, int command, int param );
     static I2CControl initControl( I2CType type, int file, int command, char *buffer );
     const char *description();
 };
@@ -108,7 +108,7 @@ public:
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
-    void request( I2CType type, int file, int command, int param );     // Writes
+    void request( I2CType type, int file, int command, int param );    // Writes
     long request( I2CType type, int file, int command );                // Reads with long result values
 
     int readReg8( int reg );
