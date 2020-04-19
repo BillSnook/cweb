@@ -276,7 +276,7 @@ void Manager::execute( I2CControl i2cControl ) {
         case readI2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                read( file_i2c, i2cControl.i2cData[2], i2cControl.i2cCommand );
+                read( file_i2c, &i2cControl.i2cData[2], i2cControl.i2cCommand );
                 syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
 //                i2cControl.i2cParam = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
                 i2cControl.i2cData[0] = 1;  // Signal completion
