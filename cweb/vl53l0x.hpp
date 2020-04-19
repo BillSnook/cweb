@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "vl53l0x_api.h"
-#include "vl53l0x_platform.h"
+#include "../inc/vl53l0x_api.h"
+#include "../inc/vl53l0x_platform.h"
 
 
 class VL53L0X {

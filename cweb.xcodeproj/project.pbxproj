@@ -46,6 +46,18 @@
 		6B2FD2A9244CE1AC00BAC739 /* vl53l0x_api_core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_core.c; path = vl53l0x/Api/core/src/vl53l0x_api_core.c; sourceTree = "<group>"; };
 		6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_api_strings.c; path = vl53l0x/Api/core/src/vl53l0x_api_strings.c; sourceTree = "<group>"; };
 		6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vl53l0x_platform.c; path = vl53l0x/VL53L0X_rasp/platform/src/vl53l0x_platform.c; sourceTree = "<group>"; };
+		6B2FD2B2244D193400BAC739 /* vl53l0x_platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vl53l0x_platform.h; path = vl53l0x/VL53L0X_rasp/platform/inc/vl53l0x_platform.h; sourceTree = "<group>"; };
+		6B2FD2B3244D193400BAC739 /* vl53l0x_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vl53l0x_types.h; path = vl53l0x/VL53L0X_rasp/platform/inc/vl53l0x_types.h; sourceTree = "<group>"; };
+		6B2FD2B4244D193400BAC739 /* vl53l0x_platform_log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vl53l0x_platform_log.h; path = vl53l0x/VL53L0X_rasp/platform/inc/vl53l0x_platform_log.h; sourceTree = "<group>"; };
+		6B2FD2B5244D195400BAC739 /* vl53l0x_api_calibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_calibration.h; path = vl53l0x/Api/core/inc/vl53l0x_api_calibration.h; sourceTree = "<group>"; };
+		6B2FD2B6244D195400BAC739 /* vl53l0x_interrupt_threshold_settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_interrupt_threshold_settings.h; path = vl53l0x/Api/core/inc/vl53l0x_interrupt_threshold_settings.h; sourceTree = "<group>"; };
+		6B2FD2B7244D195400BAC739 /* vl53l0x_api_strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_strings.h; path = vl53l0x/Api/core/inc/vl53l0x_api_strings.h; sourceTree = "<group>"; };
+		6B2FD2B8244D195400BAC739 /* vl53l0x_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api.h; path = vl53l0x/Api/core/inc/vl53l0x_api.h; sourceTree = "<group>"; };
+		6B2FD2B9244D195400BAC739 /* vl53l0x_device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_device.h; path = vl53l0x/Api/core/inc/vl53l0x_device.h; sourceTree = "<group>"; };
+		6B2FD2BA244D195400BAC739 /* vl53l0x_tuning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_tuning.h; path = vl53l0x/Api/core/inc/vl53l0x_tuning.h; sourceTree = "<group>"; };
+		6B2FD2BB244D195500BAC739 /* vl53l0x_api_ranging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_ranging.h; path = vl53l0x/Api/core/inc/vl53l0x_api_ranging.h; sourceTree = "<group>"; };
+		6B2FD2BC244D195500BAC739 /* vl53l0x_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_def.h; path = vl53l0x/Api/core/inc/vl53l0x_def.h; sourceTree = "<group>"; };
+		6B2FD2BD244D195500BAC739 /* vl53l0x_api_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_core.h; path = vl53l0x/Api/core/inc/vl53l0x_api_core.h; sourceTree = "<group>"; };
 		A91D0AD4209958DF00EA1DB4 /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
@@ -96,7 +108,19 @@
 				6B2FD2A8244CE1AC00BAC739 /* vl53l0x_api_ranging.c */,
 				6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */,
 				6B2FD2A7244CE1AC00BAC739 /* vl53l0x_api.c */,
+				6B2FD2B5244D195400BAC739 /* vl53l0x_api_calibration.h */,
+				6B2FD2BD244D195500BAC739 /* vl53l0x_api_core.h */,
+				6B2FD2BB244D195500BAC739 /* vl53l0x_api_ranging.h */,
+				6B2FD2B7244D195400BAC739 /* vl53l0x_api_strings.h */,
+				6B2FD2B8244D195400BAC739 /* vl53l0x_api.h */,
+				6B2FD2BC244D195500BAC739 /* vl53l0x_def.h */,
+				6B2FD2B9244D195400BAC739 /* vl53l0x_device.h */,
+				6B2FD2B6244D195400BAC739 /* vl53l0x_interrupt_threshold_settings.h */,
+				6B2FD2BA244D195400BAC739 /* vl53l0x_tuning.h */,
 				6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */,
+				6B2FD2B4244D193400BAC739 /* vl53l0x_platform_log.h */,
+				6B2FD2B2244D193400BAC739 /* vl53l0x_platform.h */,
+				6B2FD2B3244D193400BAC739 /* vl53l0x_types.h */,
 			);
 			name = lidar;
 			sourceTree = "<group>";
