@@ -7,7 +7,7 @@
 #include <linux/i2c-dev.h>
 #include <unistd.h>
 #include "../inc/vl53l0x_platform.h"
-#include "../../Api/core/inc/vl53l0x_api.h"
+#include "../Api/core/inc/vl53l0x_api.h"
 
 int VL53L0X_i2c_init(char * devPath, int devAddr)
 {
