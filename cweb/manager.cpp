@@ -118,12 +118,13 @@ unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 102
 
 // MARK: - I2C Queue
 
-I2CControl I2CControl::initControl( I2CType type, int file, int command, int param ) {
+I2CControl I2CControl::initControl( I2CType type, int file, int command, long param ) {
     I2CControl newI2CControl = I2CControl();
     newI2CControl.i2cType = type;
     newI2CControl.i2cFile = file;
     newI2CControl.i2cCommand = command;
     newI2CControl.i2cParam = param;
+//    newI2CControl.i2cData = nullptr;
     return newI2CControl;
 }
 
@@ -132,6 +133,7 @@ I2CControl I2CControl::initControl( I2CType type, int file, int command, char *b
     newI2CControl.i2cType = type;
     newI2CControl.i2cFile = file;
     newI2CControl.i2cCommand = command;
+    newI2CControl.i2cParam = 0;
     newI2CControl.i2cData = buffer;
     return newI2CControl;
 }
@@ -275,7 +277,7 @@ void Manager::execute( I2CControl i2cControl ) {
             {
                 pthread_mutex_lock( &readWaitMutex );
                 read( file_i2c, i2cControl.i2cData, i2cControl.i2cCommand );
-                syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X    0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
+                syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[0], i2cControl.i2cData[1], i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cCommand);
                 i2cControl.i2cParam = (i2cControl.i2cData[0] << 24) | (i2cControl.i2cData[1] << 16) | (i2cControl.i2cData[2] << 8) | i2cControl.i2cData[3];
                 i2cControl.i2cData[0] = 1;  // Signal done
                 i2cControl.i2cCommand = 0;  // Signal completion
@@ -299,7 +301,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
     }
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, %d returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, %ld returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
 void Manager::request( I2CType type, int file, int command, int param ) {
@@ -314,7 +316,6 @@ void Manager::request( I2CType type, int file, int command, int param ) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
     }
     pthread_mutex_unlock( &i2cQueueMutex );
-    return i2cControl;
 }
 
 long Manager::request( I2CType type, int file, int command ) {
@@ -335,13 +336,13 @@ long Manager::request( I2CType type, int file, int command ) {
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
-        syslog(LOG_NOTICE, "In Manager::request, wait for readWaitCond", reg );
+        syslog(LOG_NOTICE, "In Manager::request, wait for readWaitCond", command );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
         syslog(LOG_NOTICE, "In Manager::request, got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 
-    int result = i2cControl.i2cParam;
+    long result = i2cControl.i2cParam;
     syslog(LOG_NOTICE, "In Manager::request data read: %04X\n", result );
 
     return result;
@@ -381,8 +382,7 @@ long Manager::getStatus() {
 //	return minion.getStatus();
     
     long status = request( readI2C, file_i2c, 4 );
-//    long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
-    syslog(LOG_NOTICE, "In Manager::getStatus data read: %02X %02X %02X %02X    0x%08lX\n", buffSpace[0], buffSpace[1], buffSpace[2], buffSpace[3], status);
+    syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
 
     return status;
 }

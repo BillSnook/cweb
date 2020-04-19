@@ -69,7 +69,7 @@ public:
     I2CType     i2cType;
     int         i2cFile;
     int         i2cCommand;     // Passed in as register or length, test for zero for done?
-    int         i2cParam;
+    long        i2cParam;
     char        *i2cData;
     
 public:
