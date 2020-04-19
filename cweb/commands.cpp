@@ -13,6 +13,7 @@
 #include "manager.hpp"
 //#include "actions.hpp"
 //#include "minion.hpp"       // For testing smb/i2c upgrades
+#include "hardware.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
