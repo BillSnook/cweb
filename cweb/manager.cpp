@@ -297,11 +297,23 @@ void Manager::execute( I2CControl i2cControl ) {
             }
             break;
 
+//        case readReg8I2C:
+//            {
+//                pthread_mutex_lock( &readWaitMutex );
+//                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
+//                i2cControl.i2cData[2] = rdByte;  // Return result
+//                i2cControl.i2cData[0] = 1;  // Signal completion
+//                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+//                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
+//                pthread_mutex_unlock( &readWaitMutex );
+//            }
+//            break;
+            
         case readReg8I2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
-                i2cControl.i2cData[2] = rdByte;  // Return result
+                write( file_i2c, &i2cControl.i2cCommand, 1 );
+                read( file_i2c, &i2cControl.i2cData[2], 1 );
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
@@ -316,6 +328,7 @@ void Manager::execute( I2CControl i2cControl ) {
     syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
+// Typically a single write operation with command being a register and param being the value to write
 void Manager::request( I2CType type, int file, int command, int param ) {
     
     I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
@@ -330,12 +343,13 @@ void Manager::request( I2CType type, int file, int command, int param ) {
     pthread_mutex_unlock( &i2cQueueMutex );
 }
 
+// Typically a read where we are expected to wait for a long result
 long Manager::request( I2CType type, int file, int command ) {
         
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
     
-    I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
+    volatile I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
@@ -360,6 +374,22 @@ long Manager::request( I2CType type, int file, int command ) {
     return result;
 }
 
+// Typically a multiple write sequence
+long Manager::request( I2CControl writelist[] ) {
+        
+    pthread_mutex_lock( &i2cQueueMutex );
+    try {
+        for ( int i = 0; i < writeList.size; i++ ) {
+            i2cQueue.push( writeList[i] );
+        }
+        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+        pthread_cond_signal( &i2cQueueCond );
+    } catch(...) {
+        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+    }
+    pthread_mutex_unlock( &i2cQueueMutex );
+}
+
 long Manager::getNowMs() {
 	
 	struct timespec ts;
@@ -382,8 +412,6 @@ int Manager::readReg8( int reg ) {
 void Manager::setStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::setStatus()" );
-//    minion.setStatus();
-    
     request( writeI2C, file_i2c, 's', 0 );
 }
 
@@ -391,8 +419,6 @@ long Manager::getStatus() {
 	
 	syslog(LOG_NOTICE, "In Manager::getStatus()" );
 	expectedControllerMode = statusMode;
-//	return minion.getStatus();
-    
     long status = request( readI2C, file_i2c, 4 );
     syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
 
@@ -422,17 +448,12 @@ void Manager::setRange( unsigned int angle) {
 
 //	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
 	expectedControllerMode = rangeMode;
-//	minion.setRange( angle );
-    
     request( writeI2C, file_i2c, 'p', angle );
 }
 
 long Manager::getRangeResult() {
 	
-//	long result = minion.getRange();	// This will wait for a response to an I2C read
-
-    long status = request( readI2C, file_i2c, 4 );
-//    long status = (buffSpace[0] << 24) | (buffSpace[1] << 16) | (buffSpace[2] << 8) | buffSpace[3];
+   long status = request( readI2C, file_i2c, 4 );
     syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
 
     expectedControllerMode = statusMode;    // Controller should drop back to this too
@@ -449,5 +470,5 @@ unsigned int Manager::getRange() {
 }
 
 void Manager::setMotorPower( bool On ) {
-//	minion.setRelay( 0, On );
+
 }

@@ -68,8 +68,8 @@ class I2CControl {
 public:
     I2CType     i2cType;
     int         i2cFile;
-    int         i2cCommand;     // Passed in as register or length, test for zero for done?
-    int         i2cParam;
+    int     i2cCommand;     // Passed in as register or length, test for zero for done?
+    int     i2cParam;
     char        *i2cData;
     
 public:
@@ -108,8 +108,9 @@ public:
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
     void execute( I2CControl i2cControl );
-    void request( I2CType type, int file, int command, int param );    // Writes
+    void request( I2CType type, int file, int command, int param );     // Writes, two bytes or single byte with register
     long request( I2CType type, int file, int command );                // Reads with long result values
+    long request( I2CControl writelist[] );                             // Multiple address write
 
     int readReg8( int reg );
     
