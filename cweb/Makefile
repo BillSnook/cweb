@@ -65,7 +65,7 @@ $(OBJ_DIR)/%.o: ${RASP_DIR}/src/%.c
 
 info:
 	pwd
-	echo $(OBJ_DIR)/*
+	echo ${OBJECTS}
 
 clean:
 #	-rm -f $(OBJECTS)
