@@ -32,8 +32,9 @@ public:
 	int     file_i2c;           // File handle to I2C device
 	
     int     i2cRead(int reg);
-	int     i2cWrite(int reg, int data);
-	
+    void    i2cWrite(int reg, int data);
+    void    i2cWriteX(int reg, int data);
+
 };
 
 

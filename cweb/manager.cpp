@@ -349,7 +349,7 @@ long Manager::request( I2CType type, int file, int command ) {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
     
-    volatile I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
+    I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
@@ -375,7 +375,7 @@ long Manager::request( I2CType type, int file, int command ) {
 }
 
 // Typically a multiple write sequence
-long Manager::request( I2CControl writelist[] ) {
+long Manager::request( I2CControl writeList[] ) {
         
     pthread_mutex_lock( &i2cQueueMutex );
     try {

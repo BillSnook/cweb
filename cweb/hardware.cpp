@@ -96,6 +96,8 @@
 
 #define PingWaitTime			100000
 
+extern  Manager     manager;
+
 bool	scanLoop;
 
 //  MARK: i2c interface read and write support
@@ -123,14 +125,21 @@ int I2C::i2cRead(int reg) {
 }
 
 
-int I2C::i2cWrite(int reg, int data) {
-	
+void I2C::i2cWrite(int reg, int data) {
+    
 #ifdef ON_PI
     
-    
-	return wiringPiI2CWriteReg8(file_i2c, reg, data);
+    wiringPiI2CWriteReg8(file_i2c, reg, data);
 #else
-	return reg + data;
+#endif  // ON_PI
+}
+
+void I2C::i2cWriteX(int reg, int data) {
+    
+#ifdef ON_PI
+    
+    manager.request( writeI2C, file_i2c, reg, data );
+#else
 #endif  // ON_PI
 }
 
@@ -195,10 +204,10 @@ void PWM::setPWM( int channel, int on, int off ) {
 	}
 	
 //	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
-	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
-	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
-	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
-	i2c->i2cWrite( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
+	i2c->i2cWriteX( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
+	i2c->i2cWriteX( CHANNEL0_ON_H + (4 * channel), on >> 8 );
+	i2c->i2cWriteX( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
+	i2c->i2cWriteX( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
 }
 
 void PWM::setPWMAll( int on, int off ) {
