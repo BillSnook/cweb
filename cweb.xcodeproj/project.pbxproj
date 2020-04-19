@@ -17,7 +17,6 @@
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
 		A9ABD7762095078900B64F14 /* hardware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD7742095078900B64F14 /* hardware.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
-		A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF207F21E16F9500DF77E3 /* minion.cpp */; };
 		A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF208121EAD2A700DF77E3 /* manager.cpp */; };
 /* End PBXBuildFile section */
 
@@ -62,8 +61,6 @@
 		A9ABD7752095078900B64F14 /* hardware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = hardware.hpp; sourceTree = "<group>"; };
 		A9ABD777209507A400B64F14 /* speed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = speed.cpp; sourceTree = "<group>"; };
 		A9ABD778209507A400B64F14 /* speed.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = speed.hpp; sourceTree = "<group>"; };
-		A9AF207E21E16F9400DF77E3 /* minion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minion.hpp; sourceTree = "<group>"; };
-		A9AF207F21E16F9500DF77E3 /* minion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = minion.cpp; sourceTree = "<group>"; };
 		A9AF208121EAD2A700DF77E3 /* manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
 		A9AF208221EAD2A700DF77E3 /* manager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = manager.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,8 +111,6 @@
 				A9ABD7752095078900B64F14 /* hardware.hpp */,
 				A9ABD777209507A400B64F14 /* speed.cpp */,
 				A9ABD778209507A400B64F14 /* speed.hpp */,
-				A9AF207F21E16F9500DF77E3 /* minion.cpp */,
-				A9AF207E21E16F9400DF77E3 /* minion.hpp */,
 				A949BB4D22A8158C006383AE /* vl53l0x.cpp */,
 				A949BB4E22A8158C006383AE /* vl53l0x.hpp */,
 			);
@@ -226,7 +221,6 @@
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
-				A9AF208021E16F9600DF77E3 /* minion.cpp in Sources */,
 				A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
