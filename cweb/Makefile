@@ -46,7 +46,7 @@ INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/
 
 default: mtrctl
 
-mtrctl: $(OBJECTS)
+mtrctl: $(OBJECTS) $(VLOBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 obj/%.o: %.cpp
