@@ -57,11 +57,11 @@ obj/%.o: %.cpp
 
 obj/%.o: ${CORE_DIR}/src/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	pwd
