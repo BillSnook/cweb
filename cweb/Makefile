@@ -2,6 +2,10 @@
 
 CXX = g++
 
+CC = $(CROSS_COMPILE)gcc
+
+CFLAGS = -O0 -g -Wall -c
+
 OBJ_DIR = obj
 
 LIB_SRCS = \
@@ -14,6 +18,7 @@ LIB_SRCS = \
 
 LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
 
+API_DIR = /home/pi/code/c/cweb/cweb/vl53l0x
 
 CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
@@ -28,9 +33,13 @@ INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/
 #LIB_DIR = -L/home/pi/code/c/cweb/lib
 #LDLIBS += -lVL53L0X_Rasp
 
+VPATH = ${API_DIR}/Api/core/src/ ${API_DIR}/VL53L0X_rasp/platform/src/
+
+
+
 default: mtrctl
 
-mtrctl: $(OBJECTS)
+mtrctl: $(OBJECTS) $(OBJ_DIR)/*
 	$(CXX) $(CXXFLAGS) $^ $(LIB_DIR) $(LDLIBS) -o $@
 
 %.o: %.cpp
@@ -45,5 +54,5 @@ $(OBJ_DIR)/%.o:%.c
 .PHONY: clean
 clean:
 	-rm -f $(OBJECTS)
-	-rm -r ./$(OBJ_DIR)/*
+	-rm -rf ./$(OBJ_DIR)/*
 	-rm -f mtrctl
