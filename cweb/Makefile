@@ -49,7 +49,7 @@ mtrctl: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $(OBJ_DIR)/$@ $<
 
 $(OBJECTS): $(HEADERS)
 
