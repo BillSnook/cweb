@@ -19,8 +19,8 @@ LIB_SRCS = \
 LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 API_DIR = /home/pi/code/c/cweb/cweb/vl53l0x
-CORE_DIR = ${API_DIR}/Api/core/src
-RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform/src
+CORE_DIR = ${API_DIR}/Api/core
+RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform
 
 CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
@@ -29,14 +29,16 @@ CXXFLAGS += -DON_PI
 LDLIBS += -lwiringPi
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp manager.hpp vl53l0x.hpp
+VLHEADERS = ${CORE_DIR}/inc/vl53l0x_api.h ${CORE_DIR}/inc/vl53l0x_api_core.h ${CORE_DIR}/inc/vl53l0x_api_calibration.h ${CORE_DIR}/inc/vl53l0x_api_ranging.h ${CORE_DIR}/inc/vl53l0x_api_strings.h ${CORE_DIR}/inc/vl53l0x_def.h ${CORE_DIR}/inc/vl53l0x_device.h ${CORE_DIR}/inc/vl53l0x_tuning.h ${CORE_DIR}/inc/vl53l0x_interrupt_threshold_settings.h ${RASP_DIR}/inc/platform.h ${RASP_DIR}/inc/platform_log.h ${RASP_DIR}/inc/types.h
+
 OBJECTS = mtrctl.o signals.o threader.o commands.o listen.o sender.o hardware.o speed.o tasks.o filer.o actions.o manager.o vl53l0x.o
-VLOBJECTS = ${CORE_DIR}/vl53l0x_api_calibration.o ${CORE_DIR}/vl53l0x_api_core.o ${CORE_DIR}/vl53l0x_api_ranging.o ${CORE_DIR}/vl53l0x_api_strings.o ${RASP_DIR}/vl53l0x_platform.o
+VLOBJECTS = ${CORE_DIR}/src/vl53l0x_api_calibration.o ${CORE_DIR}/src/vl53l0x_api_core.o ${CORE_DIR}/src/vl53l0x_api_ranging.o ${CORE_DIR}/src/vl53l0x_api_strings.o ${RASP_DIR}/src/vl53l0x_platform.o
 
 INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/c/cweb/cweb/vl53l0x/VL53L0X_rasp/platform/inc
 #LIB_DIR = -L/home/pi/code/c/cweb/lib
 #LDLIBS += -lVL53L0X_Rasp
 
-VPATH = ${CORE_DIR} ${RASP_DIR}
+VPATH = ${CORE_DIR}/src ${RASP_DIR}/src
 
 
 
@@ -49,6 +51,8 @@ mtrctl: $(OBJECTS) $(VLOBJECTS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $@ $<
 
 $(OBJECTS): $(HEADERS)
+
+$(VLOBJECTS): $(VLHEADERS)
 
 $(OBJ_DIR)/%.o:%.c
 	mkdir -p $(dir $@)
