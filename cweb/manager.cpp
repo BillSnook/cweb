@@ -375,20 +375,20 @@ long Manager::request( I2CType type, int file, int command ) {
 }
 
 // Typically a multiple write sequence
-long Manager::request( I2CControl writeList[] ) {
-        
-    pthread_mutex_lock( &i2cQueueMutex );
-    try {
-        for ( int i = 0; i < writeList->size(); i++ ) {
-            i2cQueue.push( writeList[i] );
-        }
-        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
-        pthread_cond_signal( &i2cQueueCond );
-    } catch(...) {
-        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
-    }
-    pthread_mutex_unlock( &i2cQueueMutex );
-}
+//long Manager::request( I2CControl writeList[] ) {
+//        
+//    pthread_mutex_lock( &i2cQueueMutex );
+//    try {
+//        for ( int i = 0; i < writeList->size(); i++ ) {
+//            i2cQueue.push( writeList[i] );
+//        }
+//        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+//        pthread_cond_signal( &i2cQueueCond );
+//    } catch(...) {
+//        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+//    }
+//    pthread_mutex_unlock( &i2cQueueMutex );
+//}
 
 long Manager::getNowMs() {
 	

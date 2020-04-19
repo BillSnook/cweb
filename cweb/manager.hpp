@@ -110,7 +110,7 @@ public:
     void execute( I2CControl i2cControl );
     void request( I2CType type, int file, int command, int param );     // Writes, two bytes or single byte with register
     long request( I2CType type, int file, int command );                // Reads with long result values
-    long request( I2CControl writelist[] );                             // Multiple address write
+//    long request( I2CControl writelist[] );                             // Multiple address write
 
     int readReg8( int reg );
     
