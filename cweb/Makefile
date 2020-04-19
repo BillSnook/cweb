@@ -47,13 +47,14 @@ VPATH = ${CORE_DIR}/src ${RASP_DIR}/src
 
 default: mtrctl
 
-mtrctl: $(OBJECTS)
+#mtrctl: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 $(OBJ_DIR)/%.o: %.cpp
+	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -O0 -c -o $(OBJ_DIR)/$@ $<
 
-$(OBJECTS): $(HEADERS)
+#$(OBJECTS): $(HEADERS)
 
 $(OBJ_DIR)/%.o: ${CORE_DIR}/src/%.c
 	mkdir -p $(dir $@)
