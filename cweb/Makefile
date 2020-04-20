@@ -17,7 +17,7 @@ API_DIR = ${DIR}/vl53l0x
 CORE_DIR = ${API_DIR}/Api/core
 RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform
 
-#LIB_SRCS = \
+LIB_SRCS = \
 	vl53l0x_api_calibration.c \
 	vl53l0x_api_core.c \
 	vl53l0x_api_ranging.c \
@@ -25,7 +25,7 @@ RASP_DIR = ${API_DIR}/VL53L0X_rasp/platform
 	vl53l0x_api.c \
 	vl53l0x_platform.c
 
-#LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
+LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp manager.hpp vl53l0x.hpp
@@ -67,8 +67,8 @@ info:
 	pwd
 	echo "Object directory: "
 	echo ${OBJ_DIR}
-	echo "Objects :"
-	echo ${OBJECTS}
+	echo "LIB_OBJS :"
+	echo ${LIB_OBJS}
 
 clean:
 	-rm -rf $(OBJ_DIR)
