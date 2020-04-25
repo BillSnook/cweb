@@ -43,10 +43,9 @@ INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 default: mtrctl
 
 mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
-	$(CXX) $(CXXFLAGS) $(CFLAGS) $^ $(LDLIBS) -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 obj/%.o: %.cpp
-#	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 #$(OBJECTS): $(PIHEADERS) $(VLHEADERS) $(HEADERS)
@@ -54,11 +53,9 @@ obj/%.o: %.cpp
 #$(PIOBJECTS): $(PIHEADERS) $(VLHEADERS)
 
 obj/%.o: ${CORE_DIR}/src/%.c
-#	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
-#	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
