@@ -1,15 +1,15 @@
 # Makefile for mtrctl project - control a motorized robot remotely
 
 CXX = g++
-#CXXFLAGS = -std=c++11 -DDEBUG
+CXXFLAGS = -std=c++11
 LDLIBS = -lpthread
 # If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
-CXXFLAGS = -DON_PI
+CXXFLAGS += -DON_PI
 LDLIBS += -lwiringPi
 
 
 CC = gcc
-CFLAGS = -O0 -g -Wall -c
+CFLAGS = -O0 -Wall -c
 
 WORK_DIR = $(shell pwd)
 
@@ -53,10 +53,10 @@ obj/%.o:: %.cpp
 #$(PIOBJECTS): $(PIHEADERS) $(VLHEADERS)
 
 obj/%.o:: ${CORE_DIR}/src/%.c
-	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o:: ${RASP_DIR}/src/%.c
-	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	@pwd
