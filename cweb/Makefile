@@ -47,7 +47,7 @@ mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
 
 obj/%.o: %.cpp
 #	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 #$(OBJECTS): $(PIHEADERS) $(VLHEADERS) $(HEADERS)
 #$(VLOBJECTS): $(PIHEADERS) $(VLHEADERS)
