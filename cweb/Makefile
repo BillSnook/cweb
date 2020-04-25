@@ -53,10 +53,10 @@ obj/%.o:: %.cpp
 #$(PIOBJECTS): $(PIHEADERS) $(VLHEADERS)
 
 obj/%.o:: ${CORE_DIR}/src/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o:: ${RASP_DIR}/src/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	@pwd
