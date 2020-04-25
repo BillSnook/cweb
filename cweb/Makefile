@@ -35,6 +35,8 @@ HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp
 OBJECTS = ${OBJ_DIR}/mtrctl.o ${OBJ_DIR}/signals.o ${OBJ_DIR}/threader.o ${OBJ_DIR}/commands.o ${OBJ_DIR}/listen.o ${OBJ_DIR}/sender.o ${OBJ_DIR}/hardware.o ${OBJ_DIR}/speed.o ${OBJ_DIR}/tasks.o ${OBJ_DIR}/filer.o ${OBJ_DIR}/actions.o ${OBJ_DIR}/manager.o ${OBJ_DIR}/vl53l0x.o
 OBJECTS1 = ${OBJ_DIR}/*.o
 
+OTEST = mtrctl.o signals.o threader.o
+
 VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o ${OBJ_DIR}/vl53l0x_api_ranging.o ${OBJ_DIR}/vl53l0x_api_strings.o ${OBJ_DIR}/vl53l0x_platform.o
 
 INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/c/cweb/cweb/vl53l0x/VL53L0X_rasp/platform/inc
@@ -71,8 +73,8 @@ info:
 #	echo ${LIB_OBJS}
 	echo "OBJECTS: "
 	$(OBJECTS)
-	echo "OBJECTS1: "
-	$(OBJECTS1)
+	echo "OTEST: "
+	${OBJ_DIR}/$(OTEST)
 clean:
 	-rm -rf $(OBJ_DIR)/*
 	-rm -f mtrctl
