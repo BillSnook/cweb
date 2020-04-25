@@ -13,6 +13,8 @@
 		6B2FD2AE244CE1AC00BAC739 /* vl53l0x_api_core.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2A9244CE1AC00BAC739 /* vl53l0x_api_core.c */; };
 		6B2FD2AF244CE1AC00BAC739 /* vl53l0x_api_strings.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2AA244CE1AC00BAC739 /* vl53l0x_api_strings.c */; };
 		6B2FD2B1244CE1CA00BAC739 /* vl53l0x_platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */; };
+		6B2FD2BE2454E0EB00BAC739 /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
+		6B2FD2BF2454E0F100BAC739 /* vl53l0x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A949BB4D22A8158C006383AE /* vl53l0x.cpp */; };
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
@@ -266,6 +268,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B2FD2AE244CE1AC00BAC739 /* vl53l0x_api_core.c in Sources */,
+				6B2FD2BE2454E0EB00BAC739 /* actions.cpp in Sources */,
+				6B2FD2BF2454E0F100BAC739 /* vl53l0x.cpp in Sources */,
 				6B2FD2AC244CE1AC00BAC739 /* vl53l0x_api.c in Sources */,
 				6B2FD2AB244CE1AC00BAC739 /* vl53l0x_api_calibration.c in Sources */,
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
