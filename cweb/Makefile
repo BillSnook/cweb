@@ -29,7 +29,7 @@ OBJECTS = ${OBJ_DIR}/mtrctl.o ${OBJ_DIR}/signals.o ${OBJ_DIR}/threader.o ${OBJ_D
 
 OTEST = mtrctl.o signals.o threader.o
 
-VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o ${OBJ_DIR}/vl53l0x_api_ranging.o ${OBJ_DIR}/vl53l0x_api_strings.o
+VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o ${OBJ_DIR}/vl53l0x_api_ranging.o ${OBJ_DIR}/vl53l0x_api_strings.o ${OBJ_DIR}/vl53l0x_api.o
 
 PIOBJECTS = ${OBJ_DIR}/vl53l0x_platform.o
 
