@@ -45,17 +45,17 @@ default: mtrctl
 mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
-obj/%.o: %.cpp
+obj/%.o:: %.cpp
 	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 #$(OBJECTS): $(PIHEADERS) $(VLHEADERS) $(HEADERS)
 #$(VLOBJECTS): $(PIHEADERS) $(VLHEADERS)
 #$(PIOBJECTS): $(PIHEADERS) $(VLHEADERS)
 
-obj/%.o: ${CORE_DIR}/src/%.c
+obj/%.o:: ${CORE_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
-obj/%.o: ${RASP_DIR}/src/%.c
+obj/%.o:: ${RASP_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
