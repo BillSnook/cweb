@@ -43,7 +43,7 @@ INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 default: mtrctl
 
 mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
-	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
+	$(CXX) $^ $(LDLIBS) -o $@
 
 obj/%.o:: %.cpp
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -o $@ $<
