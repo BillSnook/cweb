@@ -1,10 +1,10 @@
 # Makefile for mtrctl project - control a motorized robot remotely
 
 CXX = g++
-CXXFLAGS = -std=c++11 -DDEBUG
+#CXXFLAGS = -std=c++11 -DDEBUG
 LDLIBS = -lpthread
 # If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
-CXXFLAGS += -DON_PI
+CXXFLAGS = -DON_PI
 LDLIBS += -lwiringPi
 
 
