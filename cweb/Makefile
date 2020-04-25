@@ -46,7 +46,7 @@ mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 obj/%.o:: %.cpp
-	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -o $@ $<
 
 #$(OBJECTS): $(PIHEADERS) $(VLHEADERS) $(HEADERS)
 #$(VLOBJECTS): $(PIHEADERS) $(VLHEADERS)
