@@ -30,16 +30,20 @@ LIB_OBJS  = $(LIB_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 HEADERS = mtrctl.hpp signals.hpp threader.hpp commands.hpp listen.hpp sender.hpp hardware.hpp speed.hpp tasks.hpp filer.hpp actions.hpp manager.hpp vl53l0x.hpp
 
-#VLHEADERS = ${CORE_DIR}/inc/vl53l0x_api.h ${CORE_DIR}/inc/vl53l0x_api_core.h ${CORE_DIR}/inc/vl53l0x_api_calibration.h ${CORE_DIR}/inc/vl53l0x_api_ranging.h ${CORE_DIR}/inc/vl53l0x_api_strings.h ${CORE_DIR}/inc/vl53l0x_def.h ${CORE_DIR}/inc/vl53l0x_device.h ${CORE_DIR}/inc/vl53l0x_tuning.h ${CORE_DIR}/inc/vl53l0x_interrupt_threshold_settings.h ${RASP_DIR}/inc/platform.h ${RASP_DIR}/inc/platform_log.h ${RASP_DIR}/inc/types.h
+VLHEADERS = ${CORE_DIR}/inc/vl53l0x_api.h ${CORE_DIR}/inc/vl53l0x_api_core.h ${CORE_DIR}/inc/vl53l0x_api_calibration.h ${CORE_DIR}/inc/vl53l0x_api_ranging.h ${CORE_DIR}/inc/vl53l0x_api_strings.h ${CORE_DIR}/inc/vl53l0x_def.h ${CORE_DIR}/inc/vl53l0x_device.h ${CORE_DIR}/inc/vl53l0x_tuning.h ${CORE_DIR}/inc/vl53l0x_interrupt_threshold_settings.h
+
+PIHEADERS = ${RASP_DIR}/inc/platform.h ${RASP_DIR}/inc/platform_log.h ${RASP_DIR}/inc/types.h
 
 OBJECTS = ${OBJ_DIR}/mtrctl.o ${OBJ_DIR}/signals.o ${OBJ_DIR}/threader.o ${OBJ_DIR}/commands.o ${OBJ_DIR}/listen.o ${OBJ_DIR}/sender.o ${OBJ_DIR}/hardware.o ${OBJ_DIR}/speed.o ${OBJ_DIR}/tasks.o ${OBJ_DIR}/filer.o ${OBJ_DIR}/actions.o ${OBJ_DIR}/manager.o ${OBJ_DIR}/vl53l0x.o
-OBJECTS1 = ${OBJ_DIR}/*.o
+#OBJECTS1 = ${OBJ_DIR}/*.o
 
 OTEST = mtrctl.o signals.o threader.o
 
-VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o ${OBJ_DIR}/vl53l0x_api_ranging.o ${OBJ_DIR}/vl53l0x_api_strings.o ${OBJ_DIR}/vl53l0x_platform.o
+VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o ${OBJ_DIR}/vl53l0x_api_ranging.o ${OBJ_DIR}/vl53l0x_api_strings.o
 
-INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/c/cweb/cweb/vl53l0x/VL53L0X_rasp/platform/inc
+PIOBJECTS = ${OBJ_DIR}/vl53l0x_platform.o
+
+INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 
 #VPATH = ${CORE_DIR}/src ${RASP_DIR}/src
 
@@ -48,7 +52,7 @@ INCLUDES = -I. -I/home/pi/code/c/cweb/cweb/vl53l0x/Api/core/inc -I/home/pi/code/
 
 default: mtrctl
 
-mtrctl: $(OBJECTS) $(VLOBJECTS)
+mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDLIBS) -o $@
 
 obj/%.o: %.cpp
@@ -59,11 +63,11 @@ obj/%.o: %.cpp
 
 obj/%.o: ${CORE_DIR}/src/%.c
 #	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
 #	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	pwd
@@ -74,7 +78,7 @@ info:
 	echo "OBJECTS: "
 	$(OBJECTS)
 	echo "OTEST: "
-	${OBJ_DIR}/$(OTEST)
+	echo $(OTEST)
 clean:
 	-rm -rf $(OBJ_DIR)/*
 	-rm -f mtrctl
