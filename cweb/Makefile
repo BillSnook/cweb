@@ -63,11 +63,11 @@ obj/%.o: %.cpp
 
 obj/%.o: ${CORE_DIR}/src/%.c
 #	mkdir -p $(dir $@)
-	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
 #	mkdir -p $(dir $@)
-	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	pwd
@@ -76,7 +76,7 @@ info:
 #	echo "LIB_OBJS :"
 #	echo ${LIB_OBJS}
 	echo "OBJECTS: "
-	$(OBJECTS)
+	echo $(OBJECTS)
 	echo "OTEST: "
 	echo $(OTEST)
 clean:
