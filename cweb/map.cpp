@@ -6,7 +6,8 @@
 //  Copyright © 2020 billsnook. All rights reserved.
 //
 
-#include <syslog.h>            // close read write
+#include <syslog.h>         // close read write
+#include <stdio.h>          // sprintf
 
 #include "map.hpp"
 
