@@ -335,7 +335,7 @@ void Manager::request( I2CType type, int file, int command, int param ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+        syslog(LOG_NOTICE, "In Manager::request, i2c command %s put on queue", i2cControl.description() );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
@@ -353,7 +353,7 @@ long Manager::request( I2CType type, int file, int command ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+        syslog(LOG_NOTICE, "In Manager::request, i2c command %s put on queue", i2cControl.description() );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
