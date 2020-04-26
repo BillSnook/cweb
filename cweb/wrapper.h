@@ -12,10 +12,8 @@
 #include <stdio.h>
 
 
-extern "C" void managerWrite( int file, int reg, int data ) { // wrapper function
-    return manager.request( writeI2C, file, reg, data );
-}
+extern "C" void managerWrite( int file, int reg, int data );
 
-extern "C" long managerRead( int file, int length ) {         // wrapper function
+extern "C" long managerRead( int file, int length );
 
 #endif /* wrapper_h */
