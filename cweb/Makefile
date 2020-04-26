@@ -31,6 +31,19 @@ VLOBJECTS = ${OBJ_DIR}/vl53l0x_api_calibration.o ${OBJ_DIR}/vl53l0x_api_core.o $
 
 PIOBJECTS = ${OBJ_DIR}/vl53l0x_platform.o
 
+MainFiles = $(wildcard *.cpp)
+CoreSources := $(wildcard $(CORE_DIR)/src/*.c)
+CoreFiles := $(notdir $(CoreSources))
+RaspSources := $(wildcard $(RASP_DIR)/src/*.c)
+RaspFiles := $(notdir $(RaspSources))
+#SourceFiles := $(MainFiles) $(CoreFiles) $(RaspFiles)
+MainFileNames := $(basename $(MainFiles))
+CoreFileNames := $(basename $(CoreFiles))
+RaspFileNames := $(basename $(RaspFiles))
+AllFileNames := $(MainFileNames) $(CoreFileNames) $(RaspFileNames)
+FileObjects := $(addsuffix .o, $(AllFileNames))
+AllObjects := $(addprefix obj/, $(FileObjects))
+
 INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 
 #VPATH = ${CORE_DIR}/src ${RASP_DIR}/src
@@ -41,33 +54,35 @@ INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 default: mtrctl
 
 # Test to see if it works, it is simpler, no need for OBJECTS
-#mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
-mtrctl: $(OBJ_DIR)/*.o
+#mtrctl: $(AllObjects)
+mtrctl: $(AllObjects)
 	$(CXX) $^ $(LDLIBS) -o $@
 
-obj/%.o: %.cpp
+obj/%.o:: %.cpp
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -o $@ $<
 
 #$(OBJECTS): $(PIHEADERS) $(VLHEADERS) $(HEADERS)
 #$(VLOBJECTS): $(PIHEADERS) $(VLHEADERS)
 #$(PIOBJECTS): $(PIHEADERS) $(VLHEADERS)
 
-obj/%.o: ${CORE_DIR}/src/%.c
+obj/%.o:: ${CORE_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
-obj/%.o: ${RASP_DIR}/src/%.c
+obj/%.o:: ${RASP_DIR}/src/%.c
 	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	@pwd
-	@echo "Object directory: "
-	@echo ${OBJ_DIR}
-#	echo "LIB_OBJS :"
-#	echo ${LIB_OBJS}
-	@echo "OBJECTS: "
+	@echo "OBJECTS:"
 	@echo $(OBJECTS)
-	@echo "WORK_DIR: "
-	@echo $(WORK_DIR)
+	@echo "MainFiles:"
+	@echo $(MainFiles)
+	@echo "MainFileNames:"
+	@echo $(MainFileNames)
+	@echo "AllFileNames:"
+	@echo $(AllFileNames)
+	@echo "AllObjects:"
+	@echo $(AllObjects)
 clean:
 	-rm -rf $(OBJ_DIR)/*
 	-rm -f mtrctl
