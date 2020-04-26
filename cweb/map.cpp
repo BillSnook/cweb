@@ -6,8 +6,12 @@
 //  Copyright © 2020 billsnook. All rights reserved.
 //
 
-#include <syslog.h>         // close read write
-#include <stdio.h>          // sprintf
+#include <stdlib.h>            // malloc
+#include <stdio.h>             // sprintf
+#include <syslog.h>            // close read write
+#include <string.h>            // strcat
+#include <unistd.h>
+
 
 #include "map.hpp"
 

@@ -9,14 +9,14 @@
 #ifndef hardware_hpp
 #define hardware_hpp
 
+#include <stdlib.h>            // malloc
+#include <stdio.h>            // sprintf
+#include <syslog.h>            // close read write
+#include <string.h>            // strcat
+#include <unistd.h>
+
 #include "speed.hpp"
 
-
-#include <stdlib.h>			// malloc
-#include <stdio.h>			// sprintf
-#include <syslog.h>			// close read write
-#include <string.h>			// strcat
-#include <unistd.h>
 
 #define ArdI2CAddr          0x08    // Needs to match value set in Arduino controller code
 #define MOTOR_I2C_ADDRESS   0x6F    // Hard coded (literally) on motor controller board

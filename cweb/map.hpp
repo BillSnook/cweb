@@ -9,8 +9,6 @@
 #ifndef map_hpp
 #define map_hpp
 
-#include <stdio.h>
-
 
 struct DistanceEntry {
     unsigned int    range;
