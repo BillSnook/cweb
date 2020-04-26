@@ -188,7 +188,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'e':
 		{
 //			char *display = (char *)manager.sitMap.returnMap( msg );	// msg is 1024 bytes
-			syslog(LOG_NOTICE, "Error - Sitmap moved - Command e calls: returnMap(), got: %s", display );
+			syslog(LOG_NOTICE, "Error - Sitmap moved" );
 //			listener.writeBlock( msg, int( strlen( (char *)msg ) ), socket );
 		}
 			break;
