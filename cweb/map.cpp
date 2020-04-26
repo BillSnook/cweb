@@ -6,6 +6,8 @@
 //  Copyright © 2020 billsnook. All rights reserved.
 //
 
+#include <syslog.h>            // close read write
+
 #include "map.hpp"
 
 
