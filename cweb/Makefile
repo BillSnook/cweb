@@ -42,6 +42,8 @@ INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 
 default: mtrctl
 
+# Test to see if it works, it is simpler, no need for OBJECTS
+#mtrctl: $(OBJ_DIR)/*.o
 mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
 	$(CXX) $^ $(LDLIBS) -o $@
 
@@ -56,7 +58,7 @@ obj/%.o: ${CORE_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	@pwd

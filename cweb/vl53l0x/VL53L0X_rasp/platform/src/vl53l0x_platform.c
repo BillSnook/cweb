@@ -9,7 +9,7 @@
 #include "vl53l0x_platform.h"
 #include "vl53l0x_api.h"
 
-#include "manager.hpp"
+///#include "manager.hpp"
 
 
 int VL53L0X_i2c_init(char * devPath, int devAddr)
@@ -29,7 +29,7 @@ int VL53L0X_i2c_init(char * devPath, int devAddr)
 	syslog(LOG_NOTICE, "In VL53L0X_i2c_init, attached to slave address %d", devAddr);
     
     // test
-    manager.setMotorPower( true );
+///    manager.setMotorPower( true );
     
     return file;
 }

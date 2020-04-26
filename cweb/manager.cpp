@@ -471,4 +471,5 @@ unsigned int Manager::getRange() {
 
 void Manager::setMotorPower( bool On ) {
 
+    syslog( LOG_NOTICE, "In Manager::setMotorPower(), test for access to manager from vl code" );
 }
