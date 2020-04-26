@@ -15,8 +15,6 @@
 #include "hardware.hpp"
 #include "manager.hpp"
 
-#include <pthread.h>
-
 //Minion	minion;
 
 #ifdef ON_PI

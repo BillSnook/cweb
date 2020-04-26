@@ -12,7 +12,8 @@
 // This class manages communication with the
 // Arduino microcontroller over I2C
 
-#include    <queue>
+#include <queue>
+#include <pthread.h>
 
 struct DistanceEntry {
 	unsigned int	range;
@@ -68,8 +69,8 @@ class I2CControl {
 public:
     I2CType     i2cType;
     int         i2cFile;
-    int     i2cCommand;     // Passed in as register or length, test for zero for done?
-    int     i2cParam;
+    int         i2cCommand;     // Passed in as register or length, test for zero for done?
+    int         i2cParam;
     char        *i2cData;
     
 public:
