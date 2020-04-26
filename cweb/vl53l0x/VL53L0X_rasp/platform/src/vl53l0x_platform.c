@@ -42,7 +42,7 @@ int32_t VL53L0X_i2c_close(void)
 
 static int i2c_write(int fd, uint8_t cmd, uint8_t * data, uint8_t len){
 
-    uint8_t * buf = malloc(len+1);
+    uint8_t * buf = (uint8_t *)malloc(len+1);
     buf[0] = cmd;
     memcpy(buf+1, data, len);
     if (write(fd, buf, len+1) != len+1) {
