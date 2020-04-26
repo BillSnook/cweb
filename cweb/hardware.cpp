@@ -13,6 +13,7 @@
 #include "listen.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
+#include "map.hpp"
 
 #ifdef ON_PI
 
@@ -117,7 +118,7 @@ int I2C::i2cRead(int reg) {
 
     return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
 
-//    return manager.readReg8( reg );
+//    return manager.readReg8( file_i2c, reg );
 
 #else
 	return reg;
@@ -264,19 +265,23 @@ bool Hardware::setupHardware() {
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
 // WFS	speed.initializeSpeedArray();
-	
+    
+    pattern = SearchPattern( 45, 135, 5 );
+    sitMap = SitMap( pattern );
+    sitMap.setupSitMap();
+
 	scanLoop = false;
 
 
 	return true;
 }
 
-bool Hardware::resetHardware() {
+bool Hardware::shutdownHardware() {
 	
 //	scanStop();
 //	centerServo();
 	
-	syslog(LOG_NOTICE, "In resetHardware" );
+	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
 	setPWM( M0En, 0 );		// Turn off motors
 	setPin( M0Fw, 0 );
@@ -290,11 +295,7 @@ bool Hardware::resetHardware() {
 	
 	setPWM( Scanner, 0 );		// Turn off servos
 
-//#ifdef ON_PI
-//
-//	digitalWrite(TRIG, LOW);	// Off
-//
-//#endif  // ON_PI
+    sitMap.shutdownSitMap();
 
 	return true;
 }
@@ -506,7 +507,11 @@ void Hardware::pingLoop() {
 
 void Hardware::prepPing( int start, int end, int inc ) {
 	
-	manager.resetPattern( start, end, inc );
+    sitMap.shutdownSitMap();
+    pattern = SearchPattern( start, end, inc );
+    sitMap = SitMap( pattern );
+    sitMap.setupSitMap();
+    
 	sweepOneWay = true;			// For greater consistency
 	upsideDownScanner = true;	// For dev32, not for dev31!!
 }
@@ -519,9 +524,9 @@ void Hardware::scanPing( int socket ) {
 	}
 	scanLoop = true;
 	
-	int start = manager.pattern.startAngle;
-	int end = manager.pattern.endAngle;
-	int inc = manager.pattern.incrementAngle;
+	int start = pattern.startAngle;
+	int end = pattern.endAngle;
+	int inc = pattern.incrementAngle;
 	
 	syslog(LOG_NOTICE, "In scanPing, %d - %d + %d", start, end, inc );
 	
@@ -542,7 +547,7 @@ void Hardware::scanPing( int socket ) {
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
 			// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
 			if ( 0 != socket ) {
-				buffer = manager.sitMap.returnMap( buffer );
+				buffer = sitMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
@@ -555,7 +560,7 @@ void Hardware::scanPing( int socket ) {
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 			}
 			if ( 0 != socket ) {
-				buffer = manager.sitMap.returnMap( buffer );
+				buffer = sitMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
@@ -568,7 +573,7 @@ void Hardware::scanPing( int socket ) {
 			}
 			// Range newly scanned, sitmap updated - contact mother ship with ping map
 			if ( 0 != socket ) {
-				buffer = manager.sitMap.returnMap( buffer );
+				buffer = sitMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}

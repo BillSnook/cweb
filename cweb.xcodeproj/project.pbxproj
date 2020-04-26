@@ -16,6 +16,7 @@
 		6B2FD2BE2454E0EB00BAC739 /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		6B2FD2BF2454E0F100BAC739 /* vl53l0x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A949BB4D22A8158C006383AE /* vl53l0x.cpp */; };
 		6B2FD2C22455F81900BAC739 /* wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2C02455F81900BAC739 /* wrapper.cpp */; };
+		6B2FD2C5245646D900BAC739 /* map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2C3245646D900BAC739 /* map.cpp */; };
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
@@ -63,6 +64,8 @@
 		6B2FD2BD244D195500BAC739 /* vl53l0x_api_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_core.h; path = vl53l0x/Api/core/inc/vl53l0x_api_core.h; sourceTree = "<group>"; };
 		6B2FD2C02455F81900BAC739 /* wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = wrapper.cpp; sourceTree = "<group>"; };
 		6B2FD2C12455F81900BAC739 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		6B2FD2C3245646D900BAC739 /* map.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = map.cpp; sourceTree = "<group>"; };
+		6B2FD2C4245646D900BAC739 /* map.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = map.hpp; sourceTree = "<group>"; };
 		A91D0AD4209958DF00EA1DB4 /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 				A9ABD7752095078900B64F14 /* hardware.hpp */,
 				A9ABD777209507A400B64F14 /* speed.cpp */,
 				A9ABD778209507A400B64F14 /* speed.hpp */,
+				6B2FD2C3245646D900BAC739 /* map.cpp */,
+				6B2FD2C4245646D900BAC739 /* map.hpp */,
 				A949BB4D22A8158C006383AE /* vl53l0x.cpp */,
 				A949BB4E22A8158C006383AE /* vl53l0x.hpp */,
 			);
@@ -275,6 +280,7 @@
 				6B2FD2AE244CE1AC00BAC739 /* vl53l0x_api_core.c in Sources */,
 				6B2FD2BE2454E0EB00BAC739 /* actions.cpp in Sources */,
 				6B2FD2BF2454E0F100BAC739 /* vl53l0x.cpp in Sources */,
+				6B2FD2C5245646D900BAC739 /* map.cpp in Sources */,
 				6B2FD2AC244CE1AC00BAC739 /* vl53l0x_api.c in Sources */,
 				6B2FD2AB244CE1AC00BAC739 /* vl53l0x_api_calibration.c in Sources */,
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,

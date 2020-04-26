@@ -48,13 +48,13 @@ void TaskMaster::shutdownTaskMaster() {
 }
 
 // MARK: Tasks section
-// TODO: move to tasks class
+// Starts selected task in it's own thread - for good or ill
 void TaskMaster::mobileTask( int taskNumber, int param ) {
 	
 	threader.queueThread( taskThread, taskNumber, (uint)param );
 }
 
-// This runs in a seperate thread
+// This runs this task in a separate thread
 void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", task, param );

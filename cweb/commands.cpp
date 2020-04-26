@@ -47,7 +47,7 @@ void Commander::setupCommander() {
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-	hardware.resetHardware();
+	hardware.shutdownHardware();
 }
 
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
@@ -187,8 +187,8 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'E':
 		case 'e':
 		{
-			char *display = (char *)manager.sitMap.returnMap( msg );	// msg is 1024 bytes
-			syslog(LOG_NOTICE, "Command e calls: returnMap(), got: %s", display );
+//			char *display = (char *)manager.sitMap.returnMap( msg );	// msg is 1024 bytes
+			syslog(LOG_NOTICE, "Error - Sitmap moved - Command e calls: returnMap(), got: %s", display );
 //			listener.writeBlock( msg, int( strlen( (char *)msg ) ), socket );
 		}
 			break;

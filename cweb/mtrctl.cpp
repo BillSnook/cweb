@@ -34,6 +34,7 @@ Sender		sender;
 
 Manager		manager;
 
+
 bool		becomeDaemon;
 bool		ready;
 

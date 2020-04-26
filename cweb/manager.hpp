@@ -15,40 +15,6 @@
 #include <queue>
 #include <pthread.h>
 
-struct DistanceEntry {
-	unsigned int	range;
-	unsigned int	angle;
-};
-
-class SearchPattern {
-public:
-	explicit SearchPattern();
-	explicit SearchPattern( int start, int end, int inc );
-
-	int	startAngle;
-	int	endAngle;
-	int	incrementAngle;
-	int indexCount;
-};
-
-class SitMap {
-	
-	SearchPattern		pattern;
-	DistanceEntry		*distanceMap;
-	
-public:
-
-	explicit SitMap();
-	explicit SitMap( SearchPattern newPattern );
-
-	void setupSitMap();
-	void resetSitMap();
-	void shutdownSitMap();
-	
-	void updateEntry( long entry );
-	char *returnMap( char *buffer );
-	unsigned char *returnMapData( unsigned char *buffer );
-};
 
 enum ControllerMode {
 	initialMode = 0,
@@ -96,15 +62,11 @@ class Manager {
 	long getNowMs();
 
 public:
-	SearchPattern	pattern;
-	SitMap			sitMap;
-	
 	ControllerMode	expectedControllerMode;
 	
     int     file_i2c;
     
 	void setupManager();
-	void resetPattern( int start, int end, int inc );
 	void shutdownManager();
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
@@ -113,7 +75,7 @@ public:
     long request( I2CType type, int file, int command );                // Reads with long result values
 //    long request( I2CControl writelist[] );                             // Multiple address write
 
-    int readReg8( int reg );
+    int readReg8( int file, int reg );
     
     void setStatus();
 	long getStatus();

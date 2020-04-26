@@ -90,7 +90,7 @@ public:
 	
 //	void initSpeedArrays();
 	bool setupHardware();
-	bool resetHardware();
+	bool shutdownHardware();
 	
 	void setPin( int pin, int value );
 	void setPWM( int pin, int value );

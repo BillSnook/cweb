@@ -24,103 +24,13 @@
 
 #endif  // ON_PI
 
+#include "map.hpp"
+
 
 enum CheckTimes {	// milliSecond interval for various checks
 	statusCheckInterval = 5000L,
 	heartBeatInterval = 1000L
 };
-
-// MARK: SearchPattern
-SearchPattern::SearchPattern() {
-
-//	startAngle = 0;
-//	endAngle = 180;
-//	incrementAngle = 20;
-//	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
-	
-	SearchPattern( 45, 135, 5 );
-}
-
-SearchPattern::SearchPattern( int start, int end, int inc ) {
-
-	startAngle = start;
-	endAngle = end;
-	incrementAngle = inc;
-	indexCount = ( ( endAngle - startAngle ) / incrementAngle ) + 1;
-}
-
-// MARK: SitMap
-SitMap::SitMap() {
-	
-	pattern = SearchPattern();
-}
-
-SitMap::SitMap( SearchPattern newPattern ) {
-	
-	pattern = newPattern;
-}
-
-void SitMap::setupSitMap() {
-	
-	syslog(LOG_NOTICE, "In SitMap::setupSitMap(), before distanceMap, size: %d", pattern.indexCount );
-	distanceMap = new DistanceEntry[pattern.indexCount];
-	syslog(LOG_NOTICE, "In SitMap::setupSitMap(), after distanceMap" );
-	for ( int i = 0; i < pattern.indexCount; i++ ) {
-		distanceMap[ i ].angle = 0;
-		distanceMap[ i ].range = 0;
-	}
-}
-
-void SitMap::resetSitMap() {
-	
-	for ( int i = 0; i < pattern.indexCount; i++ ) {
-		distanceMap[ i ].angle = 0;
-		distanceMap[ i ].range = 0;
-	}
-}
-
-void SitMap::shutdownSitMap() {
-	
-	delete distanceMap;
-}
-
-void SitMap::updateEntry( long entry ) {
-	
-	unsigned int range = (entry >> 16) & 0x0FFFF;		// Actual range value
-	unsigned int angle = entry & 0x0FFFF;				// Angle used to track value of range
-//	syslog(LOG_NOTICE, "In SitMap::updateEntry(), angle: %u, range: %u", angle, range );
-
-	if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
-		unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
-//		syslog(LOG_NOTICE, "In SitMap::updateEntry(), index: %u", index );
-		if ( ( index >= 0 ) && ( index < pattern.indexCount ) ) {
-			distanceMap[ index ].range = range;
-			distanceMap[ index ].angle = angle;
-		}
-	}
-}
-
-char *SitMap::returnMap( char *buffer ) {
-
-	sprintf( buffer, "@Map\n" );
-	for ( int i = 0; i < pattern.indexCount; i++ ) {
-		sprintf( buffer, "%s %4d  %5d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
-	}
-	sprintf( buffer, "%s\n", buffer );	// Terminate string
-//	syslog(LOG_NOTICE, "In SitMap::returnMap()\n%s", buffer );
-	return buffer;
-}
-
-unsigned char *SitMap::returnMapData( unsigned char *buffer ) {	// buffer is 1024 bytes
-
-//	for ( int i = 0; i < pattern.indexCount; i++ ) {
-//		sprintf( buffer, "%s %4d  %4d\n", buffer, distanceMap[ i ].angle, distanceMap[ i ].range );
-//	}
-//	sprintf( buffer, "%s\n", buffer );
-	memcpy( buffer, &pattern, sizeof( pattern ) );
-	memcpy( buffer + sizeof( pattern ), distanceMap, sizeof( distanceMap ) * pattern.indexCount );
-	return buffer;
-}
 
 // MARK: - I2C Queue
 
@@ -182,10 +92,6 @@ void Manager::setupManager() {
 	
     file_i2c = wiringPiI2CSetup( ArdI2CAddr );
 
-	pattern = SearchPattern( 45, 135, 5 );
-	sitMap = SitMap( pattern );
-	sitMap.setupSitMap();
-
     pthread_mutex_init( &i2cQueueMutex, NULL );
     pthread_cond_init( &i2cQueueCond, NULL );
 
@@ -194,21 +100,12 @@ void Manager::setupManager() {
 
 }
 
-void Manager::resetPattern( int start, int end, int inc ) {
-
-	sitMap.shutdownSitMap();
-	pattern = SearchPattern( start, end, inc );
-	sitMap = SitMap( pattern );
-	sitMap.setupSitMap();
-}
-
 void Manager::shutdownManager() {
 
     stopLoop = true;
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
-	sitMap.shutdownSitMap();
 
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
@@ -272,14 +169,14 @@ void Manager::execute( I2CControl i2cControl ) {
                 unsigned char buffer[4] = {0};
                 buffer[0] = i2cControl.i2cCommand;  // Send this command
                 buffer[1] = i2cControl.i2cParam;    // With this optional parameter
-                write( file_i2c, buffer, 2 );
+                write( i2cControl.i2cFile, buffer, 2 );
             }
             break;
 
         case readI2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                read( file_i2c, &i2cControl.i2cData[2], i2cControl.i2cCommand );
+                read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
                 syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
 //                i2cControl.i2cParam = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
                 i2cControl.i2cData[0] = 1;  // Signal completion
@@ -292,7 +189,7 @@ void Manager::execute( I2CControl i2cControl ) {
 //        case readReg8I2C:
 //            {
 //                pthread_mutex_lock( &readWaitMutex );
-//                int rdByte = wiringPiI2CReadReg8( file_i2c, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
+//                int rdByte = wiringPiI2CReadReg8( i2cControl.i2cFile, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
 //                i2cControl.i2cData[2] = rdByte;  // Return result
 //                i2cControl.i2cData[0] = 1;  // Signal completion
 //                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
@@ -304,8 +201,8 @@ void Manager::execute( I2CControl i2cControl ) {
         case readReg8I2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                write( file_i2c, &i2cControl.i2cCommand, 1 );
-                read( file_i2c, &i2cControl.i2cData[2], 1 );
+                write( i2cControl.i2cFile, &i2cControl.i2cCommand, 1 );
+                read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
@@ -392,9 +289,9 @@ long Manager::getNowMs() {
 	return sec + ms;
 }
 
-int Manager::readReg8( int reg ) {
+int Manager::readReg8( int file, int reg ) {
     
-    long result = request( readReg8I2C, file_i2c, reg );
+    long result = request( readReg8I2C, file, reg );
 
     syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
 
