@@ -241,13 +241,7 @@ Hardware::Hardware() {
 
 bool Hardware::setupHardware() {
 	
-//#ifdef ON_PI
-//	pinMode( TRIG, OUTPUT );	// Brown
-//	pinMode( ECHO, INPUT );		// White
-//
-//	digitalWrite(TRIG, LOW);	// Off
-//
-//#endif  // ON_PI
+    syslog(LOG_NOTICE, "In setupHardware" );
 
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
@@ -271,7 +265,6 @@ bool Hardware::setupHardware() {
     sitMap.setupSitMap();
 
 	scanLoop = false;
-
 
 	return true;
 }
