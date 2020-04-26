@@ -41,8 +41,8 @@ INCLUDES = -I. -I$(CORE_DIR)/inc -I$(RASP_DIR)/inc
 default: mtrctl
 
 # Test to see if it works, it is simpler, no need for OBJECTS
-#mtrctl: $(OBJ_DIR)/*.o
-mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
+#mtrctl: $(OBJECTS) $(VLOBJECTS) $(PIOBJECTS)
+mtrctl: $(OBJ_DIR)/*.o
 	$(CXX) $^ $(LDLIBS) -o $@
 
 obj/%.o: %.cpp

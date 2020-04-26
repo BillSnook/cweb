@@ -12,7 +12,6 @@
 #include "tasks.hpp"
 #include "manager.hpp"
 //#include "actions.hpp"
-//#include "minion.hpp"       // For testing smb/i2c upgrades
 #include "hardware.hpp"
 
 #include <stdlib.h>			// malloc
@@ -32,8 +31,6 @@
 Commander	commander;
 TaskMaster	taskMaster;
 Hardware	hardware;
-
-//extern Minion   minion;
 
 
 extern Filer	filer;
@@ -287,10 +284,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         {
             manager.request( writeI2C, manager.file_i2c, 's', 0x66 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );
-//            minion.putI2CCmd( 's', 0x66 );
-//            unsigned char buffSpace[10] = {0};
-//            unsigned char *buffer = buffSpace;
-//            minion.getI2CData( buffer );
             syslog(LOG_NOTICE, "Test getting status, got response: %08X\n", status );
             break;
         }
@@ -300,10 +293,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         {
             manager.request( writeI2C, manager.file_i2c, 'p', 0x99 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );
-//            minion.putI2CCmd( 'p', 0x99 );
-//            unsigned char buffSpace[10] = {0};
-//            unsigned char *buffer = buffSpace;
-//            minion.getI2CData( buffer );
             syslog(LOG_NOTICE, "Test p, got response: %08X\n", status );
             break;
         }

@@ -10,12 +10,10 @@
 #include <syslog.h>
 #include <stdio.h>			// sprintf
 
-//#include "minion.hpp"
 #include "vl53l0x.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
 
-//Minion	minion;
 
 #ifdef ON_PI
 
@@ -182,9 +180,6 @@ void Manager::setupManager() {
 //	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 //	vl53l0x.setupVL53L0X( 0x29 );
 	
-//	minion = Minion();					// Minions talk to the arduino to relay commands
-//	minion.setupMinion( ArdI2CAddr );
-//    file_i2c = minion.file_i2c;
     file_i2c = wiringPiI2CSetup( ArdI2CAddr );
 
 	pattern = SearchPattern( 45, 135, 5 );
@@ -213,7 +208,6 @@ void Manager::shutdownManager() {
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
-//	minion.shutdownMinion();
 	sitMap.shutdownSitMap();
 
     pthread_mutex_lock( &readWaitMutex );

@@ -28,10 +28,6 @@ int VL53L0X_i2c_init(char * devPath, int devAddr)
     }
 	syslog(LOG_NOTICE, "In VL53L0X_i2c_init, attached to slave address %d", devAddr);
     
-    // test
-///    manager.setMotorPower( true );
-    managerWrite( file, 8, 42 );
-    
     return file;
 }
 
