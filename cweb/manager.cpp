@@ -473,11 +473,3 @@ void Manager::setMotorPower( bool On ) {
 
     syslog( LOG_NOTICE, "In Manager::setMotorPower(), test for access to manager from vl code" );
 }
-
-extern "C" void managerWrite( int file, int reg, int data ) { // wrapper function
-    return manager.request( writeI2C, file, reg, data );
-}
-
-extern "C" long managerRead( int file, int length ) {         // wrapper function
-    return manager.request( readI2C, file, length );
-}

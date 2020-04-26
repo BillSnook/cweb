@@ -15,6 +15,7 @@
 		6B2FD2B1244CE1CA00BAC739 /* vl53l0x_platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2B0244CE1CA00BAC739 /* vl53l0x_platform.c */; };
 		6B2FD2BE2454E0EB00BAC739 /* actions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A958526221BCDD9E001573FA /* actions.cpp */; };
 		6B2FD2BF2454E0F100BAC739 /* vl53l0x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A949BB4D22A8158C006383AE /* vl53l0x.cpp */; };
+		6B2FD2C22455F81900BAC739 /* wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2C02455F81900BAC739 /* wrapper.cpp */; };
 		A91D0AD6209958DF00EA1DB4 /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A91D0AD4209958DF00EA1DB4 /* filer.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
@@ -60,6 +61,8 @@
 		6B2FD2BB244D195500BAC739 /* vl53l0x_api_ranging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_ranging.h; path = vl53l0x/Api/core/inc/vl53l0x_api_ranging.h; sourceTree = "<group>"; };
 		6B2FD2BC244D195500BAC739 /* vl53l0x_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_def.h; path = vl53l0x/Api/core/inc/vl53l0x_def.h; sourceTree = "<group>"; };
 		6B2FD2BD244D195500BAC739 /* vl53l0x_api_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vl53l0x_api_core.h; path = vl53l0x/Api/core/inc/vl53l0x_api_core.h; sourceTree = "<group>"; };
+		6B2FD2C02455F81900BAC739 /* wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = wrapper.cpp; sourceTree = "<group>"; };
+		6B2FD2C12455F81900BAC739 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		A91D0AD4209958DF00EA1DB4 /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
 		A91D0AD5209958DF00EA1DB4 /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A923017E218E989F00EB2A21 /* tasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tasks.cpp; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 				A923017F218E989F00EB2A21 /* tasks.hpp */,
 				A958526221BCDD9E001573FA /* actions.cpp */,
 				A958526321BCDD9E001573FA /* actions.hpp */,
+				6B2FD2C02455F81900BAC739 /* wrapper.cpp */,
+				6B2FD2C12455F81900BAC739 /* wrapper.h */,
 			);
 			name = control;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
 				6B2FD2AD244CE1AC00BAC739 /* vl53l0x_api_ranging.c in Sources */,
 				6B2FD2AF244CE1AC00BAC739 /* vl53l0x_api_strings.c in Sources */,
+				6B2FD2C22455F81900BAC739 /* wrapper.cpp in Sources */,
 				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,

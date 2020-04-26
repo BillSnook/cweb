@@ -9,8 +9,8 @@
 #include "vl53l0x_platform.h"
 #include "vl53l0x_api.h"
 
-///#include "manager.hpp"
-void managerWrite( int file, int reg, int data );
+#include "wrapper.h"
+
 
 int VL53L0X_i2c_init(char * devPath, int devAddr)
 {
