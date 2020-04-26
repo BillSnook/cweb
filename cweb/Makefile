@@ -58,7 +58,7 @@ obj/%.o: ${CORE_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 obj/%.o: ${RASP_DIR}/src/%.c
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 info:
 	@pwd
