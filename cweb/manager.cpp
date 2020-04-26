@@ -475,9 +475,9 @@ void Manager::setMotorPower( bool On ) {
 }
 
 extern "C" void managerWrite( int file, int reg, int data ) { // wrapper function
-    return manager->request( writeI2C, file, reg, data );
+    return manager.request( writeI2C, file, reg, data );
 }
 
 extern "C" long managerRead( int file, int length ) {         // wrapper function
-    return manager->request( readI2C, file, length );
+    return manager.request( readI2C, file, length );
 }
