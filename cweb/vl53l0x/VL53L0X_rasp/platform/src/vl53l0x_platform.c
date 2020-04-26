@@ -30,7 +30,7 @@ int VL53L0X_i2c_init(char * devPath, int devAddr)
     
     // test
 ///    manager.setMotorPower( true );
-    void managerWrite( file, 8, 42 );
+    managerWrite( file, 8, 42 );
     
     return file;
 }
