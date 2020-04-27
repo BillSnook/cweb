@@ -289,14 +289,14 @@ long Manager::getNowMs() {
 	return sec + ms;
 }
 
-int Manager::readReg8( int file, int reg ) {
-    
-    long result = request( readReg8I2C, file, reg );
-
-    syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
-
-    return (int)result;
-}
+//int Manager::readReg8( int file, int reg ) {
+//    
+//    long result = request( readReg8I2C, file, reg );
+//
+//    syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
+//
+//    return (int)result;
+//}
 
 void Manager::setStatus() {
 	

@@ -118,7 +118,7 @@ int I2C::i2cRead(int reg) {
 
 //    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
 
-    return manager.request( readReg8I2C, file, reg );
+    return manager.request( readReg8I2C, file_i2c, reg );
 
 #else
 	return reg;
