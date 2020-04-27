@@ -128,7 +128,7 @@ void Manager::shutdownManager() {
 
 void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	
-	syslog(LOG_NOTICE, "In Manager::monitor, wait for queued I2C requests" );
+	syslog(LOG_NOTICE, "monitor, wait for queued I2C requests" );
 
     while ( !stopLoop ) {
         I2CControl i2cControl;
@@ -142,10 +142,10 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
             try {
                 i2cControl = i2cQueue.front();
                 i2cQueue.pop();
-//                syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
+//                syslog(LOG_NOTICE, "monitor, i2c command from queue" );
             } catch(...) {
                 stopLoop = true;    // Error, we're done
-                syslog(LOG_NOTICE, "In Manager::monitor, i2c queue pop failure occured" );
+                syslog(LOG_NOTICE, "monitor, i2c queue pop failure occured" );
             }
         }
         
@@ -159,7 +159,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -176,8 +176,7 @@ void Manager::execute( I2CControl i2cControl ) {
             {
                 pthread_mutex_lock( &readWaitMutex );
                 read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
-                syslog(LOG_NOTICE, "In Manager::execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
-//                i2cControl.i2cParam = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
+//                syslog(LOG_NOTICE, "execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
@@ -213,7 +212,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
     }
     
-//    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
+//    syslog(LOG_NOTICE, "execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
 // Typically a single write operation with command being a register and param being the value to write
@@ -223,10 +222,10 @@ void Manager::request( I2CType type, int file, int command, int param ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+        syslog(LOG_NOTICE, "request wr, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
-        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+        syslog(LOG_NOTICE, "request wr, i2c queue push failure occured" );
     }
     pthread_mutex_unlock( &i2cQueueMutex );
 }
@@ -241,18 +240,18 @@ long Manager::request( I2CType type, int file, int command ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+        syslog(LOG_NOTICE, "request rd, command type: %s, reg/len %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
-        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+        syslog(LOG_NOTICE, "request rd, i2c queue push failure occured" );
     }
     pthread_mutex_unlock( &i2cQueueMutex );
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
-        syslog(LOG_NOTICE, "In Manager::request, wait for readWaitCond", command );
+        syslog(LOG_NOTICE, "request rd, wait for readWaitCond", command );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
-        syslog(LOG_NOTICE, "In Manager::request, got readWaitCond: %d - 0x%02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
+        syslog(LOG_NOTICE, "request rd, got readWaitCond: %02X -> %02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 
@@ -260,7 +259,7 @@ long Manager::request( I2CType type, int file, int command ) {
     if ( type == readReg8I2C ) {
         result = i2cControl.i2cData[2];
     }
-    syslog(LOG_NOTICE, "In Manager::request data read: %04X\n", result );
+    syslog(LOG_NOTICE, "request rd data: %04X\n", result );
 
     return result;
 }
@@ -273,10 +272,10 @@ long Manager::request( I2CType type, int file, int command ) {
 //        for ( int i = 0; i < writeList->size(); i++ ) {
 //            i2cQueue.push( writeList[i] );
 //        }
-//        syslog(LOG_NOTICE, "In Manager::request, i2c command put on queue" );
+//        syslog(LOG_NOTICE, "request, i2c command put on queue" );
 //        pthread_cond_signal( &i2cQueueCond );
 //    } catch(...) {
-//        syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
+//        syslog(LOG_NOTICE, "request, i2c queue push failure occured" );
 //    }
 //    pthread_mutex_unlock( &i2cQueueMutex );
 //}
@@ -295,7 +294,7 @@ long Manager::getNowMs() {
 //    
 //    long result = request( readReg8I2C, file, reg );
 //
-//    syslog(LOG_NOTICE, "In Manager::readReg8 data read: %04X\n", result );
+//    syslog(LOG_NOTICE, "readReg8 data read: %04X\n", result );
 //
 //    return (int)result;
 //}
