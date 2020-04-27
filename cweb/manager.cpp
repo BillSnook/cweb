@@ -82,6 +82,7 @@ const char *I2CControl::description() {
 // MARK: - Manager
 void Manager::setupManager() {
 	stopLoop = false;
+    endLoop = false;
 	lastAnythingTime = 0;
 	lastStatusTime = 0;
 	expectedControllerMode = initialMode;
@@ -102,7 +103,7 @@ void Manager::setupManager() {
 
 void Manager::shutdownManager() {
 
-    stopLoop = true;
+    endLoop = true;
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
@@ -153,6 +154,10 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
         
         if ( !stopLoop ) {
             execute( i2cControl );
+        }
+        
+        if ( endLoop && i2cQueue.empty() ) {
+            stopLoop = true;
         }
 	}
 }

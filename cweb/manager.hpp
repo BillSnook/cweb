@@ -47,7 +47,8 @@ public:
 
 class Manager {
 	
-	bool stopLoop;
+    bool stopLoop;
+    bool endLoop;
 	long lastAnythingTime;
 	long lastStatusTime;
 	long status;
