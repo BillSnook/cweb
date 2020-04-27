@@ -72,6 +72,7 @@ void Threader::setupThreader() {
     manager = Manager();
     manager.setupManager();         // Manages i2c queue and controller communication
     threader.queueThread( managerThread, 8, 0 );
+    threader.createThread();
 
 	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
