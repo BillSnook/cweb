@@ -116,9 +116,9 @@ int I2C::i2cRead(int reg) {
 	
 #ifdef ON_PI
 
-    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
+//    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
 
-//    return manager.readReg8( file_i2c, reg );
+    return manager.request( readReg8I2C, file, reg );
 
 #else
 	return reg;
@@ -130,8 +130,9 @@ void I2C::i2cWrite(int reg, int data) {
     
 #ifdef ON_PI
     
-    wiringPiI2CWriteReg8(file_i2c, reg, data);
-#else
+    manager.request( writeI2C, file_i2c, reg, data );
+//    wiringPiI2CWriteReg8(file_i2c, reg, data);
+    
 #endif  // ON_PI
 }
 
@@ -140,7 +141,7 @@ void I2C::i2cWriteX(int reg, int data) {
 #ifdef ON_PI
     
     manager.request( writeI2C, file_i2c, reg, data );
-#else
+
 #endif  // ON_PI
 }
 

@@ -75,7 +75,7 @@ public:
     long request( I2CType type, int file, int command );                // Reads with long result values
 //    long request( I2CControl writelist[] );                             // Multiple address write
 
-    int readReg8( int file, int reg );
+//    int readReg8( int file, int reg );
     
     void setStatus();
 	long getStatus();
