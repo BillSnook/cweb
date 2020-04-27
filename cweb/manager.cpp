@@ -160,7 +160,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d started", i2cControl.i2cType, i2cControl.i2cCommand );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -221,10 +221,11 @@ void Manager::execute( I2CControl i2cControl ) {
 void Manager::request( I2CType type, int file, int command, int param ) {
     
     I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, i2c command %s put on queue", i2cControl.description() );
+        syslog(LOG_NOTICE, "In Manager::request, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
@@ -242,7 +243,7 @@ long Manager::request( I2CType type, int file, int command ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, i2c command %s put on queue", i2cControl.description() );
+        syslog(LOG_NOTICE, "In Manager::request, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
@@ -257,7 +258,6 @@ long Manager::request( I2CType type, int file, int command ) {
     }
     pthread_mutex_unlock( &readWaitMutex );
 
-    i2cControl.i2cCommand = i2cControl.i2cData[2];
     long result = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
     if ( type == readReg8I2C ) {
         result = i2cControl.i2cData[2];
