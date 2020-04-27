@@ -128,8 +128,7 @@ void Manager::shutdownManager() {
 
 void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	
-	syslog(LOG_NOTICE, "In Manager::monitor, should only start once" );
-
+	syslog(LOG_NOTICE, "In Manager::monitor, wait for queued I2C requests" );
 
     while ( !stopLoop ) {
         I2CControl i2cControl;
@@ -143,7 +142,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
             try {
                 i2cControl = i2cQueue.front();
                 i2cQueue.pop();
-                syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
+//                syslog(LOG_NOTICE, "In Manager::monitor, i2c command from queue" );
             } catch(...) {
                 stopLoop = true;    // Error, we're done
                 syslog(LOG_NOTICE, "In Manager::monitor, i2c queue pop failure occured" );
@@ -160,7 +159,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -214,7 +213,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
     }
     
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
+//    syslog(LOG_NOTICE, "In Manager::execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
 // Typically a single write operation with command being a register and param being the value to write
