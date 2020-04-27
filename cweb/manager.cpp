@@ -257,7 +257,11 @@ long Manager::request( I2CType type, int file, int command ) {
     }
     pthread_mutex_unlock( &readWaitMutex );
 
+    i2cControl.i2cCommand = i2cControl.i2cData[2];
     long result = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
+    if ( type == readReg8I2C ) {
+        result = i2cControl.i2cData[2];
+    }
     syslog(LOG_NOTICE, "In Manager::request data read: %04X\n", result );
 
     return result;
