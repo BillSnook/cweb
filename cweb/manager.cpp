@@ -116,7 +116,9 @@ void Manager::shutdownManager() {
     pthread_cond_signal( &i2cQueueCond );
     pthread_mutex_unlock( &i2cQueueMutex );
     
-    usleep( 1000 );
+    while ( ! stopLoop ) {
+        usleep( 1000 );
+    }
     
     pthread_mutex_destroy( &readWaitMutex );
     pthread_cond_destroy( &readWaitCond );
