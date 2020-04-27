@@ -220,11 +220,10 @@ void Manager::execute( I2CControl i2cControl ) {
 void Manager::request( I2CType type, int file, int command, int param ) {
     
     I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
-    syslog(LOG_NOTICE, "In Manager::execute, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "In Manager::request, command type: %s, command/register %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+        syslog(LOG_NOTICE, "In Manager::request, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "In Manager::request, i2c queue push failure occured" );
