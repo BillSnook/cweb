@@ -90,7 +90,4 @@ public:
 	void stopVL();
 };
 
-extern Manager	manager;
-
-
 #endif /* manager_hpp */

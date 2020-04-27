@@ -9,6 +9,8 @@
 #include "wrapper.h"
 #include "manager.hpp"
 
+extern Manager        manager;
+
 void managerWrite( int file, int reg, int data ) { // wrapper function
     return manager.request( writeI2C, file, reg, data );
 }

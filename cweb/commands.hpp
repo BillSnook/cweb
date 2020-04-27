@@ -19,6 +19,4 @@ public:
 
 };
 
-extern Commander	commander;
-
 #endif /* commands_hpp */

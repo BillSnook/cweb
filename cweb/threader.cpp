@@ -20,6 +20,8 @@
 extern Threader		threader;
 extern TaskMaster	taskMaster;
 extern Manager		manager;
+extern Commander    commander;
+
 
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {

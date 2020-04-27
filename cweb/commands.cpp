@@ -34,7 +34,6 @@ Hardware	hardware;
 
 
 extern Filer	filer;
-//extern Listener	listener;
 extern Manager 	manager;
 
 void Commander::setupCommander() {
