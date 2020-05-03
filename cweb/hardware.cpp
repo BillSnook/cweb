@@ -253,7 +253,7 @@ bool Hardware::setupHardware() {
 	pwm->setPWMFrequency( PWM_FREQ );
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
-//	speed = Speed();
+	speed = Speed();
 // WFS	speed.initializeSpeedArray();
     
     pattern = SearchPattern( 45, 135, 5 );
