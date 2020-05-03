@@ -249,8 +249,8 @@ long Manager::request( I2CType type, int file, int command ) {
     }
     pthread_mutex_unlock( &readWaitMutex );
 
-//    long result = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
-    long result = (i2cControl.i2cData[5] << 24) | (i2cControl.i2cData[4] << 16) | (i2cControl.i2cData[3] << 8) | i2cControl.i2cData[2];
+    long result = (i2cControl.i2cData[2] << 24) | (i2cControl.i2cData[3] << 16) | (i2cControl.i2cData[4] << 8) | i2cControl.i2cData[5];
+//    long result = (i2cControl.i2cData[5] << 24) | (i2cControl.i2cData[4] << 16) | (i2cControl.i2cData[3] << 8) | i2cControl.i2cData[2];
     if ( type == readReg8I2C ) {
         result = i2cControl.i2cData[2];
     }
@@ -350,7 +350,8 @@ long Manager::getRangeResult() {
 unsigned int Manager::getRange() {
 	
 	long result = getRangeResult();
-	unsigned int range = (result >> 16) & 0x0FFFF;		// Actual range value
+//    unsigned int range = (result >> 16) & 0x0FFFF;        // Actual range value
+    unsigned int range = result & 0x0FFFF;        // Actual range value
 	return range;
 }
 
