@@ -78,11 +78,11 @@ void SiteMap::updateEntry( long entry ) {
     
     unsigned int range = (entry >> 16) & 0x0FFFF;        // Actual range value
     unsigned int angle = entry & 0x0FFFF;                // Angle used to track value of range
-//    syslog(LOG_NOTICE, "In SiteMap::updateEntry(), angle: %u, range: %u", angle, range );
+    syslog(LOG_NOTICE, "In SiteMap::updateEntry(), angle: %u, range: %u", angle, range );
 
     if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
         unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
-//        syslog(LOG_NOTICE, "In SiteMap::updateEntry(), index: %u", index );
+        syslog(LOG_NOTICE, "In SiteMap::updateEntry(), index: %u", index );
         if ( ( index >= 0 ) && ( index < pattern.indexCount ) ) {
             distanceMap[ index ].range = range;
             distanceMap[ index ].angle = angle;
