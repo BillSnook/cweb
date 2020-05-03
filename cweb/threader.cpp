@@ -18,8 +18,8 @@
 #include <stdlib.h>
 
 extern Threader		threader;
+extern Manager        manager;
 extern TaskMaster	taskMaster;
-extern Manager		manager;
 extern Commander    commander;
 
 

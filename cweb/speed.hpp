@@ -9,7 +9,6 @@
 #ifndef speed_hpp
 #define speed_hpp
 
-#include "filer.hpp"
 
 // There are 4096 possible counts per interval. This supplies full voltage to the motors.
 // Micros seem to freak out after about 6v. So we keep our count below 2048 with a 12v supply

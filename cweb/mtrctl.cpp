@@ -28,11 +28,11 @@
 #define MAKE_DAEMON
 
 Threader	threader;
+Manager        manager;
 
 Listener	listener;
 Sender		sender;
 
-Manager		manager;
 
 
 bool		becomeDaemon;
@@ -63,62 +63,48 @@ int main(int argc, const char * argv[]) {
 		
 		pid_t pid;
 		
-		/* Fork off the parent process */
-		pid = fork();
+		pid = fork();       // Fork off the parent process
 		
-		/* An error occurred */
-		if (pid < 0)
+		if (pid < 0)        // An error occurred
 			exit(EXIT_FAILURE);
 		
-		/* Success: Let the parent terminate */
-		if (pid > 0)
+		if (pid > 0)        // We are the parent so we terminate while the child continues
 			exit(EXIT_SUCCESS);
 		
-		/* On success: The child process becomes session leader */
-		if (setsid() < 0)
+		if (setsid() < 0)   // On success: The child process becomes session leader
 			exit(EXIT_FAILURE);
 		
-		/* Catch, ignore and/or handle signals */
-		signal(SIGCHLD, SIG_IGN);
+		signal(SIGCHLD, SIG_IGN);   // Catch, ignore and/or handle signals
 		signal(SIGHUP, SIG_IGN);
-		signals_setup();
+		signals_setup();    // Setup and manage signal handling
 		
-		/* Fork off for the second time*/
-		pid = fork();
+		pid = fork();       // Fork off for the second time: process magic
 		
-		/* An error occurred */
-		if (pid < 0)
+		if (pid < 0)        // An error occurred
 			exit(EXIT_FAILURE);
-		
-		/* Success: Let the parent terminate */
-		if (pid > 0)
+
+		if (pid > 0)        // Success: Let the parent terminate
 			exit(EXIT_SUCCESS);
 		
-		/* Set new file permissions */
-		umask(0);
+        // Now we are Daemon
+		umask(0);           // Set new file permissions
 		
-		/* Change the working directory to the root directory */
-		/* or another appropriated directory */
-		chdir("/");
+		chdir("/");         // Change the working directory to the root directory
 		
-		/* Close all open file descriptors */
-		long x;
+		long x;             // Close all open file descriptors
 		for (x = sysconf(_SC_OPEN_MAX); x>=0; x--) {
 			close ( int(x) );
 		}
-		/* Open the log file */
-		openlog("mtrctllog", LOG_PID, LOG_DAEMON);
+
+		openlog("mtrctllog", LOG_PID, LOG_DAEMON);        // Open the log file
 		syslog(LOG_NOTICE, "Started mtrctl as daemon");
 		
 	} else {
 		
 		signals_setup();
 
-		/* Open the log file */
 		openlog("mtrctllog", LOG_PID | LOG_PERROR, LOG_USER);	// Also log to stderr
 		syslog(LOG_NOTICE, "Started mtrctl as user - syslog + LOG_PERROR");
-
-//		fprintf( stderr, "\nStarted mtrctl as user\n" );
 	}
 	
 	// Done figuring out whether we are a daemon, running in the background, or not.

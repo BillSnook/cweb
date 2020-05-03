@@ -6,7 +6,6 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "speed.hpp"
 
 
 #include <syslog.h>			// close read write
@@ -14,6 +13,9 @@
 #include <string.h>			// strcat
 #include <stdio.h>			// sprintf
 //#include <getopt.h>
+
+#include "speed.hpp"
+#include "filer.hpp"
 
 extern Filer	filer;
 
