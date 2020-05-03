@@ -84,9 +84,9 @@ bool Filer::readData( speed_array *forward, speed_array *reverse ) {
 
 // MARK: - Speed
 // Converts speed index into speeds
-Speed::Speed() {
-    
-}
+//Speed::Speed() {
+//    
+//}
 
 bool Speed::setupForSpeed() {
 	

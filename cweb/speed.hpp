@@ -41,7 +41,7 @@ class Speed {
 	int				calibrationTestIndex;	// Keep track of working index
 	
 public:
-    explicit        Speed();
+//    explicit        Speed();
 
 	speed_array 	forward[SPEED_ARRAY];
 	speed_array 	reverse[SPEED_ARRAY];
