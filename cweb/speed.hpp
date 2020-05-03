@@ -16,6 +16,25 @@
 #define SPEED_ARRAY             9		// Number of distinct speeds we can select - f and r
 #define SPEED_ADJUSTMENT        512     // Half for now to solve crash if too high
 
+struct speed_array {
+    int left;
+    int right;
+};
+
+
+class Filer {
+
+    char fileName[64];
+    char *speedFileName = fileName;
+
+public:
+    explicit Filer();
+    
+    void setFile( int whichFile );
+    void saveData( speed_array *forward, speed_array *reverse );
+    bool readData( speed_array *forward, speed_array *reverse );
+};
+
 
 class Speed {
 	

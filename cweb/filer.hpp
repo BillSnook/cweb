@@ -10,23 +10,4 @@
 #define filer_hpp
 
 
-struct speed_array {
-	int left;
-	int right;
-};
-
-
-class Filer {
-
-	char fileName[64];
-	char *speedFileName = fileName;
-
-public:
-	explicit Filer();
-	
-	void setFile( int whichFile );
-	void saveData( speed_array *forward, speed_array *reverse );
-	bool readData( speed_array *forward, speed_array *reverse );
-};
-
 #endif /* filer_hpp */

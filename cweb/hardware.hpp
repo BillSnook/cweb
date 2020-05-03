@@ -77,6 +77,8 @@ public:
 	I2C     	*i2c;
 	PWM     	*pwm;
 	
+    Speed       speed;
+    
 	bool    	motor0Setup;
 	bool   		motor1Setup;
 	bool		sweepOneWay;
@@ -85,9 +87,7 @@ public:
 	int     	i2cAddress;
 	int     	i2cFrequency;
 
-	Speed		speed;
-	
-	
+
 //	void initSpeedArrays();
 	bool setupHardware();
 	bool shutdownHardware();
