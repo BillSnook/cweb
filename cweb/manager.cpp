@@ -338,8 +338,8 @@ void Manager::setRange( unsigned int angle) {
 
 long Manager::getRangeResult() {
 	
-   long status = request( readI2C, file_i2c, 4 );
-    syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
+    long status = request( readI2C, file_i2c, 4 );
+    syslog(LOG_NOTICE, "In Manager::getRangeResult data read: 0x%08lX\n", status);
 
     expectedControllerMode = statusMode;    // Controller should drop back to this too
 	siteMap.updateEntry( status );
