@@ -343,7 +343,6 @@ long Manager::getRangeResult() {
 
     expectedControllerMode = statusMode;    // Controller should drop back to this too
 	siteMap.updateEntry( status );
-	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", status );
 	return status;
 }
 
