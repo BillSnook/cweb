@@ -210,6 +210,7 @@ void Manager::execute( I2CControl i2cControl ) {
                 read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+                syslog(LOG_NOTICE, "execute,    reg8 command type: %s, data: %02X", i2cControl.description(), i2cControl.i2cData[2] );
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }
