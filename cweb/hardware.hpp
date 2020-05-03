@@ -72,7 +72,6 @@ enum {		// Distance class
 class Hardware {
 	
 public:
-	explicit Hardware();
 	
 	I2C     	*i2c;
 	PWM     	*pwm;

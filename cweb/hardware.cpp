@@ -230,20 +230,15 @@ int PWM::getPWMResolution() {
 }
 
 
-Hardware::Hardware() {
-	
-	motor0Setup = false;
-	motor1Setup = false;
-	sweepOneWay = false;
-	upsideDownScanner = false;
-
-	
-}
-
 bool Hardware::setupHardware() {
 	
     syslog(LOG_NOTICE, "In setupHardware" );
 
+    motor0Setup = false;
+    motor1Setup = false;
+    sweepOneWay = false;
+    upsideDownScanner = false;
+    
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
