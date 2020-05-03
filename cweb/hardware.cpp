@@ -262,8 +262,8 @@ bool Hardware::setupHardware() {
 // WFS	speed.initializeSpeedArray();
     
     pattern = SearchPattern( 45, 135, 5 );
-    sitMap = SitMap( pattern );
-    sitMap.setupSitMap();
+    siteMap = SiteMap( pattern );
+    siteMap.setupSiteMap();
 
 	scanLoop = false;
 
@@ -289,7 +289,7 @@ bool Hardware::shutdownHardware() {
 	
 	setPWM( Scanner, 0 );		// Turn off servos
 
-    sitMap.shutdownSitMap();
+    siteMap.shutdownSiteMap();
 
 	return true;
 }
@@ -501,10 +501,10 @@ void Hardware::pingLoop() {
 
 void Hardware::prepPing( int start, int end, int inc ) {
 	
-    sitMap.shutdownSitMap();
+    siteMap.shutdownSiteMap();
     pattern = SearchPattern( start, end, inc );
-    sitMap = SitMap( pattern );
-    sitMap.setupSitMap();
+    siteMap = SiteMap( pattern );
+    siteMap.setupSiteMap();
     
 	sweepOneWay = true;			// For greater consistency
 	upsideDownScanner = true;	// For dev32, not for dev31!!
@@ -541,7 +541,7 @@ void Hardware::scanPing( int socket ) {
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
 			// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
 			if ( 0 != socket ) {
-				buffer = sitMap.returnMap( buffer );
+				buffer = siteMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
@@ -554,7 +554,7 @@ void Hardware::scanPing( int socket ) {
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u", angle, distance );
 			}
 			if ( 0 != socket ) {
-				buffer = sitMap.returnMap( buffer );
+				buffer = siteMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
@@ -567,7 +567,7 @@ void Hardware::scanPing( int socket ) {
 			}
 			// Range newly scanned, sitmap updated - contact mother ship with ping map
 			if ( 0 != socket ) {
-				buffer = sitMap.returnMap( buffer );
+				buffer = siteMap.returnMap( buffer );
 				listener.writeBack( buffer, socket );
 				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}

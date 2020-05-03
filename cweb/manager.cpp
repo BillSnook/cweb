@@ -354,7 +354,7 @@ long Manager::getRangeResult() {
     syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
 
     expectedControllerMode = statusMode;    // Controller should drop back to this too
-	sitMap.updateEntry( status );
+	siteMap.updateEntry( status );
 	syslog(LOG_NOTICE, "In Manager::getRangeResult(): 0x%08lX", status );
 	return status;
 }

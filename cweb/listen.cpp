@@ -77,7 +77,7 @@ void Listener::serviceConnection( int connectionSockfd ) {
 		syslog(LOG_NOTICE, "Here is a received message: %s", buffer );
 		// start thread to service command
 		
-		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread
+		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread with socket in case it needs to respond
 		free( buffer );
 
 //		n = write( connectionSockfd, "\nAck\n", 5 );

@@ -26,19 +26,19 @@ public:
     int indexCount;
 };
 
-class SitMap {
+class SiteMap {
     
     SearchPattern        pattern;
     DistanceEntry        *distanceMap;
     
 public:
 
-    explicit SitMap();
-    explicit SitMap( SearchPattern newPattern );
+    explicit SiteMap();
+    explicit SiteMap( SearchPattern newPattern );
 
-    void setupSitMap();
-    void resetSitMap();
-    void shutdownSitMap();
+    void setupSiteMap();
+    void resetSiteMap();
+    void shutdownSiteMap();
     
     void updateEntry( long entry );
     char *returnMap( char *buffer );
@@ -46,6 +46,6 @@ public:
 };
 
 extern SearchPattern    pattern;
-extern SitMap           sitMap;
+extern SiteMap           siteMap;
 
 #endif /* map_hpp */

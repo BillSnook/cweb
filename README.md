@@ -32,49 +32,50 @@ In the system file /etc/rc.local, there should be a line at the end like:
 This line should be commented out to prevent the program from becoming a daemon.
 
 
+mtrctl
+    Main module, controls startup, initialization and cleanup.
+    Start listener to wait for connections on WiFi.
+threader
+    Initializes thread creation and management process.
+    Start manager and it's I2C queue thread.
+    Start commander to process commands on WiFi
+        from cartroller app in it's own thread.
+    Start taskmanager for specific tasks to be created when needed.
+signals
+    Manage processing of system signals, specifically kill and interrupt.
+filer
+    Utility to manage files for persistent data on the device.
+    
+listen
+    Start thread to liten for connections and open a comm channel,
+        only used if we are not a sender as determined at startup.
+sender
+    Initialize and open a connection to another device.,
+        only used if we are not a listener as determined at startup.
 
+hardware
+    Initializes motor controller hardware, sets up PWM parameters,
+        reads speed adjustment table, initializes search and pattern.
+speed
+    Manages speed table to adjust for large motor speed differences.
+map
+    Search and map functions to help determine location and obstacles
+vl53l0x
+    Light based distance measurements
+    
+commands
+    Start thread to parse and execute commands from cartroller over WiFi.
+manager
+    Starts and manages a queue to gate requests for the I2C bus,
+        then executes them.
+tasks
+    Run specific tasks on their own queue for persistence and performance.
+actions
+    Interface tests for vl53l0x, start specific operations for entire device control.
+wrapper
+    Interface file from vl53l0x to I2C queue to perform platform (Pi) specific operations.
 
-mtrctllog[1253]: Started mtrctl as user - syslog + LOG_PERROR
-mtrctllog[1253]: In setupManager
-mtrctllog[1253]: In SitMap::setupSitMap(), before distanceMap, size: 19
-mtrctllog[1253]: In SitMap::setupSitMap(), after distanceMap
-mtrctllog[1253]: In setupCommander
-mtrctllog[1253]: Setting I2C address: 0x6F, PWM freq: 50
-mtrctllog[1253]: SPECIAL, oldmode read from PWM board: 0x0001 before rework
-mtrctllog[1253]: Setting up speed array
-mtrctllog[1253]: In setupTaskMaster
-mtrctllog[1253]: mtrctl argc = 1
-mtrctllog[1253]: Ready to service queue
-mtrctllog[1253]: In runNextThread with managerThread, thread count 1
-mtrctllog[1253]: In Manager::monitor, should only start once
-mtrctllog[1253]: In runNextThread with listenThread, thread count 2
-mtrctllog[1253]: Success binding to socket port 5555 on 0.0.0.0
-mtrctllog[1253]: In acceptConnections, listening
-mtrctllog[1253]: Accepted connection, clientAddr: 192.168.1.4
-mtrctllog[1253]: In acceptConnections, listening
-mtrctllog[1253]: In runNextThread with serverThread, thread count 3
-mtrctllog[1253]: Here is a received message: a
-mtrctllog[1253]: In runNextThread with commandThread, thread count 4
-mtrctllog[1253]: In serviceCommand with: a
-mtrctllog[1253]: Command a calls: setStatus()
-mtrctllog[1253]: In Manager::setStatus()
-mtrctllog[1253]: In Manager::request, i2c command writeI2C put on queue
-mtrctllog[1253]: In runNextThread, exiting from commandThread, thread count 3
-mtrctllog[1253]: In Manager::monitor, i2c command from queue
-mtrctllog[1253]: In Manager::execute, command type: 2, 115 started
-mtrctllog[1253]: In Manager::execute, command type: 2, 115 completed, 0x00000000 returned
-mtrctllog[1253]: Here is a received message: b
-mtrctllog[1253]: In runNextThread with commandThread, thread count 4
-mtrctllog[1253]: In serviceCommand with: b
-mtrctllog[1253]: In Manager::getStatus()
-mtrctllog[1253]: In Manager::request, i2c command readI2C put on queue
-mtrctllog[1253]: In Manager::request, wait for readWaitCond
-mtrctllog[1253]: In Manager::monitor, i2c command from queue
-mtrctllog[1253]: In Manager::execute, command type: 3, 4 started
-mtrctllog[1253]: In Manager::execute, data read: AA 55 CC FF, command: 0x0004
-mtrctllog[1253]: In Manager::execute, command type: 3, 0 completed, 0x00000000 returned
-mtrctllog[1253]: In Manager::request, got readWaitCond: 4 - 0x01
-mtrctllog[1253]: In Manager::request data read: AA55CCFF
-mtrctllog[1253]: In Manager::getStatus data read: 0xAA55CCFF
-mtrctllog[1253]: Command b calls: getStatus(): 0xAA55CCFF
-mtrctllog[1253]: In runNextThread, exiting from commandThread, thread count 3
+vl53l0x library code
+    Perform stand-alone operations.
+    
+    

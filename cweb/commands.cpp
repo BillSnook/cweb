@@ -49,11 +49,13 @@ void Commander::shutdownCommander() {
 	hardware.shutdownHardware();
 }
 
+// This is launched on it's own thread from the listener when command data comes in over wifi
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceCommand with: %s", command );
+    // First interpret tokens
+    char *nextToken[tokenMax+1];
 	int len = int( strlen( command ) );
-	char *nextToken[tokenMax+1];
 	int i = 0;
 	int tokenCount = 0;
 	do {
@@ -83,12 +85,12 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		token4 = atoi( nextToken[4] );
 	}
 	char commandType = command[0];	// Get command
-
 //	for ( int y = 0; y < tokenCount; y++ ) {
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 //	}
 
-	char msg[ 1024 ];
+    // Prepare for return msg
+	char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
 //	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 	switch ( commandType ) {
@@ -186,7 +188,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'E':
 		case 'e':
 		{
-//			char *display = (char *)manager.sitMap.returnMap( msg );	// msg is 1024 bytes
+//			char *display = (char *)manager.siteMap.returnMap( msg );	// msg is 1024 bytes
 			syslog(LOG_NOTICE, "Error - Sitmap moved" );
 //			listener.writeBlock( msg, int( strlen( (char *)msg ) ), socket );
 		}
