@@ -43,11 +43,9 @@ threader
     Start taskmanager for specific tasks to be created when needed.
 signals
     Manage processing of system signals, specifically kill and interrupt.
-filer
-    Utility to manage files for persistent data on the device.
     
 listen
-    Start thread to liten for connections and open a comm channel,
+    Start thread to listen for connections and open comm channels,
         only used if we are not a sender as determined at startup.
 sender
     Initialize and open a connection to another device.,
@@ -57,7 +55,8 @@ hardware
     Initializes motor controller hardware, sets up PWM parameters,
         reads speed adjustment table, initializes search and pattern.
 speed
-    Manages speed table to adjust for large motor speed differences.
+    Manages speed table to adjust for large motor speed differences,
+        writes and reads table from storage using filer.
 map
     Search and map functions to help determine location and obstacles
 vl53l0x

@@ -166,7 +166,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+//    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -191,18 +191,6 @@ void Manager::execute( I2CControl i2cControl ) {
             }
             break;
 
-//        case readReg8I2C:
-//            {
-//                pthread_mutex_lock( &readWaitMutex );
-//                int rdByte = wiringPiI2CReadReg8( i2cControl.i2cFile, i2cControl.i2cCommand );    // Read 8 bits from register reg on device
-//                i2cControl.i2cData[2] = rdByte;  // Return result
-//                i2cControl.i2cData[0] = 1;  // Signal completion
-//                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
-//                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
-//                pthread_mutex_unlock( &readWaitMutex );
-//            }
-//            break;
-            
         case readReg8I2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
@@ -210,7 +198,6 @@ void Manager::execute( I2CControl i2cControl ) {
                 read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
                 i2cControl.i2cData[0] = 1;  // Signal completion
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
-                syslog(LOG_NOTICE, "execute,    reg8 command type: %s, data: %02X", i2cControl.description(), i2cControl.i2cData[2] );
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }
@@ -219,7 +206,6 @@ void Manager::execute( I2CControl i2cControl ) {
         default:
             break;
     }
-    
 //    syslog(LOG_NOTICE, "execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
 }
 
@@ -230,7 +216,7 @@ void Manager::request( I2CType type, int file, int command, int param ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "request wr, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+//        syslog(LOG_NOTICE, "request wr, command type: %s, cmd/reg %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "request wr, i2c queue push failure occured" );
@@ -248,7 +234,7 @@ long Manager::request( I2CType type, int file, int command ) {
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
-        syslog(LOG_NOTICE, "request rd, command type: %s, reg/len %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
+//        syslog(LOG_NOTICE, "request rd, command type: %s, reg/len %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
         syslog(LOG_NOTICE, "request rd, i2c queue push failure occured" );
@@ -257,9 +243,9 @@ long Manager::request( I2CType type, int file, int command ) {
 
     pthread_mutex_lock( &readWaitMutex );
     while ( 0 == i2cControl.i2cData[0] ) {    // Until there is a response ready
-        syslog(LOG_NOTICE, "request rd, wait for readWaitCond", command );
+//        syslog(LOG_NOTICE, "request rd, wait for readWaitCond", command );
         pthread_cond_wait( &readWaitCond, &readWaitMutex ); // Free mutex and wait
-        syslog(LOG_NOTICE, "request rd, got readWaitCond: %02X -> %02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
+//        syslog(LOG_NOTICE, "request rd, got readWaitCond: %02X -> %02X", i2cControl.i2cCommand, i2cControl.i2cData[0] );
     }
     pthread_mutex_unlock( &readWaitMutex );
 

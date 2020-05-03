@@ -28,7 +28,6 @@ class Filer {
     char *speedFileName = fileName;
 
 public:
-    explicit Filer();
     
     void setFile( int whichFile );
     void saveData( speed_array *forward, speed_array *reverse );
@@ -42,7 +41,6 @@ class Speed {
 	int				calibrationTestIndex;	// Keep track of working index
 	
 public:
-	explicit Speed();
 	
 	speed_array 	forward[SPEED_ARRAY];
 	speed_array 	reverse[SPEED_ARRAY];

@@ -42,10 +42,6 @@ enum FileType {
 Filer filer;
 
 // MARK: - Filer
-Filer::Filer() {
-//    char *speedFileName;
-}
-
 void Filer::setFile( int whichFile ) {
     
     int sizeOfPath = sizeof( SPEED_FILE_PATH );
@@ -88,10 +84,6 @@ bool Filer::readData( speed_array *forward, speed_array *reverse ) {
 
 // MARK: - Speed
 // Converts speed index into speeds
-Speed::Speed() {
-	
-}
-
 bool Speed::setupForSpeed() {
 	
 	return true;
