@@ -39,7 +39,6 @@ extern Filer        filer;
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
-	hardware = Hardware();
 	hardware.setupHardware();
 }
 
