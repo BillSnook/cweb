@@ -17,9 +17,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+Manager      manager;
+TaskMaster   taskMaster;
+
 extern Threader		threader;
-extern Manager        manager;
-extern TaskMaster	taskMaster;
 extern Commander    commander;
 
 
@@ -71,8 +72,8 @@ void Threader::setupThreader() {
 	pthread_mutex_init( &threadArrayMutex, nullptr );
     manager = Manager();
     manager.setupManager();         // Manages i2c queue and controller communication
-    threader.queueThread( managerThread, 8, 0 );
-    threader.createThread();
+    queueThread( managerThread, 8, 0 );
+    createThread();
     usleep( 100000 );   // 1/10 second but will it change threads?
 
 	commander = Commander();

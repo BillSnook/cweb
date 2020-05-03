@@ -28,7 +28,6 @@
 #define MAKE_DAEMON
 
 Threader	threader;
-Manager        manager;
 
 Listener	listener;
 Sender		sender;

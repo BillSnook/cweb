@@ -29,12 +29,12 @@
 #define tokenMax	5
 
 Commander	commander;
-TaskMaster	taskMaster;
 Hardware	hardware;
 
 
-extern Filer	filer;
-extern Manager 	manager;
+extern TaskMaster   taskMaster;
+extern Manager 	    manager;
+extern Filer        filer;
 
 void Commander::setupCommander() {
 	

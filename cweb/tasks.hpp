@@ -13,7 +13,9 @@
 class TaskMaster {
 	
 	bool stopLoop;
+    
 public:
+    
 	void setupTaskMaster();
 	void shutdownTaskMaster();
 	void mobileTask( int taskNumber, int param );
@@ -28,7 +30,5 @@ public:
 	void taskScanPing();
 	void taskHunt();
 };
-
-// extern TaskMaster	task;
 
 #endif /* tasks_hpp */
