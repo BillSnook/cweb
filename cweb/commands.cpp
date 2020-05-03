@@ -292,7 +292,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         case 'p':
 //            actor.doTest();
         {
-            manager.request( writeI2C, manager.file_i2c, 'p', 0x99 );
+            manager.request( writeI2C, manager.file_i2c, 'p', token1 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );
             syslog(LOG_NOTICE, "Test p, got response: %08X\n", status );
             break;
