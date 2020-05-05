@@ -43,6 +43,7 @@
 #define MIN_PWM					150		// For servos, 1.0 ms
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
+#define DEVICE_ADJUSTMENT       20
 
 //// Pi pins - ultrasonic range-finder
 //#define TRIG					0		// Brown	Out
@@ -428,7 +429,7 @@ void Hardware::cmdSpeed( int speedIndex ) {
 // MARK: servo section
 int Hardware::angleToPWM( int angle ) {
 	
-	return MIN_PWM + ( angle * DEGREE_PER_PWM );
+	return MIN_PWM + ( angle * DEGREE_PER_PWM ) + DEVICE_ADJUSTMENT;
 }
 
 void Hardware::cmdAngle( int angle ) {
@@ -502,7 +503,7 @@ void Hardware::prepPing( int start, int end, int inc ) {
     siteMap.setupSiteMap();
     
 	sweepOneWay = false;			// For greater consistency
-	upsideDownScanner = false;	// True for dev32, not for dev31!!
+	upsideDownScanner = true;	// True for dev32, not for dev31!!
 }
 
 // Scan and ping through angle range
