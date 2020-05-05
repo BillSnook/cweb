@@ -501,8 +501,8 @@ void Hardware::prepPing( int start, int end, int inc ) {
     siteMap = SiteMap( pattern );
     siteMap.setupSiteMap();
     
-	sweepOneWay = true;			// For greater consistency
-	upsideDownScanner = true;	// For dev32, not for dev31!!
+	sweepOneWay = false;			// For greater consistency
+	upsideDownScanner = false;	// True for dev32, not for dev31!!
 }
 
 // Scan and ping through angle range
