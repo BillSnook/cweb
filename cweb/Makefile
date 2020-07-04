@@ -37,6 +37,7 @@ AllObjects := $(addprefix obj/, $(ObjectFiles))
 default: mtrctl
 
 mtrctl: $(AllObjects)
+	mkdir -p $(OBJ_DIR)
 	$(CXX) $^ $(LDLIBS) -o $@
 
 obj/%.o:: %.cpp

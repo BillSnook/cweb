@@ -9,6 +9,7 @@
 #include <syslog.h>			// close read write
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <fcntl.h>
 #include <math.h>
 
 #include "mtrctl.hpp"
