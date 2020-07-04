@@ -11,6 +11,8 @@
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <stdio.h>			// sprintf
+#include <fcntl.h>
+//#include <linux/i2c-dev.h>
 
 #include "vl53l0x.hpp"
 #include "hardware.hpp"
