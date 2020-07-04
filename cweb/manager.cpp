@@ -8,6 +8,8 @@
 
 #include <time.h>
 #include <syslog.h>
+#include <sys/ioctl.h>
+#include <errno.h>
 #include <stdio.h>			// sprintf
 
 #include "vl53l0x.hpp"
@@ -94,7 +96,7 @@ void Manager::setupManager() {
 //    file_i2c = wiringPiI2CSetup( ArdI2CAddr );
     if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
       syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
-    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
+    if ( ioctl( file_i2c, I2C_SLAVE, ArdI2CAddr ) < 0 )
         syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
 
     pthread_mutex_init( &i2cQueueMutex, NULL );
