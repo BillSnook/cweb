@@ -7,6 +7,8 @@
 //
 
 #include <syslog.h>			// close read write
+#include <errno.h>
+#include <sys/ioctl.h>
 #include <math.h>
 
 #include "mtrctl.hpp"
@@ -17,10 +19,10 @@
 
 #ifdef ON_PI
 
-#include <wiringPi.h>
+//#include <wiringPi.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-#include <wiringPiI2C.h>
+//#include <wiringPiI2C.h>
 
 #endif  // ON_PI
 
@@ -108,41 +110,29 @@ I2C::I2C(int addr) {
 	address = addr;
 	
 #ifdef ON_PI
-	file_i2c = wiringPiI2CSetup( addr );
+//	file_i2c = wiringPiI2CSetup( addr );
 #endif  // ON_PI
+
+    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
+      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
+    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
+        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
 }
 
 int I2C::i2cRead(int reg) {
 	
-#ifdef ON_PI
-
-//    return wiringPiI2CReadReg8( file_i2c, reg );    // Read 8 bits from register reg on device
-
-    return manager.request( readReg8I2C, file_i2c, reg );
-
-#else
-	return reg;
-#endif  // ON_PI
+    return int( manager.request( readReg8I2C, file_i2c, reg ) );
 }
 
 
 void I2C::i2cWrite(int reg, int data) {
     
-#ifdef ON_PI
-    
     manager.request( writeI2C, file_i2c, reg, data );
-//    wiringPiI2CWriteReg8(file_i2c, reg, data);
-    
-#endif  // ON_PI
 }
 
 void I2C::i2cWriteX(int reg, int data) {
     
-#ifdef ON_PI
-    
     manager.request( writeI2C, file_i2c, reg, data );
-
-#endif  // ON_PI
 }
 
 

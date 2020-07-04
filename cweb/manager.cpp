@@ -17,10 +17,10 @@
 
 #ifdef ON_PI
 
-#include <wiringPi.h>
+//#include <wiringPi.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-#include <wiringPiI2C.h>
+//#include <wiringPiI2C.h>
 
 #endif  // ON_PI
 
@@ -91,7 +91,11 @@ void Manager::setupManager() {
 //	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 //	vl53l0x.setupVL53L0X( 0x29 );
 	
-    file_i2c = wiringPiI2CSetup( ArdI2CAddr );
+//    file_i2c = wiringPiI2CSetup( ArdI2CAddr );
+    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
+      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
+    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
+        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
 
     pthread_mutex_init( &i2cQueueMutex, NULL );
     pthread_cond_init( &i2cQueueCond, NULL );
