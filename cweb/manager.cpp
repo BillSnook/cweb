@@ -17,18 +17,15 @@
 #include "vl53l0x.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
+#include "map.hpp"
 
 
 #ifdef ON_PI
 
-//#include <wiringPi.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-//#include <wiringPiI2C.h>
 
 #endif  // ON_PI
-
-#include "map.hpp"
 
 
 enum CheckTimes {	// milliSecond interval for various checks
