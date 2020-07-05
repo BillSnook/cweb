@@ -207,7 +207,7 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
     return Status;
 }
 
-int Actor::setupTest() {
+void Actor::setupTest() {
     VL53L0X_DeviceInfo_t                DeviceInfo;
 
     int32_t status_int;
@@ -275,7 +275,7 @@ int Actor::setupTest() {
     }
 }
 
-int Actor::mainTest() {
+void Actor::mainTest() {
 
     if(Status == VL53L0X_ERROR_NONE)
     {
@@ -288,15 +288,13 @@ int Actor::mainTest() {
 
 }
 
-int Actor::shutdownTest() {
+void Actor::shutdownTest() {
     //  Disconnect comms - part of VL53L0X_platform.c
     printf ("Close Comms\n");
     VL53L0X_i2c_close();
 
 
     print_pal_error(Status);
-	
-    return (0);
 }
 /* */
 
