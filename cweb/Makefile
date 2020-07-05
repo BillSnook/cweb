@@ -31,13 +31,14 @@ RaspFileNames := $(basename $(RaspFiles))
 ObjectFiles := $(addsuffix .o, $(MainFileNames) $(CoreFileNames) $(RaspFileNames))
 AllObjects := $(addprefix obj/, $(ObjectFiles))
 
+mkdir -p $(OBJ_DIR)
+
 
 .PHONY: clean info
 
 default: mtrctl
 
 mtrctl: $(AllObjects)
-	mkdir -p $(OBJ_DIR)
 	$(CXX) $^ $(LDLIBS) -o $@
 
 obj/%.o:: %.cpp
