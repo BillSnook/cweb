@@ -42,7 +42,7 @@ mtrctl: $(AllObjects)
 	$(CXX) $^ $(LDLIBS) -o $@
 
 obj/%.o:: %.cpp
-	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -I/usr/includes/wiringPi -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -I/usr/include/wiringPi -o $@ $<
 
 obj/%.o:: ${CORE_DIR}/src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
