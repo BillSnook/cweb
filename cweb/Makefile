@@ -31,7 +31,7 @@ RaspFileNames := $(basename $(RaspFiles))
 ObjectFiles := $(addsuffix .o, $(MainFileNames) $(CoreFileNames) $(RaspFileNames))
 AllObjects := $(addprefix obj/, $(ObjectFiles))
 
-mkdir -p $(OBJ_DIR)
+$(shell mkdir -p $(OBJ_DIR))
 
 
 .PHONY: clean info
