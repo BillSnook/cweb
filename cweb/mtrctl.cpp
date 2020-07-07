@@ -25,7 +25,7 @@
 
 #define	PORT	5555
 
-#define MAKE_DAEMON
+#define MAKE_DAEMON     // Potentially become a daemon and run in the background
 
 Threader	threader;
 
@@ -44,16 +44,12 @@ int main(int argc, const char * argv[]) {
 
 //	TIMER_Init();
 	
+    becomeDaemon = false;
 #ifdef MAKE_DAEMON
 	if ( argc == 3 ) {
 		becomeDaemon = true;
 	}
-#else	// not MAKE_DAEMON
-	becomeDaemon = false;
 #endif	// MAKE_DAEMON
-	if ( argc == 2 ) {
-		becomeDaemon = false;		// Do not become daemon if sender or by intent
-	}
 #ifdef ON_PI
 #else	// not ON_PI
 	becomeDaemon = false;
@@ -98,7 +94,7 @@ int main(int argc, const char * argv[]) {
 		openlog("mtrctllog", LOG_PID, LOG_DAEMON);        // Open the log file
 		syslog(LOG_NOTICE, "Started mtrctl as daemon");
 		
-	} else {
+	} else {    // Not daemon, regular program
 		
 		signals_setup();
 
@@ -114,7 +110,7 @@ int main(int argc, const char * argv[]) {
 	threader.setupThreader();
 	
 	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
-	if ( argc == 2 ) {	// Should be sender as we pass in host name
+	if ( argc == 2 ) {	// Should be sender as we must pass in a host name
 		char buff[32], *buffer = (char *)&buff;
 		bcopy( argv[1], buffer, 31);
 		sender = Sender();
