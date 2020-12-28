@@ -16,9 +16,12 @@ Scanning servo working
 
 Define and implement control api - in process
 
-Get ultrasonic rangefinder working in microcontroller
+Got ultrasonic rangefinder working in Arduino
 
-Get light ranger working
+Got light ranger working on i2c from Pi
+
+Need to bring ultrasonic/lidar and scanner on to Pi
+  Lidar i2c, scanner , ultrasonic needs controller code
 
 Profit!
 
@@ -45,8 +48,9 @@ signals
     Manage processing of system signals, specifically kill and interrupt.
     
 listen
-    Start thread to listen for connections and open comm channels,
+    Start thread to listen for connections and start command listener thread for each,
         only used if we are not a sender as determined at startup.
+    Listen for commands and start threads to execute them.
 sender
     Initialize and open a connection to another device.,
         only used if we are not a listener as determined at startup.
@@ -78,3 +82,34 @@ vl53l0x library code
     Perform stand-alone operations.
     
     
+
+
+====================
+
+Commands from controller to robot
+
+    General
+Get robot status
+Set robot mode
+
+Safe shutdown command
+
+    Movement control
+Setup speed ranges
+Set left track speed
+Set right track speed
+Set straight speed
+
+Calibrate motor speeds
+
+    Scanner/ranger control
+Set scanner position
+Set ranger rate and limits
+Access ranger data
+
+Calibrate scan repeatablility
+
+    Maintainence
+Diagnostics
+Test/development support
+

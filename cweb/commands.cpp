@@ -379,3 +379,21 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 	}
 //	free( msg );
 }
+
+
+/*
+ 
+ Vehicle status
+    Unknown
+    Starting
+    Ready
+    Fault
+ 
+ 
+ Vehicle modes
+    Controlled
+    Tasked - various: follow, flee, push. crash, etc.
+    Autonomous
+ 
+ 
+ */
