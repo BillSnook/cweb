@@ -109,7 +109,7 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
-	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
+//	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
 	if ( argc == 2 ) {	// Should be sender as we must pass in a host name
         // Deprecated - just not used anymore
 		char buff[32], *buffer = (char *)&buff;

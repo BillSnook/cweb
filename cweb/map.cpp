@@ -52,9 +52,9 @@ SiteMap::SiteMap( SearchPattern newPattern ) {
 
 void SiteMap::setupSiteMap() {
     
-    syslog(LOG_NOTICE, "In SiteMap::setupSiteMap(), before distanceMap, size: %d", pattern.indexCount );
+//    syslog(LOG_NOTICE, "In SiteMap::setupSiteMap(), before distanceMap, size: %d", pattern.indexCount );
     distanceMap = new DistanceEntry[pattern.indexCount];
-    syslog(LOG_NOTICE, "In SiteMap::setupSiteMap(), after distanceMap" );
+//    syslog(LOG_NOTICE, "In SiteMap::setupSiteMap(), after distanceMap" );
     for ( int i = 0; i < pattern.indexCount; i++ ) {
         distanceMap[ i ].angle = 0;
         distanceMap[ i ].range = 0;

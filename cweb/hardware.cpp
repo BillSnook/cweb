@@ -168,7 +168,7 @@ void PWM::setPWMFrequency( int freq ) {
 	}
 	
 	int oldmode = i2c->i2cRead( MODE1 );
-    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
+//    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
 	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
 	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );

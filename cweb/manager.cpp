@@ -136,7 +136,7 @@ void Manager::shutdownManager() {
 
 void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	
-	syslog(LOG_NOTICE, "monitor, wait for queued I2C requests" );
+//	syslog(LOG_NOTICE, "In Manager monitor, entering loop waiting for queued I2C requests" );
 
     while ( !stopLoop ) {
         I2CControl i2cControl;
@@ -259,7 +259,7 @@ long Manager::request( I2CType type, int file, int command ) {
     if ( type == readReg8I2C ) {
         result = i2cControl.i2cData[2];
     }
-    syslog(LOG_NOTICE, "request rd data: %04X\n", result );
+//    syslog(LOG_NOTICE, "request rd data: %04X\n", result );
 
     return result;
 }
