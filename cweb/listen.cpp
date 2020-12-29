@@ -51,7 +51,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		}
 		syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
 		
-		threader.queueThread( serverThread, connectionSockfd, 0 );
+		threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
 		
 //		doListenerLoop = false; // Do once for testing
 	}
@@ -59,7 +59,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 	syslog(LOG_NOTICE, "In acceptConnections at exit" );
 }
 
-void Listener::serviceConnection( int connectionSockfd ) {
+void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
 	long	n;
 	bool	localLoop = true;
@@ -69,7 +69,7 @@ void Listener::serviceConnection( int connectionSockfd ) {
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
 		n = read( connectionSockfd, buffer, bufferSize );	// Blocks waiting for incoming data from WiFi
 		if ( n <= 0 ) {
-            syslog(LOG_NOTICE, "Connection closed" );
+            syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
 //			syslog(LOG_ERR, "ERROR reading command from socket" );
 			free( buffer );
 			break;

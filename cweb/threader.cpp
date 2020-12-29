@@ -182,7 +182,7 @@ void Threader::runNextThread( void *arguments ) {
 			listener.acceptConnections( nextThreadControl.nextSocket );
 			break;
 		case serverThread:
-			listener.serviceConnection( nextThreadControl.nextSocket );
+			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
 			break;
 		case commandThread:
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );

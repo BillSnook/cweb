@@ -21,7 +21,7 @@ class Listener {
 
 public:
 	void acceptConnections( int rcvPortNo );
-	void serviceConnection( int connectionSockfd );
+	void serviceConnection( int connectionSockfd, char *inet_address );
 	void writeBack( char *msg, int socket );
 	void writeBlock( char *msg, int length, int socket );
 };
