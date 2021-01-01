@@ -17,7 +17,7 @@
 
 #define bufferSize	            256
 
-#define useDatagramProtocol     false
+#define useDatagramProtocol     true
 
 extern Threader		threader;
 
@@ -46,10 +46,12 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     if ( useDatagramProtocol ) {
         syslog(LOG_NOTICE, "Success binding to UDP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
-        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), 0 );
+        char msg[32] = "datagram";
+        threader.queueThread( serverThread, msg, listenSockfd );
     } else {
         syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
         doListenerLoop = true;
+        struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof( cli_addr );
         while ( doListenerLoop ) {
             syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", listenSockfd);
@@ -81,17 +83,20 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
             // recv
+            struct sockaddr_storage serverStorage;
+            socklen_t addr_size = sizeof( serverStorage );
+            n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
-            if ( n <= 0 ) {
-                syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
-//                syslog(LOG_ERR, "ERROR reading command from socket" );
-                free( buffer );
-                break;
-            }
-            
-            syslog(LOG_NOTICE, "Received command: %s", buffer );
         }
+        if ( n <= 0 ) {
+            syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
+//          syslog(LOG_ERR, "ERROR reading command from socket" );
+            free( buffer );
+            break;
+        }
+        
+        syslog(LOG_NOTICE, "Received command: %s", buffer );
         // Now start thread to service command
 
 		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread with socket in case it needs to respond
@@ -108,10 +113,17 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 }
 
 void Listener::writeBack( char *msg, int socket ) {
-	long n = write( socket, msg, strlen( msg ) );
-	if ( n < 0 ) {
-		syslog(LOG_ERR, "ERROR writing back to socket" );
-	}
+    long n;
+    if ( useDatagramProtocol ) {
+        n = sendto(socket, msg, strlen( msg ), 0, NULL, 0);
+    } else {
+        n = write( socket, msg, strlen( msg ) );
+    }
+    if ( n < 0 ) {
+        syslog(LOG_ERR, "ERROR writing back to socket" );
+        return;
+    }
+    syslog(LOG_NOTICE, "In writeBack sent successfully" );
 }
 
 void Listener::writeBlock( char *msg, int length, int socket ) {
