@@ -118,8 +118,8 @@ I2C::I2C(int addr) {
     if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
         syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
     syslog( LOG_NOTICE, "Found our own I2C device pointer: %d\n", file_i2c );
-    file_i2c = manager.file_i2c;
-    syslog( LOG_NOTICE, "Found manager I2C device pointer: %d\n", file_i2c );
+//    file_i2c = manager.file_i2c;
+//    syslog( LOG_NOTICE, "Found our I2C device pointer: %d\n", file_i2c );
 }
 
 int I2C::i2cRead(int reg) {

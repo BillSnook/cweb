@@ -94,9 +94,10 @@ void Manager::setupManager() {
 	
 //    file_i2c = wiringPiI2CSetup( ArdI2CAddr );
     if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
-      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
+        syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
     if ( ioctl( file_i2c, I2C_SLAVE, ArdI2CAddr ) < 0 )
         syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
+    syslog( LOG_NOTICE, "Found manager I2C device pointer: %d\n", file_i2c );
 
     pthread_mutex_init( &i2cQueueMutex, NULL );
     pthread_cond_init( &i2cQueueCond, NULL );
