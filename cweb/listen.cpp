@@ -23,8 +23,8 @@ extern Threader		threader;
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
 	doListenerLoop = false;
-    listenSockfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
-//    listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+//    listenSockfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+    listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
 	if ( listenSockfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
