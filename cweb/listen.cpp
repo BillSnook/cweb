@@ -15,7 +15,9 @@
 #include <arpa/inet.h>
 
 
-#define bufferSize	256
+#define bufferSize	            256
+
+#define useDatagramProtocol     false
 
 extern Threader		threader;
 
@@ -23,8 +25,11 @@ extern Threader		threader;
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
 	doListenerLoop = false;
-    listenSockfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
-//    listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+    if ( useDatagramProtocol ) {
+        listenSockfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+    } else {
+        listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+    }
 	if ( listenSockfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
@@ -38,25 +43,31 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		syslog(LOG_ERR, "ERROR on binding"  );
 		return;
 	}
-	syslog(LOG_NOTICE, "Success binding to socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
 
-	doListenerLoop = true;
-	socklen_t clilen = sizeof( cli_addr );
-	while ( doListenerLoop ) {
-		syslog(LOG_NOTICE, "In acceptConnections, listening" );
-		listen(  listenSockfd, 5 );
-		int connectionSockfd = accept( listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
-		if ( connectionSockfd < 0 ) {
-			syslog(LOG_ERR, "ERROR on accept" );
-			break;
-		}
-		syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
-		
-		threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
-		
-//		doListenerLoop = false; // Do once for testing
-	}
-	close( listenSockfd );
+    if ( useDatagramProtocol ) {
+        syslog(LOG_NOTICE, "Success binding to UDP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
+        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), 0 );
+    } else {
+        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
+        doListenerLoop = true;
+        socklen_t clilen = sizeof( cli_addr );
+        while ( doListenerLoop ) {
+            syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", listenSockfd);
+            listen(  listenSockfd, 5 );
+            int connectionSockfd = accept( listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
+            syslog(LOG_NOTICE, "Listen socket %d. connection socket %d", listenSockfd, connectionSockfd);
+            if ( connectionSockfd < 0 ) {
+                syslog(LOG_ERR, "ERROR on accept" );
+                break;
+            }
+            syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
+            
+            threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
+            
+//          doListenerLoop = false; // Do once for testing
+        }
+        close( listenSockfd );
+    }
 	syslog(LOG_NOTICE, "In acceptConnections at exit" );
 }
 
@@ -68,15 +79,19 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 		char	*buffer = (char *)valloc( bufferSize );
 		bzero( buffer, bufferSize );
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
-		n = read( connectionSockfd, buffer, bufferSize );	// Blocks waiting for incoming data from WiFi
-		if ( n <= 0 ) {
-            syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
-//			syslog(LOG_ERR, "ERROR reading command from socket" );
-			free( buffer );
-			break;
-		}
-		
-		syslog(LOG_NOTICE, "Received command: %s", buffer );
+        if ( useDatagramProtocol ) {
+            // recv
+        } else {
+            n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
+            if ( n <= 0 ) {
+                syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
+//                syslog(LOG_ERR, "ERROR reading command from socket" );
+                free( buffer );
+                break;
+            }
+            
+            syslog(LOG_NOTICE, "Received command: %s", buffer );
+        }
         // Now start thread to service command
 
 		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread with socket in case it needs to respond
