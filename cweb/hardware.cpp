@@ -117,7 +117,7 @@ I2C::I2C(int addr) {
       syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
     if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
         syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
-/    file_i2c = manager.file_i2c;
+//    file_i2c = manager.file_i2c;
 }
 
 int I2C::i2cRead(int reg) {
