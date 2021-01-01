@@ -113,10 +113,11 @@ I2C::I2C(int addr) {
 //	file_i2c = wiringPiI2CSetup( addr );
 #endif  // ON_PI
 
-    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
-      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
-    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
-        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
+//    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
+//      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
+//    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
+//        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
+    file_i2c = manager.file_i2c;
 }
 
 int I2C::i2cRead(int reg) {
@@ -130,7 +131,7 @@ void I2C::i2cWrite(int reg, int data) {
     manager.request( writeI2C, file_i2c, reg, data );
 }
 
-void I2C::i2cWriteX(int reg, int data) {
+void I2C::i2cWriteX(int reg, int data) {        // WFS ??
     
     manager.request( writeI2C, file_i2c, reg, data );
 }
@@ -246,7 +247,8 @@ bool Hardware::setupHardware() {
 	speed = Speed();
 // WFS	speed.initializeSpeedArray();
     
-    pattern = SearchPattern( 45, 135, 5 );
+    // WFS - why is this being done here?  where should it be?
+    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
     siteMap = SiteMap( pattern );
     siteMap.setupSiteMap();
 
@@ -282,6 +284,7 @@ bool Hardware::shutdownHardware() {
 void Hardware::setPin( int pin, int value ) {
 	
 	if ( ( pin < 0 ) || ( pin > CHANNEL_MAX ) ) {
+        syslog(LOG_ERR, "ERROR: Hardware:setPin pin: %d; should be 0 <= pin <= CHANNEL_MAX", pin);
 		return;
 	}
 	if ( value == 0 ) {

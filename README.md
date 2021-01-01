@@ -113,3 +113,10 @@ Calibrate scan repeatablility
 Diagnostics
 Test/development support
 
+
+
+    ToDo:
+Get scanner working on Pi
+Get uSonic ranger working on Pi 
+  bit control
+Get Lidar working on Pi - I2C

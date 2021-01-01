@@ -48,7 +48,7 @@ void Commander::shutdownCommander() {
 	hardware.shutdownHardware();
 }
 
-// This is launched on it's own thread from the listener when command data comes in over wifi
+// This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
 
 	syslog(LOG_NOTICE, "In serviceCommand with: %s", command );
@@ -84,7 +84,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		token4 = atoi( nextToken[4] );
 	}
 	char commandType = command[0];	// Get command
-//	for ( int y = 0; y < tokenCount; y++ ) {
+//	for ( int y = 0; y < tokenCount; y++ ) {        // Display all token values
 //		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 //	}
 
@@ -106,52 +106,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			hardware.setMotors( token1, token2, token3, token4 );
 			break;
 			
-//		case 'A':
-//		case 'a':
-//			hardware.setMtrDirSpd( 0, 1, token1 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 0, 0 );
-//			break;
-//
-//		case 'B':
-//		case 'b':
-//			hardware.setMtrDirSpd( 0, 0, token1 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 0, 0 );
-//			break;
-//
-//		case 'C':
-//		case 'c':
-//			hardware.setMtrDirSpd( 1, 1, token1 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 1, 0 );
-//			break;
-//
-//		case 'D':
-//		case 'd':
-//			hardware.setMtrDirSpd( 1, 0, token1 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 1, 0 );
-//			break;
-//
-//		case 'E':
-//		case 'e':
-//			hardware.setMtrDirSpd( 0, 1, token1 );
-//			hardware.setMtrDirSpd( 1, 1, token2 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 0, 0 );
-//			hardware.setMtrSpd( 1, 0 );
-//			break;
-//
-//		case 'F':
-//		case 'f':
-//			hardware.setMtrDirSpd( 1, 0, token1 );
-//			hardware.setMtrDirSpd( 1, 0, token2 );
-//			usleep( aWaitOn );
-//			hardware.setMtrSpd( 0, 0 );
-//			hardware.setMtrSpd( 1, 0 );
-//			break;
-//
 			// Controller commands
 		case 'A':
 		case 'a':
@@ -199,31 +153,6 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			manager.setMotorPower( token1 );
 			break;
 			
-//		case 'C':
-//		case 'c':
-//			syslog(LOG_NOTICE, "Command c calls: manager.testWrite( 'Test' )" );
-////			memcpy( buffer, "Test", 5 );
-//			manager.testWrite( (unsigned char *)"Test" );
-//			break;
-//
-//		case 'D':
-//		case 'd':
-//			syslog(LOG_NOTICE, "Command d calls: manager.testWrite( 'Test1' )" );
-//			manager.testWrite( (unsigned char *)"Test1" );
-//			break;
-//
-//		case 'E':
-//		case 'e':
-//			syslog(LOG_NOTICE, "Command e calls: manager.testWrite( 'Test12' )" );
-//			manager.testWrite( (unsigned char *)"Test12" );
-//			break;
-//
-//		case 'F':
-//		case 'f':
-//			syslog(LOG_NOTICE, "Command f calls: manager.testRead()" );
-//			manager.testRead();
-//			break;
-//
 			// Motor/speed commands
 		case 'G':
 		case 'g':

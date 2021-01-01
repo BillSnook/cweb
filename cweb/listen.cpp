@@ -61,9 +61,9 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
-	long	n;
 	bool	localLoop = true;
 	while ( localLoop ) {
+        long    n;
 		char	*buffer = (char *)valloc( bufferSize );
 		bzero( buffer, bufferSize );
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
@@ -76,8 +76,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 		}
 		
 		syslog(LOG_NOTICE, "Received command: %s", buffer );
-		// start thread to service command
-		
+        // Now start thread to service command
+
 		threader.queueThread( commandThread, buffer, connectionSockfd );	// Parse and execute command in its own thread with socket in case it needs to respond
 		free( buffer );
 
@@ -88,7 +88,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //		}
 	}
 	close( connectionSockfd );
-	syslog(LOG_NOTICE, "In serviceConnection at end" );
+//	syslog(LOG_NOTICE, "In serviceConnection at end" );
 }
 
 void Listener::writeBack( char *msg, int socket ) {

@@ -24,7 +24,7 @@ extern Threader		threader;
 extern Commander    commander;
 
 
-
+// Class or factory methods to create and initialize an instance of ThreadControl
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
@@ -175,23 +175,23 @@ void Threader::runNextThread( void *arguments ) {
 	threadCount += 1;
 	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
-		case managerThread:
+		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
 			break;
-		case listenThread:
+		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
 			listener.acceptConnections( nextThreadControl.nextSocket );
 			break;
-		case serverThread:
+		case serverThread:          // One started for each connection accepted, queues commands received
 			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
 			break;
-		case commandThread:
+		case commandThread:         // One for each command queued, executes method for command with params
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
-		case taskThread:
+		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
 			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
 		case testThread:
-			syslog(LOG_NOTICE, "In runNextThread with testThreads" );
+			syslog(LOG_NOTICE, "In runNextThread with testThread" );
 			break;
 		default:
 			break;

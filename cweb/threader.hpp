@@ -37,7 +37,6 @@ public:
 public:
 	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
 	static ThreadControl initThread( ThreadType threadType, char *command, int socket );
-	static ThreadControl initTaskThread( int taskNumber, int param );
 	const char *description();
 };
 
