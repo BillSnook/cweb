@@ -110,9 +110,9 @@ void Speed::initializeSpeedArray() {
 		syslog(LOG_NOTICE, "Read speed array from file" );
 	}
 
-    char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
-    char *display = displaySpeedArray( (char *)msg );
-    syslog(LOG_NOTICE, "initializeSpeedArray():\n%s", display );
+//    char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
+//    char *display = displaySpeedArray( (char *)msg );
+//    syslog(LOG_NOTICE, "initializeSpeedArray():\n%s", display );
 
 }
 

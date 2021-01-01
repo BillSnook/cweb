@@ -92,12 +92,11 @@ void Manager::setupManager() {
 //	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 //	vl53l0x.setupVL53L0X( 0x29 );
 	
-//    file_i2c = wiringPiI2CSetup( ArdI2CAddr );
     if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
         syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
     if ( ioctl( file_i2c, I2C_SLAVE, ArdI2CAddr ) < 0 )
         syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
-    syslog( LOG_NOTICE, "Found manager I2C device pointer: %d\n", file_i2c );
+    syslog( LOG_NOTICE, "Found manager I2C device pointer for Arduino addr %02X: %d\n", ArdI2CAddr, file_i2c );
 
     pthread_mutex_init( &i2cQueueMutex, NULL );
     pthread_cond_init( &i2cQueueCond, NULL );
@@ -172,7 +171,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
+//    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -218,7 +217,7 @@ void Manager::execute( I2CControl i2cControl ) {
 // Typically a single write operation with command being a register and param being the value to write
 void Manager::request( I2CType type, int file, int command, int param ) {
     
-    I2CControl i2cControl = I2CControl::initControl( type, file_i2c, command, param );
+    I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
@@ -236,7 +235,7 @@ long Manager::request( I2CType type, int file, int command ) {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
     
-    I2CControl i2cControl = I2CControl::initControl( type, file_i2c, command, buffer );
+    I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
