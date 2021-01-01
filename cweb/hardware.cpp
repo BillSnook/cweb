@@ -245,7 +245,7 @@ bool Hardware::setupHardware() {
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
-// WFS	speed.initializeSpeedArray();
+	speed.initializeSpeedArray();
     
     // WFS - why is this being done here?  where should it be?
     pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
