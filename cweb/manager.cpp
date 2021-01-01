@@ -218,7 +218,7 @@ void Manager::execute( I2CControl i2cControl ) {
 // Typically a single write operation with command being a register and param being the value to write
 void Manager::request( I2CType type, int file, int command, int param ) {
     
-    I2CControl i2cControl = I2CControl::initControl( type, file, command, param );
+    I2CControl i2cControl = I2CControl::initControl( type, file_i2c, command, param );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
@@ -236,7 +236,7 @@ long Manager::request( I2CType type, int file, int command ) {
     char buffSpace[8] = {0};
     char *buffer = buffSpace;
     
-    I2CControl i2cControl = I2CControl::initControl( type, file, command, buffer );
+    I2CControl i2cControl = I2CControl::initControl( type, file_i2c, command, buffer );
     pthread_mutex_lock( &i2cQueueMutex );
     try {
         i2cQueue.push( i2cControl );
