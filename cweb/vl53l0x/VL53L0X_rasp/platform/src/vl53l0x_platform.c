@@ -27,7 +27,7 @@ int VL53L0X_i2c_init(char * devPath, int devAddr)
 //        return -1;
 //    }
 //	syslog(LOG_NOTICE, "In VL53L0X_i2c_init, attached to slave address %d", devAddr);
-  
+
     return file;
 }
 
@@ -42,7 +42,7 @@ static int i2c_write(int fd, uint8_t cmd, uint8_t * data, uint8_t len){
     uint8_t * buf = (uint8_t *)malloc(len+1);
     buf[0] = cmd;
     memcpy(buf+1, data, len);
-    if (managerWrite(fd, buf, len+1) != len+1) {
+    if (write(fd, buf, len+1) != len+1) {
         printf("Failed to write to the i2c bus.\n");
         free(buf);
         return VL53L0X_ERROR_CONTROL_INTERFACE;
@@ -53,12 +53,12 @@ static int i2c_write(int fd, uint8_t cmd, uint8_t * data, uint8_t len){
 
 static int i2c_read(int fd, uint8_t cmd, uint8_t * data, uint8_t len){
 
-    if (managerWrite(fd, &cmd, 1) != 1) {
+    if (write(fd, &cmd, 1) != 1) {
         printf("Failed to write to the i2c bus.\n");
         return VL53L0X_ERROR_CONTROL_INTERFACE;
     }
 
-    if (managerRead(fd, data, len) != len) {
+    if (read(fd, data, len) != len) {
         printf("Failed to read from the i2c bus.\n");
         return VL53L0X_ERROR_CONTROL_INTERFACE;
     }
