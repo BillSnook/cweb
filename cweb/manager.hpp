@@ -71,10 +71,11 @@ public:
 	void shutdownManager();
 	
 	void monitor();     // In own thread in loop waiting for I2C request on queue and then executing it
-    void execute( I2CControl i2cControl );
-    void request( I2CType type, int file, int command, int param );     // Writes, two bytes or single byte with register
-    long request( I2CType type, int file, int command );                // Reads with long result values
-//    long request( I2CControl writelist[] );                             // Multiple address write
+    int openI2CFile( int address );                                 // Return open I2C file descriptor for address
+    void execute( I2CControl i2cControl );                          // Run command
+    void request( I2CType type, int file, int command, int param ); // Writes, two bytes or register then single byte
+    long request( I2CType type, int file, int command );            // Reads with long result values
+//    long request( I2CControl writelist[] );                       // Multiple address write
 
 //    int readReg8( int file, int reg );
     

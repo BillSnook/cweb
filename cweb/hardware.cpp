@@ -104,7 +104,7 @@ extern  Manager     manager;
 bool	scanLoop;
 
 //  MARK: i2c interface read and write support
-I2C::I2C(int addr) {
+I2C::I2C( int addr ) {
 	
 	debug = false;
 	address = addr;
@@ -113,14 +113,10 @@ I2C::I2C(int addr) {
 //	file_i2c = wiringPiI2CSetup( addr );
 #endif  // ON_PI
 
-    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
-      syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
-    if ( ioctl( file_i2c, I2C_SLAVE, addr ) < 0 )
-        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
-    syslog( LOG_NOTICE, "Found our device pointer for Motor Hat addr %02X: %d\n", addr, file_i2c );
+    file_i2c = manager.openI2CFile( addr );
 }
 
-int I2C::i2cRead(int reg) {
+int I2C::i2cRead( int reg ) {
 	
     return int( manager.request( readReg8I2C, file_i2c, reg ) );
 }

@@ -11,6 +11,10 @@
 
 extern Manager        manager;
 
+int managerOpen( int address ) {
+    return manager.openI2CFile( address );
+}
+
 void managerWrite( int file, int reg, int data ) { // wrapper function
     return manager.request( writeI2C, file, reg, data );
 }

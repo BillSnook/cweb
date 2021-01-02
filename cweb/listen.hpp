@@ -16,7 +16,6 @@ class Listener {
 	
 	int					listenSockfd, portno;
 	char				buffer[256];
-	struct sockaddr_in	serv_addr;
 	bool				doListenerLoop;
 
 public:

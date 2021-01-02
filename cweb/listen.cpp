@@ -34,6 +34,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
 	}
+    struct sockaddr_in    serv_addr;
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
 	portno = rcvPortNo;
 	serv_addr.sin_family = AF_INET;
@@ -126,9 +127,9 @@ void Listener::writeBack( char *msg, int socket ) {
     syslog(LOG_NOTICE, "In writeBack sent successfully" );
 }
 
-void Listener::writeBlock( char *msg, int length, int socket ) {
-	long n = write( socket, msg, length );
-	if ( n < 0 ) {
-		syslog(LOG_ERR, "ERROR writing block to socket" );
-	}
-}
+//void Listener::writeBlock( char *msg, int length, int socket ) {
+//	long n = write( socket, msg, length );
+//	if ( n < 0 ) {
+//		syslog(LOG_ERR, "ERROR writing block to socket" );
+//	}
+//}

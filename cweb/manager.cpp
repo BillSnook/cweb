@@ -92,11 +92,7 @@ void Manager::setupManager() {
 //	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
 //	vl53l0x.setupVL53L0X( 0x29 );
 	
-    if ( ( file_i2c = open( "/dev/i2c-1", O_RDWR) ) < 0 )
-        syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
-    if ( ioctl( file_i2c, I2C_SLAVE, ArdI2CAddr ) < 0 )
-        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
-    syslog( LOG_NOTICE, "Found manager I2C device pointer for Arduino addr %02X: %d\n", ArdI2CAddr, file_i2c );
+    file_i2c = openI2CFile( ArdI2CAddr );
 
     pthread_mutex_init( &i2cQueueMutex, NULL );
     pthread_cond_init( &i2cQueueCond, NULL );
@@ -133,6 +129,17 @@ void Manager::shutdownManager() {
 
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
+
+int openI2CFile( int address ) {
+    int fileDescriptor;
+    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 )
+        syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
+    if ( ioctl( fileDescriptor, I2C_SLAVE, ArdI2CAddr ) < 0 )
+        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
+    syslog( LOG_NOTICE, "Found manager I2C device pointer for Arduino addr %02X: %d\n", address, fileDescriptor );
+    return fileDescriptor;
+}
+
 
 void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	

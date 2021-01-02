@@ -12,6 +12,8 @@
 #include <stdio.h>
 
 
+extern "C" int managerOpen( int address );
+
 extern "C" void managerWrite( int file, int reg, int data );
 
 extern "C" long managerRead( int file, int length );

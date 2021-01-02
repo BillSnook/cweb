@@ -120,3 +120,16 @@ Get scanner working on Pi
 Get uSonic ranger working on Pi 
   bit control
 Get Lidar working on Pi - I2C
+
+
+Router wpasupplicant
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+        ssid="Chronos"
+        psk=e9ad1d7ad40adaeb6e8254b6234f6582429c78361c0b9e43a1e78e50c4409a99
+}
+
