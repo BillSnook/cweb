@@ -97,7 +97,7 @@
 
 #define Scanner					0
 
-#define PingWaitTime			100000
+#define PingWaitTime			500000      // 5/10 second
 
 extern  Manager     manager;
 
