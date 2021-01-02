@@ -130,7 +130,7 @@ void Manager::shutdownManager() {
 	syslog(LOG_NOTICE, "In shutdownManager" );
 }
 
-int openI2CFile( int address ) {
+int Manager::openI2CFile( int address ) {
     int fileDescriptor;
     if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 )
         syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
