@@ -15,6 +15,7 @@
 class Listener {
 	
 	int					listenSockfd, portno;
+    unsigned int        addrno;
 	char				buffer[256];
 	bool				doListenerLoop;
 
