@@ -46,7 +46,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 	}
 
     if ( useDatagramProtocol ) {
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", listenSockfd, portno, inet_ntoa(serv_addr.sin_addr) );
+        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", listenSockfd, portno, inet_ntoa(serv_addr.sin_addr));
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), listenSockfd );
     } else {
         syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
@@ -87,7 +87,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( serverStorage.sin_addr ) );
-            addrno = serverStorage.sin_addr.s_addr;
+            addrno = ntohl(serverStorage.sin_addr.s_addr);
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
@@ -123,7 +123,7 @@ void Listener::writeBack( char *msg, int socket ) {
         serv_addr.sin_addr.s_addr = htonl( addrno );
         serv_addr.sin_port = htons( portno );
         n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&serv_addr, addr_size);
-        syslog(LOG_ERR, "Sending back to socket %d, addr %s, response %ld", socket, inet_ntoa(serv_addr.sin_addr), n);
+        syslog(LOG_ERR, "Sending back to socket %d, addr %s, response length %ld", socket, inet_ntoa(serv_addr.sin_addr), n);
     } else {
         n = write( socket, msg, strlen( msg ) );
     }
@@ -131,7 +131,7 @@ void Listener::writeBack( char *msg, int socket ) {
         syslog(LOG_ERR, "ERROR writing back to socket %d", socket );
         return;
     }
-    syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d: %s", socket, msg );
+    syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d", socket);
 }
 
 //void Listener::writeBlock( char *msg, int length, int socket ) {
