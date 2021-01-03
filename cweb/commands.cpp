@@ -28,10 +28,10 @@
 #define xWaitOff	50000
 #define tokenMax	5
 
+
 Commander	commander;
-Hardware	hardware;
 
-
+extern Hardware     hardware;
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
 extern Filer        filer;
@@ -39,13 +39,11 @@ extern Filer        filer;
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
-	hardware.setupHardware();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-	hardware.shutdownHardware();
 }
 
 // This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi

@@ -12,7 +12,6 @@
 #include <errno.h>
 #include <stdio.h>			// sprintf
 #include <fcntl.h>
-//#include <linux/i2c-dev.h>
 
 #include "vl53l0x.hpp"
 #include "hardware.hpp"
@@ -25,7 +24,13 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
+#else
+
+#define I2C_SLAVE   0x0703
+
 #endif  // ON_PI
+
+Hardware    hardware;
 
 
 enum CheckTimes {	// milliSecond interval for various checks
@@ -89,17 +94,18 @@ void Manager::setupManager() {
 	expectedControllerMode = initialMode;
 	syslog(LOG_NOTICE, "In setupManager" );
 
-//	vl53l0x = VL53L0X();				// VL53L0xes talk to the array of light-rangers
-//	vl53l0x.setupVL53L0X( 0x29 );
-	
-    file_i2c = openI2CFile( ArdI2CAddr );
-
-    pthread_mutex_init( &i2cQueueMutex, NULL );
+    pthread_mutex_init( &i2cQueueMutex, NULL );     // Protect I2C queue access
     pthread_cond_init( &i2cQueueCond, NULL );
 
-    pthread_mutex_init( &readWaitMutex, NULL );
+    pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
+    hardware.setupHardware();               // To manage i2c communication and vehicle operation
+
+    file_i2c = openI2CFile( ArdI2CAddr );   // For talking to arduino, if any
+
+//    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
+//    vl53l0x.setupVL53L0X( 0x29 );
 }
 
 void Manager::shutdownManager() {
@@ -109,6 +115,8 @@ void Manager::shutdownManager() {
 		vl53l0x.shutdownVL53L0X();
 	}
 
+    hardware.shutdownHardware();
+
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
     pthread_mutex_unlock( &readWaitMutex );
@@ -117,7 +125,7 @@ void Manager::shutdownManager() {
     pthread_cond_signal( &i2cQueueCond );
     pthread_mutex_unlock( &i2cQueueMutex );
     
-    while ( ! stopLoop ) {
+    while ( ! stopLoop ) {                  // Wait for monitor/execute I2C queued operations to complete
         usleep( 1000 );
     }
     
@@ -178,7 +186,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
+//    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
