@@ -19,8 +19,8 @@ class Listener {
 	char				buffer[256];
 	bool				doListenerLoop;
     
-    struct sockaddr_in serverStorage;
-    socklen_t addr_size = sizeof( serverStorage );
+    struct sockaddr_in  clientStorage;
+    socklen_t           cli_addr_size = sizeof( clientStorage );
 
 
 public:

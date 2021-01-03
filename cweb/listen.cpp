@@ -85,9 +85,10 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             // recv
 //            struct sockaddr_in serverStorage;
 //            socklen_t addr_size = sizeof( serverStorage );
-            n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
-            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( serverStorage.sin_addr ) );
-            addrno = ntohl(serverStorage.sin_addr.s_addr);
+            memset(&clientStorage, 0, sizeof(clientStorage));
+            n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&clientStorage, &cli_addr_size);
+            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( clientStorage.sin_addr ) );
+            addrno = ntohl(clientStorage.sin_addr.s_addr);
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
@@ -122,8 +123,9 @@ void Listener::writeBack( char *msg, int socket ) {
 //        serv_addr.sin_family = AF_INET;
 //        serv_addr.sin_addr.s_addr = htonl(addrno);
 //        serv_addr.sin_port = htons( portno );
-        n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&serverStorage, addr_size);
-        syslog(LOG_ERR, "Sending back to socket %d, addr %s, response length %ld", socket, inet_ntoa(serverStorage.sin_addr), n);
+        syslog(LOG_ERR, "In writeBack with client address: %s", inet_ntoa(clientStorage.sin_addr) );
+        n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&clientStorage, cli_addr_size);
+        syslog(LOG_ERR, "Sending back to socket %d, addr %s, response length %ld", socket, inet_ntoa(clientStorage.sin_addr), n);
     } else {
         n = write( socket, msg, strlen( msg ) );
     }
