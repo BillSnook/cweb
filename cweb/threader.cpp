@@ -37,7 +37,8 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
-	memcpy( newThreadControl.nextCommand, command, COMMAND_SIZE );
+    int cmdSize = sizeof(command);
+	memcpy( newThreadControl.nextCommand, command, cmdSize );
 	return newThreadControl;
 }
 
