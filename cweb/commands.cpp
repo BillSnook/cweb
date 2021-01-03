@@ -213,7 +213,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         {
             manager.request( writeI2C, manager.file_i2c, 's', 0x66 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );
-            syslog(LOG_NOTICE, "Test getting status, got response: %08X\n", status );
+            syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
             break;
         }
         case 'P':
@@ -222,7 +222,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
         {
             manager.request( writeI2C, manager.file_i2c, 'p', token1 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );
-            syslog(LOG_NOTICE, "Test p, got response: %08X\n", status );
+            syslog(LOG_NOTICE, "Test p, got response: %08lX\n", status );
             break;
         }
 //		case 'R':

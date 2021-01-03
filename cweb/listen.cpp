@@ -120,7 +120,7 @@ void Listener::writeBack( char *msg, int socket ) {
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = addrno;
+        serv_addr.sin_addr.s_addr = htonl(addrno);
         serv_addr.sin_port = htons( portno );
         n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&serv_addr, addr_size);
         syslog(LOG_ERR, "Sending back to socket %d, addr %s, response length %ld", socket, inet_ntoa(serv_addr.sin_addr), n);
