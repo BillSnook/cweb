@@ -178,7 +178,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-//    syslog(LOG_NOTICE, "execute,         command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
+    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
