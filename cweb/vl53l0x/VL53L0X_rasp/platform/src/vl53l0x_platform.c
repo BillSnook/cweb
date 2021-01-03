@@ -4,12 +4,17 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <time.h>
-#include <linux/i2c-dev.h>
 #include <unistd.h>
 #include "vl53l0x_platform.h"
 #include "vl53l0x_api.h"
 
 #include "wrapper.h"
+
+#ifdef ON_PI
+
+#include <linux/i2c-dev.h>
+
+#endif  // ON_PI
 
 
 int VL53L0X_i2c_init(char * devPath, int devAddr)

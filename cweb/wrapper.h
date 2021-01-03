@@ -11,11 +11,18 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-extern "C" int managerOpen( int address );
+int managerOpen( int address );
 
-extern "C" void managerWrite( int file, int reg, int data );
+void managerWrite( int file, int reg, int data );
 
-extern "C" long managerRead( int file, int length );
+long managerRead( int file, int length );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* wrapper_h */

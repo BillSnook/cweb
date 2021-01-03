@@ -30,8 +30,6 @@
 
 #endif  // ON_PI
 
-Hardware    hardware;
-
 
 enum CheckTimes {	// milliSecond interval for various checks
 	statusCheckInterval = 5000L,
@@ -102,8 +100,6 @@ void Manager::setupManager() {
 
     file_i2c = openI2CFile( ArdI2CAddr );   // For talking to arduino, if any
 
-    hardware.setupHardware();               // To manage i2c communication and vehicle operation
-
 //    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
 //    vl53l0x.setupVL53L0X( 0x29 );
 }
@@ -114,8 +110,6 @@ void Manager::shutdownManager() {
     if ( vl53l0x.isSetup ) {
 		vl53l0x.shutdownVL53L0X();
 	}
-
-    hardware.shutdownHardware();
 
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
