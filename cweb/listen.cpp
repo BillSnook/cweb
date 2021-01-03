@@ -83,15 +83,15 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
             // recv
-//            struct sockaddr_in serverStorage;
-//            socklen_t addr_size = sizeof( serverStorage );
-            memset(&clientStorage, 0, sizeof(clientStorage));
-            clientStorage.sin_family = AF_INET;
-            clientStorage.sin_addr.s_addr = INADDR_ANY;
-            clientStorage.sin_port = htons( portno );
-            n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&clientStorage, &cli_addr_size);
-            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( clientStorage.sin_addr ) );
-            addrno = ntohl(clientStorage.sin_addr.s_addr);
+            struct sockaddr_in serverStorage;
+            socklen_t addr_size = sizeof( serverStorage );
+//            memset(&clientStorage, 0, sizeof(clientStorage));
+//            clientStorage.sin_family = AF_INET;
+//            clientStorage.sin_addr.s_addr = INADDR_ANY;
+//            clientStorage.sin_port = htons( portno );
+            n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
+            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( serverStorage.sin_addr ) );
+            addrno = ntohl(serverStorage.sin_addr.s_addr);
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
