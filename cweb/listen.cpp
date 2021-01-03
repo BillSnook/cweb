@@ -87,7 +87,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
 //            memset(&serverStorage, 0, sizeof(serverStorage));
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
-            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s, port %d", inet_ntoa( serverStorage.sin_addr ), ntohs(portno));
+            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s, port %d", inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             addrno = ntohl(serverStorage.sin_addr.s_addr);
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
