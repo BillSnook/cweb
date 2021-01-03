@@ -18,6 +18,10 @@ class Listener {
     unsigned int        addrno;
 	char				buffer[256];
 	bool				doListenerLoop;
+    
+    struct sockaddr_in serverStorage;
+    socklen_t addr_size = sizeof( serverStorage );
+
 
 public:
 	void acceptConnections( int rcvPortNo );
