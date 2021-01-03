@@ -46,7 +46,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 	}
 
     if ( useDatagramProtocol ) {
-        syslog(LOG_NOTICE, "Success binding to UDP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
+        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", listenSockfd, portno, inet_ntoa(serv_addr.sin_addr) );
         char msg[32] = "datagram";
         threader.queueThread( serverThread, msg, listenSockfd );
     } else {
@@ -122,10 +122,10 @@ void Listener::writeBack( char *msg, int socket ) {
         n = write( socket, msg, strlen( msg ) );
     }
     if ( n < 0 ) {
-        syslog(LOG_ERR, "ERROR writing back to socket" );
+        syslog(LOG_ERR, "ERROR writing back to socket %d", socket );
         return;
     }
-    syslog(LOG_NOTICE, "In writeBack sent successfully" );
+    syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d: %s", socket, msg );
 }
 
 //void Listener::writeBlock( char *msg, int length, int socket ) {
