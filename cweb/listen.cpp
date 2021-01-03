@@ -58,7 +58,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
             syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", listenSockfd);
             listen(  listenSockfd, 5 );
             int connectionSockfd = accept( listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
-            syslog(LOG_NOTICE, "Listen socket %d. connection socket %d", listenSockfd, connectionSockfd);
+            syslog(LOG_NOTICE, "Listen socket %d accepted a connection on socket %d", listenSockfd, connectionSockfd);
             if ( connectionSockfd < 0 ) {
                 syslog(LOG_ERR, "ERROR on accept" );
                 break;
@@ -70,8 +70,8 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 //          doListenerLoop = false; // Do once for testing
         }
         close( listenSockfd );
+        syslog(LOG_NOTICE, "In acceptConnections at exit" );
     }
-	syslog(LOG_NOTICE, "In acceptConnections at exit" );
 }
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
@@ -84,9 +84,10 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
             // recv
-            struct sockaddr_storage serverStorage;
+            struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
+            syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s", inet_ntoa( serverStorage.sin_addr ) );
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }

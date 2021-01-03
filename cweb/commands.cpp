@@ -51,7 +51,7 @@ void Commander::shutdownCommander() {
 // This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
 
-	syslog(LOG_NOTICE, "In serviceCommand with command %s, socket %d", command, socket );
+	syslog(LOG_NOTICE, "In serviceCommand with socket %d, command %s", socket, command );
     // First interpret tokens
     char *nextToken[tokenMax+1];
 	int len = int( strlen( command ) );
