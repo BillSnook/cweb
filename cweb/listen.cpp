@@ -115,11 +115,11 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 void Listener::writeBack( char *msg, int socket ) {
     long n;
-//    if ( useDatagramProtocol ) {
-//        n = sendto(socket, msg, strlen( msg ), 0, NULL, 0);
-//    } else {
+    if ( useDatagramProtocol ) {
+        n = send(socket, msg, strlen( msg ), 0);
+    } else {
         n = write( socket, msg, strlen( msg ) );
-//    }
+    }
     if ( n < 0 ) {
         syslog(LOG_ERR, "ERROR writing back to socket %d", socket );
         return;
