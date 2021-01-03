@@ -113,7 +113,7 @@ I2C::I2C( int addr ) {
 //	file_i2c = wiringPiI2CSetup( addr );
 #endif  // ON_PI
 
-    file_i2c = manager.openI2CFile( addr );
+    file_i2c = manager.openI2CFile( address );
 }
 
 int I2C::i2cRead( int reg ) {

@@ -133,10 +133,10 @@ void Manager::shutdownManager() {
 int Manager::openI2CFile( int address ) {
     int fileDescriptor;
     if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 )
-        syslog( LOG_ERR, "Unable to open I2C device: %s\n", strerror( errno ) );
-    if ( ioctl( fileDescriptor, I2C_SLAVE, ArdI2CAddr ) < 0 )
-        syslog( LOG_ERR, "Unable to select I2C device: %s\n", strerror( errno ) );
-    syslog( LOG_NOTICE, "Found manager I2C device pointer for Arduino addr %02X: %d\n", address, fileDescriptor );
+        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
+    if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 )
+        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
+    syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
     return fileDescriptor;
 }
 
@@ -249,7 +249,7 @@ long Manager::request( I2CType type, int file, int command ) {
 //        syslog(LOG_NOTICE, "request rd, command type: %s, reg/len %02X: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam );
         pthread_cond_signal( &i2cQueueCond );
     } catch(...) {
-        syslog(LOG_NOTICE, "request rd, i2c queue push failure occured" );
+        syslog(LOG_NOTICE, "request rd, i2c queue push failure occurred" );
     }
     pthread_mutex_unlock( &i2cQueueMutex );
 
