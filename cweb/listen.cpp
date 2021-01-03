@@ -116,7 +116,10 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 void Listener::writeBack( char *msg, int socket ) {
     long n;
     if ( useDatagramProtocol ) {
-        n = send(socket, msg, strlen( msg ), 0);
+        struct sockaddr_in serverStorage;
+        socklen_t addr_size = sizeof( serverStorage );
+        n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&serverStorage, addr_size);
+        syslog(LOG_ERR, "Sending back to socket %d, addr %s, response %ld", socket, inet_ntoa(serverStorage.sin_addr), n);
     } else {
         n = write( socket, msg, strlen( msg ) );
     }
