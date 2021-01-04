@@ -34,6 +34,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
 	}
+    
     struct sockaddr_in    serv_addr;
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
 	portno = rcvPortNo;
@@ -85,7 +86,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             // recv
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
-//            memset(&serverStorage, 0, sizeof(serverStorage));
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s, port %d", inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             addrno = ntohl(serverStorage.sin_addr.s_addr);

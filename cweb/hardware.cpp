@@ -259,7 +259,7 @@ bool Hardware::shutdownHardware() {
 	
 	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
-	setPWM( M0En, 0 );		// Turn off motors
+	setPWM( M0En, 0 );		    // Turn off motors
 	setPin( M0Fw, 0 );
 	setPin( M0Rv, 0 );
 	setPWM( M1En, 0 );
@@ -269,7 +269,7 @@ bool Hardware::shutdownHardware() {
 	motor0Setup = false;
 	motor1Setup = false;
 	
-	setPWM( Scanner, 0 );		// Turn off servos
+	setPWM( Scanner, 0 );		// Unpower servos
 
     siteMap.shutdownSiteMap();
 

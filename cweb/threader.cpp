@@ -180,6 +180,7 @@ void Threader::runNextThread( void *arguments ) {
 			manager.monitor();
 			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
+                                    // For datagram, binds socket to port and returns
 			listener.acceptConnections( nextThreadControl.nextSocket );
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received
