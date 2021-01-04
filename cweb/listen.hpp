@@ -11,13 +11,21 @@
 
 #include <netinet/in.h>
 
+#define AP_SIZE     32
+
+struct addrPort {
+    int addr;
+    int port;
+};
+
 
 class Listener {
 	
 	int					listenSockfd, portno;
     unsigned int        addrno;
-	char				buffer[256];
+//	char				buffer[256];
 	bool				doListenerLoop;
+    addrPort            apArray[AP_SIZE];
 
 public:
 	void acceptConnections( int rcvPortNo );

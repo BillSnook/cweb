@@ -50,7 +50,11 @@ void Commander::shutdownCommander() {
 
 // This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
 void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
-
+    // WFS socket is only used here for use as an indicator of where to respond,
+    //  but this does not work with UDP datagrams that need an addr/port pair to target the response
+    //  I propose to set up an array of response addr/port structs and pass the index here instead of the socket.
+    //  That way a datagram mode can use it differently than a connection oriented service like TCP.
+    //  And the value is only generated in listen.serviceConnection and used eventually only in writeBack.
 	syslog(LOG_NOTICE, "In serviceCommand with socket %d, command %s", socket, command );
     // First interpret tokens
     char *nextToken[tokenMax+1];
