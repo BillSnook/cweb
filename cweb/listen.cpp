@@ -128,7 +128,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
     
-    syslog(LOG_NOTICE, "input, addr %d, port %d", ap.addr, ap.port);
+    syslog(LOG_NOTICE, "input, addr %d, port %d", addr, port);
     for ( int i = 1; i < AP_SIZE; i++ ) {
         addrPort ap = apArray[i];
         syslog(LOG_NOTICE, "index %d, addr %d, port %d", i, ap.addr, ap.port);
