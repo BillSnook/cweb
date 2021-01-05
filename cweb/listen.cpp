@@ -48,7 +48,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
         memset(&apArray, 0, sizeof(addrPort) * AP_SIZE);
-        apArray[1].port = 1234; // WFS Test 
+        apArray[1].port = 1234; // WFS Test
 //        for (int i = 0; i < AP_SIZE; i++) {
 //            apArray[i].addr = 0;
 //            apArray[i].port = 0;
@@ -154,7 +154,9 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/por
         }
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
-        addrPort ap = apArray[sockOrAddr];
+        addrPort ap;
+        ap.addr = apArray[sockOrAddr].addr;
+        ap.port = apArray[sockOrAddr].port;
         syslog(LOG_NOTICE, "writeBack index %d, addr %d, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
