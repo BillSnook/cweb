@@ -47,10 +47,12 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
-        for (int i = 0; i < AP_SIZE; i++) {
-            apArray[i].addr = 0;
-            apArray[i].port = 0;
-        }
+        memset(&apArray, 0, sizeof(addrPort) * AP_SIZE);
+        apArray[1].port = 1234; // WFS Test 
+//        for (int i = 0; i < AP_SIZE; i++) {
+//            apArray[i].addr = 0;
+//            apArray[i].port = 0;
+//        }
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
         bool doListenerLoop = true;
