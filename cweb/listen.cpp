@@ -47,12 +47,8 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
-        memset(&apArray, 0, sizeof(addrPort) * AP_SIZE);
-        apArray[1].port = 1234; // WFS Test
-//        for (int i = 0; i < AP_SIZE; i++) {
-//            apArray[i].addr = 0;
-//            apArray[i].port = 0;
-//        }
+//        memset(&apArray, 0, sizeof(addrPort) * AP_SIZE);
+//        apArray[1].port = 1234; // WFS Test
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
         bool doListenerLoop = true;
@@ -98,7 +94,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
             int portno = ntohs(serverStorage.sin_port);
             sockOrAddr = findMatchOrNewIndex( addrno, portno );
-            syslog(LOG_NOTICE, "serviceConnection sockOrAddr %d", sockOrAddr );
+//            syslog(LOG_NOTICE, "serviceConnection sockOrAddr %d", sockOrAddr );
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
@@ -128,14 +124,12 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
     
-    syslog(LOG_NOTICE, "input, addr %08X, port %d", addr, port);
+//    syslog(LOG_NOTICE, "input, addr %08X, port %d", addr, port);
     for ( int i = 1; i < AP_SIZE; i++ ) {
         addrPort ap = apArray[i];
-        syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, apArray[i].addr, apArray[i].port);
         if ( ap.port == 0 ) {   // Blank entry, we have no matches, create new entry
             apArray[i].addr = addr;
             apArray[i].port = port;
-            syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, ap.addr, ap.port);
             return( i );
         }
         if ( ( ap.addr == addr ) && ( ap.port == port ) ) {
@@ -154,15 +148,13 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/por
         }
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
-        addrPort ap;
-        ap.addr = apArray[sockOrAddr].addr;
-        ap.port = apArray[sockOrAddr].port;
+        addrPort ap = apArray[sockOrAddr];
         syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
         serv_addr.sin_port = htons( ap.port );
         n = sendto(socketfd, msg, strlen( msg ), 0, (struct sockaddr *)&serv_addr, addr_size);
-        syslog(LOG_ERR, "Sending back to addr %s, port %d, response length %ld", inet_ntoa(serv_addr.sin_addr), ap.port, n);
+//        syslog(LOG_ERR, "Sending back to addr %s, port %d, response length %ld", inet_ntoa(serv_addr.sin_addr), ap.port, n);
         if ( n < 0 ) {
             syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
             return;
