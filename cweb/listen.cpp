@@ -98,6 +98,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
             int portno = ntohs(serverStorage.sin_port);
             sockOrAddr = findMatchOrNewIndex( addrno, portno );
+            syslog(LOG_NOTICE, "serviceConnection sockOrAddr %d", sockOrAddr );
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
@@ -145,6 +146,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/por
     long n;
     if ( useDatagramProtocol ) {
         // get addr and port from sockOrAddr as addr/port array index
+        syslog(LOG_NOTICE, "writeBack sockOrAddr %d", sockOrAddr );
         if ( sockOrAddr == 0 ) {
             return;     // Invalid addr/port index
         }
