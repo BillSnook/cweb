@@ -128,11 +128,14 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
     
+    syslog(LOG_NOTICE, "input, addr %d, port %d", ap.addr, ap.port);
     for ( int i = 1; i < AP_SIZE; i++ ) {
         addrPort ap = apArray[i];
+        syslog(LOG_NOTICE, "index %d, addr %d, port %d", i, ap.addr, ap.port);
         if ( ap.port == 0 ) {   // Blank entry, we have no matches, create new entry
             ap.addr = addr;
             ap.port = port;
+            syslog(LOG_NOTICE, "index %d, addr %d, port %d", i, ap.addr, ap.port);
             return( i );
         }
         if ( ( ap.addr == addr ) && ( ap.port == port ) ) {
@@ -145,7 +148,7 @@ int Listener::findMatchOrNewIndex( int addr, int port ) {
 void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/port reference vs socketfd here
     long n;
     if ( useDatagramProtocol ) {
-        // get addr and port from sockOrAddr as addr/port array index
+        // Get addr and port from sockOrAddr as addr/port array index
         syslog(LOG_NOTICE, "writeBack sockOrAddr %d", sockOrAddr );
         if ( sockOrAddr == 0 ) {
             return;     // Invalid addr/port index
