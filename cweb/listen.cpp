@@ -131,10 +131,10 @@ int Listener::findMatchOrNewIndex( int addr, int port ) {
     syslog(LOG_NOTICE, "input, addr %08X, port %d", addr, port);
     for ( int i = 1; i < AP_SIZE; i++ ) {
         addrPort ap = apArray[i];
-        syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, ap.addr, ap.port);
+        syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, apArray[i].addr, apArray[i].port);
         if ( ap.port == 0 ) {   // Blank entry, we have no matches, create new entry
-            ap.addr = addr;
-            ap.port = port;
+            apArray[i].addr = addr;
+            apArray[i].port = port;
             syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, ap.addr, ap.port);
             return( i );
         }
