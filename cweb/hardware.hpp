@@ -107,7 +107,7 @@ public:
 	void scanStop();
 	void scanTest();
 	void prepPing( int start, int end, int inc );
-	void scanPing( int socket );
+	void scanPing( int sockOrAddr );
 	void pingLoop();
 
 	unsigned int ping( unsigned int angle );

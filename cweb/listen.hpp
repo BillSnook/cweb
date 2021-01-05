@@ -21,17 +21,16 @@ struct addrPort {
 
 class Listener {
 	
-	int					listenSockfd, portno;
-    unsigned int        addrno;
-//	char				buffer[256];
-	bool				doListenerLoop;
+	int					socketfd;
     addrPort            apArray[AP_SIZE];
+    
+    int findMatchOrNewIndex( int addr, int portno );
 
 public:
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd, char *inet_address );
-	void writeBack( char *msg, int socket );
-	void writeBlock( char *msg, int length, int socket );
+	void writeBack( char *msg, int sockOrAddr );
+//	void writeBlock( char *msg, int length, int socket );
 };
 
 extern Listener	listener;

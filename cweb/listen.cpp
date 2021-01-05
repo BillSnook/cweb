@@ -25,47 +25,45 @@ extern Threader		threader;
 
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
-	doListenerLoop = false;
     if ( useDatagramProtocol ) {
-        listenSockfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+        socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
     } else {
-        listenSockfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+        socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
     }
-	if ( listenSockfd < 0 ) {
+	if ( socketfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
 		return;
 	}
     
     struct sockaddr_in    serv_addr;
 	bzero( (char *)&serv_addr, sizeof( serv_addr ) );
-	portno = rcvPortNo;
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons( portno );
-	if ( bind( listenSockfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr) ) < 0) {
+	serv_addr.sin_port = htons( rcvPortNo );
+	if ( bind( socketfd, (struct sockaddr *)&serv_addr, sizeof( serv_addr) ) < 0) {
 		syslog(LOG_ERR, "ERROR on binding"  );
 		return;
 	}
 
-    if ( useDatagramProtocol ) {
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", listenSockfd, portno, inet_ntoa(serv_addr.sin_addr));
+    if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
+        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
         struct addrPort     ap;
         ap.addr = 0;
         ap.port = 0;
         for (int i = 0; i < AP_SIZE; i++) {
             apArray[i] = ap;
         }
-        threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), listenSockfd );
-    } else {
-        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", portno, inet_ntoa(serv_addr.sin_addr) );
-        doListenerLoop = true;
+        threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
+    } else {                            // Basically listen forever for a new connection then create a server thread
+        bool doListenerLoop = true;
+        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", rcvPortNo, inet_ntoa(serv_addr.sin_addr) );
         struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof( cli_addr );
         while ( doListenerLoop ) {
-            syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", listenSockfd);
-            listen(  listenSockfd, 5 );
-            int connectionSockfd = accept( listenSockfd, (struct sockaddr *)&cli_addr, &clilen);
-            syslog(LOG_NOTICE, "Listen socket %d accepted a connection on socket %d", listenSockfd, connectionSockfd);
+            syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", socketfd);
+            listen( socketfd, 5 );
+            int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
+            syslog(LOG_NOTICE, "Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
             if ( connectionSockfd < 0 ) {
                 syslog(LOG_ERR, "ERROR on accept" );
                 break;
@@ -76,7 +74,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
             
 //          doListenerLoop = false; // Do once for testing
         }
-        close( listenSockfd );
+        close( socketfd );
         syslog(LOG_NOTICE, "In acceptConnections at exit" );
     }
 }
@@ -97,9 +95,9 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             syslog(LOG_NOTICE, "In datagram serviceConnection received data from clientAddr: %s, port %d", inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             // WFS Need an addr/port reference vs socketfd here
-            // sockOrAddr = findMatchOrNewIndex( addrno, portno );
-            addrno = ntohl(serverStorage.sin_addr.s_addr);
-            portno = ntohs(serverStorage.sin_port);
+            int addrno = ntohl(serverStorage.sin_addr.s_addr);
+            int portno = ntohs(serverStorage.sin_port);
+            sockOrAddr = findMatchOrNewIndex( addrno, portno );
         } else {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
@@ -114,7 +112,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         // Now start thread to service command
 
         // Parse and execute command in its own thread with socket in case it needs to respond
-		threader.queueThread( commandThread, buffer, sockOrAddr );    // WFS Need an addr/port reference vs socketfd here
+		threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
 		free( buffer );
 
 //		n = write( connectionSockfd, "\nAck\n", 5 );
@@ -127,25 +125,50 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //	syslog(LOG_NOTICE, "In serviceConnection at end" );
 }
 
-void Listener::writeBack( char *msg, int socket ) {  // WFS Need an addr/port reference vs socketfd here
+int Listener::findMatchOrNewIndex( int addr, int port ) {
+    
+    for ( int i = 1; i < AP_SIZE; i++ ) {
+        addrPort ap = apArray[i];
+        if ( ap.port == 0 ) {   // Blank entry, we have no matches, create new entry
+            ap.addr = addr;
+            ap.port = port;
+            return( i );
+        }
+        if ( ( ap.addr == addr ) && ( ap.port == port ) ) {
+            return( i );
+        }
+    }
+    return 0;   // List is full!
+}
+
+void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/port reference vs socketfd here
     long n;
     if ( useDatagramProtocol ) {
-        // get addr and port from socket as addr/port array index
+        // get addr and port from sockOrAddr as addr/port array index
+        if ( sockOrAddr == 0 ) {
+            return;     // Invalid addr/port index
+        }
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
+        addrPort ap = apArray[sockOrAddr];
         serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = htonl(addrno);
-        serv_addr.sin_port = htons( portno );
-        n = sendto(socket, msg, strlen( msg ), 0, (struct sockaddr *)&serv_addr, addr_size);
-        syslog(LOG_ERR, "Sending back to socket %d, addr %s, port %d, response length %ld", socket, inet_ntoa(serv_addr.sin_addr), portno, n);
+        serv_addr.sin_addr.s_addr = htonl(ap.addr);
+        serv_addr.sin_port = htons( ap.port );
+        n = sendto(socketfd, msg, strlen( msg ), 0, (struct sockaddr *)&serv_addr, addr_size);
+        syslog(LOG_ERR, "Sending back to addr %s, port %d, response length %ld", inet_ntoa(serv_addr.sin_addr), ap.port, n);
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
+            return;
+        }
+        syslog(LOG_NOTICE, "In writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
     } else {
-        n = write( socket, msg, strlen( msg ) );
+        n = write( sockOrAddr, msg, strlen( msg ) );
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing back to socket %d", sockOrAddr );
+            return;
+        }
+        syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d", sockOrAddr);
     }
-    if ( n < 0 ) {
-        syslog(LOG_ERR, "ERROR writing back to socket %d", socket );
-        return;
-    }
-    syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d", socket);
 }
 
 //void Listener::writeBlock( char *msg, int length, int socket ) {

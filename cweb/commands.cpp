@@ -49,13 +49,13 @@ void Commander::shutdownCommander() {
 }
 
 // This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
-void Commander::serviceCommand( char *command, int socket ) {	// Main command determination routine
-    // WFS socket is only used here for use as an indicator of where to respond,
+void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main command determination routine
+    // WFS sockOrAddr is only used here for use as an indicator of where to respond,
     //  but this does not work with UDP datagrams that need an addr/port pair to target the response
     //  I propose to set up an array of response addr/port structs and pass the index here instead of the socket.
     //  That way a datagram mode can use it differently than a connection oriented service like TCP.
     //  And the value is only generated in listen.serviceConnection and used eventually only in writeBack.
-	syslog(LOG_NOTICE, "In serviceCommand with socket %d, command %s", socket, command );
+	syslog(LOG_NOTICE, "In serviceCommand with sockOrAddr %d, command %s", sockOrAddr, command );
     // First interpret tokens
     char *nextToken[tokenMax+1];
 	int len = int( strlen( command ) );
@@ -147,7 +147,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		{
 //			char *display = (char *)manager.siteMap.returnMap( msg );	// msg is 1024 bytes
 			syslog(LOG_NOTICE, "Error - Sitmap moved" );
-//			listener.writeBlock( msg, int( strlen( (char *)msg ) ), socket );
+//			listener.writeBlock( msg, int( strlen( (char *)msg ) ), sockOrAddr );
 		}
 			break;
 			
@@ -208,7 +208,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'N':
 		case 'n':
 			hardware.prepPing( token1, token2, token3 );
-			hardware.scanPing( socket );
+			hardware.scanPing( sockOrAddr );
 			break;
 			
         case 'O':
@@ -251,7 +251,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 		case 'T':
 		case 't':
 			memcpy( msg, "\nMessage 1...\n", 15 );
-			listener.writeBack( (char *)msg, socket );
+			listener.writeBack( (char *)msg, sockOrAddr );
 			usleep( 5000000 ); // 5 second delay as test
 			memcpy( msg, "\nMessage 2   \n", 15 );	// msg gets written at end of this routine
 			break;
@@ -308,7 +308,7 @@ void Commander::serviceCommand( char *command, int socket ) {	// Main command de
 			break;
 	}
 	if ( strlen((char *)msg) > 0 ) {
-		listener.writeBack( (char *)msg, socket );
+		listener.writeBack( (char *)msg, sockOrAddr );
 	}
 //	free( msg );
 }

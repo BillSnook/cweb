@@ -494,7 +494,7 @@ void Hardware::prepPing( int start, int end, int inc ) {
 }
 
 // Scan and ping through angle range
-void Hardware::scanPing( int socket ) {
+void Hardware::scanPing( int sockOrAddr ) {
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
 		return;				// If this is run multiple times, mayhem!
@@ -523,9 +523,9 @@ void Hardware::scanPing( int socket ) {
 			// 180º in .9 seconds = .005 sec / degree
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
 			// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
-			if ( 0 != socket ) {
+			if ( 0 != sockOrAddr ) {
 				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, socket );
+				listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 		} else {
@@ -536,9 +536,9 @@ void Hardware::scanPing( int socket ) {
 				unsigned int distance = ping( angle );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
-			if ( 0 != socket ) {
+			if ( 0 != sockOrAddr ) {
 				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, socket );
+				listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 			for( int angle = end; angle > start; angle -= inc ) {
@@ -549,9 +549,9 @@ void Hardware::scanPing( int socket ) {
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			// Range newly scanned, sitmap updated - contact mother ship with ping map
-			if ( 0 != socket ) {
+			if ( 0 != sockOrAddr ) {
 				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, socket );
+				listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 		}
