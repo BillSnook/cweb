@@ -47,11 +47,10 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
-        struct addrPort     ap;
-        ap.addr = 0;
-        ap.port = 0;
         for (int i = 0; i < AP_SIZE; i++) {
-            apArray[i] = ap;
+            struct addrPort ap = apArray[i] ;
+            ap.addr = 0;
+            ap.port = 0;
         }
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
