@@ -148,13 +148,13 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/por
     long n;
     if ( useDatagramProtocol ) {
         // Get addr and port from sockOrAddr as addr/port array index
-        syslog(LOG_NOTICE, "writeBack sockOrAddr %d", sockOrAddr );
         if ( sockOrAddr == 0 ) {
             return;     // Invalid addr/port index
         }
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         addrPort ap = apArray[sockOrAddr];
+        syslog(LOG_NOTICE, "writeBack index %d, addr %d, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
         serv_addr.sin_port = htons( ap.port );
