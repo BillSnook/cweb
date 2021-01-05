@@ -128,14 +128,14 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
     
-    syslog(LOG_NOTICE, "input, addr %d, port %d", addr, port);
+    syslog(LOG_NOTICE, "input, addr %08X, port %d", addr, port);
     for ( int i = 1; i < AP_SIZE; i++ ) {
         addrPort ap = apArray[i];
-        syslog(LOG_NOTICE, "index %d, addr %d, port %d", i, ap.addr, ap.port);
+        syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, ap.addr, ap.port);
         if ( ap.port == 0 ) {   // Blank entry, we have no matches, create new entry
             ap.addr = addr;
             ap.port = port;
-            syslog(LOG_NOTICE, "index %d, addr %d, port %d", i, ap.addr, ap.port);
+            syslog(LOG_NOTICE, "index %d, addr %08X, port %d", i, ap.addr, ap.port);
             return( i );
         }
         if ( ( ap.addr == addr ) && ( ap.port == port ) ) {
@@ -157,7 +157,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // WFS Need an addr/por
         addrPort ap;
         ap.addr = apArray[sockOrAddr].addr;
         ap.port = apArray[sockOrAddr].port;
-        syslog(LOG_NOTICE, "writeBack index %d, addr %d, port %d", sockOrAddr, ap.addr, ap.port);
+        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
         serv_addr.sin_port = htons( ap.port );
