@@ -438,10 +438,10 @@ long Hardware::cmdPing() {
     struct sched_param priority = {1};
     priority.sched_priority = 99;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
-    if (result != 0) {
-        syslog(LOG_ERR, "Failed setting thread FIFO priority" );
-        return 0;
-    }
+//    if (result != 0) {
+//        syslog(LOG_ERR, "Failed setting thread FIFO priority" );
+//        return 0;
+//    }
     
     struct timeval tvStart, tvEnd, tvDiff;
     gettimeofday(&tvStart, NULL);
