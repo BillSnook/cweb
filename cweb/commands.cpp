@@ -145,8 +145,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'E':
 		case 'e':
 		{
+            hardware.pingTest( 90 );
+            
 //			char *display = (char *)manager.siteMap.returnMap( msg );	// msg is 1024 bytes
-			syslog(LOG_NOTICE, "Error - Sitmap moved" );
+///			syslog(LOG_NOTICE, "Error - Sitmap moved" );
 //			listener.writeBlock( msg, int( strlen( (char *)msg ) ), sockOrAddr );
 		}
 			break;

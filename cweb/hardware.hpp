@@ -102,7 +102,8 @@ public:
 
 	int angleToPWM( int angle );
 	void cmdAngle( int angle );
-	
+    long cmdPing();
+    
 	void centerServo();
 	void scanStop();
 	void scanTest();
@@ -110,8 +111,11 @@ public:
 	void scanPing( int sockOrAddr );
 	void pingLoop();
 
-	unsigned int ping( unsigned int angle );
+    unsigned int ping( unsigned int angle );
+    long pingTest( unsigned int angle );
+    
 	void allStop();
+    
 	void scanUntilFound( int scanType );
 	void turnAndFollow( int followDistance );
 

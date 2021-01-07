@@ -11,6 +11,10 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <math.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sched.h>
+#include <sys/time.h>
 
 #include "mtrctl.hpp"
 #include "listen.hpp"
@@ -45,9 +49,9 @@
 #define MAX_PWM					510		// to 2.0 ms
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
-//// Pi pins - ultrasonic range-finder
-//#define TRIG					0		// Brown	Out
-//#define ECHO					2		// White	In
+// Pi pins - ultrasonic range-finder
+#define TRIG					0		// Brown	Out
+#define ECHO					2		// White	In
 
 
 // Sub-addresses in motor hat i2c address
@@ -77,7 +81,7 @@
 
 
 // Address of PWM channels - Fw and Rv expect their on and off values to be 0 to PWM_MAX
-// If a PWM channel is used as a off or on, the value would be 0  or PWM_COUNT respectively
+// If a PWM channel is used as a off or on, the value would be 0 or PWM_COUNT respectively
 #define M0Fw                    9       // Motor 1 Forward enable PWM channel
 #define M0Rv                    10      // Motor 1 Reverse enable - both 0 is safe off
 #define M0En                    8       // Motor 1 enable, values from 0 to PWM_MAX
@@ -232,6 +236,9 @@ bool Hardware::setupHardware() {
 		return false;
 	}
 	//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
+    pinMode( TRIG, OUTPUT );
+    pinMode( ECHO, INPUT );
+
 #endif  // ON_PI
 	
 	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
@@ -424,6 +431,56 @@ void Hardware::cmdAngle( int angle ) {
 	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
+long Hardware::cmdPing() {
+    
+    
+    long pingTime = 0;
+    struct sched_param priority = {1};
+    priority.sched_priority = 99;
+    int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
+    if (result != 0) {
+        syslog(LOG_ERR, "Failed setting thread FIFO priority" );
+        return 0;
+    }
+    
+    struct timeval tvStart, tvEnd, tvDiff;
+    gettimeofday(&tvStart, NULL);
+
+#ifdef ON_PI
+    
+//    digitalWrite( TRIG, 0);
+//    usleep( 2 );
+//    digitalWrite( TRIG, 1);
+//    usleep( 5 );
+//    digitalWrite( TRIG, 0);
+//    // Wait for response on echo pin
+//    int echoResponse;
+//    do {
+//        echoResponse = digitaRead( ECHO );
+//    } while ( echoResponse != 1);
+    delay( 450 ); // Test 450 mSec
+    
+#endif  // ON_PI    // Set trigger pulse pin
+
+    gettimeofday(&tvEnd, NULL);
+    tvDiff.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
+    tvDiff.tv_usec = tvEnd.tv_usec - tvStart.tv_usec;
+    if ( tvDiff.tv_usec < 0 ) {
+        tvDiff.tv_sec -= 1;
+        tvDiff.tv_usec += 1000000;
+    }
+    pingTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
+    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+
+    priority.sched_priority = 0;
+    result = pthread_setschedparam( pthread_self(), SCHED_OTHER, &priority );
+    if (result != 0) {
+        syslog(LOG_ERR, "Failed resetting thread FIFO priority" );
+        return pingTime;
+    }
+    return pingTime;
+}
+
 void Hardware::centerServo() {
 	
 	cmdAngle( 90 );
@@ -574,6 +631,13 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	unsigned int range = (unsigned int)manager.getRange();
 	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return cm;
+}
+
+long Hardware::pingTest( unsigned int angle ) {
+    
+    cmdAngle( angle );
+    usleep(2000);   // 2ms to let it settle
+    return cmdPing();
 }
 
 void Hardware::allStop() {
