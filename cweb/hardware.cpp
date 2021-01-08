@@ -436,7 +436,7 @@ void Hardware::cmdAngle( int angle ) {
 void Hardware::priorityUp() {
         
     struct sched_param priority = {10};
-    priority.sched_priority = 10;
+    priority.sched_priority = 20;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "In priorityUp, failed setting thread FIFO priority to %d", priority.sched_priority );

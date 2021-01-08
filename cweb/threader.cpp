@@ -148,7 +148,7 @@ void Threader::createThread() {
         syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
     }
     struct sched_param priority = {1};
-    priority.sched_priority = 1;
+    priority.sched_priority = 10;
     result = pthread_attr_setschedparam( attrPtr, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
