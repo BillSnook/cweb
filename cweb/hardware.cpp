@@ -435,7 +435,7 @@ void Hardware::cmdAngle( int angle ) {
 
 void Hardware::priorityUp() {
     
-//    priorityDisplay();      // WFS Test
+    priorityDisplay();      // WFS Test
     
     struct sched_param priority = {10};
     priority.sched_priority = 10;
@@ -465,7 +465,8 @@ int Hardware::priorityDisplay() {
         syslog(LOG_ERR, "In priorityDisplay, failed getting thread priority" );
     }
     syslog(LOG_ERR, "In priorityDisplay, got thread priority: %d", priority.sched_priority );
-    return priority.sched_priority;
+    result = priority.sched_priority;
+    return result;
 }
 
 long Hardware::doPing() {
