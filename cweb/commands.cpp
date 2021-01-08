@@ -146,10 +146,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'e':
 		{
             long range = hardware.pingTest( 90 );
-            long cm = range/29/2;
-            long inches = range/74/2;
+            double cm = range / 29.0 / 2.0;
+            double inches = range / 74.0 / 2.0;
 //            long mm = (range*10)/29/2
-            sprintf( msg, "Distance is %ld inches, %ld cm", inches, cm );
+            sprintf( msg, "Distance is %02f inches, %02f cm", inches, cm );
 
 //			char *display = (char *)manager.siteMap.returnMap( msg );	// msg is 1024 bytes
 ///			syslog(LOG_NOTICE, "Error - Sitmap moved" );
