@@ -161,14 +161,14 @@ void PWM::setPWMFrequency( int freq ) {
 	prescaleval /= float( freq );
 	prescaleval -= 1.0;                     // For averaging
 	float prescale = floor(prescaleval + 0.5);
-//	syslog(LOG_NOTICE, "prescaleval: %d, prescale: %f", prescaleval, prescale );
+	syslog(LOG_NOTICE, "prescaleval: %d, prescale: %f", prescaleval, prescale );
 	int prescaleSetting = int(floor(prescale));
 	if ( prescaleSetting < 3 ) {
 		prescaleSetting = 3;
 	}
 	
 	int oldmode = i2c->i2cRead( MODE1 );
-//    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
+    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
 	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
 	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );
@@ -235,7 +235,7 @@ bool Hardware::setupHardware() {
 		syslog(LOG_ERR, "Error setting up wiringPi." );
 		return false;
 	}
-	//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
+	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
     pinMode( TRIG, OUTPUT );
     pinMode( ECHO, INPUT );
     
