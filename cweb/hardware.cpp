@@ -435,37 +435,37 @@ void Hardware::cmdAngle( int angle ) {
 
 long Hardware::cmdPing() {
     
-    long pingTime = 0;
     struct sched_param priority = {1};
     priority.sched_priority = 10;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "Failed setting thread FIFO priority" );
- //       return 0;
+//       return 0;
     }
     
     struct timeval tvStart, tvEnd, tvDiff;
-    syslog(LOG_NOTICE, "In cmdPing, ready to ping" );
+//    syslog(LOG_NOTICE, "In cmdPing, ready to ping" );
 
 #ifdef ON_PI
     
     int echoResponse;
     digitalWrite( TRIG, 0);   // Make sure
-    usleep( 2 );
+    usleep( 5 );
     digitalWrite( TRIG, 1);
-    usleep( 10 );
+    usleep( 15 );
     digitalWrite( TRIG, 0);
+    
     // Wait until echo goes high to indicate pulse start
     do {
         echoResponse = digitalRead( ECHO );
     } while ( echoResponse == 0);
     gettimeofday(&tvStart, NULL);
-    // Wait for response on echo pin to go low indication pulse end
+    
+    // Wait for response on echo pin to go low indicating pulse end
     do {
         echoResponse = digitalRead( ECHO );
     } while ( echoResponse == 1);
     gettimeofday(&tvEnd, NULL);
-    delay( 450 ); // Test 450 mSec
     
 #endif  // ON_PI    // Set trigger pulse pin
 
@@ -475,7 +475,7 @@ long Hardware::cmdPing() {
         tvDiff.tv_sec -= 1;
         tvDiff.tv_usec += 1000000;
     }
-    pingTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
+    long pingTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
     syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
 
     priority.sched_priority = 0;
