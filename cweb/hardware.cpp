@@ -238,6 +238,8 @@ bool Hardware::setupHardware() {
 	//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
     pinMode( TRIG, OUTPUT );
     pinMode( ECHO, INPUT );
+    
+    digitalWrite( TRIG, 0);     // Init trigger to 0
 
 #endif  // ON_PI
 	
@@ -433,36 +435,40 @@ void Hardware::cmdAngle( int angle ) {
 
 long Hardware::cmdPing() {
     
-    
     long pingTime = 0;
     struct sched_param priority = {1};
     priority.sched_priority = 99;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
-//    if (result != 0) {
-//        syslog(LOG_ERR, "Failed setting thread FIFO priority" );
-//        return 0;
-//    }
+    if (result != 0) {
+        syslog(LOG_ERR, "Failed setting thread FIFO priority" );
+ //       return 0;
+    }
     
     struct timeval tvStart, tvEnd, tvDiff;
-    gettimeofday(&tvStart, NULL);
+    syslog(LOG_NOTICE, "In cmdPing, ready to ping" );
 
 #ifdef ON_PI
     
-//    digitalWrite( TRIG, 0);
-//    usleep( 2 );
-//    digitalWrite( TRIG, 1);
-//    usleep( 5 );
-//    digitalWrite( TRIG, 0);
-//    // Wait for response on echo pin
-//    int echoResponse;
-//    do {
-//        echoResponse = digitaRead( ECHO );
-//    } while ( echoResponse != 1);
+    int echoResponse;
+    digitalWrite( TRIG, 0);   // Make sure
+    usleep( 2 );
+    digitalWrite( TRIG, 1);
+    usleep( 10 );
+    digitalWrite( TRIG, 0);
+    // Wait until echo goes high to indicate pulse start
+    do {
+        echoResponse = digitaRead( ECHO );
+    } while ( echoResponse == 0);
+    gettimeofday(&tvStart, NULL);
+    // Wait for response on echo pin to go low indication pulse end
+    do {
+        echoResponse = digitaRead( ECHO );
+    } while ( echoResponse == 1);
+    gettimeofday(&tvEnd, NULL);
     delay( 450 ); // Test 450 mSec
     
 #endif  // ON_PI    // Set trigger pulse pin
 
-    gettimeofday(&tvEnd, NULL);
     tvDiff.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
     tvDiff.tv_usec = tvEnd.tv_usec - tvStart.tv_usec;
     if ( tvDiff.tv_usec < 0 ) {
@@ -476,7 +482,7 @@ long Hardware::cmdPing() {
     result = pthread_setschedparam( pthread_self(), SCHED_OTHER, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "Failed resetting thread FIFO priority" );
-        return pingTime;
+//        return pingTime;
     }
     return pingTime;
 }
@@ -635,7 +641,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 
 long Hardware::pingTest( unsigned int angle ) {
     
-    cmdAngle( angle );
+//    cmdAngle( angle );
     usleep(2000);   // 2ms to let it settle
     return cmdPing();
 }
