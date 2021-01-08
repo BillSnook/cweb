@@ -457,12 +457,12 @@ long Hardware::cmdPing() {
     digitalWrite( TRIG, 0);
     // Wait until echo goes high to indicate pulse start
     do {
-        echoResponse = digitaRead( ECHO );
+        echoResponse = digitalRead( ECHO );
     } while ( echoResponse == 0);
     gettimeofday(&tvStart, NULL);
     // Wait for response on echo pin to go low indication pulse end
     do {
-        echoResponse = digitaRead( ECHO );
+        echoResponse = digitalRead( ECHO );
     } while ( echoResponse == 1);
     gettimeofday(&tvEnd, NULL);
     delay( 450 ); // Test 450 mSec
