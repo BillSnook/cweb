@@ -433,18 +433,30 @@ void Hardware::cmdAngle( int angle ) {
 	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
-long Hardware::cmdPing() {
+void Hardware::priorityUp() {
     
-    struct sched_param priority = {1};
+    struct sched_param priority = {10};
     priority.sched_priority = 10;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "Failed setting thread FIFO priority" );
-//       return 0;
     }
+}
+
+void Hardware::priorityDown() {
+    
+    struct sched_param priority = {0};
+    priority.sched_priority = 0;
+    int result = pthread_setschedparam( pthread_self(), SCHED_OTHER, &priority );
+    if (result != 0) {
+        syslog(LOG_ERR, "Failed resetting thread FIFO priority" );
+    }
+}
+
+long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd, tvDiff;
-//    syslog(LOG_NOTICE, "In cmdPing, ready to ping" );
+//    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
 #ifdef ON_PI
     
@@ -476,14 +488,20 @@ long Hardware::cmdPing() {
         tvDiff.tv_usec += 1000000;
     }
     long pingTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
-    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+//    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+    
+    return pingTime;
+}
 
-    priority.sched_priority = 0;
-    result = pthread_setschedparam( pthread_self(), SCHED_OTHER, &priority );
-    if (result != 0) {
-        syslog(LOG_ERR, "Failed resetting thread FIFO priority" );
-//        return pingTime;
-    }
+long Hardware::cmdPing() {
+    
+    priorityUp();
+    
+    long pingTime = doPing();
+    syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
+
+    priorityDown();
+    
     return pingTime;
 }
 
