@@ -434,9 +434,7 @@ void Hardware::cmdAngle( int angle ) {
 }
 
 void Hardware::priorityUp() {
-    
-    priorityDisplay();      // WFS Test
-    
+        
     struct sched_param priority = {10};
     priority.sched_priority = 10;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
@@ -453,20 +451,6 @@ void Hardware::priorityDown() {
     if (result != 0) {
         syslog(LOG_ERR, "In priorityDown, failed resetting thread FIFO priority to %d", priority.sched_priority );
     }
-    
-//    priorityDisplay();      // WFS Test
-}
-
-int Hardware::priorityDisplay() {
-    
-    struct sched_param priority = {0};
-    int result = pthread_getschedparam( pthread_self(), 0, &priority );
-    if (result != 0) {
-        syslog(LOG_ERR, "In priorityDisplay, failed getting thread priority" );
-    }
-    syslog(LOG_ERR, "In priorityDisplay, got thread priority: %d", priority.sched_priority );
-    result = priority.sched_priority;
-    return result;
 }
 
 long Hardware::doPing() {
