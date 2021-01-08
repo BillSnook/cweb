@@ -143,6 +143,18 @@ void Threader::createThread() {
 
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
+    int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
+    if (result != 0) {
+        syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
+ //       return 0;
+    }
+    struct sched_param priority = {1};
+    priority.sched_priority = 0;
+    result = pthread_attr_setschedparam( attrPtr, &priority );
+    if (result != 0) {
+        syslog(LOG_ERR, "In createThread, failed setting thread FIFO parameter to default 0" );
+ //       return 0;
+    }
 
 	pthread_create(threadPtr,
 				   attrPtr,
