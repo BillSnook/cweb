@@ -111,6 +111,7 @@ public:
 	void scanPing( int sockOrAddr );
 	void pingLoop();
 
+    int  priorityDisplay();
     void priorityUp();
     void priorityDown();
     long doPing();

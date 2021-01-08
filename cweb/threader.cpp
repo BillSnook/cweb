@@ -136,7 +136,7 @@ void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 }
 
 void Threader::createThread() {
-	
+
 //	syslog(LOG_NOTICE, "In createThread at start" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
@@ -146,14 +146,12 @@ void Threader::createThread() {
     int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
     if (result != 0) {
         syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
- //       return 0;
     }
     struct sched_param priority = {1};
     priority.sched_priority = 1;
     result = pthread_attr_setschedparam( attrPtr, &priority );
     if (result != 0) {
-        syslog(LOG_ERR, "In createThread, failed setting thread FIFO parameter to 1" );
- //       return 0;
+        syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
     }
 
 	pthread_create(threadPtr,
