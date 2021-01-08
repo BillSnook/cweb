@@ -149,10 +149,10 @@ void Threader::createThread() {
  //       return 0;
     }
     struct sched_param priority = {1};
-    priority.sched_priority = 0;
+    priority.sched_priority = 10;
     result = pthread_attr_setschedparam( attrPtr, &priority );
     if (result != 0) {
-        syslog(LOG_ERR, "In createThread, failed setting thread FIFO parameter to default 0" );
+        syslog(LOG_ERR, "In createThread, failed setting thread FIFO parameter to 10" );
  //       return 0;
     }
 
