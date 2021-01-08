@@ -437,7 +437,7 @@ long Hardware::cmdPing() {
     
     long pingTime = 0;
     struct sched_param priority = {1};
-    priority.sched_priority = 20;
+    priority.sched_priority = 10;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "Failed setting thread FIFO priority" );
