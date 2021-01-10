@@ -148,8 +148,8 @@ void Threader::createThread() {
         syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
     }
     
-    int min = sched_get_priority_min( SCHED_FIFO );
-    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
+    int min = 1; // sched_get_priority_min( SCHED_FIFO );
+//    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
     
     struct sched_param priority = {0};
     priority.sched_priority = min;
