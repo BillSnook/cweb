@@ -478,10 +478,10 @@ long Hardware::doPing() {
     do {
         loopCount += 1;
         echoResponse = digitalRead( ECHO );
-    } while ( echoResponse == 0 );
+    } while ( ( echoResponse == 0 ) && ( loopCount < 100);
     gettimeofday(&tvStart, NULL);
     
-    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes low: %d", loopCount );
+    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
 
     // Wait for response on echo pin to go low indicating pulse end
     do {
@@ -505,12 +505,12 @@ long Hardware::doPing() {
 
 long Hardware::cmdPing() {
     
-    priorityUp();
+//    priorityUp();
     
     long pingTime = doPing();
     syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
 
-    priorityDown();
+//    priorityDown();
     
     return pingTime;
 }
