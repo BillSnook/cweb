@@ -435,6 +435,9 @@ void Hardware::cmdAngle( int angle ) {
 
 void Hardware::priorityUp() {
         
+    int max = sched_get_priority_max( 1 );
+    syslog(LOG_NOTICE, "In priorityUp, shed priority max : %d", max );
+
     struct sched_param priority = {10};
     priority.sched_priority = 20;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
@@ -445,9 +448,11 @@ void Hardware::priorityUp() {
 
 void Hardware::priorityDown() {
     
+    int min = sched_get_priority_min( 1 );
+    syslog(LOG_NOTICE, "In priorityDown, shed priority min: %d", min );
     struct sched_param priority = {0};
-    priority.sched_priority = 0;
-    int result = pthread_setschedparam( pthread_self(), SCHED_OTHER, &priority );
+    priority.sched_priority = 10;
+    int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "In priorityDown, failed resetting thread FIFO priority to %d", priority.sched_priority );
     }
@@ -470,13 +475,13 @@ long Hardware::doPing() {
     // Wait until echo goes high to indicate pulse start
     do {
         echoResponse = digitalRead( ECHO );
-    } while ( echoResponse == 0);
+    } while ( echoResponse == 0 );
     gettimeofday(&tvStart, NULL);
     
     // Wait for response on echo pin to go low indicating pulse end
     do {
         echoResponse = digitalRead( ECHO );
-    } while ( echoResponse == 1);
+    } while ( echoResponse != 0 );
     gettimeofday(&tvEnd, NULL);
     
 #endif  // ON_PI    // Set trigger pulse pin
@@ -487,10 +492,10 @@ long Hardware::doPing() {
         tvDiff.tv_sec -= 1;
         tvDiff.tv_usec += 1000000;
     }
-    long pingTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
+    long pingMicroSecondTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
 //    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
     
-    return pingTime;
+    return pingMicroSecondTime;
 }
 
 long Hardware::cmdPing() {
