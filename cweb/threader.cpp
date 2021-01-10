@@ -137,57 +137,62 @@ void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 
 void Threader::createThread() {
 
-//	syslog(LOG_NOTICE, "In createThread at start" );
+//    syslog(LOG_NOTICE, "In createThread at start" );
+    ThreadControl nextThreadControl;
+    bool foundThread = false;
+    pthread_mutex_lock( &threadArrayMutex );
+    try {
+        if ( ! threadQueue.empty() ) {
+            nextThreadControl = threadQueue.front();
+            threadQueue.pop();
+            foundThread = true;
+//        } else {
+//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
+        }
+    } catch(...) {
+        syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
+    }
+    pthread_mutex_unlock( &threadArrayMutex );
+    if ( !foundThread ) {
+        return;
+    }
+
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
-//    int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
-//    if (result != 0) {
-//        syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
-//    }
-//    
-//    int min = 1; // sched_get_priority_min( SCHED_FIFO );
-////    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
-//    
-//    struct sched_param priority = {0};
-//    priority.sched_priority = min;
-//    result = pthread_attr_setschedparam( attrPtr, &priority );
-//    if (result != 0) {
-//        syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
-//    }
-//    syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
     
+    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] == 'E' ) ) {
+        int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
+        if (result != 0) {
+            syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
+        }
+
+        int min = sched_get_priority_min( SCHED_FIFO );
+    //    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
+
+        struct sched_param priority = {0};
+        priority.sched_priority = min;
+        result = pthread_attr_setschedparam( attrPtr, &priority );
+        if (result != 0) {
+            syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
+        }
+        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
+    }
+
 	pthread_create(threadPtr,
 				   attrPtr,
 				   startThread,
-				   nullptr);
+                   &nextThreadControl);
 
 	free( attrPtr );
 	free( threadPtr );
 }
 
-void Threader::runNextThread( void *arguments ) {
-
-	ThreadControl nextThreadControl;
-	bool foundThread = false;
-	pthread_mutex_lock( &threadArrayMutex );
-	try {
-		if ( ! threadQueue.empty() ) {
-			nextThreadControl = threadQueue.front();
-			threadQueue.pop();
-			foundThread = true;
-//		} else {
-//			syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
-		}
-	} catch(...) {
-		syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
-	}
-	pthread_mutex_unlock( &threadArrayMutex );
-	if ( !foundThread ) {
-		return;
-	}
+void Threader::runNextThread( void *tcPointer ) {
+    
+    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
 	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {

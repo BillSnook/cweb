@@ -60,7 +60,7 @@ public:
 	void queueThread( ThreadType threadType, int socket, uint address );
 	void queueThread( ThreadType threadType, char *command, int socket );
 	void createThread();
-	void runNextThread(void *arguments);
+	void runNextThread(void *tcPointer);
 };
 
 #endif /* threader_hpp */
