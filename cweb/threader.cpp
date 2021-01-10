@@ -137,8 +137,8 @@ void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 
 void Threader::createThread() {
 
-    syslog(LOG_NOTICE, "In createThread at start" );
-    usleep(1000000);
+//    syslog(LOG_NOTICE, "In createThread at start" );
+//    usleep(1000000);
     ThreadControl nextThreadControl;
     bool foundThread = false;
     pthread_mutex_lock( &threadArrayMutex );
@@ -158,7 +158,7 @@ void Threader::createThread() {
         return;
     }
 
-    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
+//    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
