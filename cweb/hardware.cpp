@@ -435,10 +435,10 @@ void Hardware::cmdAngle( int angle ) {
 
 void Hardware::priorityUp() {
         
-    int max = sched_get_priority_max( 1 );
-    syslog(LOG_NOTICE, "In priorityUp, sched priority max : %d", max );
+    int max = 20; // sched_get_priority_max( 1 );
+//    syslog(LOG_NOTICE, "In priorityUp, sched priority max : %d", max );
 
-    struct sched_param priority = {10};
+    struct sched_param priority = {0};
     priority.sched_priority = max;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
@@ -448,10 +448,11 @@ void Hardware::priorityUp() {
 
 void Hardware::priorityDown() {
     
-    int min = sched_get_priority_min( 1 );
-    syslog(LOG_NOTICE, "In priorityDown, sched priority min: %d", min );
+    int min =  10; // sched_get_priority_min( 1 );
+//    syslog(LOG_NOTICE, "In priorityDown, sched priority min: %d", min );
+
     struct sched_param priority = {0};
-    priority.sched_priority = 10;
+    priority.sched_priority = min;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "In priorityDown, failed resetting thread FIFO priority to %d", priority.sched_priority );
