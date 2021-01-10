@@ -433,32 +433,6 @@ void Hardware::cmdAngle( int angle ) {
 	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
-//void Hardware::priorityUp() {
-//
-//    int max = 99; // sched_get_priority_max( SCHED_FIFO );
-////    syslog(LOG_NOTICE, "In priorityUp, sched priority max : %d", max );
-//
-//    struct sched_param priority = {0};
-//    priority.sched_priority = max;
-//    int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
-//    if (result != 0) {
-//        syslog(LOG_ERR, "In priorityUp, failed setting thread FIFO priority to %d", priority.sched_priority );
-//    }
-//}
-//
-//void Hardware::priorityDown() {
-//
-//    int min = 1; // sched_get_priority_min( SCHED_FIFO );
-////    syslog(LOG_NOTICE, "In priorityDown, sched priority min: %d", min );
-//
-//    struct sched_param priority = {0};
-//    priority.sched_priority = min;
-//    int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
-//    if (result != 0) {
-//        syslog(LOG_ERR, "In priorityDown, failed resetting thread FIFO priority to %d", priority.sched_priority );
-//    }
-//}
-
 long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd, tvDiff;
@@ -504,14 +478,10 @@ long Hardware::doPing() {
 }
 
 long Hardware::cmdPing() {
-    
-//    priorityUp();
-    
+
     long pingTime = doPing();
     syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
 
-//    priorityDown();
-    
     return pingTime;
 }
 

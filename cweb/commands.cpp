@@ -219,7 +219,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
         case 'O':
         case 'o':
-// WFS           actor.doTest();            // Available
+//           actor.doTest();            // Available
         {
             manager.request( writeI2C, manager.file_i2c, 's', 0x66 );
             long status = manager.request( readI2C, manager.file_i2c, 4 );

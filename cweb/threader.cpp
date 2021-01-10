@@ -166,6 +166,7 @@ void Threader::createThread() {
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
+    // WFS We need a better way to discriminate how we want threads to be high priority
     if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] == 'E' ) ) {
         int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
         if (result != 0) {
