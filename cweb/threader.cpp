@@ -137,7 +137,7 @@ void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 
 void Threader::createThread() {
 
-//    syslog(LOG_NOTICE, "In createThread at start" );
+    syslog(LOG_NOTICE, "In createThread at start" );
     ThreadControl nextThreadControl;
     bool foundThread = false;
     pthread_mutex_lock( &threadArrayMutex );
