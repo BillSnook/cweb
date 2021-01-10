@@ -478,7 +478,7 @@ long Hardware::doPing() {
     do {
         loopCount += 1;
         echoResponse = digitalRead( ECHO );
-    } while ( ( echoResponse == 0 ) && ( loopCount < 100);
+    } while ( ( echoResponse == 0 ) && ( loopCount < 100) );
     gettimeofday(&tvStart, NULL);
     
     syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
