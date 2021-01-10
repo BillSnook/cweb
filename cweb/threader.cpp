@@ -157,6 +157,7 @@ void Threader::createThread() {
         return;
     }
 
+    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
