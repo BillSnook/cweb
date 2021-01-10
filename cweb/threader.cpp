@@ -143,21 +143,21 @@ void Threader::createThread() {
 
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
-    int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
-    if (result != 0) {
-        syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
-    }
-    
-    int min = 1; // sched_get_priority_min( SCHED_FIFO );
-//    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
-    
-    struct sched_param priority = {0};
-    priority.sched_priority = min;
-    result = pthread_attr_setschedparam( attrPtr, &priority );
-    if (result != 0) {
-        syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
-    }
-    syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
+//    int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
+//    if (result != 0) {
+//        syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
+//    }
+//    
+//    int min = 1; // sched_get_priority_min( SCHED_FIFO );
+////    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
+//    
+//    struct sched_param priority = {0};
+//    priority.sched_priority = min;
+//    result = pthread_attr_setschedparam( attrPtr, &priority );
+//    if (result != 0) {
+//        syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
+//    }
+//    syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
     
 	pthread_create(threadPtr,
 				   attrPtr,
