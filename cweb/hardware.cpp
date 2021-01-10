@@ -436,10 +436,10 @@ void Hardware::cmdAngle( int angle ) {
 void Hardware::priorityUp() {
         
     int max = sched_get_priority_max( 1 );
-    syslog(LOG_NOTICE, "In priorityUp, shed priority max : %d", max );
+    syslog(LOG_NOTICE, "In priorityUp, sched priority max : %d", max );
 
     struct sched_param priority = {10};
-    priority.sched_priority = 20;
+    priority.sched_priority = max;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
     if (result != 0) {
         syslog(LOG_ERR, "In priorityUp, failed setting thread FIFO priority to %d", priority.sched_priority );
@@ -449,7 +449,7 @@ void Hardware::priorityUp() {
 void Hardware::priorityDown() {
     
     int min = sched_get_priority_min( 1 );
-    syslog(LOG_NOTICE, "In priorityDown, shed priority min: %d", min );
+    syslog(LOG_NOTICE, "In priorityDown, sched priority min: %d", min );
     struct sched_param priority = {0};
     priority.sched_priority = 10;
     int result = pthread_setschedparam( pthread_self(), SCHED_FIFO, &priority );
@@ -473,11 +473,15 @@ long Hardware::doPing() {
     digitalWrite( TRIG, 0);
     
     // Wait until echo goes high to indicate pulse start
+    int loopCount = 0;
     do {
+        loopCount += 1;
         echoResponse = digitalRead( ECHO );
     } while ( echoResponse == 0 );
     gettimeofday(&tvStart, NULL);
     
+    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes low: %d", loopCount );
+
     // Wait for response on echo pin to go low indicating pulse end
     do {
         echoResponse = digitalRead( ECHO );
