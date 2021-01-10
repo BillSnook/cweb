@@ -74,6 +74,7 @@ void Threader::setupThreader() {
     manager = Manager();
     manager.setupManager();         // Manages i2c queue and controller communication
     queueThread( managerThread, 8, 0 );
+    usleep( 100000 );   // 1/10 second but will it change threads?
     createThread();
     usleep( 100000 );   // 1/10 second but will it change threads?
 
