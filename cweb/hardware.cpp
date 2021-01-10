@@ -435,7 +435,7 @@ void Hardware::cmdAngle( int angle ) {
 
 void Hardware::priorityUp() {
         
-    int max = sched_get_priority_max( SCHED_FIFO );
+    int max = 99; // sched_get_priority_max( SCHED_FIFO );
 //    syslog(LOG_NOTICE, "In priorityUp, sched priority max : %d", max );
 
     struct sched_param priority = {0};
@@ -448,7 +448,7 @@ void Hardware::priorityUp() {
 
 void Hardware::priorityDown() {
     
-    int min = sched_get_priority_min( SCHED_FIFO );
+    int min = 1; // sched_get_priority_min( SCHED_FIFO );
 //    syslog(LOG_NOTICE, "In priorityDown, sched priority min: %d", min );
 
     struct sched_param priority = {0};
