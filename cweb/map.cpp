@@ -79,7 +79,11 @@ void SiteMap::updateEntry( long entry ) {
     unsigned int angle = (entry >> 16) & 0x0FFFF;        // Actual range value
     unsigned int range = entry & 0x0FFFF;                // Angle used to track value of range
 //    syslog(LOG_NOTICE, "In SiteMap::updateEntry(), angle: %u, range: %u", angle, range );
+    updateEntry( angle, range );
+}
 
+void SiteMap::updateEntry( unsigned int angle, unsigned int range ) {
+    
     if ( ( angle <= pattern.endAngle ) && ( angle >= pattern.startAngle ) ) {
         unsigned int index = ( angle - pattern.startAngle ) / pattern.incrementAngle;
 //        syslog(LOG_NOTICE, "In SiteMap::updateEntry(), index: %u", index );
@@ -88,6 +92,16 @@ void SiteMap::updateEntry( long entry ) {
             distanceMap[ index ].angle = angle;
         }
     }
+}
+
+char *SiteMap::returnEntry( char *buffer, unsigned int angle, unsigned int range ) {
+
+    updateEntry( angle, range );
+    sprintf( buffer, "@Rng\n" );
+    sprintf( buffer, "%s%4d  %5d\n", buffer, angle, range );
+    
+//    syslog(LOG_NOTICE, "In SiteMap::returnEntry()\n%s", buffer );
+    return buffer;
 }
 
 char *SiteMap::returnMap( char *buffer ) {

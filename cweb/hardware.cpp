@@ -50,8 +50,10 @@
 #define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
 // Pi pins - ultrasonic range-finder
-#define TRIG					0		// Brown	Out
-#define ECHO					2		// White	In
+#define TRIG					0		// Trigger pin for ultrasonic range finder
+#define ECHO					2		// Echo pulse pin for ultrasonic range finder
+
+#define SCAN_INVERTED           5       // Pin set to 0 or 3.3v to tell us whether our scanner servo is inverted (1 = yes)
 
 
 // Sub-addresses in motor hat i2c address
@@ -236,10 +238,15 @@ bool Hardware::setupHardware() {
 		return false;
 	}
 //	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
-    pinMode( TRIG, OUTPUT );
-    pinMode( ECHO, INPUT );
+    pinMode( TRIG, OUTPUT );            // Trigger ultasonic range finder
+    pinMode( ECHO, INPUT );             // Echo response pulse for ultasonic range finder
     
-    digitalWrite( TRIG, 0);     // Init trigger to 0
+    pinMode( SCAN_INVERTED, INPUT );    // Orientation of servo for scanner for ultasonic range finder
+    
+    digitalWrite( TRIG, 0);             // Init trigger to 0, idle for now
+    
+    upsideDownScanner = ( digitalRead( SCAN_INVERTED ) == 1 );
+    syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
 
 #endif  // ON_PI
 	
@@ -422,6 +429,26 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	setPWM( M1En, speedRight );
 }
 
+// MARK: status section
+void Hardware::setStatus( unsigned int newStatusFlags ) {
+    
+    syslog(LOG_NOTICE, "In Hardware::setStatus( 0x%04X )", newStatusFlags);
+    getStatusFlags = newStatusFlags;
+}
+
+long Hardware::getStatus() {
+    
+//    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
+    setStatusFlags = 0;
+    if ( upsideDownScanner ) {
+        setStatusFlags |= (1 << statusScannerOrientation);
+    }
+    syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
+
+    return setStatusFlags;
+}
+
+
 // MARK: servo section
 int Hardware::angleToPWM( int angle ) {
 	
@@ -556,6 +583,10 @@ void Hardware::prepPing( int start, int end, int inc ) {
 
 // Scan and ping through angle range
 void Hardware::scanPing( int sockOrAddr ) {
+    
+    if ( sockOrAddr == 0 ) {
+        return;
+    }
 	if ( scanLoop ) {
 		syslog(LOG_NOTICE, "Attempting to run scanPing multiple times" );
 		return;				// If this is run multiple times, mayhem!
@@ -568,8 +599,8 @@ void Hardware::scanPing( int sockOrAddr ) {
 	
 	syslog(LOG_NOTICE, "In scanPing, %d - %d + %d", start, end, inc );
 	
-	char	*buffer = (char *)valloc( 1024 );
-	bzero( buffer, 1024 );
+	char	*buffer = (char *)valloc( 256 );
+	bzero( buffer, 256 );
 	
 	do {
 		if ( sweepOneWay ) {
@@ -578,42 +609,32 @@ void Hardware::scanPing( int sockOrAddr ) {
 					break;
 				}
 				unsigned int distance = ping( angle );
+                siteMap.returnEntry( buffer, angle, distance );
+                listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			cmdAngle( start );	// Start return sweep before returning map
 			// 180º in .9 seconds = .005 sec / degree
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
 			// Range newly scanned, sitmap updated - contact mother ship (app) with ping map
-			if ( 0 != sockOrAddr ) {
-				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
-			}
 		} else {
 			for( int angle = start; angle < end; angle += inc ) {
 				if ( !scanLoop ) {
 					break;
 				}
 				unsigned int distance = ping( angle );
+                siteMap.returnEntry( buffer, angle, distance );
+                listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
-			}
-			if ( 0 != sockOrAddr ) {
-				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 			for( int angle = end; angle > start; angle -= inc ) {
 				if ( !scanLoop ) {
 					break;
 				}
 				unsigned int distance = ping( angle );	// Test
+                siteMap.returnEntry( buffer, angle, distance );
+                listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
-			}
-			// Range newly scanned, sitmap updated - contact mother ship with ping map
-			if ( 0 != sockOrAddr ) {
-				buffer = siteMap.returnMap( buffer );
-				listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing buffer: %s", buffer );
 			}
 		}
 	} while ( scanLoop );
@@ -630,16 +651,20 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	if ( upsideDownScanner ) {
 		angle = 180 - angle;
 	}
-	manager.setRange( angle );
-	usleep( 200000 );		// Allow time for servo to move and pulse to propagate and return
-	unsigned int range = (unsigned int)manager.getRange();
-	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
-	return cm;
+//	manager.setRange( angle );
+//	usleep( 200000 );		// Allow time for servo to move and pulse to propagate and return
+//	unsigned int range = (unsigned int)manager.getRange();
+    
+    cmdAngle( angle );
+    usleep(2000);   // 2ms to let it settle
+    unsigned int range = (unsigned int)cmdPing();
+//	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
+	return range;
 }
 
 long Hardware::pingTest( unsigned int angle ) {
     
-//    cmdAngle( angle );
+    cmdAngle( angle );
     usleep(2000);   // 2ms to let it settle
     return cmdPing();
 }

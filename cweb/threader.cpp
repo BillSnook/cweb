@@ -167,7 +167,7 @@ void Threader::createThread() {
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
     // WFS We need a better way to discriminate how we want threads to be high priority
-    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] == 'E' ) ) {
+    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] <= '9' ) ) {    // 0 - 9
         int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
         if (result != 0) {
             syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );

@@ -41,6 +41,9 @@ public:
     void shutdownSiteMap();
     
     void updateEntry( long entry );
+    void updateEntry( unsigned int angle, unsigned int range );
+    
+    char *returnEntry( char *buffer, unsigned int angle, unsigned int range );
     char *returnMap( char *buffer );
     unsigned char *returnMapData( unsigned char *buffer );
 };

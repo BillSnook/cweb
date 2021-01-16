@@ -68,23 +68,37 @@ enum {		// Distance class
 	LongDistance
 };
 
+enum getStatusBit {
+    statusScannerOrientation = 0,       // Scanner may be inverted and controller may want to know
+    getStatusEnd
+};
+
+enum setStatusBit {
+    statusControlledMode = 0,           // Device expects to have a controller give it commands
+    setStatusEnd
+};
+
+
 
 class Hardware {
 	
 public:
 	
-	I2C     	*i2c;
-	PWM     	*pwm;
+	I2C     	    *i2c;
+	PWM     	    *pwm;
 	
-    Speed       speed;
+    Speed           speed;
     
-	bool    	motor0Setup;
-	bool   		motor1Setup;
-	bool		sweepOneWay;
-	bool		upsideDownScanner;
+	bool    	    motor0Setup;
+	bool   		    motor1Setup;
+	bool		    sweepOneWay;
+	bool		    upsideDownScanner;
 	
-	int     	i2cAddress;
-	int     	i2cFrequency;
+	int     	    i2cAddress;
+	int     	    i2cFrequency;
+
+    unsigned int    setStatusFlags;
+    unsigned int    getStatusFlags;
 
 
 //	void initSpeedArrays();
@@ -100,6 +114,9 @@ public:
 
 	void cmdSpeed( int speedIndex );	// Both motors
 
+    void setStatus( unsigned int newStatusFlags );
+    long getStatus();
+    
 	int angleToPWM( int angle );
 	void cmdAngle( int angle );
     long cmdPing();

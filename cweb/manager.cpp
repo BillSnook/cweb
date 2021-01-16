@@ -308,23 +308,6 @@ long Manager::getNowMs() {
 //    return (int)result;
 //}
 
-void Manager::setStatus() {
-	
-	syslog(LOG_NOTICE, "In Manager::setStatus() - null - deprecated" );
-//    request( writeI2C, file_i2c, 's', 0 );
-}
-
-long Manager::getStatus() {
-	
-	syslog(LOG_NOTICE, "In Manager::getStatus()" );
-	expectedControllerMode = statusMode;
-//    long status = request( readI2C, file_i2c, 4 );
-    long status = 0x1234;
-    syslog(LOG_NOTICE, "In Manager::getStatus data read: 0x%08lX\n", status);
-
-    return status;
-}
-
 void Manager::startVL() {
 	
 	syslog(LOG_NOTICE, "In Manager::startVL()" );

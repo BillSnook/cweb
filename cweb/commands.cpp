@@ -97,34 +97,36 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
 	switch ( commandType ) {
-			// Motor control for direct screen
+            // Commands '0' - '9' are used when we need the command to have higher thread scheduling priority
 		case '0':
-			hardware.setMtrDirSpd( 0, token1, token2 );
+            hardware.prepPing( token1, token2, token3 );
+            hardware.scanPing( sockOrAddr );
 			break;
 			
 		case '1':
-			hardware.setMtrDirSpd( 1, token1, token2 );
+//			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			
 		case '2':
-			hardware.setMotors( token1, token2, token3, token4 );
 			break;
 			
-			// Controller commands
+			// Normal Controller commands, normal thread priority
 		case 'A':
 		case 'a':
-			syslog(LOG_NOTICE, "Command a calls: setStatus()" );
-			manager.setStatus();
+            syslog(LOG_NOTICE, "Command a calls: setStatus( 0x%04X )", token1 );
+            hardware.setStatus( token1 );
 			break;
 			
 		case 'B':
 		case 'b':
 		{
-			long response = manager.getStatus();
+			long response = hardware.getStatus();
 			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
-			long vIn = ( response >> 16 ) & 0x0FFFF;
-			double voltage = ( vIn * 15 ) / 1024.0;			// vIn is 1/3 of input voltage
-			sprintf((char *)msg, "vIn: %0.2F", voltage );
+            if ( response & statusScannerOrientation ) {
+                sprintf((char *)msg, "Status response: scanner inverted");
+            } else {
+                sprintf((char *)msg, "Status response: scanner upright" );
+            }
 		}
 			break;
 
@@ -213,8 +215,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 // Testing for Map page
 		case 'N':
 		case 'n':
-			hardware.prepPing( token1, token2, token3 );
-			hardware.scanPing( sockOrAddr );
+//			hardware.prepPing( token1, token2, token3 );
+//			hardware.scanPing( sockOrAddr );
 			break;
 			
         case 'O':
@@ -235,10 +237,12 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             syslog(LOG_NOTICE, "Test p, got response: %08lX\n", status );
             break;
         }
-//		case 'R':
-//		case 'r':
+		case 'R':
+		case 'r':
+            // Motor control for direct screen
+            hardware.setMotors( token1, token2, token3, token4 );
 //			filer.readData( hardware.speed.forward, hardware.speed.reverse );
-//			break;
+			break;
 			
 		case 'S':
 		case 's':

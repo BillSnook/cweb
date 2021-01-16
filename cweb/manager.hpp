@@ -51,7 +51,6 @@ class Manager {
     bool endLoop;
 	long lastAnythingTime;
 	long lastStatusTime;
-	long status;
     
     std::queue<I2CControl>      i2cQueue;
     pthread_mutex_t             i2cQueueMutex;
@@ -79,9 +78,6 @@ public:
 
 //    int readReg8( int file, int reg );
     
-    void setStatus();
-	long getStatus();
-	
 	void setRange( unsigned int angle );
 	long getRangeResult();
 	unsigned int getRange();
