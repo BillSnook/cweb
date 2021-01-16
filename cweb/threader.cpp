@@ -38,6 +38,7 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
     int cmdSize = sizeof(command);
+    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
 	return newThreadControl;
 }
@@ -174,7 +175,7 @@ void Threader::createThread() {
         }
 
 //        int min = sched_get_priority_min( SCHED_FIFO );
-    //    syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
+//        syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
 
         struct sched_param priority = {0};
         priority.sched_priority = 10;       // Values can be from 1 to 99
@@ -212,6 +213,8 @@ void Threader::runNextThread( void *tcPointer ) {
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+            syslog(LOG_NOTICE, "In runNextThread with command %s", nextThreadControl.nextCommand );
+
 			break;
 		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
 			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
