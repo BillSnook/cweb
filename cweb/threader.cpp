@@ -165,7 +165,7 @@ void Threader::createThread() {
         return;
     }
 
-    int sz = sizeof(ThreadControl);
+    int sz = 44; // sizeof(ThreadControl);
     syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
     for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
         syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
