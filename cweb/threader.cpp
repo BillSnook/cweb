@@ -42,6 +42,9 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
     cmdSize = (int)strlen( newThreadControl.nextCommand );
     syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, newThreadControl.nextCommand );
+    for ( int i = 0; i < 16 /*COMMAND_SIZE*/; i += 4 ) {
+        syslog(LOG_NOTICE, "%02X %02X %02X %02X", newThreadControl.nextCommand[i], newThreadControl.nextCommand[i+1], newThreadControl.nextCommand[i+2], newThreadControl.nextCommand[i+3] );
+    }
 	return newThreadControl;
 }
 
@@ -213,8 +216,8 @@ void Threader::runNextThread( void *tcPointer ) {
 		case commandThread:         // One for each command queued, executes method for command with params
         {    //int cmdSize = (int)strlen(nextThreadControl.nextCommand);
             syslog(LOG_NOTICE, "In runNextThread" );
-            for ( int i = 0; i < 16 /*COMMAND_SIZE*/; i++ ) {
-                syslog(LOG_NOTICE, "%02X", nextThreadControl.nextCommand[i] );
+            for ( int i = 0; i < 16 /*COMMAND_SIZE*/; i += 4 ) {
+                syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
             }
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
             break; }
