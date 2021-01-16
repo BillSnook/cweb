@@ -37,7 +37,7 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
-    int cmdSize = (int)strlen( command );
+    int cmdSize = 16; // (int)strlen( command );
     syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
     cmdSize = (int)strlen( newThreadControl.nextCommand );
