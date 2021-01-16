@@ -146,27 +146,10 @@ void Threader::createThread() {
 
 //    syslog(LOG_NOTICE, "In createThread at start" );
 //    usleep(1000000);
-    ThreadControl nextThreadControl;
-    bool foundThread = false;
-    pthread_mutex_lock( &threadArrayMutex );
-    try {
-        if ( ! threadQueue.empty() ) {
-            nextThreadControl = threadQueue.front();
-            threadQueue.pop();
-            foundThread = true;
-//        } else {
-//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
-        }
-    } catch(...) {
-        syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
-    }
-    pthread_mutex_unlock( &threadArrayMutex );
-    if ( !foundThread ) {
-        return;
-    }
 
-    int sz = sizeof(ThreadControl);
-    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
+//    int sz = sizeof(ThreadControl);
+//    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
+
 //    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
 //        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
 //    }
@@ -195,7 +178,7 @@ void Threader::createThread() {
 	pthread_create(threadPtr,
 				   attrPtr,
 				   startThread,
-                   &nextThreadControl);
+                   nullptr);
 
 	free( attrPtr );
 	free( threadPtr );
@@ -203,13 +186,32 @@ void Threader::createThread() {
 
 void Threader::runNextThread( void *tcPointer ) {
     
-    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
+//    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 //    int sz = sizeof(ThreadControl);
 //	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
 //    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
 //        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
 //    }
+    ThreadControl nextThreadControl;
+    bool foundThread = false;
+    pthread_mutex_lock( &threadArrayMutex );
+    try {
+        if ( ! threadQueue.empty() ) {
+            nextThreadControl = threadQueue.front();
+            threadQueue.pop();
+            foundThread = true;
+//        } else {
+//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
+        }
+    } catch(...) {
+        syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
+    }
+    pthread_mutex_unlock( &threadArrayMutex );
+    if ( !foundThread ) {
+        return;
+    }
+
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
