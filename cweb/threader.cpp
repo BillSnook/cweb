@@ -205,6 +205,9 @@ void Threader::runNextThread( void *tcPointer ) {
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
 	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
+    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
+        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
+    }
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
@@ -218,10 +221,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
         {    //int cmdSize = (int)strlen(nextThreadControl.nextCommand);
-            syslog(LOG_NOTICE, "In runNextThread" );
-            for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-                syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
-            }
+//            syslog(LOG_NOTICE, "In runNextThread" );
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
             break; }
 		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
