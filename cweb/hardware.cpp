@@ -506,7 +506,8 @@ long Hardware::doPing() {
 
 long Hardware::cmdPing() {
 
-    long pingTime = doPing();
+    long pingTime = 1500; // doPing();
+    usleep( 1600 );                         // WFS Test returning data
     syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
 
     return pingTime;
@@ -578,7 +579,7 @@ void Hardware::prepPing( int start, int end, int inc ) {
     siteMap.setupSiteMap();
     
 	sweepOneWay = false;			// For greater consistency
-	upsideDownScanner = true;	// True for dev32, not for dev31!!
+//	upsideDownScanner = true;	// True for dev32, not for dev31!!
 }
 
 // Scan and ping through angle range
