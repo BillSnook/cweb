@@ -38,7 +38,7 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
     int cmdSize = (int)strlen( command );
-    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
+//    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
 //    cmdSize = (int)strlen( newThreadControl.nextCommand );
 //    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, newThreadControl.nextCommand );
@@ -205,7 +205,7 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
-//    int sz = sizeof(ThreadControl);
+    int sz = sizeof(ThreadControl);
 //	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
 //    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
 //        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
