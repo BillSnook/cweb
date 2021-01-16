@@ -37,12 +37,12 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
-    int cmdSize = 16; // (int)strlen( command );
+    int cmdSize = (int)strlen( command );
     syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
     cmdSize = (int)strlen( newThreadControl.nextCommand );
     syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, newThreadControl.nextCommand );
-    for ( int i = 0; i < 16 /*COMMAND_SIZE*/; i += 4 ) {
+    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
         syslog(LOG_NOTICE, "%02X %02X %02X %02X", newThreadControl.nextCommand[i], newThreadControl.nextCommand[i+1], newThreadControl.nextCommand[i+2], newThreadControl.nextCommand[i+3] );
     }
 	return newThreadControl;
@@ -165,7 +165,10 @@ void Threader::createThread() {
         return;
     }
 
-//    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
+    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
+    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
+        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
+    }
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -216,7 +219,7 @@ void Threader::runNextThread( void *tcPointer ) {
 		case commandThread:         // One for each command queued, executes method for command with params
         {    //int cmdSize = (int)strlen(nextThreadControl.nextCommand);
             syslog(LOG_NOTICE, "In runNextThread" );
-            for ( int i = 0; i < 16 /*COMMAND_SIZE*/; i += 4 ) {
+            for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
                 syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
             }
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
