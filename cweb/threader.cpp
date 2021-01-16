@@ -170,23 +170,20 @@ void Threader::createThread() {
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
     // WFS We need a better way to discriminate how we want threads to be high priority
-    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] <= '9' ) ) {    // 0 - 9
-        int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
-        if (result != 0) {
-            syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
-        }
-
-//        int min = sched_get_priority_min( SCHED_FIFO );
-//        syslog(LOG_NOTICE, "In createThread, sched priority min: %d", min );
-
-        struct sched_param priority = {0};
-        priority.sched_priority = 10;       // Values can be from 1 to 99
-        result = pthread_attr_setschedparam( attrPtr, &priority );
-        if (result != 0) {
-            syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
-        }
-        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
-    }
+//    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] <= '9' ) ) {    // 0 - 9
+//        int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
+//        if (result != 0) {
+//            syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
+//        }
+//
+//        struct sched_param priority = {0};
+//        priority.sched_priority = 10;       // Values can be from 1 to 99
+//        result = pthread_attr_setschedparam( attrPtr, &priority );
+//        if (result != 0) {
+//            syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
+//        }
+//        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
+//    }
 
 	pthread_create(threadPtr,
 				   attrPtr,
