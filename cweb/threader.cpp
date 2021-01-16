@@ -214,9 +214,10 @@ void Threader::runNextThread( void *tcPointer ) {
 			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
-            syslog(LOG_NOTICE, "In runNextThread with command %s", nextThreadControl.nextCommand );
+        {    int cmdSize = (int)strlen(nextThreadControl.nextCommand);
+            syslog(LOG_NOTICE, "In runNextThread with %d bytes in command %s", cmdSize, nextThreadControl.nextCommand );
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
-			break;
+            break; }
 		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
 			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
