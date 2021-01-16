@@ -147,7 +147,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         addrPort ap = apArray[sockOrAddr];
-        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
+//        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
         serv_addr.sin_port = htons( ap.port );
@@ -157,7 +157,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
             syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
             return;
         }
-        syslog(LOG_NOTICE, "In writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
+//        syslog(LOG_NOTICE, "In writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
     } else {
         n = write( sockOrAddr, msg, strlen( msg ) );
         if ( n < 0 ) {

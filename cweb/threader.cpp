@@ -40,11 +40,11 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, i
     int cmdSize = (int)strlen( command );
     syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
-    cmdSize = (int)strlen( newThreadControl.nextCommand );
-    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, newThreadControl.nextCommand );
-    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-        syslog(LOG_NOTICE, "%02X %02X %02X %02X", newThreadControl.nextCommand[i], newThreadControl.nextCommand[i+1], newThreadControl.nextCommand[i+2], newThreadControl.nextCommand[i+3] );
-    }
+//    cmdSize = (int)strlen( newThreadControl.nextCommand );
+//    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, newThreadControl.nextCommand );
+//    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
+//        syslog(LOG_NOTICE, "%02X %02X %02X %02X", newThreadControl.nextCommand[i], newThreadControl.nextCommand[i+1], newThreadControl.nextCommand[i+2], newThreadControl.nextCommand[i+3] );
+//    }
 	return newThreadControl;
 }
 
@@ -165,11 +165,11 @@ void Threader::createThread() {
         return;
     }
 
-    int sz = sizeof(ThreadControl);
-    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
-    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
-    }
+//    int sz = sizeof(ThreadControl);
+//    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
+//    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
+//        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
+//    }
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -205,11 +205,11 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
-    int sz = sizeof(ThreadControl);
-	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
-    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
-    }
+//    int sz = sizeof(ThreadControl);
+//	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
+//    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
+//        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
+//    }
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
