@@ -165,7 +165,8 @@ void Threader::createThread() {
         return;
     }
 
-    syslog(LOG_NOTICE, "In createThread after threadControl accessed" );
+    int sz = sizeof(ThreadControl);
+    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
     for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
         syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
     }
@@ -204,7 +205,8 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
 	threadCount += 1;
-	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
+    int sz = sizeof(ThreadControl);
+	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
     for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
         syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
     }
