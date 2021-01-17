@@ -109,8 +109,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case '2':
 			break;
-			
-			// Normal Controller commands, normal thread priority
+
+            // Normal Controller commands, normal thread priority
 		case 'A':
 		case 'a':
             syslog(LOG_NOTICE, "Command a calls: setStatus( 0x%04X )", token1 );
@@ -132,16 +132,18 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 
 		case 'C':
 		case 'c':
-			manager.setRange( 90 );
-			syslog(LOG_NOTICE, "Command c calls: setRange()" );
+            hardware.cmdAngle( 0 );
+//			manager.setRange( 90 );
+//			syslog(LOG_NOTICE, "Command c calls: setRange()" );
 			break;
 			
 		case 'D':
 		case 'd':
-		{
-			unsigned int range = manager.getRange();
-			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%04X)", range, range );
-		}
+            hardware.cmdAngle( 180 );
+//		{
+//			unsigned int range = manager.getRange();
+//			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%04X)", range, range );
+//		}
 			break;
 			
 		case 'E':
