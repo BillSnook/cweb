@@ -455,8 +455,13 @@ int Hardware::angleToPWM( int angle ) {
 	return MIN_PWM + ( angle * DEGREE_PER_PWM );
 }
 
+void Hardware::cmdPWM( int pulseCount ) {
+    
+    setPWM( Scanner, pulseCount );
+}
+
 void Hardware::cmdAngle( int angle ) {
-	
+    
 	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 

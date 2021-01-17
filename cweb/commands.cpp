@@ -148,6 +148,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'E':
 		case 'e':
+            hardware.cmdPWM( token1 );
 		{
             long range = hardware.pingTest( 90 );
             double cm = range / 29.0 / 2.0;
