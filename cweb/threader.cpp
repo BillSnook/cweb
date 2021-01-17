@@ -153,10 +153,10 @@ void Threader::createThread() {
     try {
         if ( ! threadQueue.empty() ) {
             nextThreadControl = threadQueue.front();
-//            threadQueue.pop();
+//            threadQueue.pop();        // We just check command here so we know to set priority high
             foundThread = true;
-//        } else {
-//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
+        } else {
+            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
         }
     } catch(...) {
         syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
@@ -165,12 +165,7 @@ void Threader::createThread() {
     if ( !foundThread ) {
         return;
     }
-//    int sz = sizeof(ThreadControl);
-//    syslog(LOG_NOTICE, "In createThread after threadControl accessed, sz: %d", sz );
 
-//    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-//        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
-//    }
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
@@ -204,13 +199,6 @@ void Threader::createThread() {
 
 void Threader::runNextThread( void *tcPointer ) {
     
-	threadCount += 1;
-//    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
-//    int sz = sizeof(ThreadControl);
-//	syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d, sz: %d", nextThreadControl.description(), threadCount, sz );
-//    for ( int i = 0; i < COMMAND_SIZE; i += 4 ) {
-//        syslog(LOG_NOTICE, "%02X %02X %02X %02X", nextThreadControl.nextCommand[i], nextThreadControl.nextCommand[i+1], nextThreadControl.nextCommand[i+2], nextThreadControl.nextCommand[i+3] );
-//    }
     ThreadControl nextThreadControl;
     bool foundThread = false;
     pthread_mutex_lock( &threadArrayMutex );
@@ -219,8 +207,8 @@ void Threader::runNextThread( void *tcPointer ) {
             nextThreadControl = threadQueue.front();
             threadQueue.pop();
             foundThread = true;
-//        } else {
-//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
+        } else {
+            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
         }
     } catch(...) {
         syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
@@ -230,6 +218,8 @@ void Threader::runNextThread( void *tcPointer ) {
         return;
     }
 
+    threadCount += 1;
+    syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
@@ -242,10 +232,8 @@ void Threader::runNextThread( void *tcPointer ) {
 			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
-        {    //int cmdSize = (int)strlen(nextThreadControl.nextCommand);
-//            syslog(LOG_NOTICE, "In runNextThread" );
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
-            break; }
+            break;
 		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
 			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
 			break;
