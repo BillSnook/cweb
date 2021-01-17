@@ -164,8 +164,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'F':
 		case 'f':
-			syslog(LOG_NOTICE, "Command f calls: manager.setMotorPower( token1 )" );
-			manager.setMotorPower( token1 );
+            hardware.cmdAngle( token1 );
+//			syslog(LOG_NOTICE, "Command f calls: manager.setMotorPower( token1 )" );
+//			manager.setMotorPower( token1 );
 			break;
 			
 			// Motor/speed commands
