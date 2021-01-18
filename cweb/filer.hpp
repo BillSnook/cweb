@@ -17,7 +17,7 @@ class Filer {
 public:
     
     char hostName[32];
-    char *hostDirectoryName = hostName;
+    char *hostDirectoryName = (char *)&hostName;
     char fileName[64];
     char *speedFileName = fileName;
 
