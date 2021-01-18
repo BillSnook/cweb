@@ -57,9 +57,8 @@ char *Filer::getHostName() {
 void Filer::setFile( int whichFile ) {
     
 //    int sizeOfPath = sizeof( SPEED_FILE_PATH );
-    hostDirectoryName = hostName;
-    syslog(LOG_NOTICE, "In setFile: %s    %s    %s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
-    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
+    syslog(LOG_NOTICE, "In setFile: %s    %s    %s", SPEED_FILE_PATH, hostName, SPEED_NAME );
+    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_NAME );
     syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
 
 //    speedFileName = fileName;
