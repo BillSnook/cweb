@@ -50,29 +50,21 @@ void Filer::getHostName() {
     } else {
         syslog(LOG_NOTICE, "Found hostname: %s", hostName );
     }
-    hostDirectoryName = (char *)&hostName;
-    syslog(LOG_NOTICE, "In getHostName, hostDirectoryName: %s", hostDirectoryName );
     return;
 }
 
 
 void Filer::setFile( int whichFile ) {
     
-//    int sizeOfPath = sizeof( SPEED_FILE_PATH );
-    hostDirectoryName = (char *)&hostName;
-    syslog(LOG_NOTICE, "In setFile: %s    %s    %s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
-    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
+    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_NAME );
     syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
-
-//    speedFileName = fileName;
-//    memcpy( &fileName[sizeOfPath], "\0", 1 );
 }
 
 void Filer::saveData( speed_array *forward, speed_array *reverse ) {
     
     FILE *fp;
     
-    fp = fopen( speedFileName, "wb" );
+    fp = fopen( fileName, "wb" );
     if ( NULL != fp ) {
         fwrite( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
         fwrite( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
@@ -87,7 +79,7 @@ bool Filer::readData( speed_array *forward, speed_array *reverse ) {
     
     FILE *fp;
     
-    fp = fopen( speedFileName, "rb" );
+    fp = fopen( fileName, "rb" );
     if ( NULL != fp ) {
         fread( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
         fread( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );

@@ -39,7 +39,7 @@ bool Speed::resetForSpeed() {
 
 void Speed::initializeSpeedArray() {
 	
-	filer = Filer();
+//	filer = Filer();
 	filer.setFile( 1 );
 	bool success = filer.readData( forward, reverse );
 	if ( ! success ) {

@@ -112,6 +112,8 @@ int main(int argc, const char * argv[]) {
 	threader = Threader();
 	threader.setupThreader();
 	
+//    return 0;         // To test on Mac
+    
 //	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
 	if ( argc == 2 ) {	// Should be sender as we must pass in a host name
         // Deprecated - just not used anymore
