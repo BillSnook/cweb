@@ -42,7 +42,7 @@ extern  Filer filer;
 
 
 // MARK: - Filer
-char *Filer::getHostName() {
+void Filer::getHostName() {
     
     int result = gethostname( hostName, 32 );
     if ( result != 0 ) {        // Error
@@ -50,13 +50,14 @@ char *Filer::getHostName() {
     } else {
         syslog(LOG_NOTICE, "Found hostname: %s", hostName );
     }
-    return hostName;
+    return;
 }
 
 
 void Filer::setFile( int whichFile ) {
     
 //    int sizeOfPath = sizeof( SPEED_FILE_PATH );
+//    hostDirectoryName = "What?";
     syslog(LOG_NOTICE, "In setFile: %s    %s    %s", SPEED_FILE_PATH, hostName, SPEED_NAME );
     sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_NAME );
     syslog(LOG_NOTICE, "Found speed file path: %s", fileName );

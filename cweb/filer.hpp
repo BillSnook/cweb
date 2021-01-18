@@ -21,7 +21,7 @@ public:
     char fileName[64];
     char *speedFileName = fileName;
 
-    char *getHostName();
+    void getHostName();
     
     void setFile( int whichFile );
     void saveData( speed_array *forward, speed_array *reverse );
