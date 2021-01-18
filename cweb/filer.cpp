@@ -6,10 +6,11 @@
 //  Copyright © 2021 billsnook. All rights reserved.
 //
 
-#include <syslog.h>            // close read write
-#include <stdlib.h>            // malloc
-#include <string.h>            // strcat
-#include <stdio.h>            // sprintf
+#include <syslog.h>             // close read write
+#include <stdlib.h>             // malloc
+#include <string.h>             // strcat
+#include <stdio.h>              // sprintf
+#include <unistd.h>             // gethostname
 
 #include "filer.hpp"
 
@@ -35,9 +36,22 @@ enum FileType {
 };
 
 
-Filer filer;
+extern  Filer filer;
+
 
 // MARK: - Filer
+char *Filer::getHostName() {
+    
+    int result = gethostname( hostName, 32 );
+    if ( result != 0 ) {        // Error
+        syslog(LOG_NOTICE, "Failed getting hostname; using default one" );
+    } else {
+        syslog(LOG_NOTICE, "Found hostname: %s", hostName );
+    }
+    return hostName;
+}
+
+
 void Filer::setFile( int whichFile ) {
     
     int sizeOfPath = sizeof( SPEED_FILE_PATH );

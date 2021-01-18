@@ -21,6 +21,7 @@
 #include "listen.hpp"
 #include "threader.hpp"
 #include "manager.hpp"
+#include "filer.hpp"
 
 
 #define	PORT	5555
@@ -32,7 +33,7 @@ Threader	threader;
 Listener	listener;
 Sender		sender;
 
-
+Filer       filer;
 
 bool		becomeDaemon;
 bool		ready;
@@ -102,6 +103,8 @@ int main(int argc, const char * argv[]) {
 		syslog(LOG_NOTICE, "Started mtrctl as user");
 	}
 	
+    filer.getHostName();
+    
 	// Done figuring out whether we are a daemon, running in the background, or not.
 	doLoop = true;
 	ready = true;
