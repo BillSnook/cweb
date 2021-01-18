@@ -16,17 +16,19 @@
 
 #ifdef ON_PI
 
-#define SPEED_FILE_PATH         "/home/pi/code/c/cweb/cweb/speed.bin"
+#define SPEED_FILE_PATH         "/home/pi/code/c/cweb/cweb"
 
 #else   // ON_PI
 
-#define SPEED_FILE_PATH         "/Users/bill/Code/iOS/Tank/cweb/cweb/speed.bin"
+#define SPEED_FILE_PATH         "/Users/bill/Code/iOS/Tank/cweb/cweb"
 
 #endif  // ON_PI
 
-#define SPEED_NAME                "speed.bin"
-#define SPEED1_NAME                "rechargeable.bin"
-#define SPEED2_NAME                "copperTop.bin"
+#define PINS_NAME               "pins.bin"
+
+#define SPEED_NAME              "speed.bin"
+#define SPEED1_NAME             "rechargeable.bin"
+#define SPEED2_NAME             "copperTop.bin"
 
 
 enum FileType {
@@ -55,7 +57,8 @@ char *Filer::getHostName() {
 void Filer::setFile( int whichFile ) {
     
     int sizeOfPath = sizeof( SPEED_FILE_PATH );
-    memcpy( fileName, SPEED_FILE_PATH, sizeOfPath );
+    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_NAME );
+    syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
 
 //    speedFileName = fileName;
     memcpy( &fileName[sizeOfPath], "\0", 1 );
