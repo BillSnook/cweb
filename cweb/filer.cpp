@@ -56,7 +56,7 @@ void Filer::getHostName() {
 
 void Filer::setFile( int whichFile ) {
     
-    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_FILE_NAME );
+    sprintf( fileName, "%s/%s", SPEED_FILE_PATH, SPEED_FILE_NAME );
 //    syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
 }
 
