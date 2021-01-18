@@ -43,15 +43,12 @@ void Speed::initializeSpeedArray() {
 	filer.setFile( 1 );
 	bool success = filer.readData( forward, reverse );
 	if ( ! success ) {
-		syslog(LOG_NOTICE, "Failed reading speed array from file; making default one" );
+		syslog(LOG_NOTICE, "Failed reading speed array from file; making and saving default one" );
 		resetSpeedArray();
+        filer.saveData( forward, reverse );
 	} else {
 		syslog(LOG_NOTICE, "Read speed array from file" );
 	}
-
-//    char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
-//    char *display = displaySpeedArray( (char *)msg );
-//    syslog(LOG_NOTICE, "initializeSpeedArray():\n%s", display );
 }
 
 void Speed::resetSpeedArray() {		// Create simple default to assist calibration

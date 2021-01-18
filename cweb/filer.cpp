@@ -26,7 +26,7 @@
 
 #define PINS_NAME               "pins.bin"
 
-#define SPEED_NAME              "speed.bin"
+#define SPEED_FILE_NAME         "speed.bin"
 #define SPEED1_NAME             "rechargeable.bin"
 #define SPEED2_NAME             "copperTop.bin"
 
@@ -56,8 +56,8 @@ void Filer::getHostName() {
 
 void Filer::setFile( int whichFile ) {
     
-    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_NAME );
-    syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
+    sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostName, SPEED_FILE_NAME );
+//    syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
 }
 
 void Filer::saveData( speed_array *forward, speed_array *reverse ) {
