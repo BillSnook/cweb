@@ -50,6 +50,7 @@ void Filer::getHostName() {
     } else {
         syslog(LOG_NOTICE, "Found hostname: %s", hostName );
     }
+    hostDirectoryName = (char *)&hostName;
     syslog(LOG_NOTICE, "In getHostName, hostDirectoryName: %s", hostDirectoryName );
     return;
 }
