@@ -56,12 +56,13 @@ char *Filer::getHostName() {
 
 void Filer::setFile( int whichFile ) {
     
-    int sizeOfPath = sizeof( SPEED_FILE_PATH );
+//    int sizeOfPath = sizeof( SPEED_FILE_PATH );
+    syslog(LOG_NOTICE, "In setFile: %s    %s    %s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
     sprintf( fileName, "%s/%s/%s", SPEED_FILE_PATH, hostDirectoryName, SPEED_NAME );
     syslog(LOG_NOTICE, "Found speed file path: %s", fileName );
 
 //    speedFileName = fileName;
-    memcpy( &fileName[sizeOfPath], "\0", 1 );
+//    memcpy( &fileName[sizeOfPath], "\0", 1 );
 }
 
 void Filer::saveData( speed_array *forward, speed_array *reverse ) {
