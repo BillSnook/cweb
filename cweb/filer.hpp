@@ -14,12 +14,13 @@
 
 class Filer {
 
+public:
+    
     char hostName[32];
+    char *hostDirectoryName = hostName;
     char fileName[64];
     char *speedFileName = fileName;
 
-public:
-    
     char *getHostName();
     
     void setFile( int whichFile );
