@@ -29,7 +29,6 @@ void VL53L0X::setupVL53L0X( int i2cAddr ) {
 
 	VL53L0X_DeviceInfo_t	deviceInfo;
 
-	int32_t status_int;
 	char ifc[] = "/dev/i2c-1";
 	char *interface = (char *)&ifc;
 

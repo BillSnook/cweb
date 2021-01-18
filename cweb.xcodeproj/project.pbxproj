@@ -18,6 +18,7 @@
 		6B2FD2C22455F81900BAC739 /* wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2C02455F81900BAC739 /* wrapper.cpp */; };
 		6B2FD2C5245646D900BAC739 /* map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B2FD2C3245646D900BAC739 /* map.cpp */; };
 		A9230180218E98A000EB2A21 /* tasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A923017E218E989F00EB2A21 /* tasks.cpp */; };
+		A9520D9225B5FBFB00762A2F /* filer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9520D9025B5FBFB00762A2F /* filer.cpp */; };
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
@@ -69,6 +70,8 @@
 		A923017F218E989F00EB2A21 /* tasks.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tasks.hpp; sourceTree = "<group>"; };
 		A949BB4D22A8158C006383AE /* vl53l0x.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vl53l0x.cpp; sourceTree = "<group>"; };
 		A949BB4E22A8158C006383AE /* vl53l0x.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vl53l0x.hpp; sourceTree = "<group>"; };
+		A9520D9025B5FBFB00762A2F /* filer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filer.cpp; sourceTree = "<group>"; };
+		A9520D9125B5FBFB00762A2F /* filer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filer.hpp; sourceTree = "<group>"; };
 		A958526221BCDD9E001573FA /* actions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = actions.cpp; sourceTree = "<group>"; };
 		A958526321BCDD9E001573FA /* actions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = actions.hpp; sourceTree = "<group>"; };
 		A96D72ED207AFD4500B98679 /* mtrctl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; name = mtrctl; path = cweb; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,6 +169,8 @@
 				A9ABD7752095078900B64F14 /* hardware.hpp */,
 				A9ABD777209507A400B64F14 /* speed.cpp */,
 				A9ABD778209507A400B64F14 /* speed.hpp */,
+				A9520D9025B5FBFB00762A2F /* filer.cpp */,
+				A9520D9125B5FBFB00762A2F /* filer.hpp */,
 				6B2FD2C3245646D900BAC739 /* map.cpp */,
 				6B2FD2C4245646D900BAC739 /* map.hpp */,
 				A949BB4D22A8158C006383AE /* vl53l0x.cpp */,
@@ -285,6 +290,7 @@
 				6B2FD2C22455F81900BAC739 /* wrapper.cpp in Sources */,
 				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
+				A9520D9225B5FBFB00762A2F /* filer.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				6B2FD2B1244CE1CA00BAC739 /* vl53l0x_platform.c in Sources */,

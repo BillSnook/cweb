@@ -106,6 +106,8 @@ Calibrate motor speeds
 Set scanner position
 Set ranger rate and limits
 Access ranger data
+Got scanner working on Pi
+Got uSonic ranger working on Pi 
 
 Calibrate scan repeatablility
 
@@ -116,8 +118,6 @@ Test/development support
 
 
     ToDo:
-Get scanner working on Pi
-Get uSonic ranger working on Pi 
   bit control
 Get Lidar working on Pi - I2C
 
@@ -132,4 +132,10 @@ network={
         ssid="Chronos"
         psk=e9ad1d7ad40adaeb6e8254b6234f6582429c78361c0b9e43a1e78e50c4409a99
 }
+
+//   Store values per machine (hostname)
+PWM min and max
+
+Motor speed balance values
+
 

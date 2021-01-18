@@ -22,19 +22,6 @@ struct speed_array {
 };
 
 
-class Filer {
-
-    char fileName[64];
-    char *speedFileName = fileName;
-
-public:
-    
-    void setFile( int whichFile );
-    void saveData( speed_array *forward, speed_array *reverse );
-    bool readData( speed_array *forward, speed_array *reverse );
-};
-
-
 class Speed {
 	
 	bool    		debug;
