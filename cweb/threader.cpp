@@ -166,8 +166,8 @@ void Threader::createThread() {
         return;
     }
 
-    ThreadControl copyThreadControl; //  = nextThreadControl;
-    memcpy( &copyThreadControl, &nextThreadControl, sizeof(ThreadControl));
+    ThreadControl copyThreadControl = nextThreadControl;
+//    memcpy( &copyThreadControl, &nextThreadControl, sizeof(ThreadControl));
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
