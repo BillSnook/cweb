@@ -100,7 +100,7 @@
 #define M3Rv                    6
 #define M3En                    7
 
-#define Scanner					0
+#define Scanner					15
 
 #define PingWaitTime			100000      // 1/10 second
 
