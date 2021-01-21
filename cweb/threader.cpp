@@ -153,7 +153,7 @@ void Threader::createThread() {
     try {
         if ( ! threadQueue.empty() ) {
             nextThreadControl = threadQueue.front();
-//            threadQueue.pop();        // We just check command here so we know to set priority high
+            threadQueue.pop();        // We just check command here so we know to set priority high
             foundThread = true;
         } else {
             syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
