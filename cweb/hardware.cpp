@@ -512,7 +512,7 @@ long Hardware::doPing() {
 long Hardware::cmdPing() {
 
     long pingTime = 1500; // doPing();
-    usleep( 1600 );                         // WFS Test returning data
+    usleep( 5000 );                         // WFS Test returning data
     syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
 
     return pingTime;
