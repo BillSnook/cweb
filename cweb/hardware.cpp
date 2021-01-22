@@ -36,7 +36,7 @@
 #define VERSION_REQUIRED_BUILD 1
 
 
-#define CHANNEL_MAX				14
+#define CHANNEL_MAX				15
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096	// Also used as value for PWM pin to be all on
@@ -100,7 +100,7 @@
 #define M3Rv                    6
 #define M3En                    7
 
-#define Scanner					15
+#define Scanner					14
 
 #define PingWaitTime			100000      // 1/10 second
 
