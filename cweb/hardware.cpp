@@ -36,7 +36,7 @@
 #define VERSION_REQUIRED_BUILD 1
 
 
-#define CHANNEL_MAX				15
+#define CHANNEL_MAX				14
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096	// Also used as value for PWM pin to be all on
