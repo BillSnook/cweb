@@ -120,36 +120,34 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 	
 //	syslog(LOG_NOTICE, "In queueThread1 at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, address );
-	pthread_mutex_lock( &threadArrayMutex );
+	lock();
 	try {
 		threadQueue.push( nextThreadControl );
 	} catch(...) {
 		syslog(LOG_NOTICE, "In queueThread, thread queue push failure occured" );
 	}
-	pthread_mutex_unlock( &threadArrayMutex );
+	unlock();
 }
 
 void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 	
 //	syslog(LOG_NOTICE, "In queueThread2 for command at start" );
 	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command, socket );
-	pthread_mutex_lock( &threadArrayMutex );
+    lock();
 	try {
 		threadQueue.push( nextThreadControl );
 	} catch(...) {
 		syslog(LOG_NOTICE, "In queueThread, thread queue push failure occured" );
 	}
-	pthread_mutex_unlock( &threadArrayMutex );
+    unlock();
 }
 
 void Threader::createThread() {
 
 //    syslog(LOG_NOTICE, "In createThread at start" );
-//    usleep(1000000);
-
     ThreadControl nextThreadControl;
     bool foundThread = false;
-    pthread_mutex_lock( &threadArrayMutex );
+    lock();
     try {
         if ( ! threadQueue.empty() ) {
             nextThreadControl = threadQueue.front();
@@ -161,20 +159,20 @@ void Threader::createThread() {
     } catch(...) {
         syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
     }
-    pthread_mutex_unlock( &threadArrayMutex );
+    unlock();
     if ( !foundThread ) {
         return;
     }
 
-    ThreadControl copyThreadControl = nextThreadControl;
-//    memcpy( &copyThreadControl, &nextThreadControl, sizeof(ThreadControl));
 	pthread_t		*threadPtr = new pthread_t;
 	pthread_attr_t	*attrPtr = new pthread_attr_t;
 
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
-//    // WFS We need a better way to discriminate how we want threads to be high priority
+    // WFS We need a better way to discriminate how we want threads to be high priority
+    // Maybe relegate them to the task thread
+    ThreadControl copyThreadControl = nextThreadControl;
     if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] <= '9' ) ) {    // 0 - 9
         int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
         if (result != 0) {
@@ -193,7 +191,7 @@ void Threader::createThread() {
 	pthread_create(threadPtr,
 				   attrPtr,
 				   startThread,
-                   &copyThreadControl); // nullptr);
+                   &copyThreadControl);
 
 	free( attrPtr );
 	free( threadPtr );
@@ -202,24 +200,6 @@ void Threader::createThread() {
 void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
-//    bool foundThread = false;
-//    pthread_mutex_lock( &threadArrayMutex );
-//    try {
-//        if ( ! threadQueue.empty() ) {
-//            nextThreadControl = threadQueue.front();
-//            threadQueue.pop();
-//            foundThread = true;
-//        } else {
-//            syslog(LOG_NOTICE, "In runNextThread with no entries in threadQueue" );
-//        }
-//    } catch(...) {
-//        syslog(LOG_NOTICE, "In runNextThread and threadQueue pop failure occured" );
-//    }
-//    pthread_mutex_unlock( &threadArrayMutex );
-//    if ( !foundThread ) {
-//        return;
-//    }
-
     threadCount += 1;
     syslog(LOG_NOTICE, "In runNextThread with %s, thread count %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {

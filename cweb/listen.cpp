@@ -79,7 +79,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	while ( localLoop ) {
         long    n;
         int sockOrAddr = connectionSockfd;
-		char	*buffer = (char *)valloc( bufferSize );
+		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
@@ -105,6 +105,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         
         syslog(LOG_NOTICE, "Received command: %s", buffer );
         // Now start thread to service command
+        
+        // Maybe taking certain high priority tasks and starting a taskThread with it vs a commandThread
 
         // Parse and execute command in its own thread with socket in case it needs to respond
 		threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
