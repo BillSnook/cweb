@@ -320,13 +320,6 @@ void Hardware::setPWM( int pin, int value ) {
 	pwm->setPWM( pin, 0, value );
 }
 
-//DCM Hardware::getMotor( int motor ) {
-//    if ( ( motor < 1 ) || ( motor > 4 ) ) {
-//        return nullptr;
-//    }
-//    return motors[motor]
-//}
-
 // MARK: motor section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
@@ -511,9 +504,9 @@ long Hardware::doPing() {
 
 long Hardware::cmdPing() {
 
-    long pingTime = 1500; // doPing();
-    usleep( 5000 );                         // WFS Test returning data
+    long pingTime = doPing();
     syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
+    usleep( 5000 );                         // WFS Test returning data
 
     return pingTime;
 }
@@ -584,7 +577,6 @@ void Hardware::prepPing( int start, int end, int inc ) {
     siteMap.setupSiteMap();
     
 	sweepOneWay = false;			// For greater consistency
-//	upsideDownScanner = true;	// True for dev32, not for dev31!!
 }
 
 // Scan and ping through angle range
@@ -657,10 +649,6 @@ unsigned int Hardware::ping( unsigned int angle ) {
 	if ( upsideDownScanner ) {
 		angle = 180 - angle;
 	}
-//	manager.setRange( angle );
-//	usleep( 200000 );		// Allow time for servo to move and pulse to propagate and return
-//	unsigned int range = (unsigned int)manager.getRange();
-    
     cmdAngle( angle );
     usleep(2000);   // 2ms to let it settle
     unsigned int range = (unsigned int)cmdPing();
