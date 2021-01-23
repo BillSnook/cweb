@@ -144,12 +144,13 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     if ( useDatagramProtocol ) {
         // Get addr and port from sockOrAddr as addr/port array index
         if ( sockOrAddr == 0 ) {
+            syslog(LOG_ERR, "In writeBack, invalid response entry index");
             return;     // Invalid addr/port index
         }
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         addrPort ap = apArray[sockOrAddr];
-//        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
+        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(ap.addr);
         serv_addr.sin_port = htons( ap.port );
