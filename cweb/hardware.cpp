@@ -529,6 +529,7 @@ long Hardware::cmdPing() {
 void Hardware::pinState( int pin, int state ) {
     
 #ifdef ON_PI
+    pinMode( pin, OUTPUT );            // Make sure it is an output
     digitalWrite( pin, state );
 #endif // ON_PI
 }
