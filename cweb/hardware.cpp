@@ -493,7 +493,7 @@ long Hardware::doPing() {
     echoResponse = digitalRead( ECHO );
     while ( echoResponse == 0 ) {
         echoResponse = digitalRead( ECHO );
-        if ( loopCount < 100) {
+        if ( loopCount < 1000) {
             lookCount += 1;
         } else {
             echoResponse = 1;   // Force exit
