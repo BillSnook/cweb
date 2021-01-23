@@ -677,7 +677,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 		angle = 180 - angle;
 	}
     cmdAngle( angle );
-    usleep(2000);   // 2ms to let it settle
+    usleep(20000);   // 20ms to let it settle
     unsigned int range = (unsigned int)cmdPing();
 //	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
 	return range;
