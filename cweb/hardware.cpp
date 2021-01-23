@@ -691,7 +691,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 		angle = 180 - angle;
 	}
     cmdAngle( angle );
-    usleep(20000);   // 20ms to let it settle
+    usleep( 50000 );    // 50ms to let it settle - 20 / second
     return (unsigned int)doPing();
 }
 
