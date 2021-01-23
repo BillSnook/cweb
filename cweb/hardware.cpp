@@ -687,11 +687,11 @@ void Hardware::scanPing( int sockOrAddr ) {
 unsigned int Hardware::ping( unsigned int angle ) {
 	
 //	syslog(LOG_NOTICE, "In ping" );
-	if ( upsideDownScanner ) {
+	if ( !upsideDownScanner ) {
 		angle = 180 - angle;
 	}
     cmdAngle( angle );
-    usleep(200000);   // 20ms to let it settle
+    usleep(20000);   // 20ms to let it settle
     return (unsigned int)doPing();
 }
 

@@ -160,7 +160,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
             syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
             return;
         }
-        syslog(LOG_NOTICE, "In UDP writeBack sent %ld bytes successfully to address %s, port %d", n, inet_ntoa(serv_addr.sin_addr), ap.port);
+//        syslog(LOG_NOTICE, "In UDP writeBack sent %ld bytes successfully to address %s, port %d", n, inet_ntoa(serv_addr.sin_addr), ap.port);
     } else {
         n = write( sockOrAddr, msg, strlen( msg ) );
         if ( n < 0 ) {
