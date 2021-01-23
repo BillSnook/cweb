@@ -675,8 +675,8 @@ void Hardware::scanPing( int sockOrAddr ) {
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 		}
-	} while ( false /*scanLoop*/ );
-    scanLoop = false; // WFS test
+	} while ( scanLoop );
+//    scanLoop = false; // WFS test
 	centerServo();
 
 	free( buffer );
