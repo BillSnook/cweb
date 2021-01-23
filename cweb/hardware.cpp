@@ -479,7 +479,6 @@ long Hardware::doPing() {
     struct timeval tvStart, tvEnd, tvDiff;
 //    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
-
 #ifdef ON_PI
     
     int loopCount = 0;
@@ -689,10 +688,8 @@ unsigned int Hardware::ping( unsigned int angle ) {
 		angle = 180 - angle;
 	}
     cmdAngle( angle );
-    usleep(20000);   // 20ms to let it settle
-    unsigned int range = (unsigned int)cmdPing();
-//	unsigned int cm = range/29/2;	// 	inches = range/74/2; mm = (range*10)/29/2
-	return range;
+    usleep(200000);   // 20ms to let it settle
+    return (unsigned int)doPing();
 }
 
 long Hardware::pingTest( unsigned int angle ) {
