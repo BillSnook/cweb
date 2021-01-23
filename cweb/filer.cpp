@@ -101,7 +101,7 @@ bool Filer::readRange( RangeData *rangeDataPtr ) {
     if ( NULL != fp ) {
         fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
         fclose(fp);
-        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->scannerPort );
+        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->pwmCenter );
         return true;
     }
     syslog(LOG_ERR, "readRange failed opening file\n" );
