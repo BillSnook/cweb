@@ -674,6 +674,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 			}
 		}
 	} while ( false /*scanLoop*/ );
+    scanLoop = false; // WFS test
 	centerServo();
 
 	free( buffer );
