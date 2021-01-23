@@ -171,8 +171,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			// Motor/speed commands
 		case 'G':
 		case 'g':
-			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
-			hardware.cmdSpeed( token1 );
+//			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
+//			hardware.cmdSpeed( token1 );
+            hardware.doPing();
 			break;
 			
 		case 'H':
