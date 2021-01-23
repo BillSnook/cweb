@@ -483,17 +483,26 @@ long Hardware::doPing() {
     
 #ifdef ON_PI
     
-    digitalWrite( TRIG, 0);   // Make sure
-    usleep( 5 );
+//    digitalWrite( TRIG, 0);   // Make sure
+//    usleep( 5 );
     digitalWrite( TRIG, 1);
-    usleep( 15 );
+//    usleep( 15 );
     digitalWrite( TRIG, 0);
     
     // Wait until echo goes high to indicate pulse start
-    do {
-        loopCount += 1;
+    echoResponse = digitalRead( ECHO );
+    while ( echoResponse == 0 ) {
         echoResponse = digitalRead( ECHO );
-    } while ( ( echoResponse == 0 ) && ( loopCount < 100) );
+        if ( loopCount < 100) {
+            lookCount += 1;
+        } else {
+            echoResponse = 1;   // Force exit
+        }
+    }
+//    do {
+//        loopCount += 1;
+//        echoResponse = digitalRead( ECHO );
+//    } while ( ( echoResponse == 0 ) && ( loopCount < 100) );
     gettimeofday(&tvStart, NULL);
     
     // Wait for response on echo pin to go low indicating pulse end
