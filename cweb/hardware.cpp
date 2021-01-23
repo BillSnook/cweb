@@ -464,6 +464,7 @@ void Hardware::cmdPWM( int pulseCount, int saveOrNot ) {
     
     setPWM( rangeData.scannerPort, pulseCount );
     if ( saveOrNot ) {  // If not zero, save file
+        rangeData.pwmCenter = pulseCount;
         filer.saveRange( &rangeData );
     }
 }

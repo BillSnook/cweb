@@ -87,6 +87,7 @@ bool Filer::saveRange( RangeData *rangeDataPtr ) {
     if ( NULL != fp ) {
         fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
         fclose(fp);
+        syslog(LOG_WARNING, "saveRange saved scanner center: %d", rangeDataPtr->pwmCenter );
         return true;
     }
     syslog(LOG_ERR, "saveRange failed opening file\n" );
