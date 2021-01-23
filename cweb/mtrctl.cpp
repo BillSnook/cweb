@@ -103,9 +103,9 @@ int main(int argc, const char * argv[]) {
 		syslog(LOG_NOTICE, "Started mtrctl as user");
 	}
 	
-    filer.setupFiles();
     filer.getHostName();
-    
+    filer.setupFiles();
+
 	// Done figuring out whether we are a daemon, running in the background, or not.
 	doLoop = true;
 	ready = true;
