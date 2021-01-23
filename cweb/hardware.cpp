@@ -478,42 +478,31 @@ long Hardware::doPing() {
     struct timeval tvStart, tvEnd, tvDiff;
 //    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
-    int echoResponse1, echoResponse2, echoResponse3, echoResponse4;
-    int echoResponse;
-    int loopCount = 0;
-    
 #ifdef ON_PI
     
-//    digitalWrite( TRIG, 0);   // Make sure
-//    usleep( 5 );
+    int echoResponse;
+    digitalWrite( TRIG, 0);   // Make sure
+    usleep( 5 );
     digitalWrite( TRIG, 1);
-    usleep( 1 );
+    usleep( 15 );
     digitalWrite( TRIG, 0);
     
     // Wait until echo goes high to indicate pulse start
-    echoResponse3 = 0; // digitalRead( ECHO );
-    while ( echoResponse3 == 0 ) {
-        echoResponse3 = digitalRead( ECHO );
-        if ( loopCount < 1000) {
-            loopCount += 1;
-        } else {
-            break;   // Force exit
-        }
-    }
-//    do {
-//        loopCount += 1;
-//        echoResponse = digitalRead( ECHO );
-//    } while ( ( echoResponse == 0 ) && ( loopCount < 100) );
+    int loopCount = 0;
+    do {
+        loopCount += 1;
+        echoResponse = digitalRead( ECHO );
+    } while ( ( echoResponse == 0 ) && ( loopCount < 100) );
     gettimeofday(&tvStart, NULL);
     
+    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
+
     // Wait for response on echo pin to go low indicating pulse end
     do {
-        echoResponse4 = digitalRead( ECHO );
-    } while ( echoResponse4 != 0 );
+        echoResponse = digitalRead( ECHO );
+    } while ( echoResponse != 0 );
     gettimeofday(&tvEnd, NULL);
     
-    syslog(LOG_NOTICE, "%d %d %d %d", echoResponse1, echoResponse2, echoResponse3, echoResponse4 );
-
 #endif  // ON_PI
 
 //    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
