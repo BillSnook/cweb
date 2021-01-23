@@ -69,7 +69,7 @@ enum {		// Distance class
 };
 
 enum getStatusBit {
-    statusScannerOrientation = 0,       // Scanner may be inverted and controller may want to know
+    statusScannerOrientation = 0x01,       // Scanner may be inverted and controller may want to know
     getStatusEnd
 };
 

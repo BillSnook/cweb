@@ -178,7 +178,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             long cm = pingTimeuSec/29/2;
             long inches = pingTimeuSec/74/2;
 //            long mm = (pingTimeuSec*10)/29/2;
-            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
+//            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
         }
 			break;
 			
