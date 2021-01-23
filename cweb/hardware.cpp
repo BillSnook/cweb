@@ -506,8 +506,8 @@ long Hardware::doPing() {
     gettimeofday(&tvEnd, NULL);
     
 //    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
-#endif  // ON_PI
     
+#endif  // ON_PI
 
     tvDiff.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
     tvDiff.tv_usec = tvEnd.tv_usec - tvStart.tv_usec;
@@ -516,7 +516,7 @@ long Hardware::doPing() {
         tvDiff.tv_usec += 1000000;
     }
     long pingMicroSecondTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
-    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+//    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
     
     return pingMicroSecondTime;
 }
@@ -524,7 +524,7 @@ long Hardware::doPing() {
 long Hardware::cmdPing() {
 
     long pingTime = doPing();
-    syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
+//    syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
     usleep( 5000 );                         // WFS Test returning data
 
     return pingTime;
@@ -636,7 +636,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 				unsigned int distance = ping( angle );
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
+				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			cmdAngle( start );	// Start return sweep before returning map
 			// 180º in .9 seconds = .005 sec / degree
@@ -650,7 +650,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 				unsigned int distance = ping( angle );
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
+				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			for( int angle = end; angle > start; angle -= inc ) {
 				if ( !scanLoop ) {
@@ -659,7 +659,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 				unsigned int distance = ping( angle );	// Test
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
-//				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
+				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 		}
 	} while ( scanLoop );
