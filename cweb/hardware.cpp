@@ -21,6 +21,7 @@
 #include "hardware.hpp"
 #include "manager.hpp"
 #include "map.hpp"
+#include "filer.hpp"
 
 #ifdef ON_PI
 
@@ -45,9 +46,12 @@
 
 #define SPEED_INDEX_MAX			PWM_COUNT / SPEED_ADJUSTMENT	// 8
 
+// Now by definition, DEGREE_PER_PWM is 2 degrees per pulse width
+// Now we will find the 90 degree point and consider it the center, and store this value
+// We will subtract 180 to make a MIN_PWM and add 180 for the MAX_PWM
 #define MIN_PWM					160		// For servos, 1.0 ms
 #define MAX_PWM					520		// to 2.0 ms
-#define	DEGREE_PER_PWM			( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
+#define	DEGREE_PER_PWM			2       //( MAX_PWM - MIN_PWM ) / 180	// == 2 per degree == 0.5 degree accuracy?
 
 // Pi pins - ultrasonic range-finder
 #define TRIG					0		// Trigger pin for ultrasonic range finder
@@ -230,7 +234,7 @@ bool Hardware::setupHardware() {
     motor1Setup = false;
     sweepOneWay = false;
     upsideDownScanner = false;
-    
+
 #ifdef ON_PI
 	int setupResult = wiringPiSetup();
 	if ( setupResult == -1 ) {
@@ -249,6 +253,14 @@ bool Hardware::setupHardware() {
     syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
 
 #endif  // ON_PI
+    
+    bool success = filer.readRange( &rangeData );
+    if ( ! success ) {
+        rangeData.pwmCenter = 330;
+        rangeData.scannerPort = Scanner;
+        filer.saveRange( &rangeData );
+    }
+    minimumPWM = rangeData.pwmCenter - 180;
 	
 	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
 	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
@@ -285,7 +297,7 @@ bool Hardware::shutdownHardware() {
 	motor0Setup = false;
 	motor1Setup = false;
 	
-	setPWM( Scanner, 0 );		// Unpower servos
+	setPWM( rangeData.scannerPort, 0 );		// Unpower servos
 
     siteMap.shutdownSiteMap();
 
@@ -445,17 +457,20 @@ long Hardware::getStatus() {
 // MARK: servo section
 int Hardware::angleToPWM( int angle ) {
 	
-	return MIN_PWM + ( angle * DEGREE_PER_PWM );
+	return minimumPWM + ( angle * DEGREE_PER_PWM );
 }
 
-void Hardware::cmdPWM( int pulseCount ) {
+void Hardware::cmdPWM( int pulseCount, int saveOrNot ) {
     
-    setPWM( Scanner, pulseCount );
+    setPWM( rangeData.scannerPort, pulseCount );
+    if ( saveOrNot ) {  // If not zero, save file
+        filer.saveRange( &rangeData );
+    }
 }
 
 void Hardware::cmdAngle( int angle ) {
     
-	setPWM( Scanner, angleToPWM( angle ) );	// Calibrated - adjust as needed
+	setPWM( rangeData.scannerPort, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
 long Hardware::doPing() {
@@ -537,7 +552,7 @@ void Hardware::scanTest() {
 			if ( !scanLoop ) {
 				break;
 			}
-			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", rangeData.scannerPort, angle );
 			cmdAngle( angle );
 			usleep( PingWaitTime );	// .1 second
 		}
@@ -545,7 +560,7 @@ void Hardware::scanTest() {
 			if ( !scanLoop ) {
 				break;
 			}
-			syslog(LOG_NOTICE, "scanTest pin %d to %d", Scanner, angle );
+			syslog(LOG_NOTICE, "scanTest pin %d to %d", rangeData.scannerPort, angle );
 			cmdAngle( angle );
 			usleep( PingWaitTime );	// .1 second
 		}

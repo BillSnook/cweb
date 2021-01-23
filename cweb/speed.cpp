@@ -18,9 +18,6 @@
 //#include "speed.hpp"
 
 
-extern Filer filer;
-
-
 // MARK: - Speed
 // Converts speed index into speeds
 Speed::Speed() {
@@ -39,13 +36,11 @@ bool Speed::resetForSpeed() {
 
 void Speed::initializeSpeedArray() {
 	
-//	filer = Filer();
-	filer.setFile( 1 );
-	bool success = filer.readData( forward, reverse );
+	bool success = filer.readSpeedArrays( forward, reverse );
 	if ( ! success ) {
 		syslog(LOG_NOTICE, "Failed reading speed array from file; making and saving default one" );
 		resetSpeedArray();
-        filer.saveData( forward, reverse );
+        filer.saveSpeedArrays( forward, reverse );
 	} else {
 		syslog(LOG_NOTICE, "Read speed array from file" );
 	}

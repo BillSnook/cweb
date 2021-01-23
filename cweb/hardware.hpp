@@ -10,7 +10,7 @@
 #define hardware_hpp
 
 #include <stdlib.h>            // malloc
-#include <stdio.h>            // sprintf
+#include <stdio.h>             // sprintf
 #include <syslog.h>            // close read write
 #include <string.h>            // strcat
 #include <unistd.h>
@@ -79,6 +79,11 @@ enum setStatusBit {
 };
 
 
+struct RangeData {
+    int pwmCenter;
+    int scannerPort;
+};
+
 
 class Hardware {
 	
@@ -99,7 +104,9 @@ public:
 
     unsigned int    setStatusFlags;
     unsigned int    getStatusFlags;
-
+    
+    RangeData       rangeData;
+    int             minimumPWM;
 
 //	void initSpeedArrays();
 	bool setupHardware();
@@ -118,7 +125,7 @@ public:
     long getStatus();
     
 	int angleToPWM( int angle );
-    void cmdPWM( int pulseCount );
+    void cmdPWM( int pulseCount, int saveOrNot );
 	void cmdAngle( int angle );
     long cmdPing();
     

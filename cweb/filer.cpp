@@ -16,29 +16,18 @@
 
 #ifdef ON_PI
 
-#define SPEED_FILE_PATH         "/home/pi/code/c/cweb/cweb"
+#define CONFIG_FILE_PATH        "/home/pi/code/c/cweb/cweb"
 
 #else   // ON_PI
 
-#define SPEED_FILE_PATH         "/Users/bill/Code/iOS/Tank/cweb/cweb"
+#define CONFIG_FILE_PATH         "/Users/bill/Code/iOS/Tank/cweb/cweb"
 
 #endif  // ON_PI
 
 #define PINS_NAME               "pins.bin"
 
 #define SPEED_FILE_NAME         "speed.bin"
-#define SPEED1_NAME             "rechargeable.bin"
-#define SPEED2_NAME             "copperTop.bin"
-
-
-enum FileType {
-    defaultFileName = 0,
-    rechargeableFileName = 1,
-    coppertopFileName = 2
-};
-
-
-extern  Filer filer;
+#define RANGE_FILE_NAME         "range.bin"
 
 
 // MARK: - Filer
@@ -46,48 +35,75 @@ void Filer::getHostName() {
     
     int result = gethostname( hostName, 32 );
     if ( result != 0 ) {        // Error
-        syslog(LOG_NOTICE, "Failed getting hostname; using default one" );
+        syslog(LOG_NOTICE, "Failed getting hostname" );
     } else {
         syslog(LOG_NOTICE, "Found hostname: %s", hostName );
     }
-    return;
 }
 
 
-void Filer::setFile( int whichFile ) {
+void Filer::setupFiles() {
     
-    sprintf( fileName, "%s/%s-%s", SPEED_FILE_PATH, hostName, SPEED_FILE_NAME );
-    syslog(LOG_NOTICE, "Set speed file path: %s", fileName );
+    sprintf( speedFileName, "%s/%s-%s", CONFIG_FILE_PATH, hostName, SPEED_FILE_NAME );
+    sprintf( rangeFileName, "%s/%s-%s", CONFIG_FILE_PATH, hostName, RANGE_FILE_NAME );
+    syslog(LOG_NOTICE, "Set speed file path: %s", speedFileName );
+    syslog(LOG_NOTICE, "Set range file path: %s", rangeFileName );
 }
 
-void Filer::saveData( speed_array *forward, speed_array *reverse ) {
+void Filer::saveSpeedArrays( speed_array *forward, speed_array *reverse ) {
     
     FILE *fp;
     
-    fp = fopen( fileName, "wb" );
+    fp = fopen( speedFileName, "wb" );
     if ( NULL != fp ) {
         fwrite( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
         fwrite( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
         fclose(fp);
     } else {
-//        fprintf(stderr,"saveData failed opening file\n");
-        syslog(LOG_ERR, "saveData failed opening file\n" );
+        syslog(LOG_ERR, "saveSpeedArrays failed opening file\n" );
     }
 }
 
-bool Filer::readData( speed_array *forward, speed_array *reverse ) {
+bool Filer::readSpeedArrays( speed_array *forward, speed_array *reverse ) {
     
     FILE *fp;
     
-    fp = fopen( fileName, "rb" );
+    fp = fopen( speedFileName, "rb" );
     if ( NULL != fp ) {
         fread( forward, sizeof( speed_array ), SPEED_ARRAY, fp );
         fread( reverse, sizeof( speed_array ), SPEED_ARRAY, fp );
         fclose(fp);
         return true;
     }
-//    fprintf(stderr,"readData failed opening file\n");
-    syslog(LOG_ERR, "readData failed opening file\n" );
+    syslog(LOG_ERR, "readSpeedArrays failed opening file\n" );
+    return false;
+}
+
+bool Filer::saveRange( RangeData *rangeDataPtr ) {
+    
+    FILE *fp;
+    
+    fp = fopen( rangeFileName, "wb" );
+    if ( NULL != fp ) {
+        fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
+        fclose(fp);
+        return true;
+    }
+    syslog(LOG_ERR, "saveRange failed opening file\n" );
+    return false;
+}
+
+bool Filer::readRange( RangeData *rangeDataPtr ) {
+    
+    FILE *fp;
+    
+    fp = fopen( rangeFileName, "rb" );
+    if ( NULL != fp ) {
+        fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
+        fclose(fp);
+        return true;
+    }
+    syslog(LOG_ERR, "readRange failed opening file\n" );
     return false;
 }
 

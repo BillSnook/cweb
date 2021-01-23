@@ -34,7 +34,6 @@ Hardware	hardware;
 
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
-extern Filer        filer;
 
 void Commander::setupCommander() {
 	
@@ -148,7 +147,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'E':
 		case 'e':
-            hardware.cmdPWM( token1 );
+            hardware.cmdPWM( token1, token2 );
 //		{
 //            long range = hardware.pingTest( 90 );
 //            double cm = range / 29.0 / 2.0;
@@ -188,7 +187,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'I':
 		case 'i':
-			filer.readData( hardware.speed.forward, hardware.speed.reverse );
+			filer.readSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			memcpy( msg, "\nData read\n", 11 );
 			break;
 			
@@ -245,7 +244,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'r':
             // Motor control for direct screen
             hardware.setMotors( token1, token2, token3, token4 );
-//			filer.readData( hardware.speed.forward, hardware.speed.reverse );
+//			filer.readSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
 		case 'S':
@@ -282,7 +281,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'W':
 		case 'w':
-			filer.saveData( hardware.speed.forward, hardware.speed.reverse );
+			filer.saveSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
 		case 'X':

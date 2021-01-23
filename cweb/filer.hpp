@@ -10,6 +10,7 @@
 #define filer_hpp
 
 #include "speed.hpp"
+#include "hardware.hpp"
 
 
 class Filer {
@@ -17,16 +18,20 @@ class Filer {
 public:
     
     char hostName[32];
-    char *hostDirectoryName = hostName;
-    char fileName[64];
-    char *speedFileName = fileName;
+    char speedFileName[64];
+    char rangeFileName[64];
 
     void getHostName();
     
-    void setFile( int whichFile );
-    void saveData( speed_array *forward, speed_array *reverse );
-    bool readData( speed_array *forward, speed_array *reverse );
+    void setupFiles();
+    
+    void saveSpeedArrays( speed_array *forward, speed_array *reverse );
+    bool readSpeedArrays( speed_array *forward, speed_array *reverse );
+    
+    bool saveRange( RangeData *rangeDataPtr );
+    bool readRange( RangeData *rangeDataPtr );
 };
 
+extern  Filer       filer;
 
 #endif /* filer_hpp */
