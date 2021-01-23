@@ -653,24 +653,24 @@ void Hardware::scanPing( int sockOrAddr ) {
 					break;
 				}
 				unsigned int distance = ping( angle );
-                if ( !scanLoop ) {
-                    break;
-                }
-                siteMap.returnEntry( buffer, angle, distance );
+//                if ( !scanLoop ) {
+//                    break;
+//                }
+//                siteMap.returnEntry( buffer, angle, distance );
 //                listener.writeBack( buffer, sockOrAddr );
-				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
+//				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			for( int angle = end; angle > start; angle -= inc ) {
 				if ( !scanLoop ) {
 					break;
 				}
 				unsigned int distance = ping( angle );	// Test
-                if ( !scanLoop ) {
-                    break;
-                }
-                siteMap.returnEntry( buffer, angle, distance );
+//                if ( !scanLoop ) {
+//                    break;
+//                }
+//                siteMap.returnEntry( buffer, angle, distance );
 //                listener.writeBack( buffer, sockOrAddr );
-				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
+//				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 		}
 	} while ( false /*scanLoop*/ );
