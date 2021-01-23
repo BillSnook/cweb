@@ -657,7 +657,7 @@ void Hardware::scanPing( int sockOrAddr ) {
                     break;
                 }
                 siteMap.returnEntry( buffer, angle, distance );
-//                listener.writeBack( buffer, sockOrAddr );
+                listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 			for( int angle = end; angle > start; angle -= inc ) {
@@ -669,7 +669,7 @@ void Hardware::scanPing( int sockOrAddr ) {
                     break;
                 }
                 siteMap.returnEntry( buffer, angle, distance );
-//                listener.writeBack( buffer, sockOrAddr );
+                listener.writeBack( buffer, sockOrAddr );
 //				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 		}
