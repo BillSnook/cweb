@@ -674,7 +674,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
 		}
-	} while ( scanLoop );
+	} while ( false /*scanLoop*/ );
 	centerServo();
 
 	free( buffer );
