@@ -499,7 +499,7 @@ long Hardware::doPing() {
         if ( loopCount < 1000) {
             loopCount += 1;
         } else {
-            echoResponse3 = 1;   // Force exit
+            break;   // Force exit
         }
     }
 //    do {
