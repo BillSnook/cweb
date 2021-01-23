@@ -147,7 +147,6 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
             syslog(LOG_ERR, "In writeBack, invalid response entry index or isBusy");
             return;     // Invalid addr/port index
         }
-        isBusy = true;
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         addrPort ap = apArray[sockOrAddr];
