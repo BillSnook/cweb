@@ -173,7 +173,13 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'g':
 //			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
 //			hardware.cmdSpeed( token1 );
-            hardware.doPing();
+        {
+            long pingTimeuSec = hardware.doPing();
+            long cm = pingTimeuSec/29/2;
+            long inches = pingTimeuSec/74/2;
+//            long mm = (pingTimeuSec*10)/29/2;
+            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
+        }
 			break;
 			
 		case 'H':
