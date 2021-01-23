@@ -634,10 +634,16 @@ void Hardware::scanPing( int sockOrAddr ) {
 					break;
 				}
 				unsigned int distance = ping( angle );
+                if ( !scanLoop ) {
+                    break;
+                }
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
 			}
+            if ( !scanLoop ) {
+                break;
+            }
 			cmdAngle( start );	// Start return sweep before returning map
 			// 180º in .9 seconds = .005 sec / degree
 			usleep( ( end - start ) * 4000 );	// .004 second / degree
@@ -648,6 +654,9 @@ void Hardware::scanPing( int sockOrAddr ) {
 					break;
 				}
 				unsigned int distance = ping( angle );
+                if ( !scanLoop ) {
+                    break;
+                }
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );
@@ -657,6 +666,9 @@ void Hardware::scanPing( int sockOrAddr ) {
 					break;
 				}
 				unsigned int distance = ping( angle );	// Test
+                if ( !scanLoop ) {
+                    break;
+                }
                 siteMap.returnEntry( buffer, angle, distance );
                 listener.writeBack( buffer, sockOrAddr );
 				syslog(LOG_NOTICE, "scanPing angle: %d, distance: %u cm", angle, distance );

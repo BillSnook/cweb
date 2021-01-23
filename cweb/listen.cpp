@@ -144,7 +144,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     if ( useDatagramProtocol ) {
         // Get addr and port from sockOrAddr as addr/port array index
         if ( sockOrAddr == 0 ) {
-            syslog(LOG_ERR, "In writeBack, invalid response entry index");
+//            syslog(LOG_ERR, "In writeBack, invalid response entry index");
             return;     // Invalid addr/port index
         }
         struct sockaddr_in serv_addr;
@@ -160,14 +160,14 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
             syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
             return;
         }
-//        syslog(LOG_NOTICE, "In writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
+//        syslog(LOG_NOTICE, "In UDP writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
     } else {
         n = write( sockOrAddr, msg, strlen( msg ) );
         if ( n < 0 ) {
             syslog(LOG_ERR, "ERROR writing back to socket %d", sockOrAddr );
             return;
         }
-        syslog(LOG_NOTICE, "In writeBack sent successfully on socket %d", sockOrAddr);
+        syslog(LOG_NOTICE, "In TCP writeBack sent successfully on socket %d", sockOrAddr);
     }
 }
 
