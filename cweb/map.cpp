@@ -97,7 +97,7 @@ void SiteMap::updateEntry( unsigned int angle, unsigned int range ) {
 char *SiteMap::returnEntry( char *buffer, unsigned int angle, unsigned int range ) {
 
     updateEntry( angle, range );
-    sprintf( buffer, "@Rng\n%s%4d  %5d\n", buffer, angle, range );
+//    sprintf( buffer, "@Rng\n%s%4d  %5d\n", buffer, angle, range );
     
 //    syslog(LOG_NOTICE, "In SiteMap::returnEntry()\n%s", buffer );
     return buffer;
