@@ -140,15 +140,13 @@ int Listener::findMatchOrNewIndex( int addr, int port ) {
 }
 
 void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port reference vs socketfd here
-    static bool isBusy = false;
     long n;
     if ( useDatagramProtocol ) {
         // Get addr and port from sockOrAddr as addr/port array index
-        if ( isBusy || ( sockOrAddr == 0 ) ) {
-            syslog(LOG_ERR, "In writeBack, invalid response entry index or isBusy");
+        if ( sockOrAddr == 0 ) {
+//            syslog(LOG_ERR, "In writeBack, invalid response entry index");
             return;     // Invalid addr/port index
         }
-        isBusy = true;
         struct sockaddr_in serv_addr;
         socklen_t addr_size = sizeof( serv_addr );
         addrPort ap = apArray[sockOrAddr];
@@ -162,7 +160,6 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
             syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
             return;
         }
-        isBusy = false;
 //        syslog(LOG_NOTICE, "In UDP writeBack sent successfully to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port);
     } else {
         n = write( sockOrAddr, msg, strlen( msg ) );
