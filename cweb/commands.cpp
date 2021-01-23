@@ -219,6 +219,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 // Testing for Map page
 		case 'N':
 		case 'n':
+            hardware.pinState( token1, token2 );
 //			hardware.prepPing( token1, token2, token3 );
 //			hardware.scanPing( sockOrAddr );
 			break;

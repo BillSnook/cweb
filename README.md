@@ -139,3 +139,11 @@ PWM min and max
 Motor speed balance values
 
 
+Commands for testing servo
+
+e x                cmdPWM                    Set servo by pulse - nominally 150 - 520 -- 2 per degree, center at ~340
+f x                 cmdAngle                    Set servo by angle - 0 - 180
+g                   doPing                        Single ping
+y                   scanTest                     Repeated sweeps, nominally 45 - 135 x 5
+n x y             pinState                      Set pin x to state y
+

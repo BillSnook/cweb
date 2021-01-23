@@ -526,6 +526,13 @@ long Hardware::cmdPing() {
     return pingTime;
 }
 
+void Hardware::pinState( int pin, int state ) {
+    
+#ifdef ON_PI
+    digitalWrite( pin, state );
+#endif // ON_PI
+}
+
 void Hardware::centerServo() {
 	
 	cmdAngle( 90 );

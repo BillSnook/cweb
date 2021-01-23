@@ -128,6 +128,7 @@ public:
     void cmdPWM( int pulseCount, int saveOrNot );
 	void cmdAngle( int angle );
     long cmdPing();
+    void pinState( int pin, int state );
     
 	void centerServo();
 	void scanStop();
