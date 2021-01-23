@@ -487,11 +487,7 @@ long Hardware::doPing() {
 //    digitalWrite( TRIG, 0);   // Make sure
 //    usleep( 5 );
     digitalWrite( TRIG, 1);
-    echoResponse1 = digitalRead( ECHO );
-    digitalWrite( TRIG, 1);
-//    usleep( 1 );
-    echoResponse2 = digitalRead( ECHO );
-    echoResponse2 = digitalRead( ECHO );
+    usleep( 1 );
     digitalWrite( TRIG, 0);
     
     // Wait until echo goes high to indicate pulse start
