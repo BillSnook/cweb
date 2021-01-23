@@ -512,7 +512,7 @@ long Hardware::doPing() {
         tvDiff.tv_usec += 1000000;
     }
     long pingMicroSecondTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
-//    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
     
     return pingMicroSecondTime;
 }
