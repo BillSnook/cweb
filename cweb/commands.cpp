@@ -54,7 +54,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     //  I propose to set up an array of response addr/port structs and pass the index here instead of the socket.
     //  That way a datagram mode can use it differently than a connection oriented service like TCP.
     //  And the value is only generated in listen.serviceConnection and used eventually only in writeBack.
-	syslog(LOG_NOTICE, "In serviceCommand with sockOrAddr %d, command %s", sockOrAddr, command );
+//	syslog(LOG_NOTICE, "In serviceCommand with sockOrAddr %d, command %s", sockOrAddr, command );
     // First interpret tokens
     char *nextToken[tokenMax+1];
 	int len = int( strlen( command ) );

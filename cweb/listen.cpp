@@ -87,7 +87,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
-            syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+//            syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
             int portno = ntohs(serverStorage.sin_port);
@@ -104,11 +104,16 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
         
         syslog(LOG_NOTICE, "Received command: %s", buffer );
-        // Now start thread to service command
+        // Now start thread to service command - now, wait. Some commands are one and done, some run until halted.
+        // If we could differentiate them here, we could save a lot of thread overhead time.
+        // Immediate commands would have to be very quick and pain-free. Like fire off a command.
+        // Commands needing threading could be screened for priority or resource requirements.
+        // Pi has 4 threads and we do not know how many can be effectively continuously in control,
+        // for critical timing or near-real time operations. Maybe two, maybe barely one.
         
-        // Maybe taking certain high priority tasks and starting a taskThread with it vs a commandThread
+        // Maybe using a taskThread for it vs a commandThread
 
-        // Parse and execute command in its own thread with socket in case it needs to respond
+        // Parse and execute command in its own thread with socket/return address and port so it can respond
 		threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
 		free( buffer );
 
