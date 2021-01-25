@@ -12,15 +12,15 @@
 
 class TaskMaster {
 	
-	bool stopLoop;
+	bool    stopLoop;
+    int     taskCount;
     
 public:
     
 	void setupTaskMaster();
 	void shutdownTaskMaster();
-	void mobileTask( int taskNumber, int param );
 	
-	void serviceTaskMaster( int command, int socket );
+	void serviceTask( char *commandString, int socket );
 
 	void killTasks();
 	void taskTest1();

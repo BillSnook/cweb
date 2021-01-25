@@ -219,7 +219,20 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'M':
 		case 'm':
-			taskMaster.mobileTask( token1, token2 );
+            switch ( token1 ) {
+                case 3:
+                    hardware.scanTest();
+                    break;
+                case 4:
+                    hardware.scanPing( token2 );
+                    break;
+                case 5:
+                    hardware.pingTest( 90 );
+                    break;
+                default:
+                    break;
+            }
+//			taskMaster.mobileTask( token1, token2 );
 			break;
 
 // Testing for Map page

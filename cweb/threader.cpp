@@ -84,7 +84,7 @@ void Threader::setupThreader() {
     createThread();
     usleep( 100000 );   // 1/10 second but will it change threads?
 
-	commander = Commander();
+//	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
 
     taskMaster = TaskMaster();
@@ -217,7 +217,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
             break;
 		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
-			taskMaster.serviceTaskMaster( nextThreadControl.nextSocket, nextThreadControl.nextAddress );
+			taskMaster.serviceTask( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );

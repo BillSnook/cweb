@@ -37,6 +37,7 @@ void TaskMaster::setupTaskMaster() {
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
 //	actor.setupActor();
 	stopLoop = false;
+    taskCount = 0;
 }
 
 void TaskMaster::shutdownTaskMaster() {
@@ -48,18 +49,13 @@ void TaskMaster::shutdownTaskMaster() {
 }
 
 // MARK: Tasks section
-// Starts selected task in it's own thread - for good or ill
-void TaskMaster::mobileTask( int taskNumber, int param ) {
-	
-	threader.queueThread( taskThread, taskNumber, (uint)param );
-}
 
-// This runs this task in a separate thread
-void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command determination routine
+// This runs this task in a separate thread - it should be a high priority one
+void TaskMaster::serviceTask( char *commandString, int socketOrAddr ) {	// Main command determination routine
 
-	syslog(LOG_NOTICE, "In serviceTaskMaster with: %d, param: %d", task, param );
-
-	switch ( task ) {
+    taskCount += 1;
+	syslog(LOG_NOTICE, "In serviceTask with task %d, command: %s", taskCount, commandString );
+	switch ( commandString[0] ) {
 		case stopTask:
 			killTasks();
 			break;
@@ -87,6 +83,7 @@ void TaskMaster::serviceTaskMaster( int task, int param ) {	// Main command dete
 			killTasks();
 			break;
 	}
+    taskCount -= 1;
 }
 
 void TaskMaster::killTasks() {

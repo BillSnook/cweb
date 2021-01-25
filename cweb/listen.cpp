@@ -112,9 +112,21 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         // for critical timing or near-real time operations. Maybe two, maybe barely one.
         
         // Maybe using a taskThread for it vs a commandThread
+        
+        // OK, now we have three options
+        // One high priority task which needs real time control or timing accuracy. Auto-driving or ranging, for example.
+        // One for quick tasks, not worth starting a thread.
+        // One for longer running tasks that may not end quickly and need a thread.
+        char cmd = buffer[0];
+        
+        if ( cmd == '-' ) {             // Real quick command such as setting a pin or pwm value
+            // Run quick command
+        } else if ( cmd == '+' ) {      // Real high priority or otherwise needs to have as much thread time as possible
+            threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
+        } else {                        // Command that may take a while to complete and needs it's own thread
+            threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
+        }
 
-        // Parse and execute command in its own thread with socket/return address and port so it can respond
-		threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
 		free( buffer );
 
 //		n = write( connectionSockfd, "\nAck\n", 5 );
