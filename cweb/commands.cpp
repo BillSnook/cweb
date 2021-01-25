@@ -263,7 +263,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         }
         case 'Q':
 //        case 'q':
-            system( "echo 'Hello world.'" );
+            system( "shutdown now" );
             break;
             
 		case 'R':
