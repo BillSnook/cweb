@@ -261,6 +261,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             syslog(LOG_NOTICE, "Test p, got response: %08lX\n", status );
             break;
         }
+        case 'Q':
+//        case 'q':
+            system( "echo 'Hello world.'" );
+            break;
+            
 		case 'R':
 		case 'r':
             // Motor control for direct screen
