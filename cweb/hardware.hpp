@@ -74,7 +74,7 @@ enum getStatusBit {
 };
 
 enum setStatusBit {
-    statusControlledMode = 0,           // Device expects to have a controller give it commands
+    statusControlledMode = 0x01,           // Device expects to have a controller give it commands
     setStatusEnd
 };
 

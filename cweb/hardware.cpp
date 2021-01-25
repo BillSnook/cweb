@@ -446,7 +446,7 @@ long Hardware::getStatus() {
 //    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
     setStatusFlags = 0;
     if ( upsideDownScanner ) {
-        setStatusFlags |= (1 << statusScannerOrientation);
+        setStatusFlags |= statusScannerOrientation;
     }
     syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
 
