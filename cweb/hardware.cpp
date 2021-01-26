@@ -504,7 +504,7 @@ long Hardware::doPing() {
     } while ( ( echoResponse != 0 ) && ( loopCount < 10000) );
     gettimeofday(&tvEnd, NULL);
     
-//    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
+    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
     
 #endif  // ON_PI
 
@@ -515,7 +515,7 @@ long Hardware::doPing() {
         tvDiff.tv_usec += 1000000;
     }
     long pingMicroSecondTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
-//    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
+    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
     
     return pingMicroSecondTime;
 }
