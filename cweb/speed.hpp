@@ -12,8 +12,8 @@
 
 // There are 4096 possible counts per interval. This supplies full voltage to the motors.
 // Micros seem to freak out after about 6v. So we keep our count below 2048 with a 12v supply
-// For the tank we have 9v and the motors can take that.
-#define SPEED_ARRAY             9		// Number of distinct speeds we can select - f and r
+// For the tank we have < ~9v and the motors can take that.
+#define SPEED_INDEX_MAX         9		// Number of distinct speeds we can select - f and r
 #define SPEED_ADJUSTMENT        512     // Half for now to solve crash if too high
 
 struct speed_array {
@@ -30,8 +30,8 @@ class Speed {
 public:
     explicit        Speed();
 
-	speed_array 	forward[SPEED_ARRAY];
-	speed_array 	reverse[SPEED_ARRAY];
+	speed_array 	forward[SPEED_INDEX_MAX];
+	speed_array 	reverse[SPEED_INDEX_MAX];
 
 	
 	bool setupForSpeed();

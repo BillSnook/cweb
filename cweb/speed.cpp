@@ -48,7 +48,7 @@ void Speed::initializeSpeedArray() {
 
 void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 	
-	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
+	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
 		forward[i].left = i * SPEED_ADJUSTMENT;
 		forward[i].right = i * SPEED_ADJUSTMENT;
 		reverse[i].left = i * SPEED_ADJUSTMENT;
@@ -60,11 +60,11 @@ char * Speed::displaySpeedArray( char *displayString ) {
 	
 //	char *displayString = (char *)malloc( 1024 );
 	strcat( displayString, " Speed array, forward:\n" );
-	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
+	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, forward[i].left, forward[i].right );
 	}
 	strcat( displayString, " Speed array, reverse:\n" );
-	for ( int i = 0; i < SPEED_ARRAY; i++ ) {
+	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, reverse[i].left, reverse[i].right );
 	}
 	return displayString;
@@ -79,7 +79,7 @@ char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
 }
 
 int Speed::speedLeft( int speedIndex ) {
-	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+	if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
 		if ( speedIndex > 0 ) {
 			return forward[speedIndex].left;
 		} else {
@@ -90,7 +90,7 @@ int Speed::speedLeft( int speedIndex ) {
 }
 
 int Speed::speedRight( int speedIndex ) {
-	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+	if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
 		if ( speedIndex > 0 ) {
 			return forward[speedIndex].right;
 		} else {
@@ -101,7 +101,7 @@ int Speed::speedRight( int speedIndex ) {
 }
 
 void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {
-	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+	if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
 		if ( speedIndex > 0 ) {
 			forward[speedIndex].left = newSpeed;
 		} else {
@@ -111,7 +111,7 @@ void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {
 }
 
 void Speed::setSpeedRight( int speedIndex, int newSpeed ) {
-	if ( ( speedIndex > -SPEED_ARRAY ) && ( speedIndex < SPEED_ARRAY ) ) {
+	if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
 		if ( speedIndex > 0 ) {
 			forward[speedIndex].right = newSpeed;
 		} else {
@@ -121,7 +121,7 @@ void Speed::setSpeedRight( int speedIndex, int newSpeed ) {
 }
 
 void Speed::setSpeedLeft( int newSpeed ) {
-	if ( ( calibrationTestIndex > -SPEED_ARRAY ) && ( calibrationTestIndex < SPEED_ARRAY ) ) {
+	if ( ( calibrationTestIndex > -SPEED_INDEX_MAX ) && ( calibrationTestIndex < SPEED_INDEX_MAX ) ) {
 		if ( calibrationTestIndex > 0 ) {
 			forward[calibrationTestIndex].left = newSpeed;
 		} else {
@@ -131,7 +131,7 @@ void Speed::setSpeedLeft( int newSpeed ) {
 }
 
 void Speed::setSpeedRight( int newSpeed ) {
-	if ( ( calibrationTestIndex > -SPEED_ARRAY ) && ( calibrationTestIndex < SPEED_ARRAY ) ) {
+	if ( ( calibrationTestIndex > -SPEED_INDEX_MAX ) && ( calibrationTestIndex < SPEED_INDEX_MAX ) ) {
 		if ( calibrationTestIndex > 0 ) {
 			forward[calibrationTestIndex].right = newSpeed;
 		} else {
@@ -144,18 +144,18 @@ void Speed::setSpeedForward() {
 	// Assume index 1 os slowest speed, index 8 is the fastest
 	// Find a pattern so each entry is linear
 	int slowest = forward[1].left;
-	int fastest = forward[SPEED_ARRAY-1].left;
-	int interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	int fastest = forward[SPEED_INDEX_MAX-1].left;
+	int interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
 	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
-	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
 //		int next = slowest + ( ( i - 1 ) * interval );
 //		syslog(LOG_NOTICE, "%d  %d", i, next );
 		forward[i].left = slowest + ( ( i - 1 ) * interval );
 	}
 	slowest = forward[1].right;
-	fastest = forward[SPEED_ARRAY-1].right;
-	interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
-	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+	fastest = forward[SPEED_INDEX_MAX-1].right;
+	interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
+	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
 		forward[i].right = slowest + ( ( i - 1 ) * interval );
 	}
 }
@@ -164,18 +164,18 @@ void Speed::setSpeedReverse() {
 	// Assume index 1 os slowest speed, index 8 is the fastest
 	// Find a pattern so each entry is linear
 	int slowest = reverse[1].left;
-	int fastest = reverse[SPEED_ARRAY-1].left;
-	int interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
+	int fastest = reverse[SPEED_INDEX_MAX-1].left;
+	int interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
 	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
-	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
 		//		int next = slowest + ( ( i - 1 ) * interval );
 		//		syslog(LOG_NOTICE, "%d  %d", i, next );
 		reverse[i].left = slowest + ( ( i - 1 ) * interval );
 	}
 	slowest = reverse[1].right;
-	fastest = reverse[SPEED_ARRAY-1].right;
-	interval = ( fastest - slowest ) / ( SPEED_ARRAY - 2 );
-	for ( int i = 2; i < ( SPEED_ARRAY - 1 ); i++ ) {
+	fastest = reverse[SPEED_INDEX_MAX-1].right;
+	interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
+	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
 		reverse[i].right = slowest + ( ( i - 1 ) * interval );
 	}
 }

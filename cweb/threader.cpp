@@ -170,17 +170,15 @@ void Threader::createThread() {
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
-    // WFS We need a better way to discriminate how we want threads to be high priority
-    // Maybe relegate them to the task thread
     ThreadControl copyThreadControl = nextThreadControl;
-    if ( ( nextThreadControl.nextThreadType == commandThread ) && ( nextThreadControl.nextCommand[0] <= '9' ) ) {    // 0 - 9
-        int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );
+    if ( nextThreadControl.nextThreadType == taskThread ) {                 // If a designated high priority task
+        int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );    // Enable ability to set a non-zero priority
         if (result != 0) {
             syslog(LOG_ERR, "In createThread, failed setting thread FIFO policy to SCHED_FIFO" );
         }
 
         struct sched_param priority = {0};
-        priority.sched_priority = 10;       // Values can be from 1 to 99
+        priority.sched_priority = 10;                                       // Nominally values can be from 1 to 99
         result = pthread_attr_setschedparam( attrPtr, &priority );
         if (result != 0) {
             syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
@@ -216,8 +214,8 @@ void Threader::runNextThread( void *tcPointer ) {
 		case commandThread:         // One for each command queued, executes method for command with params
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
             break;
-		case taskThread:            // Thread intended for longer running discrete tasks - some commands initiate tasks
-			taskMaster.serviceTask( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+		case taskThread:            // Thread intended for longer running high priority tasks
+			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );

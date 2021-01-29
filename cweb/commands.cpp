@@ -111,13 +111,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 
             // Normal Controller commands, normal thread priority
 		case 'A':
-		case 'a':
             syslog(LOG_NOTICE, "Command a calls: setStatus( 0x%04X )", token1 );
             hardware.setStatus( token1 );
 			break;
 			
 		case 'B':
-		case 'b':
 		{
 			long response = hardware.getStatus();
 			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
@@ -130,14 +128,12 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
 		case 'C':
-		case 'c':
             hardware.cmdAngle( 0 );
 //			manager.setRange( 90 );
 //			syslog(LOG_NOTICE, "Command c calls: setRange()" );
 			break;
 			
 		case 'D':
-		case 'd':
             hardware.cmdAngle( 180 );
 //		{
 //			unsigned int range = manager.getRange();
@@ -339,9 +335,31 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'Z':
 		case 'z':
-			sprintf((char *)msg, "@ %d %d %d \n", SPEED_ARRAY, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
+			sprintf((char *)msg, "@ %d %d %d \n", SPEED_INDEX_MAX, SPEED_ADJUSTMENT, SPEED_ADJUSTMENT * 2 );
 			break;
 			
+        // MARK: Setup and calibration section
+        case 'a':
+            syslog(LOG_NOTICE, "Command a, get rangeData" );
+            sprintf((char *)msg, "R %d %d", hardware.rangeData.pwmCenter, hardware.rangeData.servoPort );
+            break;
+            
+        case 'b':
+            syslog(LOG_NOTICE, "Command b, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
+            hardware.rangeData.pwmCenter = token1;
+            hardware.rangeData.servoPort = token2;
+            hardware.minimumPWM = token1 - 180;
+            filer.saveRange( &(hardware.rangeData) );
+            break;
+
+        case 'c':
+            syslog(LOG_NOTICE, "Command c" );
+            break;
+            
+        case 'd':
+            syslog(LOG_NOTICE, "Command d" );
+            break;
+            
 		default:
 //			usleep( 10000000 ); // 10 second delay
 			break;

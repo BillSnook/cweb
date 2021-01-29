@@ -119,11 +119,14 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         // One for longer running tasks that may not end quickly and need a thread.
         char cmd = buffer[0];
         
-        if ( cmd == '-' ) {             // Real quick command such as setting a pin or pwm value
-            // Run quick command
-        } else if ( cmd == '+' ) {      // Real high priority or otherwise needs to have as much thread time as possible
+        if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
+            // Real high priority or otherwise needs to have as much thread time as possible
             threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
-        } else {                        // Command that may take a while to complete and needs it's own thread
+//        } else if ( cmd < 'a' ) {       // Capitalized characters
+//            // Run real quick command such as setting a pin or pwm value
+//            // ? Run new commander method here?
+        } else {                        // Letter characters
+            // Command that may take a while to complete and needs it's own thread
             threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
         }
 

@@ -98,7 +98,7 @@ void Manager::setupManager() {
     pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
-    file_i2c = openI2CFile( ArdI2CAddr );   // For talking to arduino, if any
+    file_i2c = openI2CFile( ARD_I2C_ADDR );   // For talking to arduino, if any
 
 //    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
 //    vl53l0x.setupVL53L0X( 0x29 );

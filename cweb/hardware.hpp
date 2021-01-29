@@ -18,7 +18,7 @@
 #include "speed.hpp"
 
 
-#define ArdI2CAddr          0x08    // Needs to match value set in Arduino controller code
+#define ARD_I2C_ADDR        0x08    // Needs to match value set in Arduino controller code
 #define MOTOR_I2C_ADDRESS   0x6F    // Hard coded (literally) on motor controller board
 
 
@@ -81,7 +81,7 @@ enum setStatusBit {
 
 struct RangeData {
     int pwmCenter;
-    int scannerPort;
+    int servoPort;
 };
 
 
