@@ -214,7 +214,7 @@ void Threader::runNextThread( void *tcPointer ) {
 		case commandThread:         // One for each command queued, executes method for command with params
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
             break;
-		case taskThread:            // Thread intended for longer running high priority tasks
+		case taskThread:            // Thread intended for longer running high priority tasks - set when thread was created
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
 		case testThread:

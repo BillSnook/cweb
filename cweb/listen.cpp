@@ -6,13 +6,14 @@
 //  Copyright © 2018 billsnook. All rights reserved.
 //
 
-#include "listen.hpp"
-#include "threader.hpp"
-
 #include <stdlib.h>
 #include <string.h>
 #include <syslog.h>
 #include <arpa/inet.h>
+
+#include "listen.hpp"
+#include "threader.hpp"
+#include "commands.hpp"
 
 
 #define bufferSize	            256
@@ -21,6 +22,7 @@
 
 
 extern Threader		threader;
+extern Commander    commander;
 
 
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
@@ -104,15 +106,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
         
         syslog(LOG_NOTICE, "Received command: %s", buffer );
-        // Now start thread to service command - now, wait. Some commands are one and done, some run until halted.
-        // If we could differentiate them here, we could save a lot of thread overhead time.
-        // Immediate commands would have to be very quick and pain-free. Like fire off a command.
-        // Commands needing threading could be screened for priority or resource requirements.
-        // Pi has 4 threads and we do not know how many can be effectively continuously in control,
-        // for critical timing or near-real time operations. Maybe two, maybe barely one.
-        
-        // Maybe using a taskThread for it vs a commandThread
-        
         // OK, now we have three options
         // One high priority task which needs real time control or timing accuracy. Auto-driving or ranging, for example.
         // One for quick tasks, not worth starting a thread.
@@ -122,9 +115,9 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             // Real high priority or otherwise needs to have as much thread time as possible
             threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
-//        } else if ( cmd < 'a' ) {       // Capitalized characters
-//            // Run real quick command such as setting a pin or pwm value
-//            // ? Run new commander method here?
+        } else if ( cmd < 'a' ) {       // Capitalized characters
+            // Run real quick command such as setting a pin or pwm value
+            commander.serviceCommand( buffer, sockOrAddr );
         } else {                        // Letter characters
             // Command that may take a while to complete and needs it's own thread
             threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
