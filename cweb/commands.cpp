@@ -109,6 +109,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case '2':
 			break;
 
+            // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
             // MARK: Setup and calibration section
         case 'A':
             syslog(LOG_NOTICE, "Command a, get rangeData" );
@@ -124,11 +125,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
 
         case 'B':
-            syslog(LOG_NOTICE, "Command b" );
+            syslog(LOG_NOTICE, "Command b, cmdPWM to set servo via pwm count - ~150 to 550, 330 is nominal center" );
             hardware.cmdPWM( token1 );
             break;
             
-		case 'b':
+		case 'b':       // WFS Replace - doesn't need thread
 		{
 			long response = hardware.getStatus();
 			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
@@ -141,40 +142,22 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
 		case 'C':
-        case 'c':
             hardware.cmdAngle( token1 );
 			break;
 			
+        case 'c':       // WFS Replace - doesn't need thread
+            break;
+            
 		case 'D':
         case 'd':
-            hardware.cmdPWM( token1 );
-//		{
-//			unsigned int range = manager.getRange();
-//			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%04X)", range, range );
-//		}
 			break;
 			
 		case 'E':
 		case 'e':
-//            hardware.cmdPWM( token1 );
-//		{
-//            long range = hardware.pingTest( 90 );
-//            double cm = range / 29.0 / 2.0;
-//            double inches = range / 74.0 / 2.0;
-////            long mm = (range*10)/29/2
-//            sprintf( msg, "Distance is %.2f inches, %.2f cm", inches, cm );
-
-//			char *display = (char *)manager.siteMap.returnMap( msg );	// msg is 1024 bytes
-///			syslog(LOG_NOTICE, "Error - Sitmap moved" );
-//			listener.writeBlock( msg, int( strlen( (char *)msg ) ), sockOrAddr );
-//		}
 			break;
 			
 		case 'F':
 		case 'f':
-            hardware.cmdAngle( token1 );
-//			syslog(LOG_NOTICE, "Command f calls: manager.setMotorPower( token1 )" );
-//			manager.setMotorPower( token1 );
 			break;
 			
 			// Motor/speed commands
@@ -283,18 +266,24 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case 'S':
-		case 's':
-			manager.stopVL();
-			syslog(LOG_NOTICE, "Did stopVL" );
-			hardware.scanStop();
-			syslog(LOG_NOTICE, "Did scanStop" );
-			hardware.cmdSpeed( 0 );
-			syslog(LOG_NOTICE, "Did cmdSpeed" );
-//			taskMaster.mobileTask( 0, 0 );
-//			syslog(LOG_NOTICE, "Did mobiletask" );
-			hardware.centerServo();
-			syslog(LOG_NOTICE, "Did centerservo" );
+            hardware.scanStop();
+            hardware.cmdSpeed( 0 );
+            hardware.centerServo();
 			break;
+
+        case 's':
+            manager.stopVL();
+            syslog(LOG_NOTICE, "Did stopVL" );
+            hardware.scanStop();
+            syslog(LOG_NOTICE, "Did scanStop" );
+            hardware.cmdSpeed( 0 );
+            syslog(LOG_NOTICE, "Did cmdSpeed" );
+//            taskMaster.killTasks();
+//            syslog(LOG_NOTICE, "Did killTasks" );
+            hardware.centerServo();
+            syslog(LOG_NOTICE, "Did centerservo" );
+            break;
+            
 		// Test case for app feature - send response, wait 5 seconds, send another
 		case 'T':
 		case 't':
