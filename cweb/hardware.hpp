@@ -47,10 +47,10 @@ public:
 	int     address;             // I2C address
 	I2C     *i2c;
 	
-	void setPWMFrequency( int freq );
-	void setPWM( int channel, int on, int off );
-	void setPWMAll( int on, int off );
-	int getPWMResolution();
+	void    setPWMFrequency( int freq );
+	void    setPWM( int channel, int on, int off );
+	void    setPWMAll( int on, int off );
+	int     getPWMResolution();
 };
 
 

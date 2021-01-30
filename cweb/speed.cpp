@@ -56,9 +56,19 @@ void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 	}
 }
 
+void Speed::returnSpeedArray( char *displayString ) {
+    
+    sprintf( displayString, "S %d\n", SPEED_INDEX_MAX );
+    for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
+        sprintf( displayString, "%s%d %d %d\n", displayString, i, forward[i].left, forward[i].right );
+    }
+    for ( int i = -1; i < -SPEED_INDEX_MAX; i-- ) {
+        sprintf( displayString, "%s%d %d %d\n", displayString, i, reverse[i].left, reverse[i].right );
+    }
+}
+
 char * Speed::displaySpeedArray( char *displayString ) {
 	
-//	char *displayString = (char *)malloc( 1024 );
 	strcat( displayString, " Speed array, forward:\n" );
 	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, forward[i].left, forward[i].right );
@@ -98,6 +108,18 @@ int Speed::speedRight( int speedIndex ) {
 		}
 	}
 	return 0;
+}
+
+void Speed::setSpeedBoth( int speedIndex, int leftSpeed, int rightSpeed ) {
+    if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
+        if ( speedIndex > 0 ) {
+            forward[speedIndex].left = leftSpeed;
+            forward[speedIndex].right = rightSpeed;
+        } else {
+            reverse[-speedIndex].left = leftSpeed;
+            reverse[-speedIndex].right = rightSpeed;
+        }
+        }
 }
 
 void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {
@@ -148,8 +170,6 @@ void Speed::setSpeedForward() {
 	int interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
 	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
 	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
-//		int next = slowest + ( ( i - 1 ) * interval );
-//		syslog(LOG_NOTICE, "%d  %d", i, next );
 		forward[i].left = slowest + ( ( i - 1 ) * interval );
 	}
 	slowest = forward[1].right;
@@ -168,8 +188,6 @@ void Speed::setSpeedReverse() {
 	int interval = ( fastest - slowest ) / ( SPEED_INDEX_MAX - 2 );
 	syslog(LOG_NOTICE, "Slowest: %d, fastest: %d, interval: %d", slowest, fastest, interval );
 	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
-		//		int next = slowest + ( ( i - 1 ) * interval );
-		//		syslog(LOG_NOTICE, "%d  %d", i, next );
 		reverse[i].left = slowest + ( ( i - 1 ) * interval );
 	}
 	slowest = reverse[1].right;
@@ -178,4 +196,9 @@ void Speed::setSpeedReverse() {
 	for ( int i = 2; i < ( SPEED_INDEX_MAX - 1 ); i++ ) {
 		reverse[i].right = slowest + ( ( i - 1 ) * interval );
 	}
+}
+
+void Speed::saveSpeedArray() {
+    
+    filer.saveSpeedArrays( forward, reverse );
 }

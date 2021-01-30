@@ -34,25 +34,33 @@ public:
 	speed_array 	reverse[SPEED_INDEX_MAX];
 
 	
-	bool setupForSpeed();
-	bool resetForSpeed();
+	bool            setupForSpeed();
+	bool            resetForSpeed();
 	
-	void initializeSpeedArray();
-	void resetSpeedArray();
-	char * displaySpeedArray( char * displayString );
-	char * setSpeedTestIndex( int newSpeedIndex );
+	void            initializeSpeedArray();
+	void            resetSpeedArray();
+    
+    void            returnSpeedArray( char *displayString );
+    
 
-	int speedLeft( int speedIndex );
-	int speedRight( int speedIndex );
+	char            *displaySpeedArray( char * displayString );
+	char            *setSpeedTestIndex( int newSpeedIndex );
 
-	void setSpeedLeft( int speedIndex, int newSpeed );
-	void setSpeedRight( int speedIndex, int newSpeed );
+	int             speedLeft( int speedIndex );
+	int             speedRight( int speedIndex );
+
+    void            setSpeedBoth( int speedIndex, int leftSpeed, int rightSpeed );
+
+	void            setSpeedLeft( int speedIndex, int newSpeed );
+	void            setSpeedRight( int speedIndex, int newSpeed );
 	
-	void setSpeedLeft( int newSpeed );
-	void setSpeedRight( int newSpeed );
+	void            setSpeedLeft( int newSpeed );
+	void            setSpeedRight( int newSpeed );
 	
-	void setSpeedForward();
-	void setSpeedReverse();
+	void            setSpeedForward();
+	void            setSpeedReverse();
+    
+    void            saveSpeedArray();
 };
 
 #endif /* speed_hpp */

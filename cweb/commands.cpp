@@ -111,13 +111,25 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 
             // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
             // MARK: Setup and calibration section
+        case '@':       // Doesn't need thread
+        {
+            long response = hardware.getStatus();
+            syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
+            if ( response & statusScannerOrientation ) {
+                sprintf((char *)msg, "Status response: scanner inverted");
+            } else {
+                sprintf((char *)msg, "Status response: scanner upright" );
+            }
+        }
+            break;
+
         case 'A':
-            syslog(LOG_NOTICE, "Command a, get rangeData" );
+//            syslog(LOG_NOTICE, "Command A, return rangeData" );
             sprintf((char *)msg, "R %d %d", hardware.rangeData.pwmCenter, hardware.rangeData.servoPort );
             break;
             
         case 'a':
-            syslog(LOG_NOTICE, "Command A, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
+//            syslog(LOG_NOTICE, "Command a, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
             hardware.rangeData.pwmCenter = token1;
             hardware.rangeData.servoPort = token2;
             hardware.minimumPWM = token1 - 180;
@@ -125,35 +137,39 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
 
         case 'B':
-            syslog(LOG_NOTICE, "Command b, cmdPWM to set servo via pwm count - ~150 to 550, 330 is nominal center" );
+//            syslog(LOG_NOTICE, "Command B, cmdPWM to set servo to %d pwm value - ~150 to 550, 330 is nominal center", token1 );
             hardware.cmdPWM( token1 );
             break;
             
-		case 'b':       // WFS Replace - doesn't need thread
-		{
-			long response = hardware.getStatus();
-			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
-            if ( response & statusScannerOrientation ) {
-                sprintf((char *)msg, "Status response: scanner inverted");
-            } else {
-                sprintf((char *)msg, "Status response: scanner upright" );
-            }
-		}
+		case 'b':       // WFS Available for thread
 			break;
 
 		case 'C':
+            syslog(LOG_NOTICE, "Command C, cmdAngle to set servo to %d degree value - 0 to 180, 90 is center", token1 );
             hardware.cmdAngle( token1 );
 			break;
 			
-        case 'c':       // WFS Replace - doesn't need thread
+        case 'c':       // WFS Available for thread
             break;
             
 		case 'D':
+            syslog(LOG_NOTICE, "Command D, return speed array data" );
+            hardware.speed.returnSpeedArray( msg );
+            break;
+            
         case 'd':
 			break;
 			
 		case 'E':
+            syslog(LOG_NOTICE, "Command E, set speed array entry" );
+            hardware.speed.setSpeedBoth( token1, token2, token3 );
+            break;
+            
 		case 'e':
+            syslog(LOG_NOTICE, "Command e, setup speed array from endpoints and save it" );
+            hardware.speed.setSpeedForward();
+            hardware.speed.setSpeedReverse();
+            hardware.speed.saveSpeedArray();
 			break;
 			
 		case 'F':
