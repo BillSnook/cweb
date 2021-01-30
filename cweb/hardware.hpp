@@ -125,7 +125,7 @@ public:
     long getStatus();
     
 	int angleToPWM( int angle );
-    void cmdPWM( int pulseCount, int saveOrNot );
+    void cmdPWM( int pulseCount );
 	void cmdAngle( int angle );
     long cmdPing();
     void pinState( int pin, int state );

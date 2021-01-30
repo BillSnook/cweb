@@ -118,7 +118,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         } else if ( cmd < 'a' ) {       // Capitalized characters
             // Run real quick command such as setting a pin or pwm value
             commander.serviceCommand( buffer, sockOrAddr );
-        } else {                        // Letter characters
+        } else {                        // Lower case characters
             // Command that may take a while to complete and needs it's own thread
             threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
         }

@@ -95,7 +95,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 	char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
 //	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
-	switch ( commandType ) {
+	switch ( commandType ) {        // 0 - 9 have very high priority, capital letters are run quickly, lower case are run on a thread
             // Commands '0' - '9' are used when we need the command to have higher thread scheduling priority
 		case '0':
             hardware.prepPing( token1, token2, token3 );
@@ -110,33 +110,25 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
             // MARK: Setup and calibration section
-            case 'a':
-                syslog(LOG_NOTICE, "Command a, get rangeData" );
-                sprintf((char *)msg, "R %d %d", hardware.rangeData.pwmCenter, hardware.rangeData.servoPort );
-                break;
-                
-            case 'A':
-                syslog(LOG_NOTICE, "Command A, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
-                hardware.rangeData.pwmCenter = token1;
-                hardware.rangeData.servoPort = token2;
-                hardware.minimumPWM = token1 - 180;
-                filer.saveRange( &(hardware.rangeData) );
-                break;
+        case 'A':
+            syslog(LOG_NOTICE, "Command a, get rangeData" );
+            sprintf((char *)msg, "R %d %d", hardware.rangeData.pwmCenter, hardware.rangeData.servoPort );
+            break;
+            
+        case 'a':
+            syslog(LOG_NOTICE, "Command A, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
+            hardware.rangeData.pwmCenter = token1;
+            hardware.rangeData.servoPort = token2;
+            hardware.minimumPWM = token1 - 180;
+            filer.saveRange( &(hardware.rangeData) );
+            break;
 
-        case 'b':
+        case 'B':
             syslog(LOG_NOTICE, "Command b" );
+            hardware.cmdPWM( token1 );
             break;
             
-        case 'c':
-            syslog(LOG_NOTICE, "Command c" );
-            break;
-            
-            case 'd':
-                syslog(LOG_NOTICE, "Command d" );
-                break;
-                
-            // Normal Controller commands, normal thread priority
-		case 'B':
+		case 'b':
 		{
 			long response = hardware.getStatus();
 			syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
@@ -149,13 +141,13 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
 		case 'C':
-            hardware.cmdAngle( 0 );
-//			manager.setRange( 90 );
-//			syslog(LOG_NOTICE, "Command c calls: setRange()" );
+        case 'c':
+            hardware.cmdAngle( token1 );
 			break;
 			
 		case 'D':
-            hardware.cmdAngle( 180 );
+        case 'd':
+            hardware.cmdPWM( token1 );
 //		{
 //			unsigned int range = manager.getRange();
 //			syslog(LOG_NOTICE, "Command c calls: getRange(), got: %d (0x%04X)", range, range );
@@ -164,7 +156,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'E':
 		case 'e':
-            hardware.cmdPWM( token1, token2 );
+//            hardware.cmdPWM( token1 );
 //		{
 //            long range = hardware.pingTest( 90 );
 //            double cm = range / 29.0 / 2.0;

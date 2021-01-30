@@ -462,13 +462,9 @@ int Hardware::angleToPWM( int angle ) {
 	return minimumPWM + ( angle * DEGREE_PER_PWM );
 }
 
-void Hardware::cmdPWM( int pulseCount, int saveOrNot ) {
+void Hardware::cmdPWM( int pulseCount ) {
     
     setPWM( rangeData.servoPort, pulseCount );
-    if ( saveOrNot ) {  // If not zero, save file
-        rangeData.pwmCenter = pulseCount;
-        filer.saveRange( &rangeData );
-    }
 }
 
 void Hardware::cmdAngle( int angle ) {
