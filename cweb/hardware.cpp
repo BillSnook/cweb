@@ -385,7 +385,7 @@ void Hardware::setMotorsPWM(int direction0, int pwm0, int direction1, int pwm1) 
     
     if ( ( pwm0 < 0 ) || ( pwm0 > SPEED_INDEX_MAX ) ||
          ( pwm1 < 0 ) || ( pwm1 > SPEED_INDEX_MAX ) ) {
-        syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d - %d; should be 0 <= speed <= %d", pwm0, pwm1, SPEED_INDEX_MAX);
+        syslog(LOG_ERR, "ERROR: Hardware::setMtrDirPWM speed: %d - %d; should be 0 <= speed <= %d", pwm0, pwm1, SPEED_INDEX_MAX);
         return;
     }
     if ( direction0 == 1 ) {
@@ -403,8 +403,8 @@ void Hardware::setMotorsPWM(int direction0, int pwm0, int direction1, int pwm1) 
         setPin( M1Rv, 1 );
     }
 
-    setPWM( M0En, speed.speedLeft( pwm0 ) );
-    setPWM( M1En, speed.speedRight( pwm1 ) );
+    setPWM( M0En, pwm0 );
+    setPWM( M1En, pwm1 );
 
 }
 
