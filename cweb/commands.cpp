@@ -204,7 +204,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'h':
 		{
 			char *display = hardware.speed.displaySpeedArray( (char *)msg );
-			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", display );
+			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", msg );
 //			memcpy( msg, display, strlen( display ) );
 //			free( display );
 		}
