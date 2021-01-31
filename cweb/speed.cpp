@@ -62,8 +62,8 @@ void Speed::returnSpeedArray( char *displayString ) {
     for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
         sprintf( displayString, "%s%d %d %d\n", displayString, i, forward[i].left, forward[i].right );
     }
-    for ( int i = -1; i < -SPEED_INDEX_MAX; i-- ) {
-        sprintf( displayString, "%s%d %d %d\n", displayString, i, reverse[i].left, reverse[i].right );
+    for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
+        sprintf( displayString, "%s%d %d %d\n", displayString, -i, reverse[i].left, reverse[i].right );
     }
 }
 
@@ -75,7 +75,7 @@ char * Speed::displaySpeedArray( char *displayString ) {
 	}
 	strcat( displayString, " Speed array, reverse:\n" );
 	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
-		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, reverse[i].left, reverse[i].right );
+		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, -i, reverse[i].left, reverse[i].right );
 	}
 	return displayString;
 }
