@@ -383,9 +383,9 @@ void Hardware::setMtrSpd(int motor, int speedIndex) {
 
 void Hardware::setMotorsPWM(int direction0, int pwm0, int direction1, int pwm1) {
     
-    if ( ( pwm0 < 0 ) || ( pwm0 > SPEED_INDEX_MAX ) ||
-         ( pwm1 < 0 ) || ( pwm1 > SPEED_INDEX_MAX ) ) {
-        syslog(LOG_ERR, "ERROR: Hardware::setMtrDirPWM speed: %d - %d; should be 0 <= speed <= %d", pwm0, pwm1, SPEED_INDEX_MAX);
+    if ( ( pwm0 < 0 ) || ( pwm0 > PWM_COUNT ) ||
+         ( pwm1 < 0 ) || ( pwm1 > PWM_COUNT ) ) {
+        syslog(LOG_ERR, "ERROR: Hardware::setMtrDirPWM pwm left: %d, right %d; should be 0 <= pwm <= %d", pwm0, pwm1, PWM_COUNT);
         return;
     }
     if ( direction0 == 1 ) {
