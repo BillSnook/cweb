@@ -153,21 +153,18 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
             
 		case 'D':
-            syslog(LOG_NOTICE, "Command D, return speed array data" );
-            hardware.speed.returnSpeedArray( msg );
-            break;
-            
-        case 'd':
         {
             syslog(LOG_NOTICE, "Command D, return speed array data" );
-//            hardware.speed.returnSpeedArray( msg );
             char *display = (char *)malloc( 1024 );
             hardware.speed.returnSpeedArray( display );
-            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", display );
+//            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", display );
             memcpy( msg, display, strlen( display ) );
             free( display );
-			break;
+            break;
         }
+
+        case 'd':
+			break;
             
 		case 'E':
             syslog(LOG_NOTICE, "Command E, set speed array entry" );
