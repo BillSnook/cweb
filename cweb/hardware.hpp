@@ -117,7 +117,8 @@ public:
 	
 	void setMtrDirSpd(int motor, int direction, int speed);
 	void setMtrSpd(int motor, int speed);
-	void setMotors(int direction0, int speed0, int direction1, int speed1);
+    void setMotorsPWM(int direction0, int pwm0, int direction1, int pwm1);
+    void setMotors(int direction0, int speed0, int direction1, int speed1);
 
 	void cmdSpeed( int speedIndex );	// Both motors
 

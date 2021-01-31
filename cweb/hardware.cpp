@@ -381,6 +381,33 @@ void Hardware::setMtrSpd(int motor, int speedIndex) {
 	}
 }
 
+void Hardware::setMotorsPWM(int direction0, int pwm0, int direction1, int pwm1) {
+    
+    if ( ( pwm0 < 0 ) || ( pwm0 > SPEED_INDEX_MAX ) ||
+         ( pwm1 < 0 ) || ( pwm1 > SPEED_INDEX_MAX ) ) {
+        syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d - %d; should be 0 <= speed <= %d", pwm0, pwm1, SPEED_INDEX_MAX);
+        return;
+    }
+    if ( direction0 == 1 ) {
+        setPin( M0Fw, 1 );
+        setPin( M0Rv, 0 );
+    } else {
+        setPin( M0Fw, 0 );
+        setPin( M0Rv, 1 );
+    }
+    if ( direction1 == 1 ) {
+        setPin( M1Fw, 1 );
+        setPin( M1Rv, 0 );
+    } else {
+        setPin( M1Fw, 0 );
+        setPin( M1Rv, 1 );
+    }
+
+    setPWM( M0En, speed.speedLeft( pwm0 ) );
+    setPWM( M1En, speed.speedRight( pwm1 ) );
+
+}
+
 void Hardware::setMotors(int direction0, int speedIndex0, int direction1, int speedIndex1) {
 	if ( ( speedIndex0 < 0 ) || ( speedIndex0 > SPEED_INDEX_MAX ) ||
 		 ( speedIndex1 < 0 ) || ( speedIndex1 > SPEED_INDEX_MAX ) ) {

@@ -173,6 +173,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case 'F':
+            syslog(LOG_NOTICE, "Command F, set speed directly to test entry" );
+            hardware.setMotorsPWM( token1, token2, token3, token4 );
+            break;
+            
 		case 'f':
 			break;
 			
