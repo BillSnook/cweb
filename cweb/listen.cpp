@@ -112,7 +112,18 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         // One for longer running tasks that may not end quickly and need a thread.
         char cmd = buffer[0];
         
-        if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
+        struct timeval tvNow;
+        gettimeofday(&tvNow, NULL);
+        long diff = listener.getDiffMicroSec( tvLatest, tvNow );
+        if ( diff > 1100000 ) { // If longer than 1.1 second since last command or keep-alive, execute all stop
+            syslog(LOG_ERR, "\nERROR **** keep-alive timed out\n" );
+            commander.serviceCommand( buffer, sockOrAddr );
+        }
+        tvLatest = tvNow;
+        
+        if ( cmd == '?' ) {             // Special keep-alive
+            // Should be sent if no other commmand to indicate the communication channel is still open
+        } else if ( cmd < '@' ) {       // Control characters, numbers, and punctuation
             // Real high priority or otherwise needs to have as much thread time as possible
             threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
         } else if ( cmd < 'a' ) {       // Capitalized characters
@@ -190,3 +201,17 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
 //		syslog(LOG_ERR, "ERROR writing block to socket" );
 //	}
 //}
+
+long Listener::getDiffMicroSec( struct timeval startTime, struct timeval endTime ) {
+    
+    struct timeval diffTime;
+    diffTime.tv_sec = endTime.tv_sec - startTime.tv_sec;;
+    diffTime.tv_usec = endTime.tv_usec - startTime.tv_usec;
+    if ( diffTime.tv_usec < 0 ) {
+        diffTime.tv_sec -= 1;
+        diffTime.tv_usec += 1000000;
+    }
+    long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
+    return microSecondTime;
+}
+

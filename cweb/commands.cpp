@@ -56,6 +56,13 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     //  And the value is only generated in listen.serviceConnection and used eventually only in writeBack.
 //	syslog(LOG_NOTICE, "In serviceCommand with sockOrAddr %d, command %s", sockOrAddr, command );
     // First interpret tokens
+    char commandType = command[0];  // Get command
+    if ( commandType == '?' ) {     // Keep-alive timed out, all stop
+        hardware.cmdSpeed( 0 );
+        hardware.scanStop();
+        hardware.centerServo();
+        return;
+    }
     char *nextToken[tokenMax+1];
 	int len = int( strlen( command ) );
 	int i = 0;
@@ -86,7 +93,6 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 	if ( tokenCount > 4 ) {
 		token4 = atoi( nextToken[4] );
 	}
-	char commandType = command[0];	// Get command
 	for ( int y = 0; y < tokenCount; y++ ) {        // Display all token values
 		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
 	}
@@ -110,7 +116,6 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
             // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
-            // MARK: Setup and calibration section
         case '@':       // Doesn't need thread
         {
             long response = hardware.getStatus();
@@ -123,6 +128,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         }
             break;
 
+            // MARK: - Calibration -- A through F reserved for scanner zeroing and speed syncronization
         case 'A':
 //            syslog(LOG_NOTICE, "Command A, return rangeData" );
             sprintf((char *)msg, "R %d %d", hardware.rangeData.pwmCenter, hardware.rangeData.servoPort );
@@ -163,7 +169,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
         }
 
-        case 'd':
+        case 'd':       // WFS Available for thread
 			break;
             
 		case 'E':
@@ -173,8 +179,6 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             
 		case 'e':
             syslog(LOG_NOTICE, "Command e, setup speed array from endpoints and save it" );
-            hardware.speed.setSpeedForward();
-            hardware.speed.setSpeedReverse();
             hardware.speed.saveSpeedArray();
 			break;
 			
@@ -183,10 +187,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             hardware.setMotorsPWM( token1, token2, token3, token4 );
             break;
             
-		case 'f':
+		case 'f':       // WFS Available for thread
 			break;
 			
-			// Motor/speed commands
+            // MARK: - Calibration -- Motor control/speed commands
 		case 'G':
 		case 'g':
 //			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
@@ -292,8 +296,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case 'S':
-            hardware.scanStop();
             hardware.cmdSpeed( 0 );
+            hardware.scanStop();
             hardware.centerServo();
 			break;
 

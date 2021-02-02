@@ -10,6 +10,7 @@
 #define listen_hpp
 
 #include <netinet/in.h>
+#include <sys/time.h>
 
 #define AP_SIZE     32
 
@@ -27,10 +28,16 @@ class Listener {
     int findMatchOrNewIndex( int addr, int portno );
 
 public:
+    
+    struct timeval tvLatest = {0};
+
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd, char *inet_address );
 	void writeBack( char *msg, int sockOrAddr );
 //	void writeBlock( char *msg, int length, int socket );
+    
+    long getDiffMicroSec( struct timeval startTime, struct timeval endTime );
+
 };
 
 extern Listener	listener;

@@ -88,6 +88,7 @@ char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
 
 }
 
+// Get a power setting from an index
 int Speed::speedLeft( int speedIndex ) {
 	if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
 		if ( speedIndex > 0 ) {
@@ -142,6 +143,7 @@ void Speed::setSpeedRight( int speedIndex, int newSpeed ) {
 	}
 }
 
+// For current test index
 void Speed::setSpeedLeft( int newSpeed ) {
 	if ( ( calibrationTestIndex > -SPEED_INDEX_MAX ) && ( calibrationTestIndex < SPEED_INDEX_MAX ) ) {
 		if ( calibrationTestIndex > 0 ) {
@@ -162,6 +164,8 @@ void Speed::setSpeedRight( int newSpeed ) {
 	}
 }
 
+// Assuming index 1 has been set to the slowest practicable speed, and index 8 to the highest,
+// calculate a linear series of power settings so each index speed changes smoothly.
 void Speed::setSpeedForward() {
 	// Assume index 1 os slowest speed, index 8 is the fastest
 	// Find a pattern so each entry is linear
@@ -200,5 +204,7 @@ void Speed::setSpeedReverse() {
 
 void Speed::saveSpeedArray() {
     
+    setSpeedForward();
+    setSpeedReverse();
     filer.saveSpeedArrays( forward, reverse );
 }

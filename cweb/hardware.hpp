@@ -125,6 +125,7 @@ public:
     void setStatus( unsigned int newStatusFlags );
     long getStatus();
     
+    long getDiffUSec( struct timeval startTime, struct timeval endTime );
 	int angleToPWM( int angle );
     void cmdPWM( int pulseCount );
 	void cmdAngle( int angle );

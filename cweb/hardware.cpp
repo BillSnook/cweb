@@ -501,7 +501,7 @@ void Hardware::cmdAngle( int angle ) {
 
 long Hardware::doPing() {
     
-    struct timeval tvStart, tvEnd, tvDiff;
+    struct timeval tvStart, tvEnd;
 //    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
 #ifdef ON_PI
@@ -532,17 +532,8 @@ long Hardware::doPing() {
     syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
     
 #endif  // ON_PI
-
-    tvDiff.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
-    tvDiff.tv_usec = tvEnd.tv_usec - tvStart.tv_usec;
-    if ( tvDiff.tv_usec < 0 ) {
-        tvDiff.tv_sec -= 1;
-        tvDiff.tv_usec += 1000000;
-    }
-    long pingMicroSecondTime = ( tvDiff.tv_sec * 1000000 ) + tvDiff.tv_usec;
-    syslog(LOG_NOTICE, "Ping time is %ld seconds, %d useconds",  tvDiff.tv_sec, tvDiff.tv_usec );
     
-    return pingMicroSecondTime;
+    return listener.getDiffMicroSec( tvStart, tvEnd );
 }
 
 long Hardware::cmdPing() {
