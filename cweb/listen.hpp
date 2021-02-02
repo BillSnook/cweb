@@ -23,6 +23,7 @@ struct addrPort {
 class Listener {
 	
 	int					socketfd;
+    bool                firstAccess;
     addrPort            apArray[AP_SIZE];
     
     int findMatchOrNewIndex( int addr, int portno );

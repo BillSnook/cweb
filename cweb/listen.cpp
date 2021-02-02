@@ -47,6 +47,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		return;
 	}
 
+    firstAccess = true;
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
@@ -77,7 +78,7 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
-    gettimeofday(&tvLatest, NULL);
+//    gettimeofday(&tvLatest, NULL);
     bool    localLoop = true;
 	while ( localLoop ) {
         long    n;
@@ -117,10 +118,14 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         gettimeofday(&tvNow, NULL);
         long diff = listener.getDiffMicroSec( tvLatest, tvNow );
         if ( diff > 1100000 ) { // If longer than 1.1 second since last command or keep-alive, execute all stop
-            syslog(LOG_ERR, "\n\nERROR **** keep-alive timed out\n\n" );
-            buffer[0] = '?';
-            buffer[1] = '\0';
-            commander.serviceCommand( buffer, sockOrAddr ); // Send stop command
+            if ( firstAccess ) {
+                firstAccess = false;
+            } else {
+                syslog(LOG_ERR, "\n\nERROR **** keep-alive timed out\n\n" );
+                buffer[0] = '?';
+                buffer[1] = '\0';
+                commander.serviceCommand( buffer, sockOrAddr ); // Send stop command
+            }
         }
         tvLatest = tvNow;
         
