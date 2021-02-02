@@ -77,7 +77,8 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
-	bool	localLoop = true;
+    gettimeofday(&tvLatest, NULL);
+    bool    localLoop = true;
 	while ( localLoop ) {
         long    n;
         int sockOrAddr = connectionSockfd;
@@ -105,7 +106,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-        syslog(LOG_NOTICE, "Received command: %s", buffer );
+//        syslog(LOG_NOTICE, "Received command: %s", buffer );
         // OK, now we have three options
         // One high priority task which needs real time control or timing accuracy. Auto-driving or ranging, for example.
         // One for quick tasks, not worth starting a thread.
@@ -116,8 +117,10 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         gettimeofday(&tvNow, NULL);
         long diff = listener.getDiffMicroSec( tvLatest, tvNow );
         if ( diff > 1100000 ) { // If longer than 1.1 second since last command or keep-alive, execute all stop
-            syslog(LOG_ERR, "\nERROR **** keep-alive timed out\n" );
-            commander.serviceCommand( buffer, sockOrAddr );
+            syslog(LOG_ERR, "\n\nERROR **** keep-alive timed out\n\n" );
+            buffer[0] = '?';
+            buffer[1] = '\0';
+            commander.serviceCommand( buffer, sockOrAddr ); // Send stop command
         }
         tvLatest = tvNow;
         
