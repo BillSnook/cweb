@@ -81,7 +81,6 @@ void Threader::setupThreader() {
 	
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 //    manager = Manager();
-    listener.setupListener();
     manager.setupManager();         // Manages i2c queue and controller communication
     queueThread( managerThread, 8, 0 );
     usleep( 100000 );   // 1/10 second but will it change threads?
@@ -91,6 +90,8 @@ void Threader::setupThreader() {
 //	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
 
+    listener.setupListener();
+
     taskMaster = TaskMaster();
 	taskMaster.setupTaskMaster(); 	// Manages task queue - to allow multiple tasks at once
 }
@@ -99,10 +100,10 @@ void Threader::shutdownThreads() {
 	
 	syslog(LOG_NOTICE, "In shutdownThreads" );
 	
+    listener.shutdownListener();
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
     manager.shutdownManager();
-    listener.shutdownListener();
 	pthread_mutex_destroy( &threadArrayMutex );
 }
 

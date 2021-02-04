@@ -34,6 +34,7 @@ void Listener::setupListener() {
 void Listener::shutdownListener() {
     
     timeLoop = false;
+//    usleep( 100000 );
 }
 
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
