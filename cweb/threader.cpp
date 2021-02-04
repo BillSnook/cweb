@@ -221,7 +221,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
         case keepAliveThread:       // Thread intended for keep alive support
-            listener.testTimedOut();
+            listener.monitor();
             break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );

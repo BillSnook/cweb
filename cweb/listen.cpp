@@ -180,21 +180,6 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     }
 }
 
-bool Listener::commTimedOut() {      // Keep-alive support - true iff too long
-    
-    struct timeval diffTime, tvNow;
-    gettimeofday(&tvNow, NULL);
-    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;;
-    diffTime.tv_usec = tvNow.tv_usec - tvLatest.tv_usec;
-    if ( diffTime.tv_usec < 0 ) {
-        diffTime.tv_sec -= 1;
-        diffTime.tv_usec += 1000000;
-    }
-    long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
-    tvLatest = tvNow;
-    return microSecondTime > 1100000;
-}
-
 bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
     
     struct timeval diffTime, tvNow;
@@ -211,15 +196,16 @@ bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
 
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
-//    syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
+    syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( true ) {
         if ( testTimedOut() ) {
             // WFS test - may want to end thi if we go to autonomous mode
-            syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
+            syslog(LOG_NOTICE, "In Listener monitor, lost communication to controller" );
 //            char killAction[] = "?";
 //            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
         }
         usleep( 100000 );       // 1/10 seconds
     }
+    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
 
