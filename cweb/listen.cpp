@@ -27,12 +27,14 @@ extern Commander    commander;
 
 void Listener::setupListener() {
     
+    syslog(LOG_NOTICE, "In setupListener" );
     firstTime = true;
     timeLoop = false;
 }
 
 void Listener::shutdownListener() {
     
+    syslog(LOG_NOTICE, "In shutdownListener" );
     timeLoop = false;
 //    usleep( 100000 );
 }

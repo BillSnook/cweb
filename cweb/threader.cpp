@@ -79,6 +79,7 @@ const char *ThreadControl::description() {
 
 void Threader::setupThreader() {
 	
+    syslog(LOG_NOTICE, "In setupThreader" );
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 //    manager = Manager();
     manager.setupManager();         // Manages i2c queue and controller communication
