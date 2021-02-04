@@ -27,7 +27,8 @@ extern Commander    commander;
 
 void Listener::setupListener() {
     
-    timeLoop = true;
+    firstTime = true;
+    timeLoop = false;
 }
 
 void Listener::shutdownListener() {
@@ -117,16 +118,25 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
+        if ( firstTime ) {
+            firstTime = false;
+            timeLoop = true;
+        }
         gettimeofday(&tvLatest, NULL);
         
         char cmd = buffer[0];
 //        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
-        if ( cmd == '?' ) {             // Special keep-alive - do nothing
-            // Should have been sent if no other commmand in 1/2 second to indicate the communication channel is still open
-        } else if ( cmd < '@' ) {       // Control characters, numbers, and punctuation
-            // Real high priority or otherwise needs to have as much thread time as possible
-            threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
+        if ( cmd < '@' ) {       // Control characters, numbers, and punctuation
+            if ( cmd == '?' ) {             // Special keep-alive - do nothing
+                // Should have been sent if no other commmand in 1/2 second to indicate the communication channel is still open
+            } else if ( cmd == '#' ) {
+                timeLoop = false;
+                firstTime = true;
+            } else {
+                // Real high priority or otherwise needs to have as much thread time as possible
+                threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
+            }
         } else if ( cmd < 'a' ) {       // Capitalized characters
             // Run real quick command such as setting a pin or pwm value
             commander.serviceCommand( buffer, sockOrAddr );
@@ -207,15 +217,15 @@ bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
-    while ( !timeLoop ) {
-        if ( testTimedOut() ) {
+    while ( true ) {
+        if ( timeLoop && testTimedOut() ) {
             // WFS test - may want to end thi if we go to autonomous mode
-            syslog(LOG_NOTICE, "In Listener monitor, lost communication to controller" );
+            syslog(LOG_NOTICE, "In Listener monitor, lost communication with controller !!!!!!! " );
 //            char killAction[] = "?";
 //            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
+            usleep( 100000 );       // 1/10 seconds
         }
-        usleep( 100000 );       // 1/10 seconds
     }
-    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
+//    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
 
