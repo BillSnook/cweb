@@ -120,7 +120,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
         
         if ( firstTime ) {
-            firstTime = false;
+            syslog(LOG_NOTICE, "First time" );
+           firstTime = false;
             timeLoop = true;
         }
         gettimeofday(&tvLatest, NULL);
@@ -132,8 +133,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             if ( cmd == '?' ) {             // Special keep-alive - do nothing
                 // Should have been sent if no other commmand in 1/2 second to indicate the communication channel is still open
             } else if ( cmd == '#' ) {
-                timeLoop = false;
                 firstTime = true;
+                timeLoop = false;
                 syslog(LOG_NOTICE, "Received command: #" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
@@ -225,8 +226,8 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
             syslog(LOG_NOTICE, "In Listener monitor, lost communication with controller !!!!!!! " );
 //            char killAction[] = "?";
 //            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
-            usleep( 100000 );       // 1/10 seconds
         }
+        usleep( 100000 );       // 1/10 seconds
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
