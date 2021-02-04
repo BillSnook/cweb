@@ -133,6 +133,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             } else if ( cmd == '#' ) {
                 timeLoop = false;
                 firstTime = true;
+                syslog(LOG_NOTICE, "Received command: #" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
