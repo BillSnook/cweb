@@ -25,6 +25,16 @@ extern Threader		threader;
 extern Commander    commander;
 
 
+void Listener::setupListener() {
+    
+    timeLoop = true;
+}
+
+void Listener::shutdownListener() {
+    
+    timeLoop = false;
+}
+
 void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
 	
     if ( useDatagramProtocol ) {
@@ -197,7 +207,7 @@ bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
-    while ( true ) {
+    while ( timeLoop ) {
         if ( testTimedOut() ) {
             // WFS test - may want to end thi if we go to autonomous mode
             syslog(LOG_NOTICE, "In Listener monitor, lost communication to controller" );

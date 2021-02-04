@@ -23,6 +23,7 @@ struct addrPort {
 class Listener {
 	
 	int					socketfd;
+    bool                timeLoop;
     addrPort            apArray[AP_SIZE];
     
     struct timeval      tvLatest = {0};
@@ -32,6 +33,8 @@ class Listener {
 
 public:
     
+    void setupListener();
+    void shutdownListener();
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd, char *inet_address );
 	void writeBack( char *msg, int sockOrAddr );
