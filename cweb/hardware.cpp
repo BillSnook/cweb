@@ -529,11 +529,20 @@ long Hardware::doPing() {
     } while ( ( echoResponse != 0 ) && ( loopCount < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
-    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
+//    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
     
 #endif  // ON_PI
     
-    return listener.getDiffMicroSec( tvStart, tvEnd );
+    struct timeval diffTime;
+    diffTime.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
+    diffTime.tv_usec = tvEnd.tv_usec - tvEnd.tv_usec;
+    if ( diffTime.tv_usec < 0 ) {
+        diffTime.tv_sec -= 1;
+        diffTime.tv_usec += 1000000;
+    }
+    long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
+
+    return microSecondTime;
 }
 
 long Hardware::cmdPing() {

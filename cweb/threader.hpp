@@ -22,8 +22,9 @@ enum ThreadType {
 	listenThread = 1,
 	serverThread = 2,
 	commandThread = 3,
-	taskThread = 4,
-	testThread = 5
+    taskThread = 4,
+    keepAliveThread = 5,
+	testThread = 6
 };
 
 

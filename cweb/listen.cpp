@@ -47,7 +47,8 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		return;
 	}
 
-    firstAccess = true;
+    threader.queueThread( keepAliveThread, (int)0, 0 );    // Start keep-alive monitor
+
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
         threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
@@ -78,10 +79,9 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
-//    gettimeofday(&tvLatest, NULL);
     bool    localLoop = true;
+    long    n;
 	while ( localLoop ) {
-        long    n;
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
@@ -107,30 +107,13 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-//        syslog(LOG_NOTICE, "Received command: %s", buffer );
-        // OK, now we have three options
-        // One high priority task which needs real time control or timing accuracy. Auto-driving or ranging, for example.
-        // One for quick tasks, not worth starting a thread.
-        // One for longer running tasks that may not end quickly and need a thread.
+        gettimeofday(&tvLatest, NULL);
+        
         char cmd = buffer[0];
-        
-        struct timeval tvNow;
-        gettimeofday(&tvNow, NULL);
-        long diff = listener.getDiffMicroSec( tvLatest, tvNow );
-        if ( diff > 1100000 ) { // If longer than 1.1 second since last command or keep-alive, execute all stop
-            if ( firstAccess ) {
-                firstAccess = false;
-            } else {
-                syslog(LOG_ERR, "\n\nERROR **** keep-alive timed out\n\n" );
-                buffer[0] = '?';
-                buffer[1] = '\0';
-                commander.serviceCommand( buffer, sockOrAddr ); // Send stop command
-            }
-        }
-        tvLatest = tvNow;
-        
-        if ( cmd == '?' ) {             // Special keep-alive
-            // Should be sent if no other commmand to indicate the communication channel is still open
+//        syslog(LOG_NOTICE, "Received command: %s", buffer );
+
+        if ( cmd == '?' ) {             // Special keep-alive - do nothing
+            // Should have been sent if no other commmand in 1/2 second to indicate the communication channel is still open
         } else if ( cmd < '@' ) {       // Control characters, numbers, and punctuation
             // Real high priority or otherwise needs to have as much thread time as possible
             threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
@@ -143,12 +126,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
 
 		free( buffer );
-
-//		n = write( connectionSockfd, "\nAck\n", 5 );
-//		if ( n < 0 ) {
-//			syslog(LOG_ERR, "ERROR writing ack to socket" );
-//			break;
-//		}
 	}
 	close( connectionSockfd );
 //	syslog(LOG_NOTICE, "In serviceConnection at end" );
@@ -203,23 +180,46 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     }
 }
 
-//void Listener::writeBlock( char *msg, int length, int socket ) {
-//	long n = write( socket, msg, length );
-//	if ( n < 0 ) {
-//		syslog(LOG_ERR, "ERROR writing block to socket" );
-//	}
-//}
-
-long Listener::getDiffMicroSec( struct timeval startTime, struct timeval endTime ) {
+bool Listener::commTimedOut() {      // Keep-alive support - true iff too long
     
-    struct timeval diffTime;
-    diffTime.tv_sec = endTime.tv_sec - startTime.tv_sec;;
-    diffTime.tv_usec = endTime.tv_usec - startTime.tv_usec;
+    struct timeval diffTime, tvNow;
+    gettimeofday(&tvNow, NULL);
+    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;;
+    diffTime.tv_usec = tvNow.tv_usec - tvLatest.tv_usec;
     if ( diffTime.tv_usec < 0 ) {
         diffTime.tv_sec -= 1;
         diffTime.tv_usec += 1000000;
     }
     long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
-    return microSecondTime;
+    tvLatest = tvNow;
+    return microSecondTime > 1100000;
+}
+
+bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
+    
+    struct timeval diffTime, tvNow;
+    gettimeofday(&tvNow, NULL);
+    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;;
+    diffTime.tv_usec = tvNow.tv_usec - tvLatest.tv_usec;
+    if ( diffTime.tv_usec < 0 ) {
+        diffTime.tv_sec -= 1;
+        diffTime.tv_usec += 1000000;
+    }
+    long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
+    return microSecondTime > 1100000;
+}
+
+void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
+
+//    syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
+    while ( true ) {
+        if ( testTimedOut() ) {
+            // WFS test - may want to end thi if we go to autonomous mode
+            syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
+//            char killAction[] = "?";
+//            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
+        }
+        usleep( 100000 );       // 1/10 seconds
+    }
 }
 

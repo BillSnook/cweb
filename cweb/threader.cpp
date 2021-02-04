@@ -66,6 +66,9 @@ const char *ThreadControl::description() {
 		case taskThread:
 			name = "taskThread";
 			break;
+        case keepAliveThread:
+            name = "keepAliveThread";
+            break;
 		default:
 			name = "noThread";
 			break;
@@ -217,6 +220,9 @@ void Threader::runNextThread( void *tcPointer ) {
 		case taskThread:            // Thread intended for longer running high priority tasks - set when thread was created
 			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
 			break;
+        case keepAliveThread:       // Thread intended for keep alive support
+            listener.testTimedOut();
+            break;
 		case testThread:
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );
 			break;

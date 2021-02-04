@@ -23,22 +23,22 @@ struct addrPort {
 class Listener {
 	
 	int					socketfd;
-    bool                firstAccess;
     addrPort            apArray[AP_SIZE];
     
+    struct timeval      tvLatest = {0};
+
     int findMatchOrNewIndex( int addr, int portno );
+    bool commTimedOut();                // True if timed out, resets latest as this is called in received data method
+
+    void monitor();
 
 public:
     
-    struct timeval tvLatest = {0};
-
 	void acceptConnections( int rcvPortNo );
 	void serviceConnection( int connectionSockfd, char *inet_address );
 	void writeBack( char *msg, int sockOrAddr );
-//	void writeBlock( char *msg, int length, int socket );
-    
-    long getDiffMicroSec( struct timeval startTime, struct timeval endTime );
 
+    bool testTimedOut();                // True if timed out, called to monitor fotoo long between comms
 };
 
 extern Listener	listener;
