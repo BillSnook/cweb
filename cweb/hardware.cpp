@@ -653,7 +653,7 @@ void Hardware::scanPing( int sockOrAddr ) {
 	
 	do {
 		if ( sweepOneWay ) {
-			for( int angle = start; angle <= end; angle += inc ) {
+			for ( int angle = start; angle <= end; angle += inc ) {
 				if ( !scanLoop ) {
 					break;
 				}
@@ -714,7 +714,7 @@ unsigned int Hardware::ping( unsigned int angle ) {
 		angle = 180 - angle;
 	}
     cmdAngle( angle );
-    usleep( 50000 );    // 50ms to let it settle - 20 / second
+    usleep( 100000 );    // 50ms to let it settle - 10 / second
     return (unsigned int)doPing();
 }
 
