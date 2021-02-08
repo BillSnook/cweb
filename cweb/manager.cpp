@@ -98,7 +98,7 @@ void Manager::setupManager() {
     pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
-    file_i2c = openI2CFile( ARD_I2C_ADDR );   // For talking to arduino, if any
+    arduino_i2c = openI2CFile( ARD_I2C_ADDR );   // For talking to arduino, if any
 
 //    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
 //    vl53l0x.setupVL53L0X( 0x29 );
@@ -325,32 +325,32 @@ void Manager::stopVL() {
 }
 
 
-// These routines need to manage the freshness of the range data
+// These routines need to manage the freshness of the range data - depreczted, now done loczlly
 // They could compare the index to a copy of the timestamp when it was sent
-void Manager::setRange( unsigned int angle) {
-
-//	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
-	expectedControllerMode = rangeMode;
-    request( writeI2C, file_i2c, 'p', angle );
-}
-
-long Manager::getRangeResult() {
-	
-    long status = request( readI2C, file_i2c, 4 );
-    syslog(LOG_NOTICE, "In Manager::getRangeResult data read: 0x%08lX\n", status);
-
-    expectedControllerMode = statusMode;    // Controller should drop back to this too
-	siteMap.updateEntry( status );
-	return status;
-}
-
-unsigned int Manager::getRange() {
-	
-	long result = getRangeResult();
-//    unsigned int range = (result >> 16) & 0x0FFFF;        // Actual range value
-    unsigned int range = result & 0x0FFFF;        // Actual range value
-	return range;
-}
+//void Manager::setRange( unsigned int angle) {
+//
+////	syslog(LOG_NOTICE, "In Manager::setRange( %u )", index );
+//	expectedControllerMode = rangeMode;
+//    request( writeI2C, arduino_i2c, 'p', angle );
+//}
+//
+//long Manager::getRangeResult() {
+//
+//    long status = request( readI2C, filarduino_i2ce_i2c, 4 );
+//    syslog(LOG_NOTICE, "In Manager::getRangeResult data read: 0x%08lX\n", status);
+//
+//    expectedControllerMode = statusMode;    // Controller should drop back to this too
+//	siteMap.updateEntry( status );
+//	return status;
+//}
+//
+//unsigned int Manager::getRange() {
+//
+//	long result = getRangeResult();
+////    unsigned int range = (result >> 16) & 0x0FFFF;        // Actual range value
+//    unsigned int range = result & 0x0FFFF;        // Actual range value
+//	return range;
+//}
 
 void Manager::setMotorPower( bool On ) {
 

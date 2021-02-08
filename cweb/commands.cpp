@@ -269,8 +269,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         case 'o':
 //           actor.doTest();            // Available
         {
-            manager.request( writeI2C, manager.file_i2c, 's', 0x66 );
-            long status = manager.request( readI2C, manager.file_i2c, 4 );
+            manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
+            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
             syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
             break;
         }
@@ -278,9 +278,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         case 'p':
 //            actor.doTest();
         {
-            manager.request( writeI2C, manager.file_i2c, 'p', token1 );
-            long status = manager.request( readI2C, manager.file_i2c, 4 );
-            syslog(LOG_NOTICE, "Test p, got response: %08lX\n", status );
+            manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
+            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
+            syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
             break;
         }
         case 'Q':

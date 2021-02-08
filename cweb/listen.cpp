@@ -123,7 +123,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         
         if ( firstTime ) {
             syslog(LOG_NOTICE, "First time" );
-           firstTime = false;
+            firstTime = false;
             timeLoop = true;
         }
         gettimeofday(&tvLatest, NULL);
@@ -224,7 +224,7 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( true ) {
         if ( timeLoop && testTimedOut() ) {
-            // WFS test - may want to end thi if we go to autonomous mode
+            // WFS test - may want to end this if we go to autonomous mode
             syslog(LOG_NOTICE, "In Listener monitor, lost communication with controller !!!!!!! " );
 //            char killAction[] = "?";
 //            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command

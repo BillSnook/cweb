@@ -64,7 +64,7 @@ class Manager {
 public:
 	ControllerMode	expectedControllerMode;
 	
-    int     file_i2c;
+    int  arduino_i2c;
     
 	void setupManager();
 	void shutdownManager();
@@ -78,9 +78,9 @@ public:
 
 //    int readReg8( int file, int reg );
     
-	void setRange( unsigned int angle );
-	long getRangeResult();
-	unsigned int getRange();
+//	void setRange( unsigned int angle );
+//	long getRangeResult();
+//	unsigned int getRange();
 	
 	void setMotorPower( bool On );
 	
