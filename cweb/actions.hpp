@@ -23,9 +23,9 @@ public:
 	void print_pal_error(VL53L0X_Error Status);
 	VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev);
 	VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev);
-	VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice);
+	VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements);
 	void setupTest();
-	void mainTest();
+	void mainTest(uint32_t no_of_measurements);
 	void shutdownTest();
 
 	void setupActor();

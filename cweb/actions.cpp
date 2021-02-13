@@ -101,7 +101,7 @@ VL53L0X_Error Actor::WaitStopCompleted(VL53L0X_DEV Dev) {
 }
 
 
-VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
+VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements )
 {
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
@@ -152,7 +152,6 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
     if(Status == VL53L0X_ERROR_NONE)
     {
         uint32_t measurement;
-        uint32_t no_of_measurements = 50;
 
         uint16_t* pResults = (uint16_t*)malloc(sizeof(uint16_t) * no_of_measurements);
 
@@ -161,12 +160,13 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice)
 
             Status = WaitMeasurementDataReady(pMyDevice);
 
+            printf( "In loop measurement" );
             if(Status == VL53L0X_ERROR_NONE)
             {
                 Status = VL53L0X_GetRangingMeasurementData(pMyDevice, pRangingMeasurementData);
 
                 *(pResults + measurement) = pRangingMeasurementData->RangeMilliMeter;
-                printf("In loop measurement %d: %d\n", measurement, pRangingMeasurementData->RangeMilliMeter);
+                printf("%d: %d\n", measurement, pRangingMeasurementData->RangeMilliMeter);
 
                 // Clear the interrupt
                 VL53L0X_ClearInterruptMask(pMyDevice, VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
@@ -275,11 +275,11 @@ void Actor::setupTest() {
     }
 }
 
-void Actor::mainTest() {
+void Actor::mainTest(uint32_t no_of_measurements) {
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-        Status = rangingTest(pMyDevice);
+        Status = rangingTest(pMyDevice, no_of_measurements);
     }
 
     print_pal_error(Status);
@@ -333,5 +333,5 @@ void Actor::doTest() {
 	
 	syslog(LOG_NOTICE, "In mainTest" );
 	
-	mainTest();
+//	mainTest();
 }

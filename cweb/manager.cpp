@@ -308,21 +308,21 @@ long Manager::getNowMs() {
 //    return (int)result;
 //}
 
-void Manager::startVL() {
-	
-	syslog(LOG_NOTICE, "In Manager::startVL()" );
-	if ( vl53l0x.isSetup ) {
-		vl53l0x.measureRun();
-	}
-}
-
-void Manager::stopVL() {
-	
-	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-	if ( vl53l0x.isSetup ) {
-		vl53l0x.measureStop();
-	}
-}
+//void Manager::startVL() {
+//
+//	syslog(LOG_NOTICE, "In Manager::startVL()" );
+//	if ( vl53l0x.isSetup ) {
+//		vl53l0x.measureRun();
+//	}
+//}
+//
+//void Manager::stopVL() {
+//
+//	syslog(LOG_NOTICE, "In Manager::stopVL()" );
+//	if ( vl53l0x.isSetup ) {
+//		vl53l0x.measureStop();
+//	}
+//}
 
 
 // These routines need to manage the freshness of the range data - depreczted, now done loczlly

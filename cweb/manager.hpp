@@ -84,8 +84,8 @@ public:
 	
 	void setMotorPower( bool On );
 	
-	void startVL();
-	void stopVL();
+//	void startVL();
+//	void stopVL();
 };
 
 #endif /* manager_hpp */

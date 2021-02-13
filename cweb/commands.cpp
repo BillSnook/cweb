@@ -13,6 +13,7 @@
 #include "manager.hpp"
 #include "filer.hpp"
 #include "hardware.hpp"
+#include "actions.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -34,16 +35,20 @@ Hardware	hardware;
 
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
+extern Actor        actor;
+
 
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware.setupHardware();
+    actor.setupActor();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
+    actor.shutdownActor();
 	hardware.shutdownHardware();
 }
 
@@ -61,6 +66,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         hardware.cmdSpeed( 0 );
         hardware.scanStop();
         hardware.centerServo();
+        actor.stop();
         return;
     }
     char *nextToken[tokenMax+1];
@@ -109,6 +115,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case '1':
+            actor.mainTest( 5 );
 //			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			
@@ -266,8 +273,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
         case 'O':
-        case 'o':
-//           actor.doTest();            // Available
+        case 'o':            // Available
         {
             manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
             long status = manager.request( readI2C, manager.arduino_i2c, 4 );
@@ -276,13 +282,12 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         }
         case 'P':
         case 'p':
-//            actor.doTest();
         {
             manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
             long status = manager.request( readI2C, manager.arduino_i2c, 4 );
             syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
-            break;
         }
+            break;
         case 'Q':
 //        case 'q':
             system( "sudo shutdown now" );
@@ -299,10 +304,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             hardware.cmdSpeed( 0 );
             hardware.scanStop();
             hardware.centerServo();
+            actor.stop();
 			break;
 
         case 's':
-            manager.stopVL();
+//            manager.stopVL();
             syslog(LOG_NOTICE, "Did stopVL" );
             hardware.scanStop();
             syslog(LOG_NOTICE, "Did scanStop" );
@@ -312,6 +318,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            syslog(LOG_NOTICE, "Did killTasks" );
             hardware.centerServo();
             syslog(LOG_NOTICE, "Did centerservo" );
+            actor.stop();
             break;
             
 		// Test case for app feature - send response, wait 5 seconds, send another
