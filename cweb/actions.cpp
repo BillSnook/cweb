@@ -77,22 +77,19 @@ VL53L0X_Error Actor::setupTest() {
     }
 
     //  Get the version of the VL53L0X API running in the firmware
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         status_int = VL53L0X_GetVersion(pVersion);
         if (status_int != 0)
             Status = VL53L0X_ERROR_CONTROL_INTERFACE;
     }
 
     //  Verify the version of the VL53L0X API running in the firmrware
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        if( pVersion->major != VERSION_REQUIRED_MAJOR ||
+    if (Status == VL53L0X_ERROR_NONE) {
+        if ( pVersion->major != VERSION_REQUIRED_MAJOR ||
             pVersion->minor != VERSION_REQUIRED_MINOR
 //           ||
 //            pVersion->build != VERSION_REQUIRED_BUILD
-           )
-        {
+           ) {
             printf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\n",
                 pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
                 VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
@@ -100,19 +97,17 @@ VL53L0X_Error Actor::setupTest() {
     }
 
     // End of implementation specific
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_DataInit\n");
         Status = VL53L0X_DataInit(&MyDevice); // Data initialization
         print_pal_error(Status);
     }
     
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
     }
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    
+    if (Status == VL53L0X_ERROR_NONE) {
         printf("VL53L0X_GetDeviceInfo:\n");
         printf("Device Name : %s\n", DeviceInfo.Name);
         printf("Device Type : %s\n", DeviceInfo.Type);
@@ -207,31 +202,27 @@ VL53L0X_Error Actor::rangeSetup(VL53L0X_Dev_t *pMyDevice) {
     uint8_t VhvSettings;
     uint8_t PhaseCal;
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_StaticInit\n");
         Status = VL53L0X_StaticInit(pMyDevice); // Device Initialization
         // StaticInit will set interrupt by default
         print_pal_error(Status);
     }
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_PerformRefCalibration\n");
         Status = VL53L0X_PerformRefCalibration(pMyDevice,
                 &VhvSettings, &PhaseCal); // Device Initialization
         print_pal_error(Status);
     }
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_PerformRefSpadManagement\n");
         Status = VL53L0X_PerformRefSpadManagement(pMyDevice,
                 &refSpadCount, &isApertureSpads); // Device Initialization
         print_pal_error(Status);
     }
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
 
         printf ("Call of VL53L0X_SetDeviceMode\n");
         Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING); // Setup in single ranging mode
@@ -246,27 +237,23 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_StartMeasurement\n");
         Status = VL53L0X_StartMeasurement(pMyDevice);
         print_pal_error(Status);
     }
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         uint32_t measurement;
 
         uint16_t* pResults = (uint16_t*)malloc(sizeof(uint16_t) * no_of_measurements);
 
-        for(measurement=0; measurement<no_of_measurements; measurement++)
-        {
+        for(measurement=0; measurement<no_of_measurements; measurement++) {
 
             Status = WaitMeasurementDataReady(pMyDevice);
 
             printf( "In loop measurement" );
-            if(Status == VL53L0X_ERROR_NONE)
-            {
+            if (Status == VL53L0X_ERROR_NONE) {
                 Status = VL53L0X_GetRangingMeasurementData(pMyDevice, pRangingMeasurementData);
 
                 *(pResults + measurement) = pRangingMeasurementData->RangeMilliMeter;
@@ -280,10 +267,8 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
             }
         }
 
-//        if(Status == VL53L0X_ERROR_NONE)
-//        {
-//            for(measurement=0; measurement<no_of_measurements; measurement++)
-//            {
+//        if (Status == VL53L0X_ERROR_NONE) {
+//            for(measurement=0; measurement<no_of_measurements; measurement++) {
 //                printf("measurement %d: %d\n", measurement, *(pResults + measurement));
 //            }
 //        }
@@ -292,8 +277,7 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
     }
 
     
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Call of VL53L0X_StopMeasurement\n");
         Status = VL53L0X_StopMeasurement(pMyDevice);
     }
@@ -303,15 +287,14 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
 
 VL53L0X_Error Actor::rangeClose(VL53L0X_Dev_t *pMyDevice) {
     
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if (Status == VL53L0X_ERROR_NONE) {
         printf ("Wait Stop to be competed\n");
         Status = WaitStopCompleted(pMyDevice);
     }
 
-    if(Status == VL53L0X_ERROR_NONE)
-    Status = VL53L0X_ClearInterruptMask(pMyDevice,
-        VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
+    if (Status == VL53L0X_ERROR_NONE)
+        Status = VL53L0X_ClearInterruptMask(pMyDevice,
+                                            VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
 
     return Status;
 }
@@ -320,7 +303,7 @@ VL53L0X_Error Actor::rangeClose(VL53L0X_Dev_t *pMyDevice) {
 
 void Actor::mainTest(uint32_t no_of_measurements) {
 
-    if(Status == VL53L0X_ERROR_NONE) {
+    if (Status == VL53L0X_ERROR_NONE) {
         Status = rangingTest(pMyDevice, no_of_measurements);
     }
 
