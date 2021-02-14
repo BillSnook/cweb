@@ -237,8 +237,10 @@ void Actor::setupTest() {
     if(Status == VL53L0X_ERROR_NONE)
     {
         if( pVersion->major != VERSION_REQUIRED_MAJOR ||
-            pVersion->minor != VERSION_REQUIRED_MINOR ||
-            pVersion->build != VERSION_REQUIRED_BUILD )
+            pVersion->minor != VERSION_REQUIRED_MINOR
+//           ||
+//            pVersion->build != VERSION_REQUIRED_BUILD
+           )
         {
             printf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\n",
                 pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
@@ -267,8 +269,8 @@ void Actor::setupTest() {
         printf("ProductRevisionMajor : %d\n", DeviceInfo.ProductRevisionMajor);
         printf("ProductRevisionMinor : %d\n", DeviceInfo.ProductRevisionMinor);
 
-        if ((DeviceInfo.ProductRevisionMinor != 1) && (DeviceInfo.ProductRevisionMinor != 1)) {
-        	printf("Error expected cut 1.1 but found cut %d.%d\n",
+        if ((DeviceInfo.ProductRevisionMajor != 1) && (DeviceInfo.ProductRevisionMinor != 0)) {
+        	printf("Error expected cut 1.0.x but found %d.%d\n",
         			DeviceInfo.ProductRevisionMajor, DeviceInfo.ProductRevisionMinor);
         	Status = VL53L0X_ERROR_NOT_SUPPORTED;
         }
