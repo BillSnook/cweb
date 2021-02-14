@@ -9,34 +9,41 @@
 #ifndef actions_hpp
 #define actions_hpp
 
-#include "vl53l0x.hpp"
+//#include "vl53l0x.hpp"
+#include <stdlib.h>
+#include <stdio.h>
+#include "vl53l0x_api.h"
+#include "vl53l0x_platform.h"
 
 class Actor {
 	
 public:
-	VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-	VL53L0X_Dev_t MyDevice;
-	VL53L0X_Dev_t *pMyDevice = &MyDevice;
-	VL53L0X_Version_t                   Version;
-	VL53L0X_Version_t                  *pVersion   = &Version;
+	VL53L0X_Error       Status = VL53L0X_ERROR_NONE;
+	VL53L0X_Dev_t       MyDevice;
+	VL53L0X_Dev_t       *pMyDevice = &MyDevice;
+	VL53L0X_Version_t   Version;
+	VL53L0X_Version_t   *pVersion   = &Version;
 
 	void print_pal_error(VL53L0X_Error Status);
+    
+    void setupActor();
+    void shutdownActor();
+
+    VL53L0X_Error setupTest();
+    void shutdownTest();
+
+    void stop();
+
+    VL53L0X_Error rangeSetup(VL53L0X_Dev_t *pMyDevice);
+    VL53L0X_Error rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements);
+    VL53L0X_Error rangeClose(VL53L0X_Dev_t *pMyDevice);
+
 	VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev);
 	VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev);
+    
 	VL53L0X_Error rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements);
-	void setupTest();
-	void mainTest(uint32_t no_of_measurements);
-	void shutdownTest();
+    void mainTest(uint32_t no_of_measurements);
 
-	void setupActor();
-
-	void shutdownActor();
-
-	void stop();
-
-	void runHunt();
-	
-	void doTest();
-
+    void runHunt();
 };
 #endif /* actions_hpp */

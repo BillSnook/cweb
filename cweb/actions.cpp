@@ -46,6 +46,104 @@ void Actor::print_pal_error(VL53L0X_Error Status){
 //
 //}
 
+void Actor::setupActor() {
+    
+    syslog(LOG_NOTICE, "In setupActor" );
+
+    setupTest();
+}
+
+void Actor::shutdownActor() {
+    
+    syslog(LOG_NOTICE, "In shutdownActor" );
+    
+    shutdownTest();
+}
+
+VL53L0X_Error Actor::setupTest() {
+    VL53L0X_DeviceInfo_t                DeviceInfo;
+
+    int32_t status_int;
+    char ifc[] = "/dev/i2c-1";
+    char *interface = (char *)&ifc;
+
+    // Initialize Comms
+    pMyDevice->I2cDevAddr      = 0x29;
+
+    pMyDevice->fd = VL53L0X_i2c_init(interface, pMyDevice->I2cDevAddr); //choose between i2c-0 and i2c-1; On the raspberry pi zero, i2c-1 are pins 2 and 3
+    if (MyDevice.fd<0) {
+        Status = VL53L0X_ERROR_CONTROL_INTERFACE;
+        printf ("Failed to init\n");
+    }
+
+    //  Get the version of the VL53L0X API running in the firmware
+    if(Status == VL53L0X_ERROR_NONE)
+    {
+        status_int = VL53L0X_GetVersion(pVersion);
+        if (status_int != 0)
+            Status = VL53L0X_ERROR_CONTROL_INTERFACE;
+    }
+
+    //  Verify the version of the VL53L0X API running in the firmrware
+    if(Status == VL53L0X_ERROR_NONE)
+    {
+        if( pVersion->major != VERSION_REQUIRED_MAJOR ||
+            pVersion->minor != VERSION_REQUIRED_MINOR
+//           ||
+//            pVersion->build != VERSION_REQUIRED_BUILD
+           )
+        {
+            printf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\n",
+                pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
+                VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
+        }
+    }
+
+    // End of implementation specific
+    if(Status == VL53L0X_ERROR_NONE)
+    {
+        printf ("Call of VL53L0X_DataInit\n");
+        Status = VL53L0X_DataInit(&MyDevice); // Data initialization
+        print_pal_error(Status);
+    }
+    
+    if(Status == VL53L0X_ERROR_NONE)
+    {
+        Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
+    }
+    if(Status == VL53L0X_ERROR_NONE)
+    {
+        printf("VL53L0X_GetDeviceInfo:\n");
+        printf("Device Name : %s\n", DeviceInfo.Name);
+        printf("Device Type : %s\n", DeviceInfo.Type);
+        printf("Device ID : %s\n", DeviceInfo.ProductId);
+        printf("ProductRevisionMajor : %d\n", DeviceInfo.ProductRevisionMajor);
+        printf("ProductRevisionMinor : %d\n", DeviceInfo.ProductRevisionMinor);
+
+        if ((DeviceInfo.ProductRevisionMajor != 1) && (DeviceInfo.ProductRevisionMinor != 0)) {
+            printf("Error expected cut 1.0.x but found %d.%d\n",
+                    DeviceInfo.ProductRevisionMajor, DeviceInfo.ProductRevisionMinor);
+            Status = VL53L0X_ERROR_NOT_SUPPORTED;
+        }
+    }
+    return Status;
+}
+
+void Actor::shutdownTest() {
+    //  Disconnect comms - part of VL53L0X_platform.c
+//    printf ("Close Comms\n");
+    VL53L0X_i2c_close();
+
+//    print_pal_error(Status);
+}
+
+void Actor::stop() {
+    
+    syslog(LOG_NOTICE, "In stop" );
+    
+//    hardware.allStop();
+}
+
 
 VL53L0X_Error Actor::WaitMeasurementDataReady(VL53L0X_DEV Dev) {
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
@@ -101,10 +199,8 @@ VL53L0X_Error Actor::WaitStopCompleted(VL53L0X_DEV Dev) {
 }
 
 
-VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements )
-{
-    VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
-    VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
+VL53L0X_Error Actor::rangeSetup(VL53L0X_Dev_t *pMyDevice) {
+    
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     uint32_t refSpadCount;
     uint8_t isApertureSpads;
@@ -122,7 +218,7 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measur
     {
         printf ("Call of VL53L0X_PerformRefCalibration\n");
         Status = VL53L0X_PerformRefCalibration(pMyDevice,
-        		&VhvSettings, &PhaseCal); // Device Initialization
+                &VhvSettings, &PhaseCal); // Device Initialization
         print_pal_error(Status);
     }
 
@@ -130,7 +226,7 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measur
     {
         printf ("Call of VL53L0X_PerformRefSpadManagement\n");
         Status = VL53L0X_PerformRefSpadManagement(pMyDevice,
-        		&refSpadCount, &isApertureSpads); // Device Initialization
+                &refSpadCount, &isApertureSpads); // Device Initialization
         print_pal_error(Status);
     }
 
@@ -141,12 +237,20 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measur
         Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_CONTINUOUS_RANGING); // Setup in single ranging mode
         print_pal_error(Status);
     }
-	
+    
+    return Status;
+}
+
+VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements) {
+    
+    VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
+    VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
+
     if(Status == VL53L0X_ERROR_NONE)
     {
-		printf ("Call of VL53L0X_StartMeasurement\n");
-		Status = VL53L0X_StartMeasurement(pMyDevice);
-		print_pal_error(Status);
+        printf ("Call of VL53L0X_StartMeasurement\n");
+        Status = VL53L0X_StartMeasurement(pMyDevice);
+        print_pal_error(Status);
     }
 
     if(Status == VL53L0X_ERROR_NONE)
@@ -187,13 +291,18 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measur
         free(pResults);
     }
 
-	
+    
     if(Status == VL53L0X_ERROR_NONE)
     {
         printf ("Call of VL53L0X_StopMeasurement\n");
         Status = VL53L0X_StopMeasurement(pMyDevice);
     }
 
+    return Status;
+}
+
+VL53L0X_Error Actor::rangeClose(VL53L0X_Dev_t *pMyDevice) {
+    
     if(Status == VL53L0X_ERROR_NONE)
     {
         printf ("Wait Stop to be competed\n");
@@ -201,139 +310,41 @@ VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measur
     }
 
     if(Status == VL53L0X_ERROR_NONE)
-	Status = VL53L0X_ClearInterruptMask(pMyDevice,
-		VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
+    Status = VL53L0X_ClearInterruptMask(pMyDevice,
+        VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);
 
     return Status;
 }
 
-void Actor::setupTest() {
-    VL53L0X_DeviceInfo_t                DeviceInfo;
-
-    int32_t status_int;
-    char ifc[] = "/dev/i2c-1";
-    char *interface = (char *)&ifc;
-
-    printf ("VL53L0X PAL Continuous Ranging example\n\n");
-
-    // Initialize Comms
-    pMyDevice->I2cDevAddr      = 0x29;
-
-    pMyDevice->fd = VL53L0X_i2c_init(interface, pMyDevice->I2cDevAddr); //choose between i2c-0 and i2c-1; On the raspberry pi zero, i2c-1 are pins 2 and 3
-    if (MyDevice.fd<0) {
-        Status = VL53L0X_ERROR_CONTROL_INTERFACE;
-        printf ("Failed to init\n");
-    }
-
-    //  Get the version of the VL53L0X API running in the firmware
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        status_int = VL53L0X_GetVersion(pVersion);
-        if (status_int != 0)
-            Status = VL53L0X_ERROR_CONTROL_INTERFACE;
-    }
-
-    //  Verify the version of the VL53L0X API running in the firmrware
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        if( pVersion->major != VERSION_REQUIRED_MAJOR ||
-            pVersion->minor != VERSION_REQUIRED_MINOR
-//           ||
-//            pVersion->build != VERSION_REQUIRED_BUILD
-           )
-        {
-            printf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\n",
-                pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
-                VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
-        }
-    }
-
-    // End of implementation specific
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        printf ("Call of VL53L0X_DataInit\n");
-        Status = VL53L0X_DataInit(&MyDevice); // Data initialization
-        print_pal_error(Status);
-    }
-	
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
-    }
-    if(Status == VL53L0X_ERROR_NONE)
-    {
-        printf("VL53L0X_GetDeviceInfo:\n");
-        printf("Device Name : %s\n", DeviceInfo.Name);
-        printf("Device Type : %s\n", DeviceInfo.Type);
-        printf("Device ID : %s\n", DeviceInfo.ProductId);
-        printf("ProductRevisionMajor : %d\n", DeviceInfo.ProductRevisionMajor);
-        printf("ProductRevisionMinor : %d\n", DeviceInfo.ProductRevisionMinor);
-
-        if ((DeviceInfo.ProductRevisionMajor != 1) && (DeviceInfo.ProductRevisionMinor != 0)) {
-        	printf("Error expected cut 1.0.x but found %d.%d\n",
-        			DeviceInfo.ProductRevisionMajor, DeviceInfo.ProductRevisionMinor);
-        	Status = VL53L0X_ERROR_NOT_SUPPORTED;
-        }
-    }
-}
+/* */
 
 void Actor::mainTest(uint32_t no_of_measurements) {
 
-    if(Status == VL53L0X_ERROR_NONE)
-    {
+    if(Status == VL53L0X_ERROR_NONE) {
         Status = rangingTest(pMyDevice, no_of_measurements);
     }
 
     print_pal_error(Status);
-	
+    
     // Implementation specific
 
 }
 
-void Actor::shutdownTest() {
-    //  Disconnect comms - part of VL53L0X_platform.c
-    printf ("Close Comms\n");
-    VL53L0X_i2c_close();
+VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements ) {
 
+    rangeSetup( pMyDevice );
+    rangeRun( pMyDevice, no_of_measurements );
+    rangeClose( pMyDevice );
 
-    print_pal_error(Status);
-}
-/* */
-
-void Actor::setupActor() {
-	
-	syslog(LOG_NOTICE, "In setupActor" );
-
-	setupTest();
-}
-
-void Actor::shutdownActor() {
-	
-	syslog(LOG_NOTICE, "In shutdownActor" );
-	
-	shutdownTest();
-}
-
-void Actor::stop() {
-	
-	syslog(LOG_NOTICE, "In stop" );
-	
-	hardware.allStop();
+    return Status;
 }
 
 void Actor::runHunt() {
-	
-	syslog(LOG_NOTICE, "In runHunt" );
-	
-	//	hardware.scanPing();
-	
-	hardware.scanUntilFound( WideScan );
-	hardware.turnAndFollow( MediumDistance );
-}
-
-void Actor::doTest() {
-	
-	syslog(LOG_NOTICE, "In mainTest" );
-	
-//	mainTest();
+    
+    syslog(LOG_NOTICE, "In runHunt" );
+    
+    //    hardware.scanPing();
+    
+    hardware.scanUntilFound( WideScan );
+    hardware.turnAndFollow( MediumDistance );
 }

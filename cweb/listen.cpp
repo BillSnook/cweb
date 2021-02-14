@@ -28,7 +28,7 @@ extern Commander    commander;
 void Listener::setupListener() {
     
     syslog(LOG_NOTICE, "In setupListener" );
-    firstTime = true;
+    keepAliveOn = false;
     timeLoop = false;
 }
 
@@ -121,9 +121,9 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-        if ( firstTime ) {
-            syslog(LOG_NOTICE, "First time" );
-            firstTime = false;
+        if ( !keepAliveOn ) {
+            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
+            keepAliveOn = true;
             timeLoop = true;
         }
         gettimeofday(&tvLatest, NULL);
@@ -131,13 +131,13 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         char cmd = buffer[0];
 //        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
-        if ( cmd < '@' ) {       // Control characters, numbers, and punctuation
-            if ( cmd == '?' ) {             // Special keep-alive - do nothing
-                // Should have been sent if no other commmand in 1/2 second to indicate the communication channel is still open
-            } else if ( cmd == '#' ) {
-                firstTime = true;
+        if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
+            if ( cmd == '?' ) {         // Special keep-alive - do nothing
+                // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
+            } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
+                keepAliveOn = false;
                 timeLoop = false;
-                syslog(LOG_NOTICE, "Received command: #" );
+                syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd

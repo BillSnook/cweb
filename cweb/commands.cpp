@@ -107,7 +107,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 	char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine
 //	char *msg = (char *)malloc( 1024 );
 	memset( msg, 0, 1024 );
-	switch ( commandType ) {        // 0 - 9 have very high priority, capital letters are run quickly, lower case are run on a thread
+	switch ( commandType ) {        // 0 - 9 very high priority thresd, capital letters run quickly, lower case run on a thread
             // Commands '0' - '9' are used when we need the command to have higher thread scheduling priority
 		case '0':
             hardware.prepPing( token1, token2, token3 );
@@ -115,7 +115,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case '1':
-            actor.mainTest( 5 );
+            actor.mainTest( token1 );
 //			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			

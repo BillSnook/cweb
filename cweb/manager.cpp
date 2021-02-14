@@ -13,7 +13,7 @@
 #include <stdio.h>			// sprintf
 #include <fcntl.h>
 
-#include "vl53l0x.hpp"
+//#include "vl53l0x.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
 #include "map.hpp"
@@ -107,9 +107,9 @@ void Manager::setupManager() {
 void Manager::shutdownManager() {
 
     endLoop = true;
-    if ( vl53l0x.isSetup ) {
-		vl53l0x.shutdownVL53L0X();
-	}
+//    if ( vl53l0x.isSetup ) {
+//		vl53l0x.shutdownVL53L0X();
+//	}
 
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
