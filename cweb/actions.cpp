@@ -83,7 +83,7 @@ VL53L0X_Error Actor::setupTest() {
             Status = VL53L0X_ERROR_CONTROL_INTERFACE;
     }
 
-    //  Verify the version of the VL53L0X API running in the firmrware
+    //  Verify the version of the VL53L0X API running in the firmware
     if (Status == VL53L0X_ERROR_NONE) {
         if ( pVersion->major != VERSION_REQUIRED_MAJOR ||
             pVersion->minor != VERSION_REQUIRED_MINOR
@@ -232,7 +232,7 @@ VL53L0X_Error Actor::rangeSetup(VL53L0X_Dev_t *pMyDevice) {
     return Status;
 }
 
-VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements) {
+VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements, uint32_t  delay_ms) {
     
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
@@ -265,6 +265,7 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
             } else {
                 break;
             }
+            usleep( delay_ms * 1000 );
         }
 
 //        if (Status == VL53L0X_ERROR_NONE) {
@@ -301,10 +302,10 @@ VL53L0X_Error Actor::rangeClose(VL53L0X_Dev_t *pMyDevice) {
 
 /* */
 
-void Actor::mainTest(uint32_t no_of_measurements) {
+void Actor::mainTest(uint32_t no_of_measurements, uint32_t delay_ms) {
 
     if (Status == VL53L0X_ERROR_NONE) {
-        Status = rangingTest(pMyDevice, no_of_measurements);
+        Status = rangingTest(pMyDevice, no_of_measurements, delay_ms);
     }
 
     print_pal_error(Status);
@@ -313,10 +314,10 @@ void Actor::mainTest(uint32_t no_of_measurements) {
 
 }
 
-VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements ) {
+VL53L0X_Error Actor::rangingTest(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measurements, uint32_t delay_ms ) {
 
     rangeSetup( pMyDevice );
-    rangeRun( pMyDevice, no_of_measurements );
+    rangeRun( pMyDevice, no_of_measurements, delay_ms );
     rangeClose( pMyDevice );
 
     return Status;

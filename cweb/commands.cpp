@@ -115,7 +115,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case '1':
-            actor.mainTest( token1 );
+            actor.mainTest( token1, token2 );
 //			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			
@@ -131,6 +131,16 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
                 sprintf((char *)msg, "Status response: scanner inverted");
             } else {
                 sprintf((char *)msg, "Status response: scanner upright" );
+            }
+            if ( actor.Version.major != 0 ) {
+                sprintf((char *)msg, "%s, lidar found", msg );
+            } else {
+                sprintf((char *)msg, "%s, no lidar found", msg );
+            }
+            if ( manager.arduino_i2c > 0 ) {
+                sprintf((char *)msg, "%s, arduino found", msg );
+            } else {
+                sprintf((char *)msg, "%s, no arduino found", msg );
             }
         }
             break;

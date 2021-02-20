@@ -98,7 +98,7 @@ void Manager::setupManager() {
     pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
-    arduino_i2c = openI2CFile( ARD_I2C_ADDR );   // For talking to arduino, if any
+    arduino_i2c = openI2CFile( ARD_I2C_ADDR );      // For talking to arduino, if any
 
 //    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
 //    vl53l0x.setupVL53L0X( 0x29 );
@@ -134,11 +134,15 @@ void Manager::shutdownManager() {
 
 int Manager::openI2CFile( int address ) {
     int fileDescriptor;
-    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 )
+    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
         syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 )
+    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
         syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
+        close( fileDescriptor );
+        fileDescriptor = 0;
+    } else {
+        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
+    }
     return fileDescriptor;
 }
 
