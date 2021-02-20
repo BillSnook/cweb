@@ -99,9 +99,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 	if ( tokenCount > 4 ) {
 		token4 = atoi( nextToken[4] );
 	}
-	for ( int y = 0; y < tokenCount; y++ ) {        // Display all token values
-		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
-	}
+//	for ( int y = 0; y < tokenCount; y++ ) {        // Display all token values
+//		syslog(LOG_NOTICE, "Token %d: %s", y, nextToken[y] );
+//	}
 
     // Prepare for return msg
 	char msg[ 1024 ]; // Reply back to sender, if non-empty at end of routine

@@ -259,7 +259,7 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
                 Status = VL53L0X_GetRangingMeasurementData(pMyDevice, pRangingMeasurementData);
 
                 *(pResults + measurement) = pRangingMeasurementData->RangeMilliMeter;
-                printf("%d: %d\n", measurement, pRangingMeasurementData->RangeMilliMeter);
+                printf("%d: %d cm\n", measurement, pRangingMeasurementData->RangeMilliMeter / 10);
 
                 // Clear the interrupt
                 VL53L0X_ClearInterruptMask(pMyDevice, VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY);

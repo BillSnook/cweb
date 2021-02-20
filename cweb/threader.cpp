@@ -190,7 +190,7 @@ void Threader::createThread() {
         if (result != 0) {
             syslog(LOG_ERR, "In createThread, failed setting initial thread FIFO parameter to %d", priority.sched_priority );
         }
-        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
+//        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
     }
 
 	pthread_create(threadPtr,
@@ -206,7 +206,7 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
     threadCount += 1;
-    syslog(LOG_NOTICE, "Run thread with %s, threads: %d", nextThreadControl.description(), threadCount );
+//    syslog(LOG_NOTICE, "Run thread with %s, threads: %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
 		case managerThread:         // Singleton, started first, manages I2C communication
 			manager.monitor();
@@ -234,7 +234,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "Run thread exit %s, threads: %d", nextThreadControl.description(), threadCount );
+//	syslog(LOG_NOTICE, "Run thread exit %s, threads: %d", nextThreadControl.description(), threadCount );
 }
 
 void *startThread(void *arguments) {
