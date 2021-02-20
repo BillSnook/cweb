@@ -240,7 +240,7 @@ VL53L0X_Error Actor::rangeRun(VL53L0X_Dev_t *pMyDevice, uint32_t no_of_measureme
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
 
     if (Status == VL53L0X_ERROR_NONE) {
-//        printf ("Call of VL53L0X_StartMeasurement\n");
+        printf ("StartMeasurement\n");
         Status = VL53L0X_StartMeasurement(pMyDevice);
         print_pal_error(Status);
     }
