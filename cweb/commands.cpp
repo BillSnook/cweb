@@ -114,14 +114,15 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             hardware.scanPing( sockOrAddr );
 			break;
 			
-		case '1':
+        // Test and calibration routines
+        case '8':   // Test ultrasonic ranger
+            hardware.testPing( token1, token2 );
+            break;
+
+		case '9':   // Test lidar
             actor.mainTest( token1, token2 );
-//			hardware.setMtrDirSpd( 1, token1, token2 );
 			break;
 			
-		case '2':
-			break;
-
             // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
         case '@':       // Doesn't need thread
         {

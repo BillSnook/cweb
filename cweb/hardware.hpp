@@ -130,6 +130,7 @@ public:
     void cmdPWM( int pulseCount );
 	void cmdAngle( int angle );
     long cmdPing();
+    void testPing(int no_of_measurements, int delay_ms);
     void pinState( int pin, int state );
     
 	void centerServo();

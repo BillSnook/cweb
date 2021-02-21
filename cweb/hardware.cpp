@@ -499,6 +499,27 @@ void Hardware::cmdAngle( int angle ) {
 	setPWM( rangeData.servoPort, angleToPWM( angle ) );	// Calibrated - adjust as needed
 }
 
+long Hardware::cmdPing() {
+
+    long pingTime = doPing();
+//    syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
+    usleep( 5000 );                         // WFS Test returning data
+
+    return pingTime;
+}
+
+void Hardware::testPing(int no_of_measurements, int delay_ms) {
+    
+    for ( int measurement = 0; measurement < no_of_measurements; measurement++ ) {
+        long pingTimeuSec = doPing();
+        long cm = pingTimeuSec/29/2;
+//        long inches = pingTimeuSec/74/2;
+//        long mm = (pingTimeuSec*10)/29/2;
+        printf("%d: %d cm\n", measurement, (int)cm );
+        usleep( delay_ms * 1000 );
+    }
+}
+
 long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd;
@@ -543,15 +564,6 @@ long Hardware::doPing() {
     long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
 
     return microSecondTime;
-}
-
-long Hardware::cmdPing() {
-
-    long pingTime = doPing();
-//    syslog(LOG_NOTICE, "Ping time is %ld useconds",  pingTime );
-    usleep( 5000 );                         // WFS Test returning data
-
-    return pingTime;
 }
 
 void Hardware::pinState( int pin, int state ) {
