@@ -23,7 +23,7 @@ struct addrPort {
 class Listener {
 	
 	int					socketfd;
-    bool                keepAliveOn, timeLoop;
+    bool                keepAliveOn;
     addrPort            apArray[AP_SIZE];
     
     struct timeval      tvLatest = {0};

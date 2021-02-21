@@ -29,13 +29,12 @@ void Listener::setupListener() {
     
     syslog(LOG_NOTICE, "In setupListener" );
     keepAliveOn = false;
-    timeLoop = false;
 }
 
 void Listener::shutdownListener() {
     
     syslog(LOG_NOTICE, "In shutdownListener" );
-    timeLoop = false;
+    keepAliveOn = false;
 //    usleep( 100000 );
 }
 
@@ -124,7 +123,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( !keepAliveOn ) {
             syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
             keepAliveOn = true;
-            timeLoop = true;
         }
         gettimeofday(&tvLatest, NULL);
         
@@ -136,7 +134,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
                 // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
-                timeLoop = false;
                 syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
@@ -221,13 +218,14 @@ bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
 
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
+    // WFS note - may want to not do this if we go to autonomous mode
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( true ) {
-        if ( timeLoop && testTimedOut() ) {
-            // WFS test - may want to end this if we go to autonomous mode
-            syslog(LOG_NOTICE, "In Listener monitor, lost communication with controller !!!!!!! " );
-//            char killAction[] = "?";
-//            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
+        if ( keepAliveOn && testTimedOut() ) {
+            keepAliveOn = false;       // Only do this once until comms are reestablished
+            char killAction[] = "?";
+            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
+            syslog(LOG_NOTICE, "Lost comms, emergency stop, keep-alive off" );
         }
         usleep( 100000 );       // 1/10 seconds
     }
