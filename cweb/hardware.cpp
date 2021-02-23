@@ -562,7 +562,7 @@ long Hardware::doPing() {
         diffTime.tv_usec += 1000000;
     }
     long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
-    syslog(LOG_NOTICE, "In doPing, uSeconds: %d", microSecondTime);
+    syslog(LOG_NOTICE, "In doPing, uSeconds: %ld", microSecondTime);
 
     return microSecondTime;
 }
