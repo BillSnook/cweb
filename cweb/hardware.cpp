@@ -544,7 +544,6 @@ long Hardware::doPing() {
     gettimeofday(&tvStart, NULL);
 
     // Wait for response on echo pin to go low indicating pulse end
-    loopCount = 0;
     do {
         loopCount2 += 1;
         echoResponse = digitalRead( ECHO );
