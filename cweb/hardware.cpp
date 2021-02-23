@@ -554,9 +554,6 @@ long Hardware::doPing() {
 
 #endif  // ON_PI
  
-//    syslog(LOG_NOTICE, "In doPing, start seconds: %ld, start uSeconds: %d", tvStart.tv_sec, tvStart.tv_usec );
-//    syslog(LOG_NOTICE, "In doPing, end seconds: %ld, end uSeconds: %d", tvEnd.tv_sec, tvEnd.tv_usec );
-
     struct timeval diffTime;
     diffTime.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
     diffTime.tv_usec = tvEnd.tv_usec - tvStart.tv_usec;
@@ -564,9 +561,8 @@ long Hardware::doPing() {
         diffTime.tv_sec -= 1;
         diffTime.tv_usec += 1000000;
     }
-//    syslog(LOG_NOTICE, "In doPing, diff seconds: %ld, diff uSeconds: %d", diffTime.tv_sec, diffTime.tv_usec );
     long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
-    syslog(LOG_NOTICE, "In doPing, uSeconds: %ld", microSecondTime);
+//    syslog(LOG_NOTICE, "In doPing, uSeconds: %ld", microSecondTime);
 
     return microSecondTime;
 }
