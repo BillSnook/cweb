@@ -550,10 +550,14 @@ long Hardware::doPing() {
     } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
-    syslog(LOG_NOTICE, "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
+//    syslog(LOG_NOTICE, "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
 
 #endif  // ON_PI
-    
+ 
+    long microSecondStart = ( tvStart.tv_sec * 1000000 ) + tvStart.tv_usec;
+    long microSecondEnd = ( tvEnd.tv_sec * 1000000 ) + tvEnd.tv_usec;
+    syslog(LOG_NOTICE, "In doPing, tim when echo goes high: %ld, time when echo goes low: %ld", microSecondStart, microSecondEnd );
+
     struct timeval diffTime;
     diffTime.tv_sec = tvEnd.tv_sec - tvStart.tv_sec;;
     diffTime.tv_usec = tvEnd.tv_usec - tvEnd.tv_usec;
