@@ -523,7 +523,7 @@ void Hardware::testPing(int no_of_measurements, int delay_ms) {
 long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd;
-    syslog(LOG_NOTICE, "In doPing, ready to ping" );
+    printf( "In doPing, ready to ping" );
 
 #ifdef ON_PI
     
@@ -551,7 +551,7 @@ long Hardware::doPing() {
     } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
-    syslog(LOG_NOTICE, "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
+    printf( "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
 
 #endif  // ON_PI
     
