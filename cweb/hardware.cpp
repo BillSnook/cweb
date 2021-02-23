@@ -515,7 +515,7 @@ void Hardware::testPing(int no_of_measurements, int delay_ms) {
         long cm = pingTimeuSec/29/2;
 //        long inches = pingTimeuSec/74/2;
 //        long mm = (pingTimeuSec*10)/29/2;
-        printf("%d: %d cm\n", measurement, (int)cm );
+        syslog(LOG_NOTICE, "%d: %d cm\n", measurement, (int)cm );
         usleep( delay_ms * 1000 );
     }
 }
@@ -523,7 +523,7 @@ void Hardware::testPing(int no_of_measurements, int delay_ms) {
 long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd;
-    printf( "In doPing, ready to ping" );
+    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
 #ifdef ON_PI
     
@@ -550,7 +550,7 @@ long Hardware::doPing() {
     } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
-    printf( "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
+    syslog(LOG_NOTICE, "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
 
 #endif  // ON_PI
     
