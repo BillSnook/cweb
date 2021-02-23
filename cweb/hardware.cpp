@@ -527,31 +527,32 @@ long Hardware::doPing() {
 
 #ifdef ON_PI
     
-    int loopCount = 0;
+    int loopCount1 = 0;
+    int loopCount2 = 0;
     int echoResponse;
-//    digitalWrite( TRIG, 0);   // Make sure
-//    usleep( 5 );
+    digitalWrite( TRIG, 0);   // Make sure
+    usleep( 5 );
     digitalWrite( TRIG, 1);
     usleep( 15 );
     digitalWrite( TRIG, 0);
     
     // Wait until echo goes high to indicate pulse start
     do {
-        loopCount += 1;
+        loopCount1 += 1;
         echoResponse = digitalRead( ECHO );
-    } while ( ( echoResponse == 0 ) && ( loopCount < 10000) );
+    } while ( ( echoResponse == 0 ) && ( loopCount1 < 10000) );
     gettimeofday(&tvStart, NULL);
 
     // Wait for response on echo pin to go low indicating pulse end
     loopCount = 0;
     do {
-        loopCount += 1;
+        loopCount2 += 1;
         echoResponse = digitalRead( ECHO );
-    } while ( ( echoResponse != 0 ) && ( loopCount < 1000000) );
+    } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
-//    syslog(LOG_NOTICE, "In doPing, loopCount for reads before echo goes high: %d", loopCount );
-    
+    syslog(LOG_NOTICE, "In doPing, wait until echo goes high: %d, until echo goes low: %d", loopCount1, loopCount2 );
+
 #endif  // ON_PI
     
     struct timeval diffTime;
