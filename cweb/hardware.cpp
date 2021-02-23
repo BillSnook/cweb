@@ -523,7 +523,7 @@ void Hardware::testPing(int no_of_measurements, int delay_ms) {
 long Hardware::doPing() {
     
     struct timeval tvStart, tvEnd;
-//    syslog(LOG_NOTICE, "In doPing, ready to ping" );
+    syslog(LOG_NOTICE, "In doPing, ready to ping" );
 
 #ifdef ON_PI
     
