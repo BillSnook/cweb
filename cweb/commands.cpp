@@ -35,20 +35,20 @@ Hardware	hardware;
 
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
-extern Actor        actor;
+//extern Actor        actor;
 
 
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware.setupHardware();
-    actor.setupActor();
+//    actor.setupActor();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-    actor.shutdownActor();
+//    actor.shutdownActor();
 	hardware.shutdownHardware();
 }
 
@@ -66,7 +66,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         hardware.cmdSpeed( 0 );
         hardware.scanStop();
         hardware.centerServo();
-        actor.stop();
+//        actor.stop();
         return;
     }
     char *nextToken[tokenMax+1];
@@ -120,7 +120,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
 
 		case '9':   // Test lidar
-            actor.mainTest( token1, token2 );
+//            actor.mainTest( token1, token2 );
 			break;
 			
             // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
@@ -133,11 +133,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             } else {
                 sprintf((char *)msg, "Status response: scanner upright" );
             }
-            if ( actor.Version.major != 0 ) {
-                sprintf((char *)msg, "%s, lidar found", msg );
-            } else {
-                sprintf((char *)msg, "%s, no lidar found", msg );
-            }
+//            if ( actor.Version.major != 0 ) {
+//                sprintf((char *)msg, "%s, lidar found", msg );
+//            } else {
+//                sprintf((char *)msg, "%s, no lidar found", msg );
+//            }
             if ( manager.arduino_i2c > 0 ) {
                 sprintf((char *)msg, "%s, arduino found", msg );
             } else {
@@ -315,7 +315,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             hardware.cmdSpeed( 0 );
             hardware.scanStop();
             hardware.centerServo();
-            actor.stop();
+//            actor.stop();
 			break;
 
         case 's':
@@ -329,7 +329,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            syslog(LOG_NOTICE, "Did killTasks" );
             hardware.centerServo();
             syslog(LOG_NOTICE, "Did centerservo" );
-            actor.stop();
+//            actor.stop();
             break;
             
 		// Test case for app feature - send response, wait 5 seconds, send another
