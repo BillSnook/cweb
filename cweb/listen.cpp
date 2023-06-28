@@ -134,7 +134,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
                 // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
-                syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled" );
+                localLoop = false;
+                syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled, exiting service loop" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
