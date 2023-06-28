@@ -98,15 +98,15 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
-		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
+//		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
             // recv
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
-            if n > 0 {
-                syslog(LOG_NOTICE, "Found data: \(buffer)")
+            if ( n > 0 ) {
+                syslog(LOG_NOTICE, "Found data: \(buffer)");
             }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
