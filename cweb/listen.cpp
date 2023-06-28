@@ -100,7 +100,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 		bzero( buffer, bufferSize );
 //		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
-            // recv
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
