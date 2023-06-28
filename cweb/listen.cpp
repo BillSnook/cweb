@@ -105,6 +105,9 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+            if n > 0 {
+                syslog(LOG_NOTICE, "Found data: \(buffer)")
+            }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
             int portno = ntohs(serverStorage.sin_port);
@@ -127,7 +130,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         gettimeofday(&tvLatest, NULL);
         
         char cmd = buffer[0];
-//        syslog(LOG_NOTICE, "Received command: %s", buffer );
+        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
