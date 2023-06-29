@@ -213,7 +213,7 @@ bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
         diffTime.tv_usec += 1000000;
     }
     long microSecondTime = ( diffTime.tv_sec * 1000000 ) + diffTime.tv_usec;
-    return microSecondTime > 1100000;
+    return microSecondTime > 1500000;
 }
 
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer

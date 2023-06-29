@@ -65,6 +65,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     if ( commandType == '?' ) {     // Keep-alive timed out, all stop
         hardware.cmdSpeed( 0 );
         hardware.scanStop();
+        syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command '?'" );
         hardware.centerServo();
 //        actor.stop();
         return;
@@ -314,6 +315,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'S':
             hardware.cmdSpeed( 0 );
             hardware.scanStop();
+            syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command 'S'" );
             hardware.centerServo();
 //            actor.stop();
 			break;
@@ -322,7 +324,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            manager.stopVL();
             syslog(LOG_NOTICE, "Did stopVL" );
             hardware.scanStop();
-            syslog(LOG_NOTICE, "Did scanStop" );
+            syslog(LOG_NOTICE, "Did scanStop for command 's'" );
             hardware.cmdSpeed( 0 );
             syslog(LOG_NOTICE, "Did cmdSpeed" );
 //            taskMaster.killTasks();
