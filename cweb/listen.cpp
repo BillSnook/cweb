@@ -28,7 +28,7 @@ extern Commander    commander;
 void Listener::setupListener() {
     
     syslog(LOG_NOTICE, "In setupListener" );
-    keepAliveOn = false;
+    keepAliveOn = false;    // No session has been established with a controller
 }
 
 void Listener::shutdownListener() {
@@ -62,12 +62,13 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     threader.queueThread( keepAliveThread, (int)0, 0 );    // Start keep-alive monitor
 
+    char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inet_ntoa(serv_addr.sin_addr));
-        threader.queueThread( serverThread, inet_ntoa(serv_addr.sin_addr), socketfd );
+        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inAddress);
+        threader.queueThread( serverThread, inAddress, socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
         bool doListenerLoop = true;
-        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", rcvPortNo, inet_ntoa(serv_addr.sin_addr) );
+        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", rcvPortNo, inAddress );
         struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof( cli_addr );
         while ( doListenerLoop ) {
@@ -202,7 +203,7 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     }
 }
 
-bool Listener::testTimedOut() {      // Keep-alive support - true iff too long
+long Listener::testTimedOut() {      // Keep-alive support - true iff too long
     
     struct timeval diffTime, tvNow;
     gettimeofday(&tvNow, NULL);
@@ -221,7 +222,7 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
     // WFS note - may want to not do this if we go to autonomous mode
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( true ) {
-        if ( keepAliveOn && testTimedOut() ) {
+        if ( keepAliveOn && ( testTimedOut() > 1500000 ) ) {    // 1.5 seconds delay before
             keepAliveOn = false;       // Only do this once until comms are reestablished
             char killAction[] = "?";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command

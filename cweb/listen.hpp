@@ -29,7 +29,7 @@ class Listener {
     struct timeval      tvLatest = {0};
 
     int findMatchOrNewIndex( int addr, int portno );
-    bool testTimedOut();                // True if timed out, called to monitor fotoo long between comms
+    long testTimedOut();                // True if timed out, called to monitor fotoo long between comms
 
 public:
     
