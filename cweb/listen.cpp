@@ -104,7 +104,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
-            if ((n == 1) && (buffer[0] == '?')) {
+            if ((n != 1) || (buffer[0] != '?')) {
                 syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             }
             // WFS Need an addr/port reference vs socketfd here

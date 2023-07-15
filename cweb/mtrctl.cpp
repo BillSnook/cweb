@@ -127,7 +127,7 @@ int main(int argc, const char * argv[]) {
 		threader.queueThread( listenThread, PORT, 0 );
 	}
 
-	syslog(LOG_NOTICE, "Ready to service queue, v2.0.1" );
+	syslog(LOG_NOTICE, "Ready to service queue, v2.0.2" );
 
 	while ( doLoop ) {
 		threader.lock();
