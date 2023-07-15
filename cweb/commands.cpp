@@ -128,7 +128,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         case '@':       // Doesn't need thread
         {
             long response = hardware.getStatus();
-            syslog(LOG_NOTICE, "Command b calls: getStatus(): 0x%08lX", response );
+            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
             if ( response & statusScannerOrientation ) {
                 sprintf((char *)msg, "Status response: scanner inverted");
             } else {
@@ -140,9 +140,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //                sprintf((char *)msg, "%s, no lidar found", msg );
 //            }
             if ( manager.arduino_i2c > 0 ) {
-                sprintf((char *)msg, "%s, arduino found", msg );
+                sprintf((char *)msg, "%s, arduino mgr found", msg );
             } else {
-                sprintf((char *)msg, "%s, no arduino found", msg );
+                sprintf((char *)msg, "%s, no arduino mgr found", msg );
             }
         }
             break;
