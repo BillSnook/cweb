@@ -231,7 +231,7 @@ void Threader::runNextThread( void *tcPointer ) {
     free(tcPointer);
 
     threadCount += 1;
-    syslog(LOG_NOTICE, "    Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
+    syslog(LOG_NOTICE, "  Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
 //    syslog(LOG_NOTICE, "  socket: %i, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 
 	switch ( newThreadControl.nextThreadType ) {
@@ -240,7 +240,7 @@ void Threader::runNextThread( void *tcPointer ) {
 //			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
                                     // For datagram, binds socket to port and returns
-			listener.acceptConnections( newThreadControl.nextSocket );
+			listener.acceptConnections( (uint16_t)newThreadControl.nextSocket );
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received
 			listener.serviceConnection( newThreadControl.nextSocket, newThreadControl.nextCommand );
