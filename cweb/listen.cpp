@@ -64,11 +64,11 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inAddress);
+        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
         threader.queueThread( serverThread, inAddress, socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
         bool doListenerLoop = true;
-        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", rcvPortNo, inAddress );
+        syslog(LOG_NOTICE, "Success binding to TCP socket port %u on %s", rcvPortNo, inAddress );
         struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof( cli_addr );
         while ( doListenerLoop ) {
