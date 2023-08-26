@@ -24,6 +24,13 @@ extern Threader		threader;
 extern Commander    commander;
 
 
+struct tcData {
+    int16_t     nextThreadType;
+    int8_t      nextSocket;
+    uint8_t     nextAddress;
+    char        nextCommand[ COMMAND_SIZE ];
+} tcData;
+
 // Class or factory methods to create and initialize an instance of ThreadControl
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
 	ThreadControl newThreadControl = ThreadControl();
@@ -156,6 +163,7 @@ void Threader::createThread() {
 //    syslog(LOG_NOTICE, "In createThread at start" );
     ThreadControl nextThreadControl;
     bool foundThread = false;
+
     lock();
     try {
         if ( ! threadQueue.empty() ) {
@@ -179,7 +187,7 @@ void Threader::createThread() {
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
-    ThreadControl copyThreadControl = nextThreadControl;
+//    ThreadControl copyThreadControl = nextThreadControl;
     if ( nextThreadControl.nextThreadType == taskThread ) {                 // If a designated high priority task
         int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );    // Enable ability to set a non-zero priority
         if (result != 0) {
@@ -195,50 +203,66 @@ void Threader::createThread() {
 //        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
     }
 
-	pthread_create(threadPtr,
+    struct tcData *copyDataPtr = (struct tcData*)malloc(sizeof(struct tcData));
+    copyDataPtr->nextThreadType = nextThreadControl.nextThreadType;
+    copyDataPtr->nextSocket = nextThreadControl.nextSocket;
+    copyDataPtr->nextAddress = nextThreadControl.nextAddress;
+    memcpy(copyDataPtr->nextCommand, nextThreadControl.nextCommand, 32);
+
+    pthread_create(threadPtr,
 				   attrPtr,
 				   startThread,
-                   &copyThreadControl);
+                   copyDataPtr);
 
 	free( attrPtr );
 	free( threadPtr );
 }
 
 void Threader::runNextThread( void *tcPointer ) {
-    
-    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
+
+    struct tcData *nextThreadDataPtr = (struct tcData *)tcPointer;
+    ThreadControl newThreadControl = ThreadControl();
+//    newThreadControl.nextThreadType = nextThreadDataPtr->nextThreadType;
+    newThreadControl.nextSocket = nextThreadDataPtr->nextSocket;
+    newThreadControl.nextAddress = nextThreadDataPtr->nextAddress;
+    memcpy(newThreadControl.nextCommand, nextThreadDataPtr->nextCommand, 32);
+    free(tcPointer);
+//    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
     // Test - validate the nextThreadControl, not working now
     // print out addresses or data as seen
     //    syslog(LOG_NOTICE, "  runNextThread type %s, count: %d", nextThreadControl.description(), threadCount );
     //    syslog(LOG_NOTICE, "    socket: %i, addr: %u, command: %s", nextThreadControl.nextSocket, nextThreadControl.nextAddress,
-    char dbgBytes[ 32 ];
-    char *dbPtr = dbgBytes;
-    memset( dbgBytes, 0, 32 );
-    dbPtr = (char *)tcPointer;
-    syslog(LOG_NOTICE, "tcPointer            %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
+//    char dbgBytes[ 32 ];
+//    char *dbPtr = dbgBytes;
+//    memset( dbgBytes, 0, 32 );
+//    dbPtr = (char *)tcPointer;
+//    syslog(LOG_NOTICE, "tcPointer            %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
+//
+//    dbPtr = (char *)dbPtr;
+//    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
 
-    dbPtr = (char *)&nextThreadControl;
-    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
+//    dbPtr = (char *)&nextThreadControl;
+//    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
 
 
 
     threadCount += 1;
-	switch ( nextThreadControl.nextThreadType ) {
+	switch ( newThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
 //			manager.monitor();
 //			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
                                     // For datagram, binds socket to port and returns
-			listener.acceptConnections( nextThreadControl.nextSocket );
+			listener.acceptConnections( newThreadControl.nextSocket );
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received
-			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
+			listener.serviceConnection( newThreadControl.nextSocket, newThreadControl.nextCommand );
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
-			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+			commander.serviceCommand( newThreadControl.nextCommand, newThreadControl.nextSocket );
             break;
 		case taskThread:            // Thread intended for longer running high priority tasks - set when thread was created
-			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+			commander.serviceCommand( newThreadControl.nextCommand, newThreadControl.nextSocket );
 			break;
         case keepAliveThread:       // Thread intended for keep alive support
             listener.monitor();
@@ -247,11 +271,11 @@ void Threader::runNextThread( void *tcPointer ) {
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );
 			break;
 		default:
-            syslog(LOG_NOTICE, "In runNextThread with unknown thread type: %d", nextThreadControl.nextThreadType );
+            syslog(LOG_NOTICE, "In runNextThread with unknown thread type: %d", newThreadControl.nextThreadType );
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "Run next thread exit %s, thread count: %d", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "Run next thread exit %s, thread count: %d", newThreadControl.description(), threadCount );
 }
 
 void *startThread(void *arguments) {
