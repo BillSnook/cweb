@@ -157,15 +157,17 @@ PWM::PWM( int addr ) {
         i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
         i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
 
+#ifdef ON_PI
         delay( 1 );                         // Millisecond to let oscillator setup
+#endif  // ON_PI
     }
 
 }
 
 void PWM::setPWMFrequency( int freq ) {
 	
-    if (i2c->file_i2c == 0) {
-        return
+    if (i2c->file_i2c <= 0) {
+        return;
     }
 	int prescaleval = 25000000.0;           // Nominal clock freq 25MHz
 	prescaleval /= PWM_RESOLUTION;          // 12-bit
