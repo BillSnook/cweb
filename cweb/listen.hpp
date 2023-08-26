@@ -35,7 +35,7 @@ public:
     
     void setupListener();
     void shutdownListener();
-	void acceptConnections( int rcvPortNo );
+	void acceptConnections( uint16_t rcvPortNo );
 	void serviceConnection( int connectionSockfd, char *inet_address );
 	void writeBack( char *msg, int sockOrAddr );
 

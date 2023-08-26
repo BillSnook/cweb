@@ -38,7 +38,7 @@ void Listener::shutdownListener() {
 //    usleep( 100000 );
 }
 
-void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
+void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
     if ( useDatagramProtocol ) {
         socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
