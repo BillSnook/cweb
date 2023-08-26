@@ -37,13 +37,15 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
 	newThreadControl.nextAddress = address;
-	return newThreadControl;
+    newThreadControl.nextCommand[0] = 0;
+    return newThreadControl;
 }
 
 ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, int socket ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
+    newThreadControl.nextAddress = 0;
     int cmdSize = (int)strlen( command );
 //    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
@@ -227,26 +229,11 @@ void Threader::runNextThread( void *tcPointer ) {
     newThreadControl.nextAddress = nextThreadDataPtr->nextAddress;
     memcpy(newThreadControl.nextCommand, nextThreadDataPtr->nextCommand, 32);
     free(tcPointer);
-//    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
-    // Test - validate the nextThreadControl, not working now
-    // print out addresses or data as seen
-    syslog(LOG_NOTICE, "Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
-    syslog(LOG_NOTICE, "  socket: %i, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
-//    char dbgBytes[ 32 ];
-//    char *dbPtr = dbgBytes;
-//    memset( dbgBytes, 0, 32 );
-//    dbPtr = (char *)tcPointer;
-//    syslog(LOG_NOTICE, "tcPointer            %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
-//
-//    dbPtr = (char *)dbPtr;
-//    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
-
-//    dbPtr = (char *)&nextThreadControl;
-//    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
-
-
 
     threadCount += 1;
+    syslog(LOG_NOTICE, "Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
+//    syslog(LOG_NOTICE, "  socket: %i, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
+
 	switch ( newThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
 //			manager.monitor();

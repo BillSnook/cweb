@@ -18,7 +18,7 @@
 
 #define bufferSize	            256
 
-#define useDatagramProtocol     true
+#define useDatagramProtocol     false   // Issues with UDP
 
 
 extern Threader		threader;
