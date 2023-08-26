@@ -207,9 +207,22 @@ void Threader::createThread() {
 void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
+    // Test - validate the nextThreadControl, not working now
+    // print out addresses or data as seen
+    //    syslog(LOG_NOTICE, "  runNextThread type %s, count: %d", nextThreadControl.description(), threadCount );
+    //    syslog(LOG_NOTICE, "    socket: %i, addr: %u, command: %s", nextThreadControl.nextSocket, nextThreadControl.nextAddress,
+    char dbgBytes[ 32 ];
+    char *dbPtr = dbgBytes;
+    memset( dbgBytes, 0, 32 );
+    dbPtr = (char *)tcPointer;
+    syslog(LOG_NOTICE, "tcPointer            %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
+
+    dbPtr = (char *)&nextThreadControl;
+    syslog(LOG_NOTICE, "nextThreadControl    %02X, %02X, %02X, %02X", dbPtr[0], dbPtr[1], dbPtr[2], dbPtr[3]);
+
+
+
     threadCount += 1;
-//    syslog(LOG_NOTICE, "Run thread with %s, threads: %d, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextCommand );
-    syslog(LOG_NOTICE, "Run thread %s, count: %d; on socket: %i, addr: %u, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextSocket, nextThreadControl.nextAddress, nextThreadControl.nextCommand );
 	switch ( nextThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
 //			manager.monitor();
@@ -238,7 +251,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "Run thread exit %s, threads: %d", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "Run next thread exit %s, thread count: %d", nextThreadControl.description(), threadCount );
 }
 
 void *startThread(void *arguments) {
