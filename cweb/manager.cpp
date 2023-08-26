@@ -13,7 +13,6 @@
 #include <stdio.h>			// sprintf
 #include <fcntl.h>
 
-//#include "vl53l0x.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
 #include "map.hpp"
@@ -98,18 +97,12 @@ void Manager::setupManager() {
     pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
-    arduino_i2c = openI2CFile( ARD_I2C_ADDR );      // For talking to arduino, if any
-
-//    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
-//    vl53l0x.setupVL53L0X( 0x29 );
+//    arduino_i2c = openI2CFile( ARD_I2C_ADDR );      // For talking to arduino, if any
 }
 
 void Manager::shutdownManager() {
 
     endLoop = true;
-//    if ( vl53l0x.isSetup ) {
-//		vl53l0x.shutdownVL53L0X();
-//	}
 
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
@@ -133,7 +126,7 @@ void Manager::shutdownManager() {
 }
 
 int Manager::openI2CFile( int address ) {
-    int fileDescriptor;
+    int fileDescriptor = 0;
     if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
         syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
     } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
@@ -312,24 +305,7 @@ long Manager::getNowMs() {
 //    return (int)result;
 //}
 
-//void Manager::startVL() {
-//
-//	syslog(LOG_NOTICE, "In Manager::startVL()" );
-//	if ( vl53l0x.isSetup ) {
-//		vl53l0x.measureRun();
-//	}
-//}
-//
-//void Manager::stopVL() {
-//
-//	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-//	if ( vl53l0x.isSetup ) {
-//		vl53l0x.measureStop();
-//	}
-//}
-
-
-// These routines need to manage the freshness of the range data - depreczted, now done loczlly
+// These routines need to manage the freshness of the range data - deprecated, now done locally
 // They could compare the index to a copy of the timestamp when it was sent
 //void Manager::setRange( unsigned int angle) {
 //

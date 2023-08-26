@@ -64,7 +64,7 @@ class Manager {
 public:
 	ControllerMode	expectedControllerMode;
 	
-    int  arduino_i2c;
+    int  arduino_i2c;           // Unused but may reappear in the future
     
 	void setupManager();
 	void shutdownManager();

@@ -279,23 +279,24 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //			hardware.prepPing( token1, token2, token3 );
 //			hardware.scanPing( sockOrAddr );
 			break;
-			
-        case 'O':
-        case 'o':            // Available
-        {
-            manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
-            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-            syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
-            break;
-        }
-        case 'P':
-        case 'p':
-        {
-            manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
-            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-            syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
-        }
-            break;
+
+    // Arduino is unused at the moment
+//        case 'O':
+//        case 'o':            // Available
+//        {
+//            manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
+//            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
+//            syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
+//            break;
+//        }
+//        case 'P':
+//        case 'p':
+//        {
+//            manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
+//            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
+//            syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
+//        }
+//            break;
         case 'Q':
 //        case 'q':
             system( "sudo shutdown now" );
