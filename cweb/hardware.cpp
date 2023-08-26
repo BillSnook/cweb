@@ -265,9 +265,9 @@ bool Hardware::setupHardware() {
 //    }
 //    minimumPWM = rangeData.pwmCenter - 180;
 //
-//	syslog(LOG_NOTICE, "Setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-//	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-//	pwm->setPWMFrequency( PWM_FREQ );
+	syslog(LOG_NOTICE, "Setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+	pwm->setPWMFrequency( PWM_FREQ );
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
