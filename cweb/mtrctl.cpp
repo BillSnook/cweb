@@ -115,19 +115,10 @@ int main(int argc, const char * argv[]) {
 	
 //    return 0;         // To test on Mac
     
-//	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
-	if ( argc == 2 ) {	// Should be sender as we must pass in a host name
-        // Deprecated - just not used anymore
-		char buff[32], *buffer = (char *)&buff;
-		bcopy( argv[1], buffer, 31);
-		sender = Sender();
-		sender.setupSender( buff, PORT );
-	} else {
-		listener = Listener();
-		threader.queueThread( listenThread, PORT, 0 );
-	}
-
-	syslog(LOG_NOTICE, "Ready to service queue, v2.0.2" );
+	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
+    listener = Listener();
+    threader.queueThread( listenThread, PORT, 0 );
+	syslog(LOG_NOTICE, "Ready to service queue, v2.0.3" );
 
 	while ( doLoop ) {
 		threader.lock();
