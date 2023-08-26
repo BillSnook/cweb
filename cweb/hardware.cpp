@@ -150,20 +150,23 @@ PWM::PWM( int addr ) {
 	debug = false;
 	address = addr;
 	i2c = new I2C( addr );
-	setPWMAll( 0, 0 );                  // Clear all to 0
-	i2c->i2cWrite( MODE2, OUTDRV );
-	i2c->i2cWrite( MODE1, ALLCALL );
-	i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
-	i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
-	
-#ifdef ON_PI
-	delay( 1 );                         // Millisecond to let oscillator setup
-#endif  // ON_PI
-	
+    if (i2c->file_i2c > 0) {
+        setPWMAll( 0, 0 );                  // Clear all to 0
+        i2c->i2cWrite( MODE2, OUTDRV );
+        i2c->i2cWrite( MODE1, ALLCALL );
+        i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
+        i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
+
+        delay( 1 );                         // Millisecond to let oscillator setup
+    }
+
 }
 
 void PWM::setPWMFrequency( int freq ) {
 	
+    if (i2c->file_i2c == 0) {
+        return
+    }
 	int prescaleval = 25000000.0;           // Nominal clock freq 25MHz
 	prescaleval /= PWM_RESOLUTION;          // 12-bit
 	prescaleval /= float( freq );
