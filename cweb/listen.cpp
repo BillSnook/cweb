@@ -129,7 +129,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         gettimeofday(&tvLatest, NULL);
         
         char cmd = buffer[0];
-//        syslog(LOG_NOTICE, "Received command: %s", buffer );
+        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
@@ -153,7 +153,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 		free( buffer );
 	}
 	close( connectionSockfd );
-//	syslog(LOG_NOTICE, "In serviceConnection at end" );
+	syslog(LOG_NOTICE, "In serviceConnection at end" );
 }
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
@@ -224,7 +224,7 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
     // WFS note - may want to not do this if we go to autonomous mode
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( true ) {
-        if ( keepAliveOn && ( testTimedOut() > 1500000 ) ) {    // 1.5 seconds delay before
+        if ( keepAliveOn && testTimedOut() ) {    // 1.5 seconds delay before true
             keepAliveOn = false;       // Only do this once until comms are reestablished
             char killAction[] = "?";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command

@@ -231,7 +231,7 @@ void Threader::runNextThread( void *tcPointer ) {
     free(tcPointer);
 
     threadCount += 1;
-    syslog(LOG_NOTICE, "Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
+    syslog(LOG_NOTICE, "    Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
 //    syslog(LOG_NOTICE, "  socket: %i, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 
 	switch ( newThreadControl.nextThreadType ) {
