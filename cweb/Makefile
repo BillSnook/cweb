@@ -28,7 +28,7 @@ MainFiles = $(wildcard *.cpp)
 MainFileNames := $(basename $(MainFiles))
 # CoreFileNames := $(basename $(CoreFiles))
 # RaspFileNames := $(basename $(RaspFiles))
-ObjectFiles := $(addsuffix .o, $(MainFileNames)
+ObjectFiles := $(addsuffix .o, $(MainFileNames))
 #  $(CoreFileNames) $(RaspFileNames))
 AllObjects := $(addprefix obj/, $(ObjectFiles))
 
