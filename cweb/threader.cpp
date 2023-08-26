@@ -70,7 +70,7 @@ const char *ThreadControl::description() {
             name = "keepAliveThread";
             break;
 		default:
-			name = "no Thread type: ";
+			name = "unrecognized Thread type";
 			break;
 	}
 	return name;
@@ -208,7 +208,8 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
     threadCount += 1;
-    syslog(LOG_NOTICE, "Run thread with %s, threads: %d, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextCommand );
+//    syslog(LOG_NOTICE, "Run thread with %s, threads: %d, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextCommand );
+    syslog(LOG_NOTICE, "Run thread %s, count: %d; on socket: %i, addr: %u, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextSocket, nextThreadControl.nextAddress, nextThreadControl.nextCommand );
 	switch ( nextThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
 //			manager.monitor();
