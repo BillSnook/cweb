@@ -17,7 +17,7 @@
 
 #define		COMMAND_SIZE		32
 
-enum ThreadType: int {
+enum ThreadType: uint16_t {
 	managerThread = 0,
 	listenThread = 1,
 	serverThread = 2,

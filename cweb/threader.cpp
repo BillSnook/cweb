@@ -222,7 +222,7 @@ void Threader::runNextThread( void *tcPointer ) {
 
     struct tcData *nextThreadDataPtr = (struct tcData *)tcPointer;
     ThreadControl newThreadControl = ThreadControl();
-//    newThreadControl.nextThreadType = nextThreadDataPtr->nextThreadType;
+    newThreadControl.nextThreadType = ThreadType(nextThreadDataPtr->nextThreadType);
     newThreadControl.nextSocket = nextThreadDataPtr->nextSocket;
     newThreadControl.nextAddress = nextThreadDataPtr->nextAddress;
     memcpy(newThreadControl.nextCommand, nextThreadDataPtr->nextCommand, 32);
@@ -230,8 +230,8 @@ void Threader::runNextThread( void *tcPointer ) {
 //    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
     // Test - validate the nextThreadControl, not working now
     // print out addresses or data as seen
-    //    syslog(LOG_NOTICE, "  runNextThread type %s, count: %d", nextThreadControl.description(), threadCount );
-    //    syslog(LOG_NOTICE, "    socket: %i, addr: %u, command: %s", nextThreadControl.nextSocket, nextThreadControl.nextAddress,
+    syslog(LOG_NOTICE, "Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
+    syslog(LOG_NOTICE, "  socket: %i, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 //    char dbgBytes[ 32 ];
 //    char *dbPtr = dbgBytes;
 //    memset( dbgBytes, 0, 32 );
