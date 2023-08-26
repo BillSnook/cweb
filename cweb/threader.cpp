@@ -208,7 +208,7 @@ void Threader::runNextThread( void *tcPointer ) {
     
     ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
     threadCount += 1;
-    syslog(LOG_NOTICE, "Run thread with %s, threads: %d", nextThreadControl.description(), threadCount );
+    syslog(LOG_NOTICE, "Run thread with %s, threads: %df, command: %s", nextThreadControl.description(), threadCount, nextThreadControl.nextCommand );
 	switch ( nextThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
 //			manager.monitor();
