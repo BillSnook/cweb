@@ -255,27 +255,28 @@ bool Hardware::setupHardware() {
     syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
 
 #endif  // ON_PI
-    
-    bool success = filer.readRange( &rangeData );
-    if ( ! success ) {
-        rangeData.pwmCenter = 330;
-        rangeData.servoPort = Scanner;
-        filer.saveRange( &rangeData );
-    }
-    minimumPWM = rangeData.pwmCenter - 180;
-	
-	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-	pwm->setPWMFrequency( PWM_FREQ );
+
+    // i2c ranger not used now
+//    bool success = filer.readRange( &rangeData );
+//    if ( ! success ) {
+//        rangeData.pwmCenter = 330;
+//        rangeData.servoPort = Scanner;
+//        filer.saveRange( &rangeData );
+//    }
+//    minimumPWM = rangeData.pwmCenter - 180;
+//
+//	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+//	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+//	pwm->setPWMFrequency( PWM_FREQ );
 	
 	syslog(LOG_NOTICE, "Setting up speed array" );
 	speed = Speed();
 	speed.initializeSpeedArray();
     
     // WFS - why is this being done here?  where should it be?
-    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
-    siteMap = SiteMap( pattern );
-    siteMap.setupSiteMap();
+//    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
+//    siteMap = SiteMap( pattern );
+//    siteMap.setupSiteMap();
 
 	scanLoop = false;
 
