@@ -16,12 +16,16 @@ Scanning servo working
 
 Define and implement control api - in process
 
+-- Replacing untrasonic/lidar with depth field camera - tof camera
+
 Got ultrasonic rangefinder working in Arduino
 
 Got light ranger working on i2c from Pi
 
 Need to bring ultrasonic/lidar and scanner on to Pi
   Lidar i2c, scanner , ultrasonic needs controller code
+
+-- End
 
 Profit!
 
@@ -32,7 +36,11 @@ If that is so, the mode is enabled at run time if there are 2 command line
 arguments, usually set as 'become daemon' as a mnemonic, with the command.
 In the system file /etc/rc.local, there should be a line at the end like:
 ./full/path/to/program/mtrctl become daemon
-This line should be commented out to prevent the program from becoming a daemon.
+This line should be commented out to prevent the program from becoming
+a daemon at startup.
+
+Currently I2C is not used and we are switching to tof camera for testing
+vl53l0x, wrapper, and actions are being eliminated and manager for i2c may not be needed.
 
 
 mtrctl
