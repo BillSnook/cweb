@@ -13,7 +13,6 @@
 #include "manager.hpp"
 #include "filer.hpp"
 #include "hardware.hpp"
-#include "actions.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -35,20 +34,17 @@ Hardware	hardware;
 
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
-//extern Actor        actor;
 
 
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware.setupHardware();
-//    actor.setupActor();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-//    actor.shutdownActor();
 	hardware.shutdownHardware();
 }
 
