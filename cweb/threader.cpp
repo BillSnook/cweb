@@ -82,11 +82,13 @@ void Threader::setupThreader() {
     syslog(LOG_NOTICE, "In setupThreader" );
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 //    manager = Manager();
-    manager.setupManager();         // Manages i2c queue and controller communication
-    queueThread( managerThread, 8, 0 );
-    usleep( 100000 );   // 1/10 second but will it change threads?
-    createThread();
-    usleep( 100000 );   // 1/10 second but will it change threads?
+
+    // i2c being unused now
+//    manager.setupManager();         // Manages i2c queue and controller communication
+//    queueThread( managerThread, 8, 0 );
+//    usleep( 100000 );   // 1/10 second but will it change threads?
+//    createThread();
+//    usleep( 100000 );   // 1/10 second but will it change threads?
 
 //	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
@@ -104,7 +106,7 @@ void Threader::shutdownThreads() {
     listener.shutdownListener();
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
-    manager.shutdownManager();
+//    manager.shutdownManager();
 	pthread_mutex_destroy( &threadArrayMutex );
 }
 
@@ -208,9 +210,9 @@ void Threader::runNextThread( void *tcPointer ) {
     threadCount += 1;
     syslog(LOG_NOTICE, "Run thread with %s, threads: %d", nextThreadControl.description(), threadCount );
 	switch ( nextThreadControl.nextThreadType ) {
-		case managerThread:         // Singleton, started first, manages I2C communication
-			manager.monitor();
-			break;
+//		case managerThread:         // Singleton, started first, manages I2C communication
+//			manager.monitor();
+//			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
                                     // For datagram, binds socket to port and returns
 			listener.acceptConnections( nextThreadControl.nextSocket );

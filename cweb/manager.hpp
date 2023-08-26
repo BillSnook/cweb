@@ -82,8 +82,6 @@ public:
 //	long getRangeResult();
 //	unsigned int getRange();
 	
-	void setMotorPower( bool On );
-	
 //	void startVL();
 //	void stopVL();
 };

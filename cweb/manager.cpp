@@ -331,8 +331,3 @@ long Manager::getNowMs() {
 //    unsigned int range = result & 0x0FFFF;        // Actual range value
 //	return range;
 //}
-
-void Manager::setMotorPower( bool On ) {
-
-    syslog( LOG_NOTICE, "In Manager::setMotorPower(), test for access to manager from vl code" );
-}

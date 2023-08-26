@@ -54,5 +54,5 @@ void leaveGracefully( int signum ) {
 	doLoop = false;
 	usleep( 500000 );
 	
-	exit( 0 );
+//	exit( 0 );
 }

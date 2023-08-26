@@ -115,10 +115,10 @@ int main(int argc, const char * argv[]) {
 	
 //    return 0;         // To test on Mac
     
-	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
+//	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
     listener = Listener();
     threader.queueThread( listenThread, PORT, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue, v2.0.3" );
+	syslog(LOG_NOTICE, "Ready to service queue and accept commands, v3.0.0" );
 
 	while ( doLoop ) {
 		threader.lock();
