@@ -117,8 +117,9 @@ int main(int argc, const char * argv[]) {
     
 //	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
     listener = Listener();
-    threader.queueThread( listenThread, PORT, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue and accept commands, v3.0.0" );
+    uint16_t portNo = PORT;
+    threader.queueThread( listenThread, portNo, 0 );
+	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v3.0.0", portNo );
 
 	while ( doLoop ) {
 		threader.lock();
