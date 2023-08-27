@@ -26,8 +26,8 @@ extern Commander    commander;
 
 struct tcData {
     int16_t     nextThreadType;
-    int8_t      nextSocket;
-    uint8_t     nextAddress;
+    int         nextSocket;
+    uint        nextAddress;
     char        nextCommand[ COMMAND_SIZE ];
 } tcData;
 
@@ -231,8 +231,9 @@ void Threader::runNextThread( void *tcPointer ) {
     free(tcPointer);
 
     threadCount += 1;
+    uint16_t newPort = newThreadControl.nextSocket & 0x0FFFF;
     syslog(LOG_NOTICE, "  Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
-    syslog(LOG_NOTICE, "  socket: %u, addr: %u, command: %s", (uint16_t)newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
+    syslog(LOG_NOTICE, "    socket: %u, addr: %u, command: %s", newPort, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 
 	switch ( newThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
@@ -240,7 +241,7 @@ void Threader::runNextThread( void *tcPointer ) {
 //			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
                                     // For datagram, binds socket to port and returns
-			listener.acceptConnections( (uint16_t)newThreadControl.nextSocket );
+			listener.acceptConnections( newPort);
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received
 			listener.serviceConnection( newThreadControl.nextSocket, newThreadControl.nextCommand );
