@@ -379,7 +379,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 
 		case 'Y':
 		case 'y':
-			hardware.scanTest();
+//			hardware.scanTest();
+            taskMaster.serviceTask(cameraTest, sockOrAddr);
 			break;
 			
 		case 'Z':
