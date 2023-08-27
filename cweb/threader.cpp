@@ -232,7 +232,7 @@ void Threader::runNextThread( void *tcPointer ) {
 
     threadCount += 1;
     syslog(LOG_NOTICE, "  Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
-    syslog(LOG_NOTICE, "  socket: %u, addr: %u, command: %s", newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
+    syslog(LOG_NOTICE, "  socket: %u, addr: %u, command: %s", (uint16_t)newThreadControl.nextSocket, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 
 	switch ( newThreadControl.nextThreadType ) {
 //		case managerThread:         // Singleton, started first, manages I2C communication
