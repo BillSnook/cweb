@@ -65,4 +65,4 @@ public:
 };
 
 #endif /* threader_hpp */
-*
+
