@@ -130,7 +130,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         gettimeofday(&tvLatest, NULL);
         
         char cmd = buffer[0];
-        syslog(LOG_NOTICE, "Received command: %s", buffer );
+//        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
