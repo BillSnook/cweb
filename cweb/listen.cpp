@@ -40,6 +40,7 @@ void Listener::shutdownListener() {
 
 void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
+    syslog(LOG_NOTICE, "In acceptConnections with portNo on which to listen: %u", rcvPortNo );
     if ( useDatagramProtocol ) {
         socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
     } else {
