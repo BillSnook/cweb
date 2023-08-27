@@ -60,7 +60,7 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 		return;
 	}
 
-    threader.queueThread( keepAliveThread, (int)0, 0 );    // Start keep-alive monitor
+    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data

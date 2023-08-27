@@ -41,7 +41,7 @@ ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint
     return newThreadControl;
 }
 
-ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, int socket ) {
+ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, char *command ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
@@ -150,7 +150,7 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 	
 //	syslog(LOG_NOTICE, "In queueThread2 for command at start" );
-	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command, socket );
+	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, command );
     lock();
 	try {
 		threadQueue.push( nextThreadControl );

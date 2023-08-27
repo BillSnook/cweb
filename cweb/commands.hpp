@@ -9,6 +9,7 @@
 #ifndef commands_hpp
 #define commands_hpp
 
+#include <stdlib.h>
 
 class Commander {
 	

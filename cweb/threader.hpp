@@ -37,7 +37,7 @@ public:
 	
 public:
 	static ThreadControl initThread( ThreadType threadType, int socket, uint address );
-	static ThreadControl initThread( ThreadType threadType, char *command, int socket );
+	static ThreadControl initThread( ThreadType threadType, int socket, char *command );
 	const char *description();
 };
 
@@ -65,3 +65,4 @@ public:
 };
 
 #endif /* threader_hpp */
+*
