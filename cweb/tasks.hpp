@@ -40,6 +40,8 @@ public:
 	void taskPing();
 	void taskScanPing();
 	void taskHunt();
+
+    int  getCameraData();
 };
 
 #endif /* tasks_hpp */

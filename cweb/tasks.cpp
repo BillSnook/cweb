@@ -82,10 +82,11 @@ void TaskMaster::killTasks() {
 
 void TaskMaster::cameraStreamTest(int socketOrAddr) {	// Print out messages so we know this task is running
 	
+    char msg[64];
 	stopLoop = false;
 	for ( int i = 0; i < 10; i++ ) {
-        char msg[32];
-        snprintf(msg, 32, "In cameraStreamTest, i = %d", i);
+        int x = getCameraData();
+        snprintf(msg, 64, "T In cameraStreamTest, i = %d, data = %i", i, x);
         listener.writeBack(msg, socketOrAddr);
 		syslog(LOG_NOTICE, "In cameraStreamTest, i = %d", i );
 		sleep( 1 );
@@ -130,8 +131,12 @@ void TaskMaster::taskScanPing() {
 }
 
 void TaskMaster::taskHunt() {
-	
-	syslog(LOG_NOTICE, "In taskHunt" );
-	
-// WFS	actor.runHunt();
+
+    syslog(LOG_NOTICE, "In taskHunt" );
+}
+
+int TaskMaster::getCameraData() {
+
+    syslog(LOG_NOTICE, "In tasks, in getCameraData" );
+    return 3;
 }
