@@ -59,11 +59,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     // First interpret tokens
     char commandType = command[0];  // Get command
     if ( commandType == '?' ) {     // Keep-alive timed out, all stop
-        hardware.cmdSpeed( 0 );
-        hardware.scanStop();
-        syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command '?'" );
-        hardware.centerServo();
-//        actor.stop();
+        syslog(LOG_NOTICE, "Command ?, keep-alive received" );
         return;
     }
     char *nextToken[tokenMax+1];
@@ -125,21 +121,22 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         {
             long response = hardware.getStatus();
             syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
-            if ( response & statusScannerOrientation ) {
-                sprintf((char *)msg, "Status response: scanner inverted");
-            } else {
-                sprintf((char *)msg, "Status response: scanner upright" );
-            }
+//            if ( response & statusScannerOrientation ) {
+//                sprintf((char *)msg, "Status response: scanner inverted");
+//            } else {
+//                sprintf((char *)msg, "Status response: scanner upright" );
+//            }
 //            if ( actor.Version.major != 0 ) {
 //                sprintf((char *)msg, "%s, lidar found", msg );
 //            } else {
 //                sprintf((char *)msg, "%s, no lidar found", msg );
 //            }
-            if ( manager.arduino_i2c > 0 ) {
-                sprintf((char *)msg, "%s, arduino mgr found", msg );
-            } else {
-                sprintf((char *)msg, "%s, no arduino mgr found", msg );
-            }
+//            if ( manager.arduino_i2c > 0 ) {
+//                sprintf((char *)msg, "%s, arduino mgr found", msg );
+//            } else {
+//                sprintf((char *)msg, "%s, no arduino mgr found", msg );
+//            }
+            snprintf((char *)msg,29, "Status is fine, how are you?" );
         }
             break;
 
