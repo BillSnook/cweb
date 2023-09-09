@@ -16,8 +16,9 @@ WORK_DIR = $(shell pwd)
 OBJ_DIR = obj
 # API_DIR = ${WORK_DIR}/vl53l0x
 # CORE_DIR = ${API_DIR}/Api/core
+ATOF_DIR = /usr/include/c
 
-INCLUDES = -I.
+INCLUDES = -I. -I$(ATOF_DIR)
 
 MainFiles = $(wildcard *.cpp)
 # CoreSources := $(wildcard $(CORE_DIR)/src/*.c)
