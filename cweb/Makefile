@@ -16,9 +16,8 @@ WORK_DIR = $(shell pwd)
 OBJ_DIR = obj
 # API_DIR = ${WORK_DIR}/vl53l0x
 # CORE_DIR = ${API_DIR}/Api/core
-ATOF_DIR = ~/Arducam_tof_camera/
 
-INCLUDES = -I. -I$(ATOF_DIR)/inc
+INCLUDES = -I.
 
 MainFiles = $(wildcard *.cpp)
 # CoreSources := $(wildcard $(CORE_DIR)/src/*.c)
