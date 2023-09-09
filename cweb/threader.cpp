@@ -259,7 +259,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );
 			break;
 		default:
-            syslog(LOG_NOTICE, "In runNextThread with unknown thread type: %d", newThreadControl.nextThreadType );
+            syslog(LOG_NOTICE, "!!  WARNING:  In runNextThread with unknown thread type: %d", newThreadControl.nextThreadType );
 			break;
 	}
 	threadCount -= 1;

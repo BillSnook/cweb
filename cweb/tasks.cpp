@@ -11,6 +11,12 @@
 #include "threader.hpp"
 #include "listen.hpp"
 
+#ifdef ON_PI
+
+#include "ArducamDepthCamera.h"
+
+#endif  // ON_PI
+
 
 // The purpose of this class is to allow a task to run independently
 // in a separate thread and allow the rest of the program to run normally.
@@ -140,3 +146,68 @@ int TaskMaster::getCameraData() {
     syslog(LOG_NOTICE, "In tasks, in getCameraData" );
     return 3;
 }
+
+#ifdef ON_PI
+
+void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_image_ptr) {
+    unsigned long int len = 240 * 180;
+    for (unsigned long int i = 0; i < len; i++)
+    {
+        uint8_t amplitude = *(amplitude_image_ptr + i) > 30 ? 254 : 0;
+        float phase = ((1 - (*(phase_image_ptr + i) / 2)) * 255);
+        uint8_t depth = phase > 255 ? 255 : phase;
+        *(preview_ptr + i) = depth & amplitude;
+    }
+}
+
+void runCamera() {
+    struct timeval tvNow;
+
+    printf("At start for runCamera test routine");
+    ArducamDepthCamera tof = createArducamDepthCamera();
+    ArducamFrameBuffer frame;
+    if (arducamCameraOpen(tof,CSI,0)) {
+        printf("arducamCameraOpen failed");
+        return;
+    }
+    if (arducamCameraStart(tof,DEPTH_FRAME)) {
+        printf("arducamCameraStart failed");
+        return;
+    }
+    uint8_t *preview_ptr = malloc(180*240*sizeof(uint8_t)) ;
+    float* depth_ptr = 0;
+    int16_t *raw_ptr = 0;
+    float *amplitude_ptr = 0;
+    ArducamFrameFormat format;
+    if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00){
+        format = arducamCameraGetFormat(frame,DEPTH_FRAME);
+        arducamCameraReleaseFrame(tof,frame);
+    }
+    for (i = 0; i < 200; i++)
+    {
+        if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00)
+        {
+            depth_ptr = (float*)arducamCameraGetDepthData(frame);
+            printf("Center distance:%.2f.\n",depth_ptr[21600]);
+            gettimeofday(&tvNow, NULL);
+            printf("Center distance:%.2f    time: %i\n",depth_ptr[21600], tvNow.tv_usec);
+            amplitude_ptr = (float*)arducamCameraGetAmplitudeData(frame);
+            getPreview(preview_ptr,depth_ptr,amplitude_ptr);
+            arducamCameraReleaseFrame(tof,frame);
+        }
+    }
+
+    free(preview_ptr);
+    if (arducamCameraStop(tof)) {
+        printf("arducamCameraStop failed");
+        return;
+    }
+    if (arducamCameraClose(tof)) {
+        printf("arducamCameraClose failed");
+        return;
+    }
+    printf("Clean exit from runCamera test routine");
+    return;
+
+}
+#endif  // ON_PI

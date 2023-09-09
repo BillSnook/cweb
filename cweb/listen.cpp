@@ -235,4 +235,3 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
-
