@@ -44,7 +44,7 @@ public:
     int  getCameraData();
 };
 
-void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_image_ptr);
+void getPreview(uint8_t *, float *, float *);
 void runCamera();
 
 #endif /* tasks_hpp */
