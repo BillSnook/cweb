@@ -9,6 +9,14 @@
 #ifndef tasks_hpp
 #define tasks_hpp
 
+#ifdef ON_PI
+
+#include "ArducamDepthCamera.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+#endif  // ON_PI
+
 
 enum TaskType {
     stopTask = 0,
