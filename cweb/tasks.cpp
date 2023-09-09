@@ -144,6 +144,7 @@ void TaskMaster::taskHunt() {
 int TaskMaster::getCameraData() {
 
     syslog(LOG_NOTICE, "In tasks, in getCameraData" );
+    runCamera();
     return 3;
 }
 
