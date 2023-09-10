@@ -158,50 +158,49 @@ void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_i
 void runCamera() {
     struct timeval tvNow;
 
-    printf("At start for runCamera test routine");
-//    ArducamDepthCamera tof = createArducamDepthCamera();
-//    ArducamFrameBuffer frame;
-//    if (arducamCameraOpen(tof,CSI,0)) {
-//        printf("arducamCameraOpen failed");
-//        return;
-//    }
-//    if (arducamCameraStart(tof,DEPTH_FRAME)) {
-//        printf("arducamCameraStart failed");
-//        return;
-//    }
-//    uint8_t *preview_ptr = malloc(180*240*sizeof(uint8_t)) ;
-//    float* depth_ptr = 0;
-//    int16_t *raw_ptr = 0;
-//    float *amplitude_ptr = 0;
-//    ArducamFrameFormat format;
-//    if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00){
-//        format = arducamCameraGetFormat(frame,DEPTH_FRAME);
-//        arducamCameraReleaseFrame(tof,frame);
-//    }
-//    for (i = 0; i < 200; i++)
-//    {
-//        if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00)
-//        {
-//            depth_ptr = (float*)arducamCameraGetDepthData(frame);
-//            printf("Center distance:%.2f.\n",depth_ptr[21600]);
-//            gettimeofday(&tvNow, NULL);
-//            printf("Center distance:%.2f    time: %i\n",depth_ptr[21600], tvNow.tv_usec);
-//            amplitude_ptr = (float*)arducamCameraGetAmplitudeData(frame);
-//            getPreview(preview_ptr,depth_ptr,amplitude_ptr);
-//            arducamCameraReleaseFrame(tof,frame);
-//        }
-//    }
-//
-//    free(preview_ptr);
-//    if (arducamCameraStop(tof)) {
-//        printf("arducamCameraStop failed");
-//        return;
-//    }
-//    if (arducamCameraClose(tof)) {
-//        printf("arducamCameraClose failed");
-//        return;
-//    }
-    printf("Clean exit from runCamera test routine");
+    syslog(LOG_NOTICE, "At start for runCamera test routine");
+    ArducamDepthCamera tof = createArducamDepthCamera();
+    ArducamFrameBuffer frame;
+    if (arducamCameraOpen(tof,CSI,0)) {
+        syslog(LOG_NOTICE, "arducamCameraOpen failed");
+        return;
+    }
+    if (arducamCameraStart(tof,DEPTH_FRAME)) {
+        syslog(LOG_NOTICE, "arducamCameraStart failed");
+        return;
+    }
+    uint8_t *preview_ptr = malloc(180*240*sizeof(uint8_t)) ;
+    float* depth_ptr = 0;
+    int16_t *raw_ptr = 0;
+    float *amplitude_ptr = 0;
+    ArducamFrameFormat format;
+    if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00){
+        format = arducamCameraGetFormat(frame,DEPTH_FRAME);
+        arducamCameraReleaseFrame(tof,frame);
+    }
+    for (i = 0; i < 200; i++)
+    {
+        if ((frame = arducamCameraRequestFrame(tof,200)) != 0x00)
+        {
+            depth_ptr = (float*)arducamCameraGetDepthData(frame);
+            gettimeofday(&tvNow, NULL);
+            syslog(LOG_NOTICE, "Center distance:%.2f    time: %i\n",depth_ptr[21600], tvNow.tv_usec);
+            amplitude_ptr = (float*)arducamCameraGetAmplitudeData(frame);
+            getPreview(preview_ptr,depth_ptr,amplitude_ptr);
+            arducamCameraReleaseFrame(tof,frame);
+        }
+    }
+
+    free(preview_ptr);
+    if (arducamCameraStop(tof)) {
+        syslog(LOG_NOTICE, "arducamCameraStop failed");
+        return;
+    }
+    if (arducamCameraClose(tof)) {
+        syslog(LOG_NOTICE, "arducamCameraClose failed");
+        return;
+    }
+    psyslog(LOG_NOTICE, "Clean exit from runCamera test routine");
     return;
 
 }
