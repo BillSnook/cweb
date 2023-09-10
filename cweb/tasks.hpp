@@ -12,11 +12,11 @@
 #ifdef ON_PI
 
 #include "ArducamDepthCamera.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 #endif  // ON_PI
 
+#include <stdlib.h>
+#include <stdio.h>
 
 enum TaskType {
     stopTask = 0,
@@ -32,8 +32,12 @@ enum TaskType {
 class TaskMaster {
 	
 	bool    stopLoop;
+    bool    cameraRunning;
     int     taskCount;
-    
+
+    ArducamDepthCamera tof;
+    ArducamFrameBuffer frame;
+
 public:
     
 	void setupTaskMaster();
@@ -49,7 +53,9 @@ public:
 	void taskScanPing();
 	void taskHunt();
 
+    int  startCamera();
     int  getCameraData();
+    int  stopCamera();
 };
 
 void getPreview(uint8_t *, float *, float *);
