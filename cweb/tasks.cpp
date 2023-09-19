@@ -149,11 +149,11 @@ int TaskMaster::startCamera() {
 
     syslog(LOG_NOTICE, "In tasks, in startCamera" );
     tof = createArducamDepthCamera();
-    if ( init( tof, CSI, DEPTH_TYPE, 0 ) ) {
+    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
         syslog(LOG_NOTICE, "arducamCameraOpen failed");
         return -1;
     }
-    if ( start( tof ) ) {
+    if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
         syslog(LOG_NOTICE, "arducamCameraStart failed");
         return -2;
     }
@@ -173,20 +173,20 @@ int TaskMaster::getCameraData(int socketOrAddr) {
 
     // Is this needed ????
     ArducamFrameFormat format;
-    if ( ( frame = requestFrame( tof, 200 ) ) != 0x00 ) {
-        format = getFormat(frame, DEPTH_FRAME);
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat(frame,DEPTH_FRAME);
         arducamCameraReleaseFrame(tof,frame);
     }
 
     for ( int i = 0; i < 200; i++ ) {
-        if ( ( frame = requestFrame( tof, 200 ) ) != 0x00 ) {
-            depth_ptr = (float*)getDepthData( frame );
+        if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+            depth_ptr = (float*)arducamCameraGetDepthData( frame );
             gettimeofday( &tvNow, NULL );
-            amplitude_ptr = (float*)getAmplitudeData( frame );
+            amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
             getPreview( preview_ptr, depth_ptr, amplitude_ptr );
             syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, %02X    time: %i\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720], tvNow.tv_usec);
             listener.writeBack((char *)preview_ptr, socketOrAddr);
-            releaseFrame( tof, frame );
+            arducamCameraReleaseFrame( tof, frame );
         }
     }
     free(preview_ptr);
@@ -203,14 +203,14 @@ int TaskMaster::stopCamera() {
         return -2;
     }
     cameraRunning = false;
-    if ( stop( &tof ) ) {
+    if ( arducamCameraStop( tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraStop failed");
 //        return -2;
     }
-//    if ( arducamCameraClose( &tof ) ) {
-//        syslog(LOG_NOTICE, "arducamCameraClose failed");
-//        return -1;
-//    }
+    if ( arducamCameraClose( tof ) ) {
+        syslog(LOG_NOTICE, "arducamCameraClose failed");
+        return -1;
+    }
     return 0;
 }
 
