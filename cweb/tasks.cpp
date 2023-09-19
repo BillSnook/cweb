@@ -203,11 +203,11 @@ int TaskMaster::stopCamera() {
         return -2;
     }
     cameraRunning = false;
-    if ( arducamCameraStop( *tof ) ) {
+    if ( arducamCameraStop( tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraStop failed");
 //        return -2;
     }
-    if ( arducamCameraClose( *tof ) ) {
+    if ( arducamCameraClose( tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraClose failed");
         return -1;
     }
