@@ -54,7 +54,7 @@ public:
 	void taskHunt();
 
     int  startCamera();
-    int  getCameraData();
+    int  getCameraData(int socketOrAddr);
     int  stopCamera();
 };
 

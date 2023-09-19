@@ -14,11 +14,11 @@
 
 // The purpose of this class is to allow a task to run independently
 // in a separate thread and allow the rest of the program to run normally.
-// The tof camera in particular is here now. Soon it will get it's own class.
+// The tof camera in particular is here now. Soon it should get it's own class.
 
 
 //extern Commander	commander;
-extern Hardware		hardware;
+extern Hardware		hardware;   // Needed here?
 extern Threader     threader;
 extern Listener     listener;
 
@@ -34,7 +34,9 @@ void TaskMaster::shutdownTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
 	killTasks();
-	usleep( 200000 );
+    usleep( 100000 );   // 1/10 second
+    stopCamera();
+	usleep( 100000 );
 }
 
 // MARK: Tasks section
@@ -91,7 +93,7 @@ void TaskMaster::cameraStreamTest(int socketOrAddr) {	// Print out messages so w
         return;
     }
 	for ( int i = 0; i < 10; i++ ) {
-        int x = getCameraData();
+        int x = getCameraData(socketOrAddr);
         snprintf(msg, 64, "T In cameraStreamTest, i = %d, data = %i", i, x);
         listener.writeBack(msg, socketOrAddr);
 		syslog(LOG_NOTICE, "In cameraStreamTest, i = %d", i );
@@ -160,14 +162,14 @@ int TaskMaster::startCamera() {
     return 0;
 }
 
-int TaskMaster::getCameraData() {
+int TaskMaster::getCameraData(int socketOrAddr) {
 
     syslog(LOG_NOTICE, "In tasks, in getCameraData" );
 
     struct timeval tvNow;
-    float* depth_ptr = 0;
+    float *depth_ptr = 0;
     float *amplitude_ptr = 0;
-    uint8_t *preview_ptr = malloc( 180 * 240 * sizeof(uint8_t) ) ;
+    uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
 
     // Is this needed ????
     ArducamFrameFormat format;
@@ -180,15 +182,16 @@ int TaskMaster::getCameraData() {
         if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
             depth_ptr = (float*)arducamCameraGetDepthData( frame );
             gettimeofday( &tvNow, NULL );
-            syslog(LOG_NOTICE, "Center distance: %.2f    time: %i\n", depth_ptr[21600], tvNow.tv_usec);
             amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
             getPreview( preview_ptr, depth_ptr, amplitude_ptr );
+            syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, %02X    time: %i\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720], tvNow.tv_usec);
+            listener.writeBack((char *)preview_ptr, socketOrAddr);
             arducamCameraReleaseFrame( tof, frame );
         }
     }
     free(preview_ptr);
 
-    syslog(LOG_NOTICE, "Clean exit from runCamera test routine");
+    syslog(LOG_NOTICE, "Clean exit from getCameraData routine");
     return 0;
 }
 
@@ -196,11 +199,15 @@ int TaskMaster::stopCamera() {
 
     syslog(LOG_NOTICE, "In tasks, in stopCamera" );
 
-    if ( arducamCameraStop( tof ) ) {
-        syslog(LOG_NOTICE, "arducamCameraStop failed");
+    if (!cameraRunning) {
         return -2;
     }
-    if ( arducamCameraClose( tof ) ) {
+    cameraRunning = false;
+    if ( arducamCameraStop( *tof ) ) {
+        syslog(LOG_NOTICE, "arducamCameraStop failed");
+//        return -2;
+    }
+    if ( arducamCameraClose( *tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraClose failed");
         return -1;
     }
