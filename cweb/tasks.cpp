@@ -164,18 +164,22 @@ int TaskMaster::startCamera() {
 
 int TaskMaster::getCameraData(int socketOrAddr) {
 
-    syslog(LOG_NOTICE, "In tasks, in getCameraData" );
+    if (!cameraRunning) {
+        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started" );
+        return -1;
+    }
+    syslog(LOG_NOTICE, "In tasks, in getCameraData started" );
 
     struct timeval tvNow;
     float *depth_ptr = 0;
     float *amplitude_ptr = 0;
     uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
 
-    // Is this needed ????
+    // Is this needed - apparently yes, preps format
     ArducamFrameFormat format;
     if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
-        format = arducamCameraGetFormat(frame,DEPTH_FRAME);
-        arducamCameraReleaseFrame(tof,frame);
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
     }
 
     for ( int i = 0; i < 200; i++ ) {

@@ -278,14 +278,13 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
     // Arduino is unused at the moment
-//        case 'O':
-//        case 'o':            // Available
-//        {
-//            manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
-//            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-//            syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
-//            break;
-//        }
+        case 'O':
+        case 'o':            // Available
+        {
+            syslog(LOG_NOTICE, "Test camera streaming\n" );
+            taskMaster.cameraStreamTest( sockOrAddr );
+            break;
+        }
 //        case 'P':
 //        case 'p':
 //        {
