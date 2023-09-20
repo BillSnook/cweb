@@ -188,8 +188,8 @@ int TaskMaster::getCameraData(int socketOrAddr) {
             gettimeofday( &tvNow, NULL );
             amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
             getPreview( preview_ptr, depth_ptr, amplitude_ptr );
-            syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, %02X    time: %i\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720], tvNow.tv_usec);
-            listener.writeBack((char *)preview_ptr, socketOrAddr);
+            syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, preview_ptr: %02X    time: %i\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720], tvNow.tv_usec);
+//            listener.writeBack((char *)preview_ptr, socketOrAddr);
             arducamCameraReleaseFrame( tof, frame );
         }
     }
