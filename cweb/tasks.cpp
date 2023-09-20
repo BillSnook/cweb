@@ -207,10 +207,10 @@ int TaskMaster::stopCamera() {
         syslog(LOG_NOTICE, "arducamCameraStop failed");
 //        return -2;
     }
-    if ( arducamCameraClose( &tof ) ) {
-        syslog(LOG_NOTICE, "arducamCameraClose failed");
-        return -1;
-    }
+//    if ( arducamCameraClose( &tof ) ) {
+//        syslog(LOG_NOTICE, "arducamCameraClose failed");
+//        return -1;
+//    }
     return 0;
 }
 
