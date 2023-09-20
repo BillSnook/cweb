@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++11
 LDLIBS = -lpthread
 # If on Raspberry Pi (as opposed to being developed on a Mac), uncomment these two lines:
 CXXFLAGS += -DON_PI
-LDLIBS += -lwiringPi -lArduCamLib -lArducamDepthCamera
+LDLIBS += -lwiringPi -lArducamDepthCamera2c
 
 
 CC = gcc
