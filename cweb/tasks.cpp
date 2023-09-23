@@ -94,9 +94,9 @@ void TaskMaster::cameraStreamTest(int socketOrAddr) {	// Print out messages so w
     }
 //	for ( int i = 0; i < 10; i++ ) {
         float x = getCameraData(socketOrAddr);
-        snprintf(msg, 64, "T In cameraStreamTest, i = %d, data = %i", i, x);
+        snprintf(msg, 64, "T In cameraStreamTest, data = %.2f", x);
         listener.writeBack(msg, socketOrAddr);
-		syslog(LOG_NOTICE, "In cameraStreamTest, i = %d", i );
+		syslog(LOG_NOTICE, "In cameraStreamTest, data = %.2f", x );
 		sleep( 1 );
 		if ( stopLoop ) {
 			return;
