@@ -163,14 +163,15 @@ int TaskMaster::startCamera() {
 }
 
 int TaskMaster::getCameraData(int socketOrAddr) {
+//    struct timeval tvNow;
 
+//    gettimeofday( &tvNow, NULL );
     if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started" );
+        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started"); // , time: %i", tvNow.tv_usec );
         return -1;
     }
-    syslog(LOG_NOTICE, "In tasks, in getCameraData started" );
+    syslog(LOG_NOTICE, "In tasks, in getCameraData started"); // , time: %i", tvNow.tv_usec );
 
-    struct timeval tvNow;
     float *depth_ptr = 0;
     float *amplitude_ptr = 0;
     uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
@@ -181,14 +182,16 @@ int TaskMaster::getCameraData(int socketOrAddr) {
         format = arducamCameraGetFormat( frame, DEPTH_FRAME );
         arducamCameraReleaseFrame( tof, frame );
     }
+//    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In tasks, in getCameraData got first frame"); // , time: %i", tvNow.tv_usec );
 
-    for ( int i = 0; i < 200; i++ ) {
+    for ( int i = 0; i < 2; i++ ) {
         if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
             depth_ptr = (float*)arducamCameraGetDepthData( frame );
-            gettimeofday( &tvNow, NULL );
             amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
             getPreview( preview_ptr, depth_ptr, amplitude_ptr );
-            syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, preview_ptr: %02X    time: %i\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720], tvNow.tv_usec);
+//            gettimeofday( &tvNow, NULL );
+            syslog(LOG_NOTICE, "Center distance: %.2f, amplitude: %.2f, preview_ptr: %02X\n", depth_ptr[21720], amplitude_ptr[21720], preview_ptr[21720]);
 //            listener.writeBack((char *)preview_ptr, socketOrAddr);
             arducamCameraReleaseFrame( tof, frame );
         }
