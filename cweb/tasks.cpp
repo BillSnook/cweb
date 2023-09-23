@@ -157,6 +157,7 @@ int TaskMaster::startCamera() {
         syslog(LOG_NOTICE, "arducamCameraStart failed");
         return -2;
     }
+    syslog(LOG_NOTICE, "In tasks, at end of startCamera, setting cameraRunning true" );
 
     cameraRunning = true;
     return 0;
@@ -185,7 +186,7 @@ int TaskMaster::getCameraData(int socketOrAddr) {
 //    gettimeofday( &tvNow, NULL );
     syslog(LOG_NOTICE, "In tasks, in getCameraData got first frame"); // , time: %i", tvNow.tv_usec );
 
-    for ( int i = 0; i < 2; i++ ) {
+//    for ( int i = 0; i < 2; i++ ) {
         if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
             depth_ptr = (float*)arducamCameraGetDepthData( frame );
             amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
@@ -195,7 +196,7 @@ int TaskMaster::getCameraData(int socketOrAddr) {
 //            listener.writeBack((char *)preview_ptr, socketOrAddr);
             arducamCameraReleaseFrame( tof, frame );
         }
-    }
+//    }
     free(preview_ptr);
 
     syslog(LOG_NOTICE, "Clean exit from getCameraData routine");
@@ -204,11 +205,12 @@ int TaskMaster::getCameraData(int socketOrAddr) {
 
 int TaskMaster::stopCamera() {
 
-    syslog(LOG_NOTICE, "In tasks, in stopCamera" );
 
     if (!cameraRunning) {
+        syslog(LOG_NOTICE, "In tasks, in stopCamera but cameraRunning is already false" );
         return -2;
     }
+    syslog(LOG_NOTICE, "In tasks, in start of stopCamera setting cameraRunning false" );
     cameraRunning = false;
     if ( arducamCameraStop( tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraStop failed");
