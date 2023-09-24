@@ -36,7 +36,6 @@ class TaskMaster {
     int     taskCount;
 
     ArducamDepthCamera tof;
-    ArducamFrameBuffer frame;
 
 public:
     
@@ -57,8 +56,5 @@ public:
     float  getCameraData(int socketOrAddr);
     int  stopCamera();
 };
-
-void getPreview(uint8_t *, float *, float *);
-void runCamera();
 
 #endif /* tasks_hpp */
