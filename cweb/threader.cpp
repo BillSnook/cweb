@@ -102,7 +102,7 @@ void Threader::setupThreader() {
 //	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
 
-    taskMaster = TaskMaster();
+//    taskMaster = TaskMaster();
 	taskMaster.setupTaskMaster(); 	// Manages task queue - to allow multiple tasks at once
 
     listener.setupListener();
