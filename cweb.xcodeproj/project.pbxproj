@@ -13,7 +13,6 @@
 		A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F0207AFD4500B98679 /* mtrctl.cpp */; };
 		A96D72FB2083DE8600B98679 /* signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D72F92083DE8600B98679 /* signals.cpp */; };
 		A96D730A2083E80A00B98679 /* listen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D73082083E80A00B98679 /* listen.cpp */; };
-		A96D730E208402C200B98679 /* sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730C208402C200B98679 /* sender.cpp */; };
 		A96D7311208BD79600B98679 /* threader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730F208BD79600B98679 /* threader.cpp */; };
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
@@ -48,8 +47,6 @@
 		A96D73082083E80A00B98679 /* listen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = listen.cpp; sourceTree = "<group>"; };
 		A96D73092083E80A00B98679 /* listen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = listen.hpp; sourceTree = "<group>"; };
 		A96D730B2083F34700B98679 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		A96D730C208402C200B98679 /* sender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sender.cpp; sourceTree = "<group>"; };
-		A96D730D208402C200B98679 /* sender.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sender.hpp; sourceTree = "<group>"; };
 		A96D730F208BD79600B98679 /* threader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = threader.cpp; sourceTree = "<group>"; };
 		A96D7310208BD79600B98679 /* threader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = threader.hpp; sourceTree = "<group>"; };
 		A96D7312208C052B00B98679 /* commands.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = commands.cpp; sourceTree = "<group>"; };
@@ -137,8 +134,6 @@
 			children = (
 				A96D73082083E80A00B98679 /* listen.cpp */,
 				A96D73092083E80A00B98679 /* listen.hpp */,
-				A96D730C208402C200B98679 /* sender.cpp */,
-				A96D730D208402C200B98679 /* sender.hpp */,
 			);
 			name = sockets;
 			sourceTree = "<group>";
@@ -211,7 +206,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B2FD2C5245646D900BAC739 /* map.cpp in Sources */,
-				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9520D9225B5FBFB00762A2F /* filer.cpp in Sources */,

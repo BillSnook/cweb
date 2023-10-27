@@ -17,7 +17,7 @@
 
 #include "mtrctl.hpp"
 #include "signals.hpp"
-#include "sender.hpp"
+#include "tasks.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
 //#include "manager.hpp"
@@ -29,6 +29,7 @@
 #define ALLOW_DAEMON     // Potentially become a daemon and run in the background
 
 Filer       filer;
+TaskMaster  taskMaster;
 Threader	threader;
 
 Listener	listener;
