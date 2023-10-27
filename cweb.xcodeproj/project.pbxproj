@@ -17,7 +17,6 @@
 		A96D7311208BD79600B98679 /* threader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730F208BD79600B98679 /* threader.cpp */; };
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
-		A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF208121EAD2A700DF77E3 /* manager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,8 +56,6 @@
 		A96D7313208C052B00B98679 /* commands.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = commands.hpp; sourceTree = "<group>"; };
 		A9ABD777209507A400B64F14 /* speed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = speed.cpp; sourceTree = "<group>"; };
 		A9ABD778209507A400B64F14 /* speed.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = speed.hpp; sourceTree = "<group>"; };
-		A9AF208121EAD2A700DF77E3 /* manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
-		A9AF208221EAD2A700DF77E3 /* manager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = manager.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,8 +148,6 @@
 			children = (
 				A96D7312208C052B00B98679 /* commands.cpp */,
 				A96D7313208C052B00B98679 /* commands.hpp */,
-				A9AF208121EAD2A700DF77E3 /* manager.cpp */,
-				A9AF208221EAD2A700DF77E3 /* manager.hpp */,
 				A923017E218E989F00EB2A21 /* tasks.cpp */,
 				A923017F218E989F00EB2A21 /* tasks.hpp */,
 			);
@@ -218,7 +213,6 @@
 				6B2FD2C5245646D900BAC739 /* map.cpp in Sources */,
 				A96D730E208402C200B98679 /* sender.cpp in Sources */,
 				A96D7314208C052B00B98679 /* commands.cpp in Sources */,
-				A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */,
 				A96D730A2083E80A00B98679 /* listen.cpp in Sources */,
 				A9520D9225B5FBFB00762A2F /* filer.cpp in Sources */,
 				A9ABD779209507A400B64F14 /* speed.cpp in Sources */,

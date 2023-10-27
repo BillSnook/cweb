@@ -20,7 +20,7 @@
 #include "sender.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
-#include "manager.hpp"
+//#include "manager.hpp"
 #include "filer.hpp"
 
 

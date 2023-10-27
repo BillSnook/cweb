@@ -63,7 +63,7 @@ sender
     Initialize and open a connection to another device.,
         only used if we are not a listener as determined at startup.
 
-hardware
+hardware - deprecated
     Initializes motor controller hardware, sets up PWM parameters,
         reads speed adjustment table, initializes search and pattern.
 speed
@@ -76,7 +76,7 @@ vl53l0x
     
 commands
     Start thread to parse and execute commands from cartroller over WiFi.
-manager
+manager - deprecated
     Starts and manages a queue to gate requests for the I2C bus,
         then executes them.
 tasks

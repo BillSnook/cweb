@@ -10,14 +10,14 @@
 #include "listen.hpp"
 #include "commands.hpp"
 #include "tasks.hpp"
-#include "manager.hpp"
+//#include "manager.hpp"
 
 #include <pthread.h>
 #include <syslog.h>
 #include <string.h>
 #include <stdlib.h>
 
-Manager      manager;
+//Manager      manager;
 TaskMaster   taskMaster;
 
 extern Threader		threader;

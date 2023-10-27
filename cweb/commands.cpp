@@ -10,7 +10,7 @@
 
 #include "listen.hpp"
 #include "tasks.hpp"
-#include "manager.hpp"
+//#include "manager.hpp"
 #include "filer.hpp"
 //#include "hardware.hpp"
 
@@ -33,7 +33,7 @@ Commander	commander;
 
 
 extern TaskMaster   taskMaster;
-extern Manager 	    manager;
+//extern Manager 	    manager;
 
 
 void Commander::setupCommander() {
