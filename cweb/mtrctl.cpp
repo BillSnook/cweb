@@ -31,7 +31,6 @@
 Filer       filer;
 TaskMaster  taskMaster;
 Threader	threader;
-
 Listener	listener;
 
 bool		stayOnline;
