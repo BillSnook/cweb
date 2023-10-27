@@ -107,10 +107,10 @@ int main(int argc, const char * argv[]) {
     filer.getHostName();
     filer.setupFiles();
 
-	threader = Threader();
+//	threader = Threader();
 	threader.setupThreader();
 
-    listener = Listener();
+//    listener = Listener();
     uint16_t portNo = PORT;
     threader.queueThread( listenThread, portNo, 0 );
 	syslog(LOG_NOTICE, "Threader and Listener setup, ready to service queue and accept commands on port %u, v4.0.0", portNo );
