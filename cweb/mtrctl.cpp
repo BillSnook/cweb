@@ -26,33 +26,30 @@
 
 #define	PORT	5555
 
-#define MAKE_DAEMON     // Potentially become a daemon and run in the background
+#define ALLOW_DAEMON     // Potentially become a daemon and run in the background
 
+Filer       filer;
 Threader	threader;
 
 Listener	listener;
-Sender		sender;
 
-Filer       filer;
-
-bool		becomeDaemon;
-bool		ready;
-
-bool		doLoop;
+bool		stayOnline;
 
 
 int main(int argc, const char * argv[]) {
 
-//	TIMER_Init();
-	
-    becomeDaemon = false;
-#ifdef MAKE_DAEMON
+    bool becomeDaemon = false;
+    bool ready = false;
+
+//    TIMER_Init();
+
+#ifdef ALLOW_DAEMON
 	if ( argc == 3 ) {
 		becomeDaemon = true;
 	}
-#endif	// MAKE_DAEMON
+#endif	// ALLOW_DAEMON
 #ifdef ON_PI
-#else	// not ON_PI
+#else	// else if not ON_PI
 	becomeDaemon = false;
 #endif	// ON_PI
 	if ( becomeDaemon ) {
@@ -102,26 +99,23 @@ int main(int argc, const char * argv[]) {
 		openlog("mtrctllog", LOG_PID | LOG_PERROR, LOG_USER);	// Also log to stderr
 		syslog(LOG_NOTICE, "Started mtrctl as user");
 	}
-	
+
+    // Done figuring out whether we are a daemon which is running in the background, or not.
+    stayOnline = true;
+    ready = true;
+
     filer.getHostName();
     filer.setupFiles();
 
-	// Done figuring out whether we are a daemon, running in the background, or not.
-	doLoop = true;
-	ready = true;
-	
 	threader = Threader();
 	threader.setupThreader();
-	
-//    return 0;         // To test on Mac
-    
-//	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
+
     listener = Listener();
     uint16_t portNo = PORT;
     threader.queueThread( listenThread, portNo, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v3.1.0", portNo );
+	syslog(LOG_NOTICE, "Threader and Listener setup, ready to service queue and accept commands on port %u, v4.0.0", portNo );
 
-	while ( doLoop ) {
+	while ( stayOnline ) {
 		threader.lock();
 		ready = threader.areThreadsOnQueue();
 		threader.unlock();

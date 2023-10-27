@@ -23,7 +23,7 @@ case TERM   = 15
 #include <syslog.h>
 #include <unistd.h>
 
-extern bool doLoop;
+extern bool stayOnline;
 
 
 void signals_setup() {
@@ -51,7 +51,7 @@ void sig_handler(int signum) {
 
 void leaveGracefully( int signum ) {
 	
-	doLoop = false;
+    stayOnline = false;
 	usleep( 500000 );
 	
 //	exit( 0 );
