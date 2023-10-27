@@ -119,8 +119,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
         case '@':       // Doesn't need thread
         {
-            long response = hardware.getStatus();
-            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
+//            long response = hardware.getStatus();
+//            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
 //            if ( response & statusScannerOrientation ) {
 //                sprintf((char *)msg, "Status response: scanner inverted");
 //            } else {

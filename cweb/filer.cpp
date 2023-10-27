@@ -79,33 +79,33 @@ bool Filer::readSpeedArrays( speed_array *forward, speed_array *reverse ) {
     return false;
 }
 
-bool Filer::saveRange( RangeData *rangeDataPtr ) {
-    
-    FILE *fp;
-    
-    fp = fopen( rangeFileName, "wb" );
-    if ( NULL != fp ) {
-        fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
-        fclose(fp);
-        syslog(LOG_WARNING, "saveRange saved scanner center: %d", rangeDataPtr->pwmCenter );
-        return true;
-    }
-    syslog(LOG_ERR, "saveRange failed opening file\n" );
-    return false;
-}
-
-bool Filer::readRange( RangeData *rangeDataPtr ) {
-    
-    FILE *fp;
-    
-    fp = fopen( rangeFileName, "rb" );
-    if ( NULL != fp ) {
-        fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
-        fclose(fp);
-        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->pwmCenter );
-        return true;
-    }
-    syslog(LOG_ERR, "readRange failed opening file\n" );
-    return false;
-}
+//bool Filer::saveRange( RangeData *rangeDataPtr ) {
+//    
+//    FILE *fp;
+//    
+//    fp = fopen( rangeFileName, "wb" );
+//    if ( NULL != fp ) {
+//        fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
+//        fclose(fp);
+//        syslog(LOG_WARNING, "saveRange saved scanner center: %d", rangeDataPtr->pwmCenter );
+//        return true;
+//    }
+//    syslog(LOG_ERR, "saveRange failed opening file\n" );
+//    return false;
+//}
+//
+//bool Filer::readRange( RangeData *rangeDataPtr ) {
+//    
+//    FILE *fp;
+//    
+//    fp = fopen( rangeFileName, "rb" );
+//    if ( NULL != fp ) {
+//        fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
+//        fclose(fp);
+//        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->pwmCenter );
+//        return true;
+//    }
+//    syslog(LOG_ERR, "readRange failed opening file\n" );
+//    return false;
+//}
 

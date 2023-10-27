@@ -10,7 +10,7 @@
 #define filer_hpp
 
 #include "speed.hpp"
-#include "hardware.hpp"
+//#include "hardware.hpp"
 
 
 class Filer {
@@ -28,8 +28,8 @@ public:
     void saveSpeedArrays( speed_array *forward, speed_array *reverse );
     bool readSpeedArrays( speed_array *forward, speed_array *reverse );
     
-    bool saveRange( RangeData *rangeDataPtr );
-    bool readRange( RangeData *rangeDataPtr );
+//    bool saveRange( RangeData *rangeDataPtr );
+//    bool readRange( RangeData *rangeDataPtr );
 };
 
 extern  Filer       filer;
