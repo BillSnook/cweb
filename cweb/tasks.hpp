@@ -17,6 +17,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <syslog.h>            // close read write
 
 enum TaskType {
     stopTask = 0,
@@ -55,6 +56,7 @@ public:
     int  startCamera();
     float  getCameraData(int socketOrAddr);
     int  stopCamera();
+    int cameraDataSend(int socketOrAddr);
 };
 
 #endif /* tasks_hpp */

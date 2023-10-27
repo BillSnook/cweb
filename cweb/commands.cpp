@@ -12,7 +12,7 @@
 #include "tasks.hpp"
 #include "manager.hpp"
 #include "filer.hpp"
-#include "hardware.hpp"
+//#include "hardware.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -285,14 +285,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             taskMaster.cameraStreamTest( sockOrAddr );
             break;
         }
-//        case 'P':
-//        case 'p':
-//        {
-//            manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
-//            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-//            syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
-//        }
-//            break;
+        case 'P':
+        case 'p':
+            syslog(LOG_NOTICE, "Test get camera data\n" );
+            taskMaster.cameraDataSend( sockOrAddr );
+            break;
         case 'Q':
 //        case 'q':
             system( "sudo shutdown now" );

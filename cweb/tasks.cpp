@@ -7,7 +7,7 @@
 //
 
 #include "tasks.hpp"
-#include "hardware.hpp"
+//#include "hardware.hpp"
 #include "threader.hpp"
 #include "listen.hpp"
 
@@ -18,7 +18,7 @@
 
 
 //extern Commander	commander;
-extern Hardware		hardware;   // Needed here?
+//extern Hardware		hardware;   // Needed here?
 extern Threader     threader;
 extern Listener     listener;
 
@@ -41,8 +41,8 @@ void TaskMaster::shutdownTaskMaster() {
     tof = 0;
 	killTasks();
     usleep( 100000 );   // 1/10 second
-    stopCamera();
-	usleep( 100000 );
+//    stopCamera();     // Causing seg fault!
+//	usleep( 100000 );
 }
 
 // MARK: Tasks section
@@ -168,21 +168,21 @@ void TaskMaster::taskTest2() {	// Print out messages so we know this task is run
 void TaskMaster::taskScan() {
 	
 	stopLoop = false;
-	hardware.scanTest();
+//	hardware.scanTest();
 }
 
 void TaskMaster::taskPing() {
 	
 	syslog(LOG_NOTICE, "In taskPing" );
 	stopLoop = false;
-	hardware.ping( 0 );
+//	hardware.ping( 0 );
 }
 
 void TaskMaster::taskScanPing() {
 	
 	syslog(LOG_NOTICE, "In taskScanPing" );
 	stopLoop = false;
-	hardware.scanPing( 0 );
+//	hardware.scanPing( 0 );
 }
 
 void TaskMaster::taskHunt() {
@@ -269,6 +269,50 @@ int TaskMaster::stopCamera() {
 //    }
     return 0;
 }
+
+int TaskMaster::cameraDataSend(int socketOrAddr) {
+    struct timeval tvNow;
+
+    if (!cameraRunning) {
+        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started" );
+        return 0;
+    }
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In tasks, in getCameraData started, time: %i", tvNow.tv_usec );
+
+    // 240 x 180 = 43200, half is 21600
+    ArducamFrameBuffer frame;
+    float *depth_ptr = 0;
+    float *depth_line = 0;
+    uint8_t preview_data[242];
+    uint8_t *preview_ptr;   //  = &preview_data[2];
+    preview_data[0] = 0x43; // "C"
+    preview_data[1] = 0x30; // "0"
+
+    ArducamFrameFormat format;
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        depth_ptr = (float*)arducamCameraGetDepthData( frame );
+        depth_line = &depth_ptr[21600];
+        for (unsigned long int i = 0; i < 240; i++) {
+            float phase = (*(depth_line + i) / 2) * 255;
+            uint8_t depth = phase > 255 ? 255 : phase;
+            *(preview_ptr + 2 + i) = depth;
+        }
+        listener.writeBackCount((char *)preview_ptr, 242, socketOrAddr);
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
+
+    return 0;
+}
+
 
 //#ifdef ON_PI
 //

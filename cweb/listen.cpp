@@ -206,6 +206,38 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     }
 }
 
+void Listener::writeBackCount( char *msg, int count, int sockOrAddr ) {  // We use an addr/port reference vs socketfd here
+    long n;
+    if ( useDatagramProtocol ) {
+        // Get addr and port from sockOrAddr as addr/port array index
+        if ( sockOrAddr == 0 ) {
+//            syslog(LOG_ERR, "In writeBack, invalid response entry index");
+            return;     // Invalid addr/port index
+        }
+        struct sockaddr_in serv_addr;
+        socklen_t addr_size = sizeof( serv_addr );
+        addrPort ap = apArray[sockOrAddr];
+//        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_addr.s_addr = htonl(ap.addr);
+        serv_addr.sin_port = htons( ap.port );
+        n = sendto(socketfd, msg, count, 0, (struct sockaddr *)&serv_addr, addr_size);
+//        syslog(LOG_ERR, "Sending back to addr %s, port %d, response length %ld", inet_ntoa(serv_addr.sin_addr), ap.port, n);
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
+            return;
+        }
+//        syslog(LOG_NOTICE, "In UDP writeBack sent %ld bytes successfully to address %s, port %d", n, inet_ntoa(serv_addr.sin_addr), ap.port);
+    } else {
+        n = write( sockOrAddr, msg, count );
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing back to socket %d", sockOrAddr );
+            return;
+        }
+        syslog(LOG_NOTICE, "In TCP writeBack sent successfully on socket %d", sockOrAddr);
+    }
+}
+
 long Listener::testTimedOut() {      // Keep-alive support - true iff too long
     
     struct timeval diffTime, tvNow;

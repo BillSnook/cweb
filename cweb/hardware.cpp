@@ -25,7 +25,7 @@
 
 #ifdef ON_PI
 
-#include <wiringPi.h>
+//#include <wiringPi.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
@@ -243,21 +243,21 @@ bool Hardware::setupHardware() {
     upsideDownScanner = false;
 
 #ifdef ON_PI
-	int setupResult = wiringPiSetup();
-	if ( setupResult == -1 ) {
-		syslog(LOG_ERR, "Error setting up wiringPi." );
-		return false;
-	}
-//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
-    pinMode( TRIG, OUTPUT );            // Trigger ultasonic range finder
-    pinMode( ECHO, INPUT );             // Echo response pulse for ultasonic range finder
-    
-    pinMode( SCAN_INVERTED, INPUT );    // Orientation of servo for scanner for ultasonic range finder
-    
-    digitalWrite( TRIG, 0);             // Init trigger to 0, idle for now
-    
-    upsideDownScanner = ( digitalRead( SCAN_INVERTED ) == 1 );
-    syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
+//	int setupResult = wiringPiSetup();
+//	if ( setupResult == -1 ) {
+//		syslog(LOG_ERR, "Error setting up wiringPi." );
+//		return false;
+//	}
+////	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
+//    pinMode( TRIG, OUTPUT );            // Trigger ultasonic range finder
+//    pinMode( ECHO, INPUT );             // Echo response pulse for ultasonic range finder
+//    
+//    pinMode( SCAN_INVERTED, INPUT );    // Orientation of servo for scanner for ultasonic range finder
+//    
+//    digitalWrite( TRIG, 0);             // Init trigger to 0, idle for now
+//    
+//    upsideDownScanner = ( digitalRead( SCAN_INVERTED ) == 1 );
+//    syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
 
 #endif  // ON_PI
 
