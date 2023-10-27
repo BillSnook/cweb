@@ -16,7 +16,6 @@
 		A96D730E208402C200B98679 /* sender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730C208402C200B98679 /* sender.cpp */; };
 		A96D7311208BD79600B98679 /* threader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D730F208BD79600B98679 /* threader.cpp */; };
 		A96D7314208C052B00B98679 /* commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96D7312208C052B00B98679 /* commands.cpp */; };
-		A9ABD7762095078900B64F14 /* hardware.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD7742095078900B64F14 /* hardware.cpp */; };
 		A9ABD779209507A400B64F14 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9ABD777209507A400B64F14 /* speed.cpp */; };
 		A9AF208321EAD2A700DF77E3 /* manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9AF208121EAD2A700DF77E3 /* manager.cpp */; };
 /* End PBXBuildFile section */
@@ -56,8 +55,6 @@
 		A96D7310208BD79600B98679 /* threader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = threader.hpp; sourceTree = "<group>"; };
 		A96D7312208C052B00B98679 /* commands.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = commands.cpp; sourceTree = "<group>"; };
 		A96D7313208C052B00B98679 /* commands.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = commands.hpp; sourceTree = "<group>"; };
-		A9ABD7742095078900B64F14 /* hardware.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hardware.cpp; sourceTree = "<group>"; };
-		A9ABD7752095078900B64F14 /* hardware.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = hardware.hpp; sourceTree = "<group>"; };
 		A9ABD777209507A400B64F14 /* speed.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = speed.cpp; sourceTree = "<group>"; };
 		A9ABD778209507A400B64F14 /* speed.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = speed.hpp; sourceTree = "<group>"; };
 		A9AF208121EAD2A700DF77E3 /* manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manager.cpp; sourceTree = "<group>"; };
@@ -114,8 +111,6 @@
 		A97126AB2206394A00AC5AC7 /* hardware */ = {
 			isa = PBXGroup;
 			children = (
-				A9ABD7742095078900B64F14 /* hardware.cpp */,
-				A9ABD7752095078900B64F14 /* hardware.hpp */,
 				A9ABD777209507A400B64F14 /* speed.cpp */,
 				A9ABD778209507A400B64F14 /* speed.hpp */,
 				A9520D9025B5FBFB00762A2F /* filer.cpp */,
@@ -230,7 +225,6 @@
 				A96D72F1207AFD4500B98679 /* mtrctl.cpp in Sources */,
 				A9230180218E98A000EB2A21 /* tasks.cpp in Sources */,
 				A96D7311208BD79600B98679 /* threader.cpp in Sources */,
-				A9ABD7762095078900B64F14 /* hardware.cpp in Sources */,
 				A96D72FB2083DE8600B98679 /* signals.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
