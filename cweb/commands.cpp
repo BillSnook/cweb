@@ -237,7 +237,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		{
 //			char *display = hardware.speed.setSpeedTestIndex( token1 );
 //			memcpy( msg, display, strlen( display ) );
-			free( display );
+//			free( display );
 		}
 			break;
 			
@@ -329,7 +329,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 't':
 			memcpy( msg, "\nMessage 1...\n", 15 );
 			listener.writeBack( (char *)msg, sockOrAddr );
-			usleep( 5000000 ); // 5 second delay as test
+//			usleep( 5000000 ); // 5 second delay as test
 			memcpy( msg, "\nMessage 2   \n", 15 );	// msg gets written at end of this routine
 			break;
 			
