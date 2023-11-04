@@ -160,7 +160,7 @@ PWM::PWM( int addr ) {
         i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
 
 #ifdef ON_PI
-        delay( 1 );                         // Millisecond to let oscillator setup
+        gpioDelay( 1000 );                         // Millisecond to let oscillator setup
 #endif  // ON_PI
     }
 
@@ -190,7 +190,7 @@ void PWM::setPWMFrequency( int freq ) {
 	i2c->i2cWrite( MODE1, oldmode );
 	
 #ifdef ON_PI
-	delay( 1 );                         // Millisecond to let oscillator stabilize
+	gpioDelay( 1000 );                         // Millisecond to let oscillator stabilize
 #endif  // ON_PI
 }
 
@@ -289,8 +289,8 @@ bool Hardware::shutdownHardware() {
 	
 #ifdef ON_PI
 
-    if initResult >= 0 {
-        if i2cDevice >= 0 {
+    if (initResult >= 0) {
+        if (i2cDevice >= 0) {
             i2cClose(i2cDevice);
         }
         gpioTerminate();
@@ -539,23 +539,23 @@ long Hardware::doPing() {
     int loopCount1 = 0;
     int loopCount2 = 0;
     int echoResponse;
-    digitalWrite( TRIG, 0);   // Make sure
-    usleep( 5 );
-    digitalWrite( TRIG, 1);
-    usleep( 15 );
-    digitalWrite( TRIG, 0);
-    
+/// WFS    digitalWrite( TRIG, 0);   // Make sure
+/// WFS    usleep( 5 );
+/// WFS    digitalWrite( TRIG, 1);
+/// WFS    usleep( 15 );
+/// WFS    digitalWrite( TRIG, 0);
+
     // Wait until echo goes high to indicate pulse start
     do {
         loopCount1 += 1;
-        echoResponse = digitalRead( ECHO );
+/// WFS        echoResponse = digitalRead( ECHO );
     } while ( ( echoResponse == 0 ) && ( loopCount1 < 10000) );
     gettimeofday(&tvStart, NULL);
 
     // Wait for response on echo pin to go low indicating pulse end
     do {
         loopCount2 += 1;
-        echoResponse = digitalRead( ECHO );
+/// WFS        echoResponse = digitalRead( ECHO );
     } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
@@ -579,8 +579,8 @@ long Hardware::doPing() {
 void Hardware::pinState( int pin, int state ) {
     
 #ifdef ON_PI
-    pinMode( pin, OUTPUT );            // Make sure it is an output
-    digitalWrite( pin, state );
+/// WFS    pinMode( pin, OUTPUT );            // Make sure it is an output
+/// WFS    digitalWrite( pin, state );
 #endif // ON_PI
 }
 
