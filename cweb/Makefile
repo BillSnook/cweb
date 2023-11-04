@@ -4,12 +4,6 @@ CXX = g++
 CXXFLAGS = -std=c++11 -DON_PI
 LDLIBS = -lpthread -lpigpio -lArducamDepthCamera2c
 
-
-CC = gcc
-CFLAGS = -O0 -Wall -c
-
-WORK_DIR = $(shell pwd)
-
 OBJ_DIR = obj
 ATOF_DIR = /usr/include/c
 
