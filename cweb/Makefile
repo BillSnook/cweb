@@ -25,7 +25,7 @@ $(shell mkdir -p $(OBJ_DIR))
 
 .PHONY: clean info
 
-default: sudo mtrctl
+default: mtrctl
 
 mtrctl: $(AllObjects)
 	$(CXX) $^ $(LDLIBS) -o $@
