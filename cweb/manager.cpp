@@ -122,7 +122,7 @@ void Manager::shutdownManager() {
     pthread_mutex_destroy( &i2cQueueMutex );
     pthread_cond_destroy( &i2cQueueCond );
 
-	syslog(LOG_NOTICE, "In shutdownManager" );
+	syslog(LOG_NOTICE, "In shutdownManager at end" );
 }
 
 int Manager::openI2CFile( int address ) {

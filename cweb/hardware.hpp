@@ -89,7 +89,7 @@ class Hardware {
 	
 public:
 	
-	I2C     	    *i2c;
+//	I2C     	    *i2c;
 	PWM     	    *pwm;
 	
     Speed           speed;
@@ -107,6 +107,10 @@ public:
     
     RangeData       rangeData;
     int             minimumPWM;
+
+
+    int             initResult;         // Result from call to gpioInitialise - less than zero is an error
+    unsigned        i2cDevice;          // Handle to opened i2c channel
 
 //	void initSpeedArrays();
 	bool setupHardware();

@@ -103,23 +103,21 @@ int main(int argc, const char * argv[]) {
 		syslog(LOG_NOTICE, "Started mtrctl as user");
 	}
 	
+    // Done figuring out whether we are a daemon, running in the background, or not.
+    doLoop = true;
+    ready = true;
+
     filer.getHostName();
     filer.setupFiles();
 
-	// Done figuring out whether we are a daemon, running in the background, or not.
-	doLoop = true;
-	ready = true;
-	
 	threader = Threader();
 	threader.setupThreader();
 	
-//    return 0;         // To test on Mac
-    
 //	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
     listener = Listener();
     uint16_t portNo = PORT;
     threader.queueThread( listenThread, portNo, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v3.1.0", portNo );
+	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v4.0.0", portNo );
 
 	while ( doLoop ) {
 		threader.lock();

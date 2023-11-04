@@ -116,7 +116,6 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            actor.mainTest( token1, token2 );
 			break;
 			
-            // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
         case '@':       // Doesn't need thread
         {
             long response = hardware.getStatus();
@@ -140,6 +139,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         }
             break;
 
+            // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps - WFS ??
             // MARK: - Calibration -- A through F reserved for scanner zeroing and speed syncronization
         case 'A':
 //            syslog(LOG_NOTICE, "Command A, return rangeData" );

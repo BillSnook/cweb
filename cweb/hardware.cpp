@@ -29,6 +29,8 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
+#include <pigpio.h>
+
 #endif  // ON_PI
 
 
@@ -243,42 +245,32 @@ bool Hardware::setupHardware() {
     upsideDownScanner = false;
 
 #ifdef ON_PI
-//	int setupResult = wiringPiSetup();
-//	if ( setupResult == -1 ) {
-//		syslog(LOG_ERR, "Error setting up wiringPi." );
-//		return false;
-//	}
-////	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
-//    pinMode( TRIG, OUTPUT );            // Trigger ultasonic range finder
-//    pinMode( ECHO, INPUT );             // Echo response pulse for ultasonic range finder
-//    
-//    pinMode( SCAN_INVERTED, INPUT );    // Orientation of servo for scanner for ultasonic range finder
-//    
-//    digitalWrite( TRIG, 0);             // Init trigger to 0, idle for now
-//    
-//    upsideDownScanner = ( digitalRead( SCAN_INVERTED ) == 1 );
-//    syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
+
+    initResult = gpioInitialise();
+    if (initResult < 0) {
+        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed with %d", initResult);
+        return false;
+    }
+    i2cDevice = i2cOpen(1, MOTOR_I2C_ADDRESS, 0);
+    if (i2cDevice < 0) {
+        syslog(LOG_NOTICE, "In setupHardware, i2cOpen failed with %d", i2cDevice);
+        return false;
+    }
+
+//    gpioSetMode(4, PI_OUTPUT);
 
 #endif  // ON_PI
 
-    // i2c ranger not used now
-//    bool success = filer.readRange( &rangeData );
-//    if ( ! success ) {
-//        rangeData.pwmCenter = 330;
-//        rangeData.servoPort = Scanner;
-//        filer.saveRange( &rangeData );
-//    }
-//    minimumPWM = rangeData.pwmCenter - 180;
-//
 	syslog(LOG_NOTICE, "Setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-	pwm->setPWMFrequency( PWM_FREQ );
-	
-	syslog(LOG_NOTICE, "Setting up speed array" );
-	speed = Speed();
-	speed.initializeSpeedArray();
-    
+
+//    pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+//	  pwm->setPWMFrequency( PWM_FREQ );
+
     // WFS - why is this being done here?  where should it be?
+//	syslog(LOG_NOTICE, "Setting up speed array" ); // WFS - Later
+//	speed = Speed();
+//	speed.initializeSpeedArray();
+    
 //    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
 //    siteMap = SiteMap( pattern );
 //    siteMap.setupSiteMap();
@@ -295,17 +287,28 @@ bool Hardware::shutdownHardware() {
 	
 	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
-	setPWM( M0En, 0 );		    // Turn off motors
-	setPin( M0Fw, 0 );
-	setPin( M0Rv, 0 );
-	setPWM( M1En, 0 );
-	setPin( M1Fw, 0 );
-	setPin( M1Rv, 0 );
-	
-	motor0Setup = false;
-	motor1Setup = false;
-	
-	setPWM( rangeData.servoPort, 0 );		// Unpower servos
+#ifdef ON_PI
+
+    if initResult >= 0 {
+        if i2cDevice >= 0 {
+            i2cClose(i2cDevice);
+        }
+        gpioTerminate();
+    }
+
+#endif  // ON_PI
+
+//	setPWM( M0En, 0 );		    // Turn off motors
+//	setPin( M0Fw, 0 );
+//	setPin( M0Rv, 0 );
+//	setPWM( M1En, 0 );
+//	setPin( M1Fw, 0 );
+//	setPin( M1Rv, 0 );
+//	
+//	motor0Setup = false;
+//	motor1Setup = false;
+//	
+//	setPWM( rangeData.servoPort, 0 );		// Unpower servos
 
 //    siteMap.shutdownSiteMap();
 

@@ -75,13 +75,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6B2FD2A5244CE12A00BAC739 /* lidar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = lidar;
-			sourceTree = "<group>";
-		};
 		A96D72E4207AFD4500B98679 = {
 			isa = PBXGroup;
 			children = (
@@ -105,7 +98,6 @@
 				A97126AE220639E500AC5AC7 /* sockets */,
 				A97126AB2206394A00AC5AC7 /* hardware */,
 				A97126AF22063A7A00AC5AC7 /* control */,
-				6B2FD2A5244CE12A00BAC739 /* lidar */,
 				A96D730B2083F34700B98679 /* README.md */,
 			);
 			path = cweb;
