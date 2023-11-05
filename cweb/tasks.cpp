@@ -38,7 +38,6 @@ void TaskMaster::shutdownTaskMaster() {
 	
 
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
-    tof = nil;
 	killTasks();
     usleep( 100000 );   // 1/10 second
     stopCamera();     // Causing seg fault!
