@@ -38,10 +38,10 @@ void TaskMaster::shutdownTaskMaster() {
 	
 
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
-    tof = 0;
+    tof = nil;
 	killTasks();
     usleep( 100000 );   // 1/10 second
-//    stopCamera();     // Causing seg fault!
+    stopCamera();     // Causing seg fault!
 //	usleep( 100000 );
 }
 
@@ -195,10 +195,6 @@ void TaskMaster::taskHunt() {
 int TaskMaster::startCamera() {
 
     syslog(LOG_NOTICE, "In tasks, in startCamera" );
-    if (tof <= 0) {
-        syslog(LOG_NOTICE, "createArducamDepthCamera failed");
-        return -1;
-    }
     if ( arducamCameraOpen( tof, CSI, 0 ) ) {
         syslog(LOG_NOTICE, "arducamCameraOpen failed");
         return -2;
