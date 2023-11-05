@@ -261,10 +261,10 @@ bool Hardware::setupHardware() {
 
 #endif  // ON_PI
 
-	syslog(LOG_NOTICE, "Setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+	syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
 
-//    pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-//	  pwm->setPWMFrequency( PWM_FREQ );
+    pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+    pwm->setPWMFrequency( PWM_FREQ );
 
     // WFS - why is this being done here?  where should it be?
 //	syslog(LOG_NOTICE, "Setting up speed array" ); // WFS - Later
@@ -339,7 +339,7 @@ void Hardware::setPWM( int pin, int value ) {
 		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_MAX);
 		return;
 	}
-//	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
+	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
 	pwm->setPWM( pin, 0, value );
 }
 

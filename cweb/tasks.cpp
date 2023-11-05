@@ -29,7 +29,7 @@ void TaskMaster::setupTaskMaster() {
     cameraRunning = false;
     tof = createArducamDepthCamera();
     if ( startCamera() != 0 ) {
-        syslog(LOG_NOTICE, "In setupTaskMaster, failed to start camera, continue" );
+        syslog(LOG_NOTICE, "In setupTaskMaster, failed to start camera, continuing" );
     }
     taskCount = 0;
 }
@@ -195,13 +195,17 @@ void TaskMaster::taskHunt() {
 int TaskMaster::startCamera() {
 
     syslog(LOG_NOTICE, "In tasks, in startCamera" );
+    if (tof <= 0) {
+        syslog(LOG_NOTICE, "createArducamDepthCamera failed");
+        return -1;
+    }
     if ( arducamCameraOpen( tof, CSI, 0 ) ) {
         syslog(LOG_NOTICE, "arducamCameraOpen failed");
-        return -1;
+        return -2;
     }
     if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
         syslog(LOG_NOTICE, "arducamCameraStart failed");
-        return -2;
+        return -3;
     }
 
     cameraRunning = true;
@@ -212,7 +216,7 @@ float TaskMaster::getCameraData(int socketOrAddr) {
     struct timeval tvNow;
 
     if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started" );
+        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not running" );
         return 0;
     }
     gettimeofday( &tvNow, NULL );
@@ -261,7 +265,7 @@ int TaskMaster::stopCamera() {
     cameraRunning = false;
     if ( arducamCameraStop( tof ) ) {
         syslog(LOG_NOTICE, "arducamCameraStop failed");
-//        return -2;
+        return -1;
     }
 //    if ( arducamCameraClose( &tof ) ) {
 //        syslog(LOG_NOTICE, "arducamCameraClose failed");
@@ -274,11 +278,11 @@ int TaskMaster::cameraDataSend(int socketOrAddr) {
     struct timeval tvNow;
 
     if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not started" );
+        syslog(LOG_NOTICE, "In tasks, in cameraDataSend with camera not started" );
         return 0;
     }
     gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "In tasks, in getCameraData started, time: %i", tvNow.tv_usec );
+    syslog(LOG_NOTICE, "In tasks, in cameraDataSend started, time: %i", tvNow.tv_usec );
 
     // 240 x 180 = 43200, half is 21600
     ArducamFrameBuffer frame;
@@ -308,7 +312,7 @@ int TaskMaster::cameraDataSend(int socketOrAddr) {
     }
 
     gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
+    syslog(LOG_NOTICE, "Clean exit from cameraDataSend routine, time: %i", tvNow.tv_usec );
 
     return 0;
 }
