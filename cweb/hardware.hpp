@@ -30,7 +30,8 @@ public:
 	bool    debug;
 	int     address;            // I2C address
 	int     file_i2c;           // File handle to I2C device
-	
+    int     motor_i2c;          // pigpio handle for device at address address on I2C bus
+
     int     i2cRead(int reg);
     void    i2cWrite(int reg, int data);
     void    i2cWriteX(int reg, int data);
@@ -46,7 +47,7 @@ public:
 	bool    debug;
 	int     address;             // I2C address
 	I2C     *i2c;
-	
+
 	void    setPWMFrequency( int freq );
 	void    setPWM( int channel, int on, int off );
 	void    setPWMAll( int on, int off );

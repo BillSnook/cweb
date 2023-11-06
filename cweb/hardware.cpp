@@ -122,25 +122,36 @@ I2C::I2C( int addr ) {
 	debug = false;
 	address = addr;
 	
-    file_i2c = manager.openI2CFile( address );
+//    file_i2c = manager.openI2CFile( address );
+
+    motor_i2c = i2cOpen(1, address, 0);
+    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", address, motor_i2c );
 }
 
 int I2C::i2cRead( int reg ) {
 	
-    return int( manager.request( readReg8I2C, file_i2c, reg ) );
+//    return int( manager.request( readReg8I2C, file_i2c, reg ) );
+
+    int result = i2cReadByteData(motor_i2c, reg);
+    return result;
+
 }
 
 
 void I2C::i2cWrite(int reg, int data) {
     
-    manager.request( writeI2C, file_i2c, reg, data );
+//    manager.request( writeI2C, file_i2c, reg, data );
+
+    int result = i2cWriteByteData(motor_i2c, reg, data);
 }
 
-void I2C::i2cWriteX(int reg, int data) {        // WFS ??
-    
-    manager.request( writeI2C, file_i2c, reg, data );
-}
-
+//void I2C::i2cWriteX(int reg, int data) {        // WFS ??
+//    
+////    manager.request( writeI2C, file_i2c, reg, data );
+//
+//    int result = i2cWriteByteData(motor_i2c, reg, data);
+//}
+//
 
 // MARK: PWM control
 PWM::PWM( int addr ) {
@@ -207,10 +218,10 @@ void PWM::setPWM( int channel, int on, int off ) {
 	}
 	
 //	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
-	i2c->i2cWriteX( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_ON_H + (4 * channel), on >> 8 );
-	i2c->i2cWriteX( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
+	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
+	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
+	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
+	i2c->i2cWrite( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
 }
 
 void PWM::setPWMAll( int on, int off ) {
