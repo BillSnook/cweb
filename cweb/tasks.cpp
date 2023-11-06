@@ -27,7 +27,15 @@ void TaskMaster::setupTaskMaster() {
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
 	stopLoop = false;
     cameraRunning = false;
+
+    // So we can use our own signal handler:
+    int cfg = gpioCfgGetInternals();
+    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10)
+    gpioCfgSetInternals(cfg);
+    int status = gpioInitialise();
+
     tof = createArducamDepthCamera();
+
     if ( startCamera() != 0 ) {
         syslog(LOG_NOTICE, "In setupTaskMaster, failed to start camera, continuing" );
     }
@@ -41,6 +49,7 @@ void TaskMaster::shutdownTaskMaster() {
 	killTasks();
     usleep( 100000 );   // 1/10 second
     stopCamera();     // Causing seg fault!
+    gpioTerminate();
 //	usleep( 100000 );
 }
 

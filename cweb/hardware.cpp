@@ -29,7 +29,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-#include <pigpio.h>
+//#include <pigpio.h>
 
 #endif  // ON_PI
 

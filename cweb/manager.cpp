@@ -20,6 +20,7 @@
 
 #ifdef ON_PI
 
+#include <pigpio.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
@@ -83,6 +84,7 @@ const char *I2CControl::description() {
 }
 
 // MARK: - Manager
+
 void Manager::setupManager() {
 	stopLoop = false;
     endLoop = false;
@@ -101,6 +103,8 @@ void Manager::setupManager() {
 }
 
 void Manager::shutdownManager() {
+
+    int result = i2cClose( motor_i2c);
 
     endLoop = true;
 
@@ -126,17 +130,19 @@ void Manager::shutdownManager() {
 }
 
 int Manager::openI2CFile( int address ) {
-    int fileDescriptor = 0;
-    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
-        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
-        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
-        close( fileDescriptor );
-        fileDescriptor = 0;
-    } else {
-        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
-    }
-    return fileDescriptor;
+//    int fileDescriptor = 0;
+//    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
+//        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
+//    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
+//        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
+//        close( fileDescriptor );
+//        fileDescriptor = 0;
+//    } else {
+//        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
+//    }
+//    return fileDescriptor;
+    motor_i2c = i2cOpen(1, address, 0);
+
 }
 
 
@@ -183,32 +189,37 @@ void Manager::execute( I2CControl i2cControl ) {
         case writeI2C:
         case writeReg8I2C:
             {
-                unsigned char buffer[4] = {0};
-                buffer[0] = i2cControl.i2cCommand;  // Send this command
-                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
-                write( i2cControl.i2cFile, buffer, 2 );
+//                unsigned char buffer[4] = {0};
+//                buffer[0] = i2cControl.i2cCommand;  // Send this command
+//                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
+//                write( i2cControl.i2cFile, buffer, 2 );
+                int result = i2cWriteByteData(i2cControl.i2cFile, i2cControl.i2cCommand, i2cControl.i2cParam);
             }
             break;
 
         case readI2C:
             {
-                pthread_mutex_lock( &readWaitMutex );
-                read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
-//                syslog(LOG_NOTICE, "execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
-                i2cControl.i2cData[0] = 1;  // Signal completion
-                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
-                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
-                pthread_mutex_unlock( &readWaitMutex );
+                syslog(LOG_NOTICE, "\n\n\treadI2C is called in ERROR, deprecated\n\n" );
+//                pthread_mutex_lock( &readWaitMutex );
+//                read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
+////                syslog(LOG_NOTICE, "execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
+//                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+//                i2cControl.i2cData[0] = 1;  // Signal completion
+//                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
+//                pthread_mutex_unlock( &readWaitMutex );
             }
             break;
 
         case readReg8I2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                write( i2cControl.i2cFile, &i2cControl.i2cCommand, 1 );
-                read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
-                i2cControl.i2cData[0] = 1;  // Signal completion
+//                write( i2cControl.i2cFile, &i2cControl.i2cCommand, 1 );
+//                read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
+                int result = i2cReadByteData(i2cControl.i2cFile, i2cControl.i2cCommand);
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+                i2cControl.i2cData[0] = 1;  // Signal completion
+                i2cControl.i2cData[1] = 0;  // Signal completion - deprecated
+                i2cControl.i2cData[2] = result & 0xFF;      // Clean byte
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }

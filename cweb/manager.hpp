@@ -65,7 +65,8 @@ public:
 	ControllerMode	expectedControllerMode;
 	
     int  arduino_i2c;           // Unused but may reappear in the future
-    
+    int  motor_i2c;             // To retain i2cOpen handle
+
 	void setupManager();
 	void shutdownManager();
 	
