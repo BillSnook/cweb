@@ -11,6 +11,7 @@
 #include "threader.hpp"
 #include "listen.hpp"
 
+#include <pigpio.h>
 
 // The purpose of this class is to allow a task to run independently
 // in a separate thread and allow the rest of the program to run normally.

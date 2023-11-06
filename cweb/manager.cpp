@@ -130,21 +130,20 @@ void Manager::shutdownManager() {
 }
 
 int Manager::openI2CFile( int address ) {
-//    int fileDescriptor = 0;
-//    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
-//        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
-//    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
-//        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
-//        close( fileDescriptor );
-//        fileDescriptor = 0;
-//    } else {
-//        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
-//    }
-//    return fileDescriptor;
+    //    int fileDescriptor = 0;
+    //    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
+    //        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
+    //    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
+    //        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
+    //        close( fileDescriptor );
+    //        fileDescriptor = 0;
+    //    } else {
+    //        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
+    //    }
+    //    return fileDescriptor;
     motor_i2c = i2cOpen(1, address, 0);
-
+    return motor_i2c;
 }
-
 
 void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 	
