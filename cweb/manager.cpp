@@ -130,24 +130,14 @@ void Manager::shutdownManager() {
 }
 
 int Manager::openI2CFile( int address ) {
-    //    int fileDescriptor = 0;
-    //    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
-    //        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    //    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
-    //        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    //        close( fileDescriptor );
-    //        fileDescriptor = 0;
-    //    } else {
-    //        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
-    //    }
-    //    return fileDescriptor;
+
     motor_i2c = i2cOpen(1, address, 0);
     syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", address, motor_i2c );
     return motor_i2c;
 }
 
-void Manager::monitor() {       // Wait for an i2c bus request, then execute it
-	
+void Manager::monitor() {       // Wait for an i2c bus request on queue, then execute it
+
 //	syslog(LOG_NOTICE, "In Manager monitor, entering loop waiting for queued I2C requests" );
 
     while ( !stopLoop ) {
@@ -183,7 +173,7 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-//    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
+    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
@@ -226,6 +216,7 @@ void Manager::execute( I2CControl i2cControl ) {
             break;
             
         default:
+            syslog(LOG_NOTICE, "Manager::execute with unrecognized command: %04X", i2cControl.i2cType);
             break;
     }
 //    syslog(LOG_NOTICE, "execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );

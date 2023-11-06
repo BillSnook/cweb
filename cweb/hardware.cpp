@@ -253,14 +253,15 @@ bool Hardware::setupHardware() {
 	syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
 
     pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+    syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
     i2cDevice = pwm->i2c->file_i2c;
-    pwm->setPWMFrequency( PWM_FREQ );
+//    pwm->setPWMFrequency( PWM_FREQ );
+    syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
 
-    // WFS - why is this being done here?  where should it be?
-//	syslog(LOG_NOTICE, "Setting up speed array" ); // WFS - Later
-//	speed = Speed();
-//	speed.initializeSpeedArray();
-    
+
+// WFS - why is this being done here?  where should it be?
+//	  speed = Speed();
+//	  speed.initializeSpeedArray();
 //    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
 //    siteMap = SiteMap( pattern );
 //    siteMap.setupSiteMap();
