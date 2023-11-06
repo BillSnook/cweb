@@ -24,8 +24,8 @@
 #define bufferSize	256
 
 //#define aWaitOn		500000
-#define xWaitOn		100000
-#define xWaitOff	50000
+#define xWaitOn		1000000
+#define xWaitOff	500000
 #define tokenMax	5
 
 Commander	commander;
