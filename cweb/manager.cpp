@@ -142,6 +142,7 @@ int Manager::openI2CFile( int address ) {
     //    }
     //    return fileDescriptor;
     motor_i2c = i2cOpen(1, address, 0);
+    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", address, motor_i2c );
     return motor_i2c;
 }
 

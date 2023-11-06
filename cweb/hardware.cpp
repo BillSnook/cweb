@@ -251,7 +251,7 @@ bool Hardware::setupHardware() {
         syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed with %d", initResult);
         return false;
     }
-    i2cDevice = i2cOpen(1, MOTOR_I2C_ADDRESS, 0);
+    i2cDevice = i2cOpen(0, MOTOR_I2C_ADDRESS, 0);
     if (i2cDevice < 0) {
         syslog(LOG_NOTICE, "In setupHardware, i2cOpen failed with %d", i2cDevice);
         return false;
