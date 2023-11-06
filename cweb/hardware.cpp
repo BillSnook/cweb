@@ -159,7 +159,7 @@ PWM::PWM( int addr ) {
 	debug = false;
 	address = addr;
 	i2c = new I2C( addr );
-    if (i2c->file_i2c >= 0) {
+    if (i2c->motor_i2c >= 0) {
         setPWMAll( 0, 0 );                  // Clear all to 0
         i2c->i2cWrite( MODE2, OUTDRV );
         i2c->i2cWrite( MODE1, ALLCALL );
@@ -175,7 +175,7 @@ PWM::PWM( int addr ) {
 
 void PWM::setPWMFrequency( int freq ) {
 	
-    if (i2c->file_i2c < 0) {
+    if (i2c->motor_i2c < 0) {
         return;
     }
 	int prescaleval = 25000000.0;           // Nominal clock freq 25MHz
@@ -265,7 +265,7 @@ bool Hardware::setupHardware() {
 
     pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
     syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
-    i2cDevice = pwm->i2c->file_i2c;
+    i2cDevice = pwm->i2c->motor_i2c;
     pwm->setPWMFrequency( PWM_FREQ );
     syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
 
