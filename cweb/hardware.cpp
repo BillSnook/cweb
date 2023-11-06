@@ -122,10 +122,6 @@ I2C::I2C( int addr ) {
 	debug = false;
 	address = addr;
 	
-#ifdef ON_PI
-//	file_i2c = wiringPiI2CSetup( addr );
-#endif  // ON_PI
-
     file_i2c = manager.openI2CFile( address );
 }
 
@@ -152,7 +148,7 @@ PWM::PWM( int addr ) {
 	debug = false;
 	address = addr;
 	i2c = new I2C( addr );
-    if (i2c->file_i2c > 0) {
+    if (i2c->file_i2c >= 0) {
         setPWMAll( 0, 0 );                  // Clear all to 0
         i2c->i2cWrite( MODE2, OUTDRV );
         i2c->i2cWrite( MODE1, ALLCALL );
@@ -168,7 +164,7 @@ PWM::PWM( int addr ) {
 
 void PWM::setPWMFrequency( int freq ) {
 	
-    if (i2c->file_i2c <= 0) {
+    if (i2c->file_i2c < 0) {
         return;
     }
 	int prescaleval = 25000000.0;           // Nominal clock freq 25MHz
@@ -251,19 +247,13 @@ bool Hardware::setupHardware() {
         syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed with %d", initResult);
         return false;
     }
-//    i2cDevice = i2cOpen(1, MOTOR_I2C_ADDRESS, 0);
-//    if (i2cDevice < 0) {
-//        syslog(LOG_NOTICE, "In setupHardware, i2cOpen failed with %d", i2cDevice);
-//        return false;
-//    }
-
-//    gpioSetMode(4, PI_OUTPUT);
 
 #endif  // ON_PI
 
 	syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
 
     pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
+    i2cDevice = pwm->i2c->file_i2c;
     pwm->setPWMFrequency( PWM_FREQ );
 
     // WFS - why is this being done here?  where should it be?
@@ -276,6 +266,7 @@ bool Hardware::setupHardware() {
 //    siteMap.setupSiteMap();
 
 	scanLoop = false;
+    i2cDevice = -1;
 
 	return true;
 }

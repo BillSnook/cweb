@@ -350,7 +350,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'X':
 		case 'x':
-			for ( int i = 0; i < 3; i++ ) {
+			for ( int i = 0; i < 2; i++ ) {
 				hardware.setMtrDirSpd( 1, 1, token1 );
 				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 1, 1, 0 );

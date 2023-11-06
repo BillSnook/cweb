@@ -117,7 +117,7 @@ int main(int argc, const char * argv[]) {
     listener = Listener();
     uint16_t portNo = PORT;
     threader.queueThread( listenThread, portNo, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v4.0.0", portNo );
+	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v4.0.1", portNo );
 
 	while ( doLoop ) {
 		threader.lock();
