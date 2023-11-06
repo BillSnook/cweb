@@ -346,10 +346,10 @@ void Hardware::setPWM( int pin, int value ) {
 // MARK: motor section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, SPEED_INDEX_MAX);
-		return;
-	}
+//	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
+//		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, SPEED_INDEX_MAX);
+//		return;
+//	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);
 	if ( motor == 0 ) {
 		if ( direction == 1 ) {
@@ -360,8 +360,8 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 			setPin( M0Rv, 1 );
 		}
 		motor0Setup = true;
-//		setPWM( M0En, speedIndex * SPEED_ADJUSTMENT );
-		setPWM( M0En, speed.speedLeft( speedIndex ) );
+		setPWM( M0En, speedIndex * SPEED_ADJUSTMENT );
+        //       setPWM( M0En, speed.speedLeft( speedIndex ) );
 	}
 	if ( motor == 1 ) {
 		if ( direction == 1 ) {
@@ -372,8 +372,8 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 			setPin( M1Rv, 1 );
 		}
 		motor1Setup = true;
-//		setPWM( M1En, speedIndex * SPEED_ADJUSTMENT );
-		setPWM( M1En, speed.speedRight( speedIndex ) );
+		setPWM( M1En, speedIndex * SPEED_ADJUSTMENT );
+        //		setPWM( M1En, speed.speedRight( speedIndex ) );
 	}
 }
 
