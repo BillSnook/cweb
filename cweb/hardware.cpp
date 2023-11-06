@@ -25,7 +25,7 @@
 
 #ifdef ON_PI
 
-//#include <wiringPi.h>
+#include <pigpio.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
