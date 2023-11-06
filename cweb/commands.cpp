@@ -296,6 +296,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
             
 		case 'R':
+            // Motor control for direct screen - m0 dir, m0speed, m1 dir, m1 speed
+            hardware.setMotorsPWM( token1, token2, token3, token4 );
+            break;
+
 		case 'r':
             // Motor control for direct screen
             hardware.setMotors( token1, token2, token3, token4 );
