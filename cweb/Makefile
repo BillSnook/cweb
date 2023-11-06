@@ -5,9 +5,9 @@ CXXFLAGS = -std=c++11 -DON_PI
 LDLIBS = -lpthread -lpigpio -lArducamDepthCamera2c
 
 OBJ_DIR = obj
-ATOF_DIR = /usr/include/c
+CAM_DIR = /usr/include/c
 
-INCLUDES = -I. -I$(ATOF_DIR)
+INCLUDES = -I$(CAM_DIR)
 
 MainFiles = $(wildcard *.cpp)
 MainFileNames := $(basename $(MainFiles))
