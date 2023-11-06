@@ -179,7 +179,7 @@ void PWM::setPWMFrequency( int freq ) {
 	}
 	
 	int oldmode = i2c->i2cRead( MODE1 );
-//    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
+    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
 	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
 	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );
@@ -255,7 +255,7 @@ bool Hardware::setupHardware() {
     pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
     syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
     i2cDevice = pwm->i2c->file_i2c;
-//    pwm->setPWMFrequency( PWM_FREQ );
+    pwm->setPWMFrequency( PWM_FREQ );
     syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
 
 
