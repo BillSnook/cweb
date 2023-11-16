@@ -167,7 +167,7 @@ void Speed::setSpeedRight( int newSpeed ) {
 // Assuming index 1 has been set to the slowest practicable speed, and index 8 to the highest,
 // calculate a linear series of power settings so each index speed changes smoothly.
 void Speed::setSpeedForward() {
-	// Assume index 1 os slowest speed, index 8 is the fastest
+	// Assume index 1 is slowest speed, index 8 is the fastest
 	// Find a pattern so each entry is linear
 	int slowest = forward[1].left;
 	int fastest = forward[SPEED_INDEX_MAX-1].left;
@@ -185,7 +185,7 @@ void Speed::setSpeedForward() {
 }
 
 void Speed::setSpeedReverse() {
-	// Assume index 1 os slowest speed, index 8 is the fastest
+	// Assume index 1 is slowest speed, index 8 is the fastest
 	// Find a pattern so each entry is linear
 	int slowest = reverse[1].left;
 	int fastest = reverse[SPEED_INDEX_MAX-1].left;

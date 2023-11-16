@@ -145,14 +145,6 @@ void I2C::i2cWrite(int reg, int data) {
     int result = i2cWriteByteData(motor_i2c, reg, data);
 }
 
-//void I2C::i2cWriteX(int reg, int data) {        // WFS ??
-//    
-////    manager.request( writeI2C, file_i2c, reg, data );
-//
-//    int result = i2cWriteByteData(motor_i2c, reg, data);
-//}
-//
-
 // MARK: PWM control
 PWM::PWM( int addr ) {
 	
