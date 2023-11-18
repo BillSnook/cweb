@@ -58,7 +58,7 @@ void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 
 void Speed::returnSpeedArray( char *displayString ) {
     
-    sprintf( displayString, "S %d\n", SPEED_INDEX_MAX );
+    sprintf( displayString, "S %d\n", SPEED_INDEX_MAX - 1 );
     for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
         sprintf( displayString, "%s%d %d %d\n", displayString, i, forward[i].left, forward[i].right );
     }
