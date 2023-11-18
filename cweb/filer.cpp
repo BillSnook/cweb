@@ -59,6 +59,7 @@ void Filer::saveSpeedArrays( speed_array *forward, speed_array *reverse ) {
         fwrite( forward, sizeof( speed_array ), SPEED_INDEX_MAX, fp );
         fwrite( reverse, sizeof( speed_array ), SPEED_INDEX_MAX, fp );
         fclose(fp);
+        syslog(LOG_ERR, "saveSpeedArrays opened file\n" );
     } else {
         syslog(LOG_ERR, "saveSpeedArrays failed opening file\n" );
     }
@@ -73,6 +74,7 @@ bool Filer::readSpeedArrays( speed_array *forward, speed_array *reverse ) {
         fread( forward, sizeof( speed_array ), SPEED_INDEX_MAX, fp );
         fread( reverse, sizeof( speed_array ), SPEED_INDEX_MAX, fp );
         fclose(fp);
+        syslog(LOG_ERR, "readSpeedArrays opened file\n" );
         return true;
     }
     syslog(LOG_ERR, "readSpeedArrays failed opening file\n" );
