@@ -175,8 +175,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             syslog(LOG_NOTICE, "Command D, return speed array data" );
             char *display = (char *)malloc( 1024 );
             hardware.speed.returnSpeedArray( display );
-//            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", display );
             memcpy( msg, display, strlen( display ) );
+            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", msg );
             free( display );
             break;
         }
