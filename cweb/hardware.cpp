@@ -290,11 +290,11 @@ bool Hardware::shutdownHardware() {
 	
 #ifdef ON_PI
 
-    if cameraInitialized {
+    if (cameraInitialized) {
         stopCamera();     // Causing seg fault?
     }
 
-    if (gpioInitialise >= 0) {
+    if (gpioInitialised) {
         if (i2cDevice >= 0) {
             i2cClose(i2cDevice);
         }
