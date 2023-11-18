@@ -45,9 +45,9 @@ void Filer::getHostName() {
 void Filer::setupFiles() {
     
     sprintf( speedFileName, "%s/%s-%s", CONFIG_FILE_PATH, hostName, SPEED_FILE_NAME );
-    sprintf( rangeFileName, "%s/%s-%s", CONFIG_FILE_PATH, hostName, RANGE_FILE_NAME );
+//    sprintf( rangeFileName, "%s/%s-%s", CONFIG_FILE_PATH, hostName, RANGE_FILE_NAME );
     syslog(LOG_NOTICE, "Set speed file path: %s", speedFileName );
-    syslog(LOG_NOTICE, "Set range file path: %s", rangeFileName );
+//    syslog(LOG_NOTICE, "Set range file path: %s", rangeFileName );
 }
 
 void Filer::saveSpeedArrays( speed_array *forward, speed_array *reverse ) {
