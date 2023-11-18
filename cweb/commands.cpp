@@ -135,7 +135,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            } else {
 //                sprintf((char *)msg, "%s, no arduino mgr found", msg );
 //            }
-            snprintf((char *)msg,29, "Status is fine, how are you?" );
+            snprintf((char *)msg, 29, "Status is fine, how are you?" );
         }
             break;
 

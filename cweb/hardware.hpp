@@ -106,7 +106,8 @@ public:
 //	void initSpeedArrays();
 	bool setupHardware();
 	bool shutdownHardware();
-	
+    long getStatus();
+
 	void setPin( int pin, int value );
 	void setPWM( int pin, int value );
 	

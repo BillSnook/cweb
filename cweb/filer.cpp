@@ -16,7 +16,7 @@
 
 #ifdef ON_PI
 
-#define CONFIG_FILE_PATH        "/home/bill/code/c/cweb/cweb"
+#define CONFIG_FILE_PATH        "~/code/c/cweb/cweb"
 
 #else   // ON_PI
 
@@ -27,7 +27,7 @@
 #define PINS_NAME               "pins.bin"
 
 #define SPEED_FILE_NAME         "speed.bin"
-#define RANGE_FILE_NAME         "range.bin"
+//#define RANGE_FILE_NAME         "range.bin"
 
 
 // MARK: - Filer
@@ -35,9 +35,9 @@ void Filer::getHostName() {
     
     int result = gethostname( hostName, 32 );
     if ( result != 0 ) {        // Error
-        syslog(LOG_NOTICE, "Failed getting hostname" );
+        syslog(LOG_NOTICE, "Filer failed getting hostname" );
     } else {
-        syslog(LOG_NOTICE, "Found hostname: %s", hostName );
+        syslog(LOG_NOTICE, "Filer found hostname: %s", hostName );
     }
 }
 
@@ -81,33 +81,32 @@ bool Filer::readSpeedArrays( speed_array *forward, speed_array *reverse ) {
     return false;
 }
 
-bool Filer::saveRange( RangeData *rangeDataPtr ) {
-    
-    FILE *fp;
-    
-    fp = fopen( rangeFileName, "wb" );
-    if ( NULL != fp ) {
-        fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
-        fclose(fp);
-        syslog(LOG_WARNING, "saveRange saved scanner center: %d", rangeDataPtr->pwmCenter );
-        return true;
-    }
-    syslog(LOG_ERR, "saveRange failed opening file\n" );
-    return false;
-}
-
-bool Filer::readRange( RangeData *rangeDataPtr ) {
-    
-    FILE *fp;
-    
-    fp = fopen( rangeFileName, "rb" );
-    if ( NULL != fp ) {
-        fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
-        fclose(fp);
-        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->pwmCenter );
-        return true;
-    }
-    syslog(LOG_ERR, "readRange failed opening file\n" );
-    return false;
-}
-
+//bool Filer::saveRange( RangeData *rangeDataPtr ) {
+//    
+//    FILE *fp;
+//    
+//    fp = fopen( rangeFileName, "wb" );
+//    if ( NULL != fp ) {
+//        fwrite( rangeDataPtr, sizeof( RangeData ), 1, fp );
+//        fclose(fp);
+//        syslog(LOG_WARNING, "saveRange saved scanner center: %d", rangeDataPtr->pwmCenter );
+//        return true;
+//    }
+//    syslog(LOG_ERR, "saveRange failed opening file\n" );
+//    return false;
+//}
+//
+//bool Filer::readRange( RangeData *rangeDataPtr ) {
+//    
+//    FILE *fp;
+//    
+//    fp = fopen( rangeFileName, "rb" );
+//    if ( NULL != fp ) {
+//        fread( rangeDataPtr, sizeof( RangeData ), 1, fp );
+//        fclose(fp);
+//        syslog(LOG_WARNING, "readRange got scanner center: %d", rangeDataPtr->pwmCenter );
+//        return true;
+//    }
+//    syslog(LOG_ERR, "readRange failed opening file\n" );
+//    return false;
+//}

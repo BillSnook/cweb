@@ -310,6 +310,18 @@ bool Hardware::shutdownHardware() {
 	return true;
 }
 
+long Hardware::getStatus() {
+
+//    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
+    int setStatusFlags = 0;
+    if ( upsideDownScanner ) {
+        setStatusFlags |= statusScannerOrientation;
+    }
+    syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
+
+    return setStatusFlags;
+}
+
 void Hardware::setPin( int pin, int value ) {
 	
 	if ( ( pin < 0 ) || ( pin > CHANNEL_MAX ) ) {
