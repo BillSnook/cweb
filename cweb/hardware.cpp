@@ -116,24 +116,27 @@ extern  Manager     manager;
 bool	scanLoop;
 
 
-//  MARK: i2c interface read and write support
+//  MARK: - i2c interface; open, read, and write support
+
 I2C::I2C( int addr ) {
 	
-	debug = false;
-	address = addr;
-	
-//    file_i2c = manager.openI2CFile( address );
+//    file_i2c = manager.openI2CFile( addr );
 
-    motor_i2c = i2cOpen(1, address, 0);
-    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", address, motor_i2c );
+#ifdef ON_PI
+    motor_i2c = i2cOpen(1, addr, 0);
+#endif  // ON_PI
+    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", addr, motor_i2c );
 }
 
 int I2C::i2cRead( int reg ) {
 	
 //    return int( manager.request( readReg8I2C, file_i2c, reg ) );
 
-    int result = i2cReadByteData(motor_i2c, reg);
-    return result;
+#ifdef ON_PI
+    return i2cReadByteData(motor_i2c, reg);
+#else
+    return 0;
+#endif  // ON_PI
 
 }
 
@@ -142,24 +145,25 @@ void I2C::i2cWrite(int reg, int data) {
     
 //    manager.request( writeI2C, file_i2c, reg, data );
 
+#ifdef ON_PI
     int result = i2cWriteByteData(motor_i2c, reg, data);
+#endif  // ON_PI
 }
 
-// MARK: PWM control
+// MARK: - PWM support
+
 PWM::PWM( int addr ) {
 	
-	debug = false;
-	address = addr;
 	i2c = new I2C( addr );
     if (i2c->motor_i2c >= 0) {
-        setPWMAll( 0, 0 );                  // Clear all to 0
+        setPWMAll( 0, 0 );                  // Clear all to 0 - stop motors
         i2c->i2cWrite( MODE2, OUTDRV );
         i2c->i2cWrite( MODE1, ALLCALL );
         i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
         i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
 
 #ifdef ON_PI
-        gpioDelay( 1000 );                         // Millisecond to let oscillator setup
+        gpioDelay( 1000 );                  // Millisecond to let oscillator setup
 #endif  // ON_PI
     }
 
@@ -183,8 +187,8 @@ void PWM::setPWMFrequency( int freq ) {
 	
 	int oldmode = i2c->i2cRead( MODE1 );
     syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
-	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
-	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
+	int newmode = ( oldmode & 0x7F ) | SLEEP;   // sleep
+	i2c->i2cWrite( MODE1, newmode );            // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );
 	i2c->i2cWrite( MODE1, oldmode );
 	
@@ -228,11 +232,7 @@ void PWM::setPWMAll( int on, int off ) {
 	i2c->i2cWrite( ALLCHANNEL_OFF_H, off >> 8 );
 }
 
-int PWM::getPWMResolution() {
-	
-	return PWM_RESOLUTION;
-}
-
+// MARK: - Hardware interface setup and control  primitives
 
 bool Hardware::setupHardware() {
 	
@@ -338,7 +338,7 @@ void Hardware::setPWM( int pin, int value ) {
 	pwm->setPWM( pin, 0, value );
 }
 
-// MARK: motor section
+// MARK: motor  manaegment section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
 //	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
@@ -465,25 +465,6 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	}
 	setPWM( M0En, speedLeft );
 	setPWM( M1En, speedRight );
-}
-
-// MARK: status section
-void Hardware::setStatus( unsigned int newStatusFlags ) {
-    
-    syslog(LOG_NOTICE, "In Hardware::setStatus( 0x%04X )", newStatusFlags);
-    getStatusFlags = newStatusFlags;
-}
-
-long Hardware::getStatus() {
-    
-//    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
-    setStatusFlags = 0;
-    if ( upsideDownScanner ) {
-        setStatusFlags |= statusScannerOrientation;
-    }
-    syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
-
-    return setStatusFlags;
 }
 
 
@@ -743,13 +724,5 @@ long Hardware::pingTest( unsigned int angle ) {
 }
 
 void Hardware::allStop() {
-	
-}
-
-void Hardware::scanUntilFound( int scanType ) {
-	
-}
-
-void Hardware::turnAndFollow( int followDistance ) {
 	
 }
