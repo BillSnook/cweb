@@ -147,11 +147,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
             
         case 'a':
-//            syslog(LOG_NOTICE, "Command a, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
-            hardware.rangeData.pwmCenter = token1;
-            hardware.rangeData.servoPort = token2;
-            hardware.minimumPWM = token1 - 180;
-            filer.saveRange( &(hardware.rangeData) );
+////            syslog(LOG_NOTICE, "Command a, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
+//            hardware.rangeData.pwmCenter = token1;
+//            hardware.rangeData.servoPort = token2;
+//            hardware.minimumPWM = token1 - 180;
+//            filer.saveRange( &(hardware.rangeData) );
             break;
 
         case 'B':
