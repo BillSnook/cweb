@@ -263,8 +263,8 @@ bool Hardware::setupHardware() {
 
 
 // WFS - why is this being done here?  where should it be?
-//	  speed = Speed();
-//	  speed.initializeSpeedArray();
+	  speed = Speed();
+	  speed.initializeSpeedArray();
 //    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
 //    siteMap = SiteMap( pattern );
 //    siteMap.setupSiteMap();
