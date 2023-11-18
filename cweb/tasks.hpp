@@ -9,12 +9,6 @@
 #ifndef tasks_hpp
 #define tasks_hpp
 
-#ifdef ON_PI
-
-#include "ArducamDepthCamera.h"
-
-#endif  // ON_PI
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <syslog.h>            // close read write
@@ -33,10 +27,7 @@ enum TaskType {
 class TaskMaster {
 	
 	bool    stopLoop;
-    bool    cameraRunning;
     int     taskCount;
-
-    ArducamDepthCamera tof;
 
 public:
     
@@ -46,17 +37,11 @@ public:
 	void serviceTask( int task, int socket );
 
 	void killTasks();
-	void cameraStreamTest(int socketOrAddr);
 	void taskTest2();
 	void taskScan();
 	void taskPing();
 	void taskScanPing();
 	void taskHunt();
-
-    int  startCamera();
-    float  getCameraData(int socketOrAddr);
-    int  stopCamera();
-    int cameraDataSend(int socketOrAddr);
 };
 
 #endif /* tasks_hpp */

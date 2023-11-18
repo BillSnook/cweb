@@ -17,6 +17,13 @@
 
 #include "speed.hpp"
 
+#ifdef ON_PI
+
+#include "ArducamDepthCamera.h"
+
+#endif  // ON_PI
+
+
 
 #define ARD_I2C_ADDR        0x08    // Needs to match value set in Arduino controller code
 #define MOTOR_I2C_ADDRESS   0x6F    // Hard coded (literally) on motor controller board
@@ -100,8 +107,13 @@ public:
     int             minimumPWM;
 
 
-    int             initResult;         // Result from call to gpioInitialise - less than zero is an error
+    bool            gpioInitialised;    // Flag for successful response from call to gpioInitialise()
     unsigned        i2cDevice;          // Handle to opened i2c channel
+
+    bool            cameraInitialized;  // Flag for successful response from call to createArducamDepthCamera()
+#ifdef ON_PI
+    ArducamDepthCamera      tof;
+#endif  // ON_PI
 
 //	void initSpeedArrays();
 	bool setupHardware();
@@ -138,6 +150,13 @@ public:
     long pingTest( unsigned int angle );
     
 	void allStop();
+
+    void cameraInit();
+    int startCamera();
+    float getCameraData(int socketOrAddr);
+    int stopCamera();
+    int cameraDataSend(int socketOrAddr);
+    void cameraStreamTest(int socketOrAddr);
 };
 
 #endif /* hardware_hpp */

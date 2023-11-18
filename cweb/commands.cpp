@@ -118,24 +118,24 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
         case '@':       // Doesn't need thread
         {
-            long response = hardware.getStatus();
-            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
-//            if ( response & statusScannerOrientation ) {
-//                sprintf((char *)msg, "Status response: scanner inverted");
-//            } else {
-//                sprintf((char *)msg, "Status response: scanner upright" );
-//            }
-//            if ( actor.Version.major != 0 ) {
-//                sprintf((char *)msg, "%s, lidar found", msg );
-//            } else {
-//                sprintf((char *)msg, "%s, no lidar found", msg );
-//            }
+//            long response = hardware.getStatus();
+//            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
+            if ( hardware.gpioInitialised ) {
+                sprintf((char *)msg, "Status response: pigpio library initialized");
+            } else {
+                sprintf((char *)msg, "Status response: pigpio library failed to initialize" );
+            }
+            if ( hardware.cameraInitialized ) {
+                sprintf((char *)msg, "%s, tof camera found", msg );
+            } else {
+                sprintf((char *)msg, "%s, no tof camera found", msg );
+            }
 //            if ( manager.arduino_i2c > 0 ) {
 //                sprintf((char *)msg, "%s, arduino mgr found", msg );
 //            } else {
 //                sprintf((char *)msg, "%s, no arduino mgr found", msg );
 //            }
-            snprintf((char *)msg, 29, "Status is fine, how are you?" );
+//            snprintf((char *)msg, 29, "Status is fine, how are you?" );
         }
             break;
 
@@ -282,13 +282,13 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
         case 'o':            // Available
         {
             syslog(LOG_NOTICE, "Test camera streaming\n" );
-            taskMaster.cameraStreamTest( sockOrAddr );
+            hardware.cameraStreamTest( sockOrAddr );
             break;
         }
         case 'P':
         case 'p':
             syslog(LOG_NOTICE, "Test get camera data\n" );
-            taskMaster.cameraDataSend( sockOrAddr );
+            hardware.cameraDataSend( sockOrAddr );
             break;
         case 'Q':
 //        case 'q':

@@ -11,7 +11,9 @@
 #include "threader.hpp"
 #include "listen.hpp"
 
+#ifdef ON_PI
 #include <pigpio.h>
+#endif  // ON_PI
 
 // The purpose of this class is to allow a task to run independently
 // in a separate thread and allow the rest of the program to run normally.
@@ -27,19 +29,8 @@ void TaskMaster::setupTaskMaster() {
 	
 	syslog(LOG_NOTICE, "In setupTaskMaster" );
 	stopLoop = false;
-    cameraRunning = false;
 
     // So we can use our own signal handler:
-    int cfg = gpioCfgGetInternals();
-    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10)
-    gpioCfgSetInternals(cfg);
-    int status = gpioInitialise();
-
-    tof = createArducamDepthCamera();
-
-    if ( startCamera() != 0 ) {
-        syslog(LOG_NOTICE, "In setupTaskMaster, failed to start camera, continuing" );
-    }
     taskCount = 0;
 }
 
@@ -49,9 +40,6 @@ void TaskMaster::shutdownTaskMaster() {
 	syslog(LOG_NOTICE, "In shutdownTaskMaster" );
 	killTasks();
     usleep( 100000 );   // 1/10 second
-    stopCamera();     // Causing seg fault!
-    gpioTerminate();
-//	usleep( 100000 );
 }
 
 // MARK: Tasks section
@@ -66,7 +54,7 @@ void TaskMaster::serviceTask( int task, int socketOrAddr ) {	// Main command det
 			killTasks();
 			break;
 		case cameraTest:
-			cameraStreamTest(socketOrAddr);
+//			cameraStreamTest(socketOrAddr);
 			break;
 		case testTask2:
 			taskTest2();
@@ -97,19 +85,6 @@ void TaskMaster::killTasks() {
 //		hardware.scanStop();
 //	}
 	stopLoop = true;
-}
-
-void TaskMaster::cameraStreamTest(int socketOrAddr) {	// Print out messages so we know this task is running
-	
-    if ( !cameraRunning ) {
-        syslog(LOG_NOTICE, "In cameraStreamTest, camera has not been started" );
-        return;
-    }
-    char msg[64];
-    float x = getCameraData(socketOrAddr);
-    snprintf(msg, 64, "T In cameraStreamTest, data = %.2f", x);
-    listener.writeBack(msg, socketOrAddr);
-    syslog(LOG_NOTICE, "In cameraStreamTest, data = %.2f", x );
 }
 
 /*
@@ -198,141 +173,3 @@ void TaskMaster::taskHunt() {
 
     syslog(LOG_NOTICE, "In taskHunt" );
 }
-
-// MARK: Camera stuff
-
-int TaskMaster::startCamera() {
-
-    syslog(LOG_NOTICE, "In tasks, in startCamera" );
-    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
-        syslog(LOG_NOTICE, "arducamCameraOpen failed");
-        return -2;
-    }
-    if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
-        syslog(LOG_NOTICE, "arducamCameraStart failed");
-        return -3;
-    }
-
-    cameraRunning = true;
-    return 0;
-}
-
-float TaskMaster::getCameraData(int socketOrAddr) {
-    struct timeval tvNow;
-
-    if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in getCameraData with camera not running" );
-        return 0;
-    }
-    gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "In tasks, in getCameraData started, time: %i", tvNow.tv_usec );
-
-    ArducamFrameBuffer frame;
-
-    float *depth_ptr = 0;
-//    float *amplitude_ptr = 0;
-//    uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
-
-    // Is this needed - apparently yes, preps format
-    ArducamFrameFormat format;
-    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
-        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
-        arducamCameraReleaseFrame( tof, frame );
-    }
-
-    float savedDepth = 0.0;
-    for ( int i = 0; i < 10; i++ ) {
-        if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
-            depth_ptr = (float*)arducamCameraGetDepthData( frame );
-//            amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
-//            getPreview( preview_ptr, depth_ptr, amplitude_ptr );
-            gettimeofday( &tvNow, NULL );
-            savedDepth = depth_ptr[21720];
-            syslog(LOG_NOTICE, "Center distance: %.2f, time: %i\n", depth_ptr[21720], tvNow.tv_usec);
-//            listener.writeBack((char *)preview_ptr, socketOrAddr);
-            arducamCameraReleaseFrame( tof, frame );
-            usleep(1000000);
-        }
-    }
-//    free(preview_ptr);
-
-    gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
-    return savedDepth;
-}
-
-int TaskMaster::stopCamera() {
-
-    if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in stopCamera but cameraRunning is already false" );
-        return -2;
-    }
-    cameraRunning = false;
-    if ( arducamCameraStop( tof ) ) {
-        syslog(LOG_NOTICE, "arducamCameraStop failed");
-        return -1;
-    }
-//    if ( arducamCameraClose( &tof ) ) {
-//        syslog(LOG_NOTICE, "arducamCameraClose failed");
-//        return -1;
-//    }
-    return 0;
-}
-
-int TaskMaster::cameraDataSend(int socketOrAddr) {
-    struct timeval tvNow;
-
-    if (!cameraRunning) {
-        syslog(LOG_NOTICE, "In tasks, in cameraDataSend with camera not started" );
-        return 0;
-    }
-    gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "In tasks, in cameraDataSend started, time: %i", tvNow.tv_usec );
-
-    // 240 x 180 = 43200, half is 21600
-    ArducamFrameBuffer frame;
-    float *depth_ptr = 0;
-    float *depth_line = 0;
-    uint8_t preview_data[242];
-    uint8_t *preview_ptr;   //  = &preview_data[2];
-    preview_data[0] = 0x43; // "C"
-    preview_data[1] = 0x30; // "0"
-
-    ArducamFrameFormat format;
-    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
-        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
-        arducamCameraReleaseFrame( tof, frame );
-    }
-
-    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
-        depth_ptr = (float*)arducamCameraGetDepthData( frame );
-        depth_line = &depth_ptr[21600];
-        for (unsigned long int i = 0; i < 240; i++) {
-            float phase = (*(depth_line + i) / 2) * 255;
-            uint8_t depth = phase > 255 ? 255 : phase;
-            *(preview_ptr + 2 + i) = depth;
-        }
-        listener.writeBackCount((char *)preview_ptr, 242, socketOrAddr);
-        arducamCameraReleaseFrame( tof, frame );
-    }
-
-    gettimeofday( &tvNow, NULL );
-    syslog(LOG_NOTICE, "Clean exit from cameraDataSend routine, time: %i", tvNow.tv_usec );
-
-    return 0;
-}
-
-
-//#ifdef ON_PI
-//
-//void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_image_ptr) {
-//    unsigned long int len = 240 * 180;
-//    for (unsigned long int i = 0; i < len; i++) {
-//        uint8_t amplitude = *(amplitude_image_ptr + i) > 30 ? 254 : 0;
-//        float phase = ((1 - (*(phase_image_ptr + i) / 2)) * 255);
-//        uint8_t depth = phase > 255 ? 255 : phase;
-//        *(preview_ptr + i) = depth & amplitude;
-//    }
-//}
-//
-//#endif  // ON_PI

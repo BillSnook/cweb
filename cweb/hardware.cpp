@@ -22,6 +22,7 @@
 #include "manager.hpp"
 #include "map.hpp"
 #include "filer.hpp"
+#include "tasks.hpp"
 
 #ifdef ON_PI
 
@@ -29,10 +30,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-//#include <pigpio.h>
-
 #endif  // ON_PI
-
 
 #define VERSION_REQUIRED_MAJOR 1
 #define VERSION_REQUIRED_MINOR 0
@@ -242,14 +240,22 @@ bool Hardware::setupHardware() {
     motor1Setup = false;
     sweepOneWay = false;
     upsideDownScanner = false;
+    cameraInitialized = false;
+    gpioInitialised = false;
 
 #ifdef ON_PI
 
-    initResult = gpioInitialise();
-    if (initResult < 0) {
-        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed with %d", initResult);
+    int cfg = gpioCfgGetInternals();
+    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10) - allows us to manage signals
+    gpioCfgSetInternals(cfg);
+
+    gpioInitialised = gpioInitialise() >= 0;
+    if ( gpioInitialised ) {
+        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed");
         return false;
     }
+
+    cameraInit();
 
 #endif  // ON_PI
 
@@ -284,7 +290,11 @@ bool Hardware::shutdownHardware() {
 	
 #ifdef ON_PI
 
-    if (initResult >= 0) {
+    if cameraInitialized {
+        stopCamera();     // Causing seg fault?
+    }
+
+    if (gpioInitialise >= 0) {
         if (i2cDevice >= 0) {
             i2cClose(i2cDevice);
         }
@@ -738,3 +748,176 @@ long Hardware::pingTest( unsigned int angle ) {
 void Hardware::allStop() {
 	
 }
+
+// MARK: Camera stuff
+
+
+void Hardware::cameraInit() {
+
+#ifdef ON_PI
+    tof = createArducamDepthCamera();
+
+    if ( startCamera() != 0 ) {
+        syslog(LOG_NOTICE, "In cameraInit, failed to start camera, continuing" );
+        return;
+    }
+    cameraInitialized = true;
+#endif  // ON_PI
+}
+
+int Hardware::startCamera() {
+
+    syslog(LOG_NOTICE, "In hardware, in startCamera" );
+#ifdef ON_PI
+    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
+        syslog(LOG_NOTICE, "arducamCameraOpen failed");
+        return -2;
+    }
+    if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
+        syslog(LOG_NOTICE, "arducamCameraStart failed");
+        return -3;
+    }
+#endif  // ON_PI
+
+    return 0;
+}
+
+float Hardware::getCameraData(int socketOrAddr) {
+    struct timeval tvNow;
+    float savedDepth = 0.0;
+
+    if (!cameraInitialized) {
+        syslog(LOG_NOTICE, "In hardware, in getCameraData with camera not running" );
+        return 0;
+    }
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In hardware, in getCameraData started, time: %i", tvNow.tv_usec );
+
+#ifdef ON_PI
+    ArducamFrameBuffer frame;
+
+    float *depth_ptr = 0;
+//    float *amplitude_ptr = 0;
+//    uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
+
+    // Is this needed - apparently yes, preps format
+    ArducamFrameFormat format;
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    for ( int i = 0; i < 10; i++ ) {
+        if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+            depth_ptr = (float*)arducamCameraGetDepthData( frame );
+//            amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
+//            getPreview( preview_ptr, depth_ptr, amplitude_ptr );
+            gettimeofday( &tvNow, NULL );
+            savedDepth = depth_ptr[21720];
+            syslog(LOG_NOTICE, "Center distance: %.2f, time: %i\n", depth_ptr[21720], tvNow.tv_usec);
+//            listener.writeBack((char *)preview_ptr, socketOrAddr);
+            arducamCameraReleaseFrame( tof, frame );
+            usleep(1000000);
+        }
+    }
+//    free(preview_ptr);
+
+#endif  // ON_PI
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
+    return savedDepth;
+}
+
+int Hardware::stopCamera() {
+
+    if (!cameraInitialized) {
+        syslog(LOG_NOTICE, "In hardware, in stopCamera but cameraRunning is already false" );
+        return -2;
+    }
+    cameraInitialized = false;
+#ifdef ON_PI
+    if ( arducamCameraStop( tof ) ) {
+        syslog(LOG_NOTICE, "arducamCameraStop failed");
+        return -1;
+    }
+//    if ( arducamCameraClose( &tof ) ) {
+//        syslog(LOG_NOTICE, "arducamCameraClose failed");
+//        return -1;
+//    }
+#endif  // ON_PI
+    return 0;
+}
+
+int Hardware::cameraDataSend(int socketOrAddr) {
+    struct timeval tvNow;
+
+    if (!cameraInitialized) {
+        syslog(LOG_NOTICE, "In hardware, in cameraDataSend with camera not started" );
+        return 0;
+    }
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In hardware, in cameraDataSend started, time: %i", tvNow.tv_usec );
+
+#ifdef ON_PI
+    // 240 x 180 = 43200, half is 21600
+    ArducamFrameBuffer frame;
+    float *depth_ptr = 0;
+    float *depth_line = 0;
+    uint8_t preview_data[242];
+    uint8_t *preview_ptr;   //  = &preview_data[2];
+    preview_data[0] = 0x43; // "C"
+    preview_data[1] = 0x30; // "0"
+
+    ArducamFrameFormat format;
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        depth_ptr = (float*)arducamCameraGetDepthData( frame );
+        depth_line = &depth_ptr[21600];
+        for (unsigned long int i = 0; i < 240; i++) {
+            float phase = (*(depth_line + i) / 2) * 255;
+            uint8_t depth = phase > 255 ? 255 : phase;
+            *(preview_ptr + 2 + i) = depth;
+        }
+        listener.writeBackCount((char *)preview_ptr, 242, socketOrAddr);
+        arducamCameraReleaseFrame( tof, frame );
+    }
+#endif  // ON_PI
+
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "Clean exit from cameraDataSend routine, time: %i", tvNow.tv_usec );
+
+    return 0;
+}
+
+void Hardware::cameraStreamTest(int socketOrAddr) {    // Print out messages so we know this task is running
+
+    if ( !cameraInitialized ) {
+        syslog(LOG_NOTICE, "In cameraStreamTest, camera has not been started" );
+        return;
+    }
+#ifdef ON_PI
+    char msg[64];
+    float x = getCameraData(socketOrAddr);
+    snprintf(msg, 64, "T In cameraStreamTest, data = %.2f", x);
+    listener.writeBack(msg, socketOrAddr);
+    syslog(LOG_NOTICE, "In cameraStreamTest, data = %.2f", x );
+#endif  // ON_PI
+}
+
+//#ifdef ON_PI
+//
+//void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_image_ptr) {
+//    unsigned long int len = 240 * 180;
+//    for (unsigned long int i = 0; i < len; i++) {
+//        uint8_t amplitude = *(amplitude_image_ptr + i) > 30 ? 254 : 0;
+//        float phase = ((1 - (*(phase_image_ptr + i) / 2)) * 255);
+//        uint8_t depth = phase > 255 ? 255 : phase;
+//        *(preview_ptr + i) = depth & amplitude;
+//    }
+//}
+//
+//#endif  // ON_PI
