@@ -16,7 +16,8 @@
 
 #ifdef ON_PI
 
-#define CONFIG_FILE_PATH        "~/code/c/cweb/cweb"
+#define CONFIG_FILE_PATH        "/home/bill/code/c/cweb/cweb"
+//#define CONFIG_FILE_PATH        "~/code/c/cweb/cweb"
 
 #else   // ON_PI
 
