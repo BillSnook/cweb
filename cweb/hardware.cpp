@@ -250,7 +250,7 @@ bool Hardware::setupHardware() {
     gpioCfgSetInternals(cfg);
 
     gpioInitialised = gpioInitialise() >= 0;
-    if ( gpioInitialised ) {
+    if ( ! gpioInitialised ) {
         syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed");
         return false;
     }
