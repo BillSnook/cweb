@@ -232,7 +232,7 @@ void PWM::setPWMAll( int on, int off ) {
 
 // MARK: - Hardware interface setup and control  primitives
 
-bool Hardware::setupHardware() {
+void Hardware::setupHardware() {
 	
     syslog(LOG_NOTICE, "In setupHardware" );
 
@@ -243,65 +243,40 @@ bool Hardware::setupHardware() {
     cameraInitialized = false;
     gpioInitialised = false;
 
-#ifdef ON_PI
+    setupPiGPIO();
+    setupTOFCamera();
 
-    int cfg = gpioCfgGetInternals();
-    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10) - allows us to manage signals
-    gpioCfgSetInternals(cfg);
+    if ( gpioInitialised ) {
+        syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
 
-    gpioInitialised = gpioInitialise() >= 0;
-    if ( ! gpioInitialised ) {
-        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed");
-        return false;
+        pwm = new PWM( MOTOR_I2C_ADDRESS );        // Default for Motor Hat PWM chip
+        syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
+        i2cDevice = pwm->i2c->motor_i2c;
+        pwm->setPWMFrequency( PWM_FREQ );
+        syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
+
+        speed = Speed();
+        speed.initializeSpeedArray();
+
+//     WFS - why is this being done here?  where should it be?
+//        pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
+//        siteMap = SiteMap( pattern );
+//        siteMap.setupSiteMap();
+
+        scanLoop = false;
+        i2cDevice = -1;
     }
-
-    cameraInit();
-
-#endif  // ON_PI
-
-	syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-
-    pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-    syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
-    i2cDevice = pwm->i2c->motor_i2c;
-    pwm->setPWMFrequency( PWM_FREQ );
-    syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
-
-
-// WFS - why is this being done here?  where should it be?
-	  speed = Speed();
-	  speed.initializeSpeedArray();
-//    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
-//    siteMap = SiteMap( pattern );
-//    siteMap.setupSiteMap();
-
-	scanLoop = false;
-    i2cDevice = -1;
-
-	return true;
 }
 
-bool Hardware::shutdownHardware() {
-	
+void Hardware::shutdownHardware() {
+
 //	scanStop();
 //	centerServo();
 	
 	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
-#ifdef ON_PI
-
-    if (cameraInitialized) {
-        stopCamera();     // Causing seg fault?
-    }
-
-    if (gpioInitialised) {
-        if (i2cDevice >= 0) {
-            i2cClose(i2cDevice);
-        }
-        gpioTerminate();
-    }
-
-#endif  // ON_PI
+    shutdownTOFCamera();
+    shutdownPiGPIO();
 
 //	setPWM( M0En, 0 );		    // Turn off motors
 //	setPin( M0Fw, 0 );
@@ -316,8 +291,76 @@ bool Hardware::shutdownHardware() {
 //	setPWM( rangeData.servoPort, 0 );		// Unpower servos
 
 //    siteMap.shutdownSiteMap();
+}
 
-	return true;
+void Hardware::setupPiGPIO() {
+
+#ifdef ON_PI
+
+    int cfg = gpioCfgGetInternals();
+    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10) - allows us to manage signals
+    gpioCfgSetInternals(cfg);
+
+    gpioInitialised = gpioInitialise() >= 0;
+    if ( ! gpioInitialised ) {
+        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise failed");
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::shutdownPiGPIO() {
+
+#ifdef ON_PI
+
+    if (gpioInitialised) {
+        if (i2cDevice >= 0) {
+            i2cClose(i2cDevice);
+        }
+        gpioTerminate();
+        gpioInitialised = false;
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::setupTOFCamera() {
+
+#ifdef ON_PI
+
+    tof = createArducamDepthCamera();
+
+    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
+        syslog(LOG_NOTICE, "In setupHardware, arducamCameraOpen failed");
+    } else if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
+        syslog(LOG_NOTICE, "In setupHardware, arducamCameraStart failed");
+    } else {
+        cameraInitialized = true;
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::shutdownTOFCamera() {
+
+#ifdef ON_PI
+
+    if (cameraInitialized) {
+        if ( arducamCameraStop( tof ) ) {
+            syslog(LOG_NOTICE, "arducamCameraStop failed");
+        }
+        //        if ( arducamCameraClose( &tof ) ) {
+        //            syslog(LOG_NOTICE, "arducamCameraClose failed");
+        //            return -1;
+        //        }
+        cameraInitialized = false;
+    }
+
+#endif  // ON_PI
+
 }
 
 long Hardware::getStatus() {
@@ -751,37 +794,6 @@ void Hardware::allStop() {
 
 // MARK: Camera stuff
 
-
-void Hardware::cameraInit() {
-
-#ifdef ON_PI
-    tof = createArducamDepthCamera();
-
-    if ( startCamera() != 0 ) {
-        syslog(LOG_NOTICE, "In cameraInit, failed to start camera, continuing" );
-        return;
-    }
-    cameraInitialized = true;
-#endif  // ON_PI
-}
-
-int Hardware::startCamera() {
-
-    syslog(LOG_NOTICE, "In hardware, in startCamera" );
-#ifdef ON_PI
-    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
-        syslog(LOG_NOTICE, "arducamCameraOpen failed");
-        return -2;
-    }
-    if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
-        syslog(LOG_NOTICE, "arducamCameraStart failed");
-        return -3;
-    }
-#endif  // ON_PI
-
-    return 0;
-}
-
 float Hardware::getCameraData(int socketOrAddr) {
     struct timeval tvNow;
     float savedDepth = 0.0;
@@ -826,26 +838,6 @@ float Hardware::getCameraData(int socketOrAddr) {
     gettimeofday( &tvNow, NULL );
     syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
     return savedDepth;
-}
-
-int Hardware::stopCamera() {
-
-    if (!cameraInitialized) {
-        syslog(LOG_NOTICE, "In hardware, in stopCamera but cameraRunning is already false" );
-        return -2;
-    }
-    cameraInitialized = false;
-#ifdef ON_PI
-    if ( arducamCameraStop( tof ) ) {
-        syslog(LOG_NOTICE, "arducamCameraStop failed");
-        return -1;
-    }
-//    if ( arducamCameraClose( &tof ) ) {
-//        syslog(LOG_NOTICE, "arducamCameraClose failed");
-//        return -1;
-//    }
-#endif  // ON_PI
-    return 0;
 }
 
 int Hardware::cameraDataSend(int socketOrAddr) {
@@ -921,3 +913,34 @@ void Hardware::cameraStreamTest(int socketOrAddr) {    // Print out messages so 
 //}
 //
 //#endif  // ON_PI
+
+/*  Startup sequence for device
+
+ mtrctllog[2690]: In setupHardware
+
+ mtrctllog[2690]: In setupHardware, gpioInitialise failed
+
+ mtrctllog[2690]: In setupTaskMaster
+ mtrctllog[2690]: In setupListener
+
+
+ ----    ----    Run with sudo .mtrctl:
+
+ mtrctllog[2696]: In setupHardware
+
+ mtrctllog[2696]: In hardware, in startCamera
+ open ***WARNING*** Could not open device node /dev/video0. Please check for permissions.
+ mtrctllog[2696]: arducamCameraOpen failed
+ mtrctllog[2696]: In cameraInit, failed to start camera, continuing
+
+ mtrctllog[2696]: In setupHardware, setting MotorI2C address: 0x6F, PWM freq: 50
+ mtrctllog[2696]: In openI2CFile, I2C device handle for addr 6F: 0
+ mtrctllog[2696]: In setupHardware, pwm initialized
+ mtrctllog[2696]: SPECIAL, oldmode read from PWM board: 0x0001 before rework
+ mtrctllog[2696]: In setupHardware, pwm setup
+ mtrctllog[2696]: readSpeedArrays opened file
+ mtrctllog[2696]: Read speed array from file
+
+ mtrctllog[2696]: In setupTaskMaster
+ mtrctllog[2696]: In setupListener
+*/

@@ -124,7 +124,7 @@ void Speed::setSpeedBoth( int speedIndex, int leftSpeed, int rightSpeed ) {
             reverse[-speedIndex].left = leftSpeed;
             reverse[-speedIndex].right = rightSpeed;
         }
-        }
+    }
 }
 
 void Speed::setSpeedLeft( int speedIndex, int newSpeed ) {

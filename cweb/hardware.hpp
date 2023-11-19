@@ -116,8 +116,14 @@ public:
 #endif  // ON_PI
 
 //	void initSpeedArrays();
-	bool setupHardware();
-	bool shutdownHardware();
+    void setupHardware();
+	void shutdownHardware();
+
+    void setupPiGPIO();
+    void shutdownPiGPIO();
+    void setupTOFCamera();
+    void shutdownTOFCamera();
+    
     long getStatus();
 
 	void setPin( int pin, int value );
@@ -151,10 +157,7 @@ public:
     
 	void allStop();
 
-    void cameraInit();
-    int startCamera();
     float getCameraData(int socketOrAddr);
-    int stopCamera();
     int cameraDataSend(int socketOrAddr);
     void cameraStreamTest(int socketOrAddr);
 };
