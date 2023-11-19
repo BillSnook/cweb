@@ -15,6 +15,7 @@
 // For the tank we have < ~9v and the motors can take that.
 #define SPEED_INDEX_MAX         9		// Number of distinct speeds we can select - f and r
 #define SPEED_ADJUSTMENT        512     // Half for now to solve crash if too high
+#define SPEED_MAX_PWM           4095    // Maximum PWM value to send to device
 
 struct speed_array {
     int left;

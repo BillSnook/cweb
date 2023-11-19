@@ -49,10 +49,14 @@ void Speed::initializeSpeedArray() {
 void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 	
 	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
-		forward[i].left = i * SPEED_ADJUSTMENT;
-		forward[i].right = i * SPEED_ADJUSTMENT;
-		reverse[i].left = i * SPEED_ADJUSTMENT;
-		reverse[i].right = i * SPEED_ADJUSTMENT;
+        int setSpeed = i * SPEED_ADJUSTMENT;
+        if (setSpeed > SPEED_MAX_PWM) {
+            setSpeed = SPEED_MAX_PWM;
+        }
+		forward[i].left = setSpeed;
+		forward[i].right = setSpeed;
+		reverse[i].left = setSpeed;
+		reverse[i].right = setSpeed;
 	}
 }
 

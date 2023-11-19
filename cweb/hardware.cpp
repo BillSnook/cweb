@@ -39,7 +39,7 @@
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096	// Also used as value for PWM pin to be all on
-#define PWM_MAX                 4095	// Supplys full voltage to motor
+#define PWM_MAX                 4095	// Supplys full pulse width to motor
 #define PWM_FREQ                50		// For servos, motors seem to not care
 
 //#define SPEED_INDEX_MAX			PWM_COUNT / SPEED_ADJUSTMENT	// 8
