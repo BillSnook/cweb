@@ -242,6 +242,8 @@ void Hardware::setupHardware() {
     upsideDownScanner = false;
     cameraInitialized = false;
     gpioInitialised = false;
+    scanLoop = false;
+    i2cDevice = -1;
 
     setupPiGPIO();
     setupTOFCamera();
@@ -255,17 +257,14 @@ void Hardware::setupHardware() {
         pwm->setPWMFrequency( PWM_FREQ );
         syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
 
-        speed = Speed();
-        speed.initializeSpeedArray();
-
 //     WFS - why is this being done here?  where should it be?
 //        pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
 //        siteMap = SiteMap( pattern );
 //        siteMap.setupSiteMap();
-
-        scanLoop = false;
-        i2cDevice = -1;
     }
+
+    speed = Speed();
+    speed.initializeSpeedArray();
 }
 
 void Hardware::shutdownHardware() {
