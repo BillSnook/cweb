@@ -44,6 +44,7 @@ void Speed::initializeSpeedArray() {
         filer.saveSpeedArrays( forward, reverse );
 	} else {
 		syslog(LOG_NOTICE, "Read speed array from file" );
+        printSpeedArray();
 	}
 }
 
