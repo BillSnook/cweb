@@ -42,7 +42,9 @@ public:
 	void            resetSpeedArray();
     
     void            returnSpeedArray( char *displayString );
-    
+
+    void            printSpeedArray();
+
 
 	char            *displaySpeedArray( char * displayString );
 	char            *setSpeedTestIndex( int newSpeedIndex );

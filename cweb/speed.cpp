@@ -40,6 +40,7 @@ void Speed::initializeSpeedArray() {
 	if ( ! success ) {
 		syslog(LOG_NOTICE, "Failed reading speed array from file; making and saving default one" );
 		resetSpeedArray();
+        printSpeedArray();
         filer.saveSpeedArrays( forward, reverse );
 	} else {
 		syslog(LOG_NOTICE, "Read speed array from file" );
@@ -82,6 +83,16 @@ char * Speed::displaySpeedArray( char *displayString ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, -i, reverse[i].left, reverse[i].right );
 	}
 	return displayString;
+}
+
+void Speed::printSpeedArray() {     // For debugging
+    syslog(LOG_NOTICE, "S %d\n", SPEED_INDEX_MAX - 1 );
+    for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
+        syslog(LOG_NOTICE, "%d %d %d\n", i, forward[i].left, forward[i].right );
+    }
+    for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
+        syslog(LOG_NOTICE, "%d %d %d\n", -i, reverse[i].left, reverse[i].right );
+    }
 }
 
 char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
@@ -208,6 +219,7 @@ void Speed::setSpeedReverse() {
 
 void Speed::saveSpeedArray() {
 
+    printSpeedArray();
     filer.saveSpeedArrays( forward, reverse );
 }
 
@@ -215,5 +227,6 @@ void Speed::makeSpeedArray() {
 
     setSpeedForward();
     setSpeedReverse();
+    printSpeedArray();
     filer.saveSpeedArrays( forward, reverse );
 }

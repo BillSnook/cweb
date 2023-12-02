@@ -19,7 +19,6 @@ public:
     
     char hostName[32];
     char speedFileName[64];
-//    char rangeFileName[64];
 
     void getHostName();
     
@@ -27,9 +26,6 @@ public:
     
     void saveSpeedArrays( speed_array *forward, speed_array *reverse );
     bool readSpeedArrays( speed_array *forward, speed_array *reverse );
-    
-//    bool saveRange( RangeData *rangeDataPtr );
-//    bool readRange( RangeData *rangeDataPtr );
 };
 
 extern  Filer       filer;
