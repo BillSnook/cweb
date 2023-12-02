@@ -207,7 +207,12 @@ void Speed::setSpeedReverse() {
 }
 
 void Speed::saveSpeedArray() {
-    
+
+    filer.saveSpeedArrays( forward, reverse );
+}
+
+void Speed::makeSpeedArray() {
+
     setSpeedForward();
     setSpeedReverse();
     filer.saveSpeedArrays( forward, reverse );

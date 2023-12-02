@@ -62,6 +62,7 @@ public:
 	void            setSpeedReverse();
     
     void            saveSpeedArray();
+    void            makeSpeedArray();
 };
 
 #endif /* speed_hpp */

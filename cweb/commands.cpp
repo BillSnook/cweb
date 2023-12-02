@@ -181,7 +181,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
         }
 
-        case 'd':       // WFS Available for thread
+        case 'd':
+            hardware.speed.saveSpeedArray();
 			break;
             
 		case 'E':
@@ -191,7 +192,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             
 		case 'e':
             syslog(LOG_NOTICE, "Command e, setup speed array from endpoints and save it" );
-            hardware.speed.saveSpeedArray();
+            hardware.speed.makeSpeedArray();
 			break;
 			
 		case 'F':
@@ -349,7 +350,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'W':
 		case 'w':
-			filer.saveSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
+//			filer.saveSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
 		case 'X':
