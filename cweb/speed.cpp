@@ -36,8 +36,9 @@ bool Speed::resetForSpeed() {
 
 void Speed::initializeSpeedArray() {
 	
+    speedLimit = SPEED_INDEX_MAX - 1;
 	bool success = filer.readSpeedArrays( forward, reverse );
-	if ( ! success ) {
+    if ( ! success ) {
 		syslog(LOG_NOTICE, "Failed reading speed array from file; making and saving default one" );
 		resetSpeedArray();
         printSpeedArray();
@@ -128,13 +129,14 @@ int Speed::speedRight( int speedIndex ) {
 }
 
 void Speed::setSpeedBoth( int speedIndex, int leftSpeed, int rightSpeed ) {
-    if ( ( speedIndex > -SPEED_INDEX_MAX ) && ( speedIndex < SPEED_INDEX_MAX ) ) {
-        if ( speedIndex > 0 ) {
-            forward[speedIndex].left = leftSpeed;
-            forward[speedIndex].right = rightSpeed;
+//    speedIndex -> 0 - 16
+    if ( ( speedIndex >= 0 ) && ( speedIndex <= (speedLimit * 2) ) ) {
+        if ( speedIndex > speedLimit ) {
+            forward[speedIndex - speedLimit].left = leftSpeed;
+            forward[speedIndex - speedLimit].right = rightSpeed;
         } else {
-            reverse[-speedIndex].left = leftSpeed;
-            reverse[-speedIndex].right = rightSpeed;
+            reverse[speedLimit - speedIndex].left = leftSpeed;
+            reverse[speedLimit - speedIndex].right = rightSpeed;
         }
     }
 }

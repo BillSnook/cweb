@@ -27,11 +27,12 @@ class Speed {
 	
 	bool    		debug;
 	int				calibrationTestIndex;	// Keep track of working index
-	
+    int             speedLimit
+
 public:
     explicit        Speed();
 
-	speed_array 	forward[SPEED_INDEX_MAX];
+	speed_array 	forward[SPEED_INDEX_MAX];   // 0...8
 	speed_array 	reverse[SPEED_INDEX_MAX];
 
 	
