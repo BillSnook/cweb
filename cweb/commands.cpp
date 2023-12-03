@@ -186,7 +186,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
             
 		case 'E':
-            syslog(LOG_NOTICE, "Command E, set speed array entry, \(token1): \(token2) - \(token3)" );
+            syslog(LOG_NOTICE, "Command E, set speed array entry %d: %d - %d ", token1, token2, token3);
             hardware.speed.setSpeedBoth( token1, token2, token3 );
             break;
             
