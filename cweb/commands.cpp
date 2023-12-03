@@ -186,7 +186,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
             
 		case 'E':
-            syslog(LOG_NOTICE, "Command E, set speed array entry" );
+            syslog(LOG_NOTICE, "Command E, set speed array entry, \(token1): \(token2) - \(token3)" );
             hardware.speed.setSpeedBoth( token1, token2, token3 );
             break;
             
@@ -208,20 +208,20 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'g':
 //			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
 //			hardware.cmdSpeed( token1 );
-        {
-            long pingTimeuSec = hardware.doPing();
-            long cm = pingTimeuSec/29/2;
-            long inches = pingTimeuSec/74/2;
-//            long mm = (pingTimeuSec*10)/29/2;
-            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
-        }
+//        {
+//            long pingTimeuSec = hardware.doPing();
+//            long cm = pingTimeuSec/29/2;
+//            long inches = pingTimeuSec/74/2;
+////            long mm = (pingTimeuSec*10)/29/2;
+//            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
+//        }
 			break;
 			
 		case 'H':
 		case 'h':
 		{
-			char *display = hardware.speed.displaySpeedArray( (char *)msg );
-			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", msg );
+			hardware.speed.printSpeedArray();
+//			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", msg );
 //			memcpy( msg, display, strlen( display ) );
 //			free( display );
 		}
