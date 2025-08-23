@@ -188,13 +188,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'E':
             syslog(LOG_NOTICE, "Command E, set speed array entry %d: %d - %d ", token1, token2, token3);
             hardware.speed.setSpeedBoth( token1, token2, token3 );
-            hardware.speed.printSpeedArray();
             break;
             
 		case 'e':
             syslog(LOG_NOTICE, "Command e, setup speed array from endpoints and save it" );
             hardware.speed.makeSpeedArray();
-            hardware.speed.printSpeedArray();
 			break;
 			
 		case 'F':
@@ -207,9 +205,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
             // MARK: - Calibration -- Motor control/speed commands
 		case 'G':
-		case 'g':
-//			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
-//			hardware.cmdSpeed( token1 );
+            syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
+            hardware.cmdSpeed( token1 );
+            break;
+		case 'g':       // WFS Available for thread
 //        {
 //            long pingTimeuSec = hardware.doPing();
 //            long cm = pingTimeuSec/29/2;

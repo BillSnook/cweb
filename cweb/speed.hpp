@@ -27,7 +27,7 @@ class Speed {
 	
 	bool    		debug;
 	int				calibrationTestIndex;	// Keep track of working index
-    int             speedLimit
+    int             speedLimit;
 
 public:
     explicit        Speed();
