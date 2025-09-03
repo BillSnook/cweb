@@ -106,7 +106,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             if ((n != 1) || (buffer[0] != '?')) {
-                syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+                syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data %c from clientAddr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
@@ -138,7 +138,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
                 localLoop = false;
-                syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled, exiting service loop" );
+                syslog(LOG_NOTICE, "Received goodbye command #, keep-alive disabled, exiting service loop" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
