@@ -515,7 +515,7 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	}
 	int speedLeft = speed.speedLeft( speedIndex );	// Index says f or r but speedL or R is absolute
 	int speedRight = speed.speedRight( speedIndex );
-	syslog( LOG_NOTICE, "cmdSpeed, sl: %d, sr: %d", speedLeft, speedRight );
+	syslog( LOG_NOTICE, "cmdSpeed index %d, sl: %d, sr: %d", speedIndex, speedLeft, speedRight );
 	if ( speedIndex < 0 ) {
 		setPin( M0Fw, 1 );
 		setPin( M0Rv, 0 );

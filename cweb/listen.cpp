@@ -135,6 +135,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
                 // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
+                syslog(LOG_NOTICE, "." );
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
                 localLoop = false;
@@ -144,7 +145,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
             }
         } else if ( cmd < 'a' ) {       // Capitalized characters
-            // Run real quick command such as setting a pin or pwm value
+            // Run real quick command such as setting a pin or formatting the speed array for sending
             commander.serviceCommand( buffer, sockOrAddr );
         } else {                        // Lower case characters
             // Command that may take a while to complete and needs it's own thread
@@ -154,6 +155,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 		free( buffer );
 	}
 	close( connectionSockfd );
+    connectionSockfd = 0;
 	syslog(LOG_NOTICE, "In serviceConnection at end" );
 }
 

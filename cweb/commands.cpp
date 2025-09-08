@@ -60,6 +60,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     char commandType = command[0];  // Get command
     if ( commandType == '?' ) {     // Keep-alive timed out, all stop
         syslog(LOG_NOTICE, "Command ?, keep-alive received" );
+        hardware.cmdSpeed( 0 );     // Emergency - stop motors
         return;
     }
     char *nextToken[tokenMax+1];
