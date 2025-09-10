@@ -11,6 +11,7 @@
 #include <syslog.h>
 #include <arpa/inet.h>
 
+#include "mtrctl.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
 #include "commands.hpp"
@@ -106,7 +107,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             if ((n != 1) || (buffer[0] != '?')) {
-                syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data %c from clientAddr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+                syslog(LOG_NOTICE, "In datagram serviceConnection: %ld bytes of data %c from addr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
@@ -117,7 +118,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
         if ( n <= 0 ) {
-            syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
+            syslog(LOG_NOTICE, "Connection closed by %s, error %ld", inet_address, n );
 //          syslog(LOG_ERR, "ERROR reading command from socket" );
             free( buffer );
             break;
@@ -127,14 +128,14 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
             keepAliveOn = true;
         }
-        gettimeofday(&tvLatest, NULL);
-        
+        gettimeofday(&tvLatest, NULL);  // Last time communication received
+
         char cmd = buffer[0];
 //        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
-                // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
+                // Was sent if no other commmand in 1/2 second to indicate the communication channel is still open
 //                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
@@ -157,6 +158,13 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	close( connectionSockfd );
     connectionSockfd = 0;
 	syslog(LOG_NOTICE, "In serviceConnection at end" );
+    if ( useDatagramProtocol ) {    // Need to listen again for connection
+        // keepaliveThread should die, restart listenThread
+        uint16_t portNo = PORT;
+        threader.queueThread( listenThread, portNo, 0 );
+        syslog(LOG_NOTICE, "Ready to accept connections again on port %u", portNo );
+    }
+
 }
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
@@ -244,7 +252,7 @@ long Listener::testTimedOut() {      // Keep-alive support - true iff too long
     
     struct timeval diffTime, tvNow;
     gettimeofday(&tvNow, NULL);
-    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;;
+    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;
     diffTime.tv_usec = tvNow.tv_usec - tvLatest.tv_usec;
     if ( diffTime.tv_usec < 0 ) {
         diffTime.tv_sec -= 1;
@@ -258,8 +266,8 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
 
     // WFS note - may want to not do this if we go to autonomous mode
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
-    while ( true ) {
-        if ( keepAliveOn && testTimedOut() ) {    // 1.5 seconds delay before true
+    while ( keepAliveOn ) {
+        if ( testTimedOut() ) {    // 1.5 seconds delay before true
             keepAliveOn = false;       // Only do this once until comms are reestablished
             char killAction[] = "?";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command

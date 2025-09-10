@@ -48,7 +48,7 @@ void Commander::shutdownCommander() {
 	hardware.shutdownHardware();
 }
 
-// This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
+// This is launched on it's own thread from the listeners serviceConnection for command data from wifi
 void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main command determination routine
     // WFS sockOrAddr is only used here for use as an indicator of where to respond,
     //  but this does not work with UDP datagrams that need an addr/port pair to target the response
@@ -117,7 +117,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            actor.mainTest( token1, token2 );
 			break;
 			
-        case '@':       // Doesn't need thread
+        case '@':       // Get status, doesn't need thread
         {
 //            long response = hardware.getStatus();
 //            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );

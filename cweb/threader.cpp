@@ -263,7 +263,7 @@ void Threader::runNextThread( void *tcPointer ) {
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "Run next thread exit %s, thread count: %d", newThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "  Run next thread exit %s, thread count: %d", newThreadControl.description(), threadCount );
 }
 
 void *startThread(void *arguments) {

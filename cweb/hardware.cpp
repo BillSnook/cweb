@@ -246,7 +246,7 @@ void Hardware::setupHardware() {
     i2cDevice = -1;
 
     setupPiGPIO();
-    setupTOFCamera();
+//    setupTOFCamera();
 
     if ( gpioInitialised ) {
         syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
@@ -274,7 +274,7 @@ void Hardware::shutdownHardware() {
 	
 	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
-    shutdownTOFCamera();
+//    shutdownTOFCamera();
     shutdownPiGPIO();
 
 //	setPWM( M0En, 0 );		    // Turn off motors
@@ -351,10 +351,10 @@ void Hardware::shutdownTOFCamera() {
         if ( arducamCameraStop( tof ) ) {
             syslog(LOG_NOTICE, "arducamCameraStop failed");
         }
-        //        if ( arducamCameraClose( &tof ) ) {
-        //            syslog(LOG_NOTICE, "arducamCameraClose failed");
-        //            return -1;
-        //        }
+//        if ( arducamCameraClose( &tof ) ) {
+//            syslog(LOG_NOTICE, "arducamCameraClose failed");
+//            return -1;
+//        }
         cameraInitialized = false;
     }
 

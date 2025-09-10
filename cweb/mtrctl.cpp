@@ -24,10 +24,6 @@
 #include "filer.hpp"
 
 
-#define	PORT	5555
-
-#define MAKE_DAEMON     // Potentially become a daemon and run in the background
-
 Threader	threader;
 
 Listener	listener;
@@ -117,7 +113,7 @@ int main(int argc, const char * argv[]) {
     listener = Listener();
     uint16_t portNo = PORT;
     threader.queueThread( listenThread, portNo, 0 );
-	syslog(LOG_NOTICE, "Ready to service queue and accept commands on port %u, v4.1.3", portNo );
+	syslog(LOG_NOTICE, "Ready to accept connections on port %u, v4.2", portNo );
 
 	while ( doLoop ) {
 		threader.lock();
