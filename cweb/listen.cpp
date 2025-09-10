@@ -135,7 +135,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
                 // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
-                syslog(LOG_NOTICE, "." );
+//                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
                 localLoop = false;

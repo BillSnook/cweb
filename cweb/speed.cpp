@@ -45,7 +45,7 @@ void Speed::initializeSpeedArray() {
         filer.saveSpeedArrays( forward, reverse );
 	} else {
 		syslog(LOG_NOTICE, "Read speed array from file" );
-        printSpeedArray();
+//        printSpeedArray();
 	}
 }
 
@@ -74,8 +74,8 @@ void Speed::returnSpeedArray( char *displayString ) {
     }
 }
 
-char * Speed::displaySpeedArray( char *displayString ) {
-	
+char * Speed::displaySpeedArray( char *displayString ) {    // Deprecated - description
+
 	strcat( displayString, " Speed array, forward:\n" );
 	for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
 		sprintf( displayString, "%s i: %d - l: %d, r: %d\n", displayString, i, forward[i].left, forward[i].right );
@@ -88,7 +88,7 @@ char * Speed::displaySpeedArray( char *displayString ) {
 }
 
 void Speed::printSpeedArray() {     // For debugging
-    syslog(LOG_NOTICE, "S %d\n", SPEED_INDEX_MAX - 1 );
+    syslog(LOG_NOTICE, "D %d\n", SPEED_INDEX_MAX - 1 );
     for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
         syslog(LOG_NOTICE, "%d %d %d\n", i, forward[i].left, forward[i].right );
     }
@@ -97,7 +97,7 @@ void Speed::printSpeedArray() {     // For debugging
     }
 }
 
-char *Speed::setSpeedTestIndex( int newSpeedIndex ) {
+char *Speed::setSpeedTestIndex( int newSpeedIndex ) {   // Cmd J
 	calibrationTestIndex = newSpeedIndex;
 	char *displayString = (char *)malloc( 32 );
 	sprintf( displayString, "i %d %d %d", newSpeedIndex, speedLeft( newSpeedIndex ), speedRight( newSpeedIndex ) );

@@ -222,10 +222,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 		case 'H':
 		case 'h':
 		{
-			hardware.speed.printSpeedArray();
-//			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", msg );
-//			memcpy( msg, display, strlen( display ) );
-//			free( display );
+			hardware.speed.printSpeedArray();   // Causes debug print of speed array
 		}
 			break;
 			
