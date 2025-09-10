@@ -62,10 +62,6 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 		return;
 	}
 
-    gettimeofday(&tvLatest, NULL);  // Last time communication received
-    keepAliveOn = true; // Test
-    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
-
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
         syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
@@ -99,7 +95,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
     bool    localLoop = true;
     long    n;
-	while ( localLoop ) {
+
+    while ( localLoop ) {
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
@@ -138,6 +135,11 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
                 // Was sent if no other commmand in 1/2 second to indicate the communication channel is still open
+                if ( !keepAliveOn ) {
+                    keepAliveOn = true; // Test
+//                    gettimeofday(&tvLatest, NULL);  // Last time communication received
+                    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+                }
 //                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;

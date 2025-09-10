@@ -308,17 +308,17 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'S':
             hardware.cmdSpeed( 0 );
-            hardware.scanStop();
+//            hardware.scanStop();
             syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command 'S'" );
-            hardware.centerServo();
+//            hardware.centerServo();
 //            actor.stop();
 			break;
 
         case 's':
 //            manager.stopVL();
-            syslog(LOG_NOTICE, "Did stopVL" );
-            hardware.scanStop();
-            syslog(LOG_NOTICE, "Did scanStop for command 's'" );
+//            syslog(LOG_NOTICE, "Did stopVL" );
+//            hardware.scanStop();
+//            syslog(LOG_NOTICE, "Did scanStop for command 's'" );
             hardware.cmdSpeed( 0 );
             syslog(LOG_NOTICE, "Did cmdSpeed" );
 //            taskMaster.killTasks();
