@@ -41,7 +41,7 @@ void Listener::shutdownListener() {
 
 void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
-    syslog(LOG_NOTICE, "In acceptConnections with portNo on which to listen: %u", rcvPortNo );
+    syslog(LOG_NOTICE, "    In acceptConnections with portNo on which to listen: %u", rcvPortNo );
     if ( useDatagramProtocol ) {
         socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
     } else {
@@ -64,24 +64,24 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
+        syslog(LOG_NOTICE, "    Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
         threader.queueThread( serverThread, inAddress, socketfd );
     } else {                            // Basically listen forever for a new connection then create a server thread
         bool doListenerLoop = true;
-        syslog(LOG_NOTICE, "Success binding to TCP socket port %u on %s", rcvPortNo, inAddress );
+        syslog(LOG_NOTICE, "    Success binding to TCP socket port %u on %s", rcvPortNo, inAddress );
         struct sockaddr_in cli_addr;
         socklen_t clilen = sizeof( cli_addr );
         while ( doListenerLoop ) {
-            syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", socketfd);
+            syslog(LOG_NOTICE, "    In acceptConnections, listening on socket %d", socketfd);
             listen( socketfd, 5 );
             int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
-            syslog(LOG_NOTICE, "Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
+            syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
             if ( connectionSockfd < 0 ) {
                 syslog(LOG_ERR, "ERROR on accept" );
                 break;
             }
-            syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
-            
+            syslog(LOG_NOTICE, "    Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
+
             threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
             
 //          doListenerLoop = false; // Do once for testing
@@ -100,7 +100,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
-//		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
+		syslog(LOG_NOTICE, "In serviceConnection ready for data...");
         if ( useDatagramProtocol ) {
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
@@ -123,10 +123,11 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-//        if ( !keepAliveOn ) {
-//            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
-//            keepAliveOn = true;
-//        }
+        if ( !keepAliveOn ) {
+            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
+            keepAliveOn = true;
+            threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+        }
         gettimeofday(&tvLatest, NULL);  // Last time communication received
 
         char cmd = buffer[0];
@@ -135,11 +136,6 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
                 // Was sent if no other commmand in 1/2 second to indicate the communication channel is still open
-                if ( !keepAliveOn ) {
-                    keepAliveOn = true; // Test
-//                    gettimeofday(&tvLatest, NULL);  // Last time communication received
-                    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
-                }
 //                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
