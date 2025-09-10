@@ -87,7 +87,7 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 //          doListenerLoop = false; // Do once for testing
         }
         close( socketfd );
-        syslog(LOG_NOTICE, "In acceptConnections at exit" );
+        syslog(LOG_NOTICE, "    In acceptConnections at exit" );
     }
 }
 
@@ -96,11 +96,11 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
     bool    localLoop = true;
     long    n;
 
+    syslog(LOG_NOTICE, "    In serviceConnection ready for data...");
     while ( localLoop ) {
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
-		syslog(LOG_NOTICE, "In serviceConnection ready for data...");
         if ( useDatagramProtocol ) {
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
