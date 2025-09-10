@@ -62,8 +62,9 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 		return;
 	}
 
-    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+    gettimeofday(&tvLatest, NULL);  // Last time communication received
     keepAliveOn = true; // Test
+    threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
@@ -268,13 +269,13 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
     // WFS note - may want to not do this if we go to autonomous mode
     syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( keepAliveOn ) {
+        usleep( 100000 );       // 1/10 seconds
         if ( testTimedOut() ) {    // 1.5 seconds delay before true
             keepAliveOn = false;       // Only do this once until comms are reestablished
-            char killAction[] = "?";
+            char killAction[] = "S";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
             syslog(LOG_NOTICE, "Lost comms, emergency stop, keep-alive off" );
         }
-        usleep( 100000 );       // 1/10 seconds
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
