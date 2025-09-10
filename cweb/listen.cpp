@@ -63,6 +63,7 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 	}
 
     threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+    keepAliveOn = true; // Test
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
@@ -124,10 +125,10 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-        if ( !keepAliveOn ) {
-            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
-            keepAliveOn = true;
-        }
+//        if ( !keepAliveOn ) {
+//            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
+//            keepAliveOn = true;
+//        }
         gettimeofday(&tvLatest, NULL);  // Last time communication received
 
         char cmd = buffer[0];
