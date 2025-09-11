@@ -106,7 +106,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             if ((n != 1) || (buffer[0] != '?')) {
-                syslog(LOG_NOTICE, "In datagram serviceConnection: %ld bytes of data %c from addr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+                syslog(LOG_NOTICE, "    In datagram serviceConnection: %ld bytes of data %c from addr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
@@ -124,7 +124,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
         
         if ( !keepAliveOn ) {
-            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
+            syslog(LOG_NOTICE, "    Keep-alive enabled" );  // Wake up
             keepAliveOn = true;
             threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
         }
@@ -140,7 +140,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
                 localLoop = false;
-                syslog(LOG_NOTICE, "Received goodbye command #, keep-alive disabled, exiting service loop" );
+                syslog(LOG_NOTICE, "    Received goodbye command #, keep-alive disabled, exiting service loop" );
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
@@ -157,12 +157,12 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	}
 	close( connectionSockfd );
     connectionSockfd = 0;
-	syslog(LOG_NOTICE, "In serviceConnection at end" );
+	syslog(LOG_NOTICE, "    In serviceConnection at end" );
     if ( useDatagramProtocol ) {    // Need to listen again for connection
         // keepaliveThread should die, restart listenThread
         uint16_t portNo = PORT;
         threader.queueThread( listenThread, portNo, 0 );
-        syslog(LOG_NOTICE, "Ready to accept connections again on port %u", portNo );
+        syslog(LOG_NOTICE, "    Ready to accept connections again on port %u", portNo );
     }
 
 }
@@ -265,7 +265,7 @@ long Listener::testTimedOut() {      // Keep-alive support - true iff too long
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
     // WFS note - may want to not do this if we go to autonomous mode
-    syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
+    syslog(LOG_NOTICE, "    In Listener monitor, entering loop testing for loss of comm to controller" );
     while ( keepAliveOn ) {
         usleep( 100000 );       // 1/10 seconds
         if ( testTimedOut() ) {    // 1.5 seconds delay before true
