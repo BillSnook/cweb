@@ -300,7 +300,7 @@ void Hardware::setupPiGPIO() {
     cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10) - allows us to manage signals
     gpioCfgSetInternals(cfg);
 
-    int initGPIO = gpioInitialise()
+    int initGPIO = gpioInitialise();
     gpioInitialised = initGPIO >= 0;
     if ( ! gpioInitialised ) {
         syslog(LOG_NOTICE, "In setupHardware, gpioInitialise() failed: %d", initGPIO);

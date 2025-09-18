@@ -152,7 +152,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             // Run real quick command such as setting a pin or formatting the speed array for sending
             commander.serviceCommand( buffer, sockOrAddr );
         } else {                        // Lower case characters
-            // Command that may take a while to complete and needs it's own thread
+            // Command that may take a while and commander.serviceCommand needs it's own thread
             threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
         }
 
@@ -276,7 +276,7 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
             keepAliveOn = false;       // Only do this once until comms are reestablished
             char killAction[] = "S";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
-            syslog(LOG_NOTICE, "Lost comms, keep-alive off, monitor exiting, sent emergency stop" );
+            syslog(LOG_NOTICE, "Lost comms, sent emergency stop, keep-alive off, monitor exiting" );
         }
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
