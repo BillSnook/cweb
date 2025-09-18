@@ -236,11 +236,11 @@ void Threader::runNextThread( void *tcPointer ) {
     syslog(LOG_NOTICE, "      socket: %u, addr: %u, command: %s", newPort, newThreadControl.nextAddress,  newThreadControl.nextCommand);
 
 	switch ( newThreadControl.nextThreadType ) {
-//		case managerThread:         // Singleton, started first, manages I2C communication
+//		case managerThread:         // Singleton, started first, manages I2C communication - deprecated - used to talk to an arduino over i2c
 //			manager.monitor();
 //			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
-                                    // For datagram, binds socket to port and returns
+                                    // For datagram, binds socket and returns
 			listener.acceptConnections( newPort);
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received

@@ -39,7 +39,7 @@ void Listener::shutdownListener() {
 //    usleep( 100000 );
 }
 
-// Runs as listenerThread
+// Runs as listenerThread - return ends that thread - fails and useDatagram (UDP) returns immediately
 void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
     syslog(LOG_NOTICE, "    In acceptConnections with portNo on which to listen: %u", rcvPortNo );
@@ -64,32 +64,34 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 	}
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
-    if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
+    if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle any incoming data
         syslog(LOG_NOTICE, "    Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
         threader.queueThread( serverThread, inAddress, socketfd );
-    } else {                            // Basically listen forever for a new connection then create a server thread
-        bool doListenerLoop = true;
-        syslog(LOG_NOTICE, "    Success binding to TCP socket port %u on %s", rcvPortNo, inAddress );
-        struct sockaddr_in cli_addr;
-        socklen_t clilen = sizeof( cli_addr );
-        while ( doListenerLoop ) {
-            syslog(LOG_NOTICE, "    In acceptConnections, listening on socket %d", socketfd);
-            listen( socketfd, 5 );
-            int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
-            syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
-            if ( connectionSockfd < 0 ) {
-                syslog(LOG_ERR, "ERROR on accept" );
-                break;
-            }
-            syslog(LOG_NOTICE, "    Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
-
-            threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
-            
-//          doListenerLoop = false; // Do once for testing
-        }
-        close( socketfd );
-        syslog(LOG_NOTICE, "    In acceptConnections at exit" );
+        return;
     }
+
+    // Basically listen forever for a new connection then create a server thread for each - deprecated because we upgraded to UDP
+    bool doListenerLoop = true;
+    syslog(LOG_NOTICE, "    Success binding to TCP socket %d, port %u on %s", socketfd, rcvPortNo, inAddress );
+    struct sockaddr_in cli_addr;
+    socklen_t clilen = sizeof( cli_addr );
+    while ( doListenerLoop ) {
+        syslog(LOG_NOTICE, "    In acceptConnections, listening on socket %d", socketfd);
+        listen( socketfd, 5 );
+        int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
+        syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
+        if ( connectionSockfd < 0 ) {
+            syslog(LOG_ERR, "ERROR on accept" );
+            break;
+        }
+        syslog(LOG_NOTICE, "    Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
+
+        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
+
+//          doListenerLoop = false; // Do once for testing
+    }
+    close( socketfd );
+    syslog(LOG_NOTICE, "    In acceptConnections at exit from TCP version" );
 }
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
@@ -156,12 +158,12 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 		free( buffer );
 	}
-    if ( useDatagramProtocol ) {    // Need to listen again for connection
+    if ( !useDatagramProtocol ) {    // No need to listen again for connection
         // keepaliveThread should die, restart listenThread
-        uint16_t portNo = PORT;
-        threader.queueThread( listenThread, portNo, 0 );
-        syslog(LOG_NOTICE, "    Ready to accept connections again on port %u", portNo );
-    } else {
+//        uint16_t portNo = PORT;
+//        threader.queueThread( listenThread, portNo, 0 );
+//        syslog(LOG_NOTICE, "    Ready to accept connections again on port %u", portNo );
+//    } else {
         close( connectionSockfd );
         connectionSockfd = 0;
     }
@@ -274,7 +276,7 @@ void Listener::monitor() {      // Intended to run in a thread to monitor keep a
             keepAliveOn = false;       // Only do this once until comms are reestablished
             char killAction[] = "S";
             commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
-            syslog(LOG_NOTICE, "Lost comms, emergency stop, keep-alive off" );
+            syslog(LOG_NOTICE, "Lost comms, keep-alive off, monitor exiting, sent emergency stop" );
         }
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );

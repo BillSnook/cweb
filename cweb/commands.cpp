@@ -124,7 +124,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             if ( hardware.gpioInitialised ) {
                 sprintf((char *)msg, "@ New pigpio library initialized");
             } else {
-                sprintf((char *)msg, "Status response: new pigpio library failed to initialize" );
+                sprintf((char *)msg, "@ New pigpio library failed to initialize" );
             }
 //            if ( hardware.cameraInitialized ) {
 //                sprintf((char *)msg, "%s, tof camera found", msg );
