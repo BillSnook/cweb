@@ -122,15 +122,15 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            long response = hardware.getStatus();
 //            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
             if ( hardware.gpioInitialised ) {
-                sprintf((char *)msg, "Status response: pigpio library initialized");
+                sprintf((char *)msg, "@ New pigpio library initialized");
             } else {
-                sprintf((char *)msg, "Status response: pigpio library failed to initialize" );
+                sprintf((char *)msg, "Status response: new pigpio library failed to initialize" );
             }
-            if ( hardware.cameraInitialized ) {
-                sprintf((char *)msg, "%s, tof camera found", msg );
-            } else {
-                sprintf((char *)msg, "%s, no tof camera found", msg );
-            }
+//            if ( hardware.cameraInitialized ) {
+//                sprintf((char *)msg, "%s, tof camera found", msg );
+//            } else {
+//                sprintf((char *)msg, "%s, no tof camera found", msg );
+//            }
 //            if ( manager.arduino_i2c > 0 ) {
 //                sprintf((char *)msg, "%s, arduino mgr found", msg );
 //            } else {
@@ -307,9 +307,9 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 			
 		case 'S':
+            syslog(LOG_NOTICE, "cmdSpeed(0) in serviceCommand for command 'S'" );
             hardware.cmdSpeed( 0 );
 //            hardware.scanStop();
-            syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command 'S'" );
 //            hardware.centerServo();
 //            actor.stop();
 			break;

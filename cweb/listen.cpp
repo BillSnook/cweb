@@ -39,6 +39,7 @@ void Listener::shutdownListener() {
 //    usleep( 100000 );
 }
 
+// Runs as listenerThread
 void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
     syslog(LOG_NOTICE, "    In acceptConnections with portNo on which to listen: %u", rcvPortNo );
@@ -124,8 +125,8 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
         
         if ( !keepAliveOn ) {
-            syslog(LOG_NOTICE, "    Keep-alive enabled" );  // Wake up
-            keepAliveOn = true;
+            syslog(LOG_NOTICE, "    Keep-alive enabled" );
+            keepAliveOn = true;         // Wake up
             threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
         }
         gettimeofday(&tvLatest, NULL);  // Last time communication received
@@ -155,15 +156,16 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 
 		free( buffer );
 	}
-	close( connectionSockfd );
-    connectionSockfd = 0;
-	syslog(LOG_NOTICE, "    In serviceConnection at end" );
     if ( useDatagramProtocol ) {    // Need to listen again for connection
         // keepaliveThread should die, restart listenThread
         uint16_t portNo = PORT;
         threader.queueThread( listenThread, portNo, 0 );
         syslog(LOG_NOTICE, "    Ready to accept connections again on port %u", portNo );
+    } else {
+        close( connectionSockfd );
+        connectionSockfd = 0;
     }
+    syslog(LOG_NOTICE, "    In serviceConnection at end" );
 
 }
 
