@@ -144,6 +144,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
                 keepAliveOn = false;
                 localLoop = false;
                 syslog(LOG_NOTICE, "    Received goodbye command #, keep-alive disabled, exiting service loop" );
+                threader.queueThread( listenThread, PORT, 0 );    // WFS test
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
