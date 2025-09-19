@@ -44,7 +44,7 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 	
     syslog(LOG_NOTICE, "    In acceptConnections with socket: %d", socketfd );
     if ( useDatagramProtocol ) {
-        if socketfd != 0 {
+        if (socketfd != 0) {
             syslog(LOG_NOTICE, "    Previous success binding to UDP socket %d", socketfd);
             return;
         } else {
