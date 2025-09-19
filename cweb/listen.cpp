@@ -44,10 +44,14 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 	
     syslog(LOG_NOTICE, "    In acceptConnections with socket: %d", socketfd );
     if ( useDatagramProtocol ) {
-        socketfd = 0;
-        socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+        if socketfd != 0 {
+            syslog(LOG_NOTICE, "    Previous success binding to UDP socket %d", socketfd);
+            return;
+        } else {
+            socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+        }
     } else {
-        socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+        socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_STREAM for TCP
     }
 	if ( socketfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
