@@ -42,7 +42,7 @@ void Listener::shutdownListener() {
 // Runs as listenerThread - return ends that thread - fails and useDatagram (UDP) returns immediately
 void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
-    syslog(LOG_NOTICE, "    In acceptConnections with portNo on which to listen: %u", rcvPortNo );
+    syslog(LOG_NOTICE, "    In acceptConnections with socket: %d", socketfd );
     if ( useDatagramProtocol ) {
         socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
     } else {
