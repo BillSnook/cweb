@@ -70,14 +70,14 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
     if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle any incoming data
-        syslog(LOG_NOTICE, "    Success binding to UDP socket %d, port %u, on %s", socketfd, rcvPortNo, inAddress);
+        syslog(LOG_NOTICE, "    Success binding to UDP socket %d, port %u", socketfd, rcvPortNo);
         threader.queueThread( serverThread, inAddress, socketfd );
         return;
     }
 
     // Basically listen forever for a new connection then create a server thread for each - deprecated because we upgraded to UDP
     bool doListenerLoop = true;
-    syslog(LOG_NOTICE, "    Success binding to TCP socket %d, port %u on %s", socketfd, rcvPortNo, inAddress );
+    syslog(LOG_NOTICE, "    Success binding to TCP socket %d, port %u", socketfd, rcvPortNo);
     struct sockaddr_in cli_addr;
     socklen_t clilen = sizeof( cli_addr );
     while ( doListenerLoop ) {
@@ -147,9 +147,9 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 //                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
-                localLoop = false;
+//                localLoop = false;
                 syslog(LOG_NOTICE, "    Received goodbye command #, keep-alive disabled, exiting service loop" );
-                threader.queueThread( listenThread, PORT, 0 );    // WFS test
+//                threader.queueThread( listenThread, PORT, 0 );    // WFS test
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
