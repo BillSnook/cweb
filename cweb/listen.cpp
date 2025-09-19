@@ -126,11 +126,11 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             break;
         }
         
-        if ( !keepAliveOn ) {
-            syslog(LOG_NOTICE, "    Keep-alive enabled" );
-            keepAliveOn = true;         // Wake up
-            threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
-        }
+//        if ( !keepAliveOn ) {
+//            syslog(LOG_NOTICE, "    Keep-alive monitor enabled" );
+//            keepAliveOn = true;         // Wake up
+//            threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+//        }
         gettimeofday(&tvLatest, NULL);  // Last time communication received
 
         char cmd = buffer[0];
@@ -157,7 +157,7 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
         }
 
 		free( buffer );
-	}
+	}   // end while localLoop
     if ( !useDatagramProtocol ) {    // No need to listen again for connection
         // keepaliveThread should die, restart listenThread
 //        uint16_t portNo = PORT;
