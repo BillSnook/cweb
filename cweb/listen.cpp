@@ -44,6 +44,7 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
 	
     syslog(LOG_NOTICE, "    In acceptConnections with socket: %d", socketfd );
     if ( useDatagramProtocol ) {
+        socketfd = 0;
         socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
     } else {
         socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
@@ -78,15 +79,15 @@ void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socke
     while ( doListenerLoop ) {
         syslog(LOG_NOTICE, "    In acceptConnections, listening on socket %d", socketfd);
         listen( socketfd, 5 );
-        int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
-        syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
-        if ( connectionSockfd < 0 ) {
+        int acceptSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
+        syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, acceptSockfd);
+        if ( acceptSockfd < 0 ) {
             syslog(LOG_ERR, "ERROR on accept" );
             break;
         }
         syslog(LOG_NOTICE, "    Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
 
-        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
+        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), acceptSockfd );
 
 //          doListenerLoop = false; // Do once for testing
     }
