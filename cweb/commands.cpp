@@ -164,10 +164,16 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
 		case 'C':
-            syslog(LOG_NOTICE, "Command C, cmdAngle to set servo to %d degree value - 0 to 180, 90 is center", token1 );
-            hardware.cmdAngle( token1 );
-			break;
-			
+        {
+            syslog(LOG_NOTICE, "Command C, reread speed file data, then return speed array data" );
+            char *display = (char *)malloc( 1024 );
+            hardware.speed.revertSpeedArray( display );
+            memcpy( msg, display, strlen( display ) );
+            syslog(LOG_NOTICE, "revertSpeedArray():\n%s", msg );
+            free( display );
+        }
+            break;
+
         case 'c':       // WFS Available for thread
             break;
             
@@ -179,8 +185,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             memcpy( msg, display, strlen( display ) );
             syslog(LOG_NOTICE, "returnSpeedArray():\n%s", msg );
             free( display );
-            break;
         }
+            break;
 
         case 'd':
             hardware.speed.saveSpeedArray();
@@ -277,7 +283,6 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //			hardware.scanPing( sockOrAddr );
 			break;
 
-    // Arduino is unused at the moment
         case 'O':
         case 'o':            // Available
         {
@@ -291,10 +296,10 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             hardware.cameraDataSend( sockOrAddr );
             break;
         case 'Q':
-//        case 'q':
+        case 'q':
             system( "sudo shutdown now" );
             break;
-            
+
 		case 'R':
             // Motor control for direct screen - m0 dir, m0speed, m1 dir, m1 speed
             hardware.setMotorsPWM( token1, token2, token3, token4 );
@@ -306,7 +311,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //			filer.readSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
-		case 'S':
+		case 'S':   // Stop
             syslog(LOG_NOTICE, "cmdSpeed(0) in serviceCommand for command 'S'" );
             hardware.cmdSpeed( 0 );
 //            hardware.scanStop();
@@ -349,7 +354,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'W':
 		case 'w':
-//			filer.saveSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
+			filer.saveSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
 		case 'X':

@@ -44,6 +44,7 @@ public:
 	void            resetSpeedArray();
     
     void            returnSpeedArray( char *displayString );
+    void            revertSpeedArray( char *displayString );
 
     void            printSpeedArray();
 

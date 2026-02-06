@@ -64,7 +64,7 @@ void Speed::resetSpeedArray() {		// Create simple default to assist calibration
 }
 
 void Speed::returnSpeedArray( char *displayString ) {
-    
+
     sprintf( displayString, "D %d\n", SPEED_INDEX_MAX - 1 );
     for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
         sprintf( displayString, "%s%d %d %d\n", displayString, i, forward[i].left, forward[i].right );
@@ -72,6 +72,17 @@ void Speed::returnSpeedArray( char *displayString ) {
     for ( int i = 0; i < SPEED_INDEX_MAX; i++ ) {
         sprintf( displayString, "%s%d %d %d\n", displayString, -i, reverse[i].left, reverse[i].right );
     }
+}
+
+void Speed::revertSpeedArray( char *displayString ) {
+
+    // First we reload the speed index file from disk, then we return it
+    bool success = filer.readSpeedArrays( forward, reverse );
+    if ( ! success ) {
+        syslog(LOG_NOTICE, "Failed reverting speed array from file; making and saving default one" );
+        initializeSpeedArray();
+    }
+    returnSpeedArray(displayString);
 }
 
 char * Speed::displaySpeedArray( char *displayString ) {    // Deprecated - description
