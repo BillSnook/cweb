@@ -12,8 +12,7 @@
 #include "tasks.hpp"
 #include "manager.hpp"
 #include "filer.hpp"
-#include "hardware.hpp"
-#include "actions.hpp"
+//#include "hardware.hpp"
 
 #include <stdlib.h>			// malloc
 #include <stdio.h>			// sprintf
@@ -25,8 +24,8 @@
 #define bufferSize	256
 
 //#define aWaitOn		500000
-#define xWaitOn		100000
-#define xWaitOff	50000
+#define xWaitOn		1000000
+#define xWaitOff	500000
 #define tokenMax	5
 
 Commander	commander;
@@ -35,24 +34,21 @@ Hardware	hardware;
 
 extern TaskMaster   taskMaster;
 extern Manager 	    manager;
-//extern Actor        actor;
 
 
 void Commander::setupCommander() {
 	
 	syslog(LOG_NOTICE, "In setupCommander" );
 	hardware.setupHardware();
-//    actor.setupActor();
 }
 
 void Commander::shutdownCommander() {
 	
 	syslog(LOG_NOTICE, "In shutdownCommander" );
-//    actor.shutdownActor();
 	hardware.shutdownHardware();
 }
 
-// This is launched on it's own thread from the listeners serviceConnection when command data comes in over wifi
+// This is launched on it's own thread from the listeners serviceConnection for command data from wifi
 void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main command determination routine
     // WFS sockOrAddr is only used here for use as an indicator of where to respond,
     //  but this does not work with UDP datagrams that need an addr/port pair to target the response
@@ -63,11 +59,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
     // First interpret tokens
     char commandType = command[0];  // Get command
     if ( commandType == '?' ) {     // Keep-alive timed out, all stop
-        hardware.cmdSpeed( 0 );
-        hardware.scanStop();
-        syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command '?'" );
-        hardware.centerServo();
-//        actor.stop();
+        syslog(LOG_NOTICE, "Command ?, keep-alive received" );
+        hardware.cmdSpeed( 0 );     // Emergency - stop motors
         return;
     }
     char *nextToken[tokenMax+1];
@@ -124,29 +117,30 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //            actor.mainTest( token1, token2 );
 			break;
 			
-            // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps
-        case '@':       // Doesn't need thread
+        case '@':       // Get status, doesn't need thread
         {
-            long response = hardware.getStatus();
-            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
-            if ( response & statusScannerOrientation ) {
-                sprintf((char *)msg, "Status response: scanner inverted");
+//            long response = hardware.getStatus();
+//            syslog(LOG_NOTICE, "Command @ calls: getStatus(): 0x%08lX", response );
+            if ( hardware.gpioInitialised ) {
+                sprintf((char *)msg, "@ New pigpio library initialized");
             } else {
-                sprintf((char *)msg, "Status response: scanner upright" );
+                sprintf((char *)msg, "@ New pigpio library failed to initialize" );
             }
-//            if ( actor.Version.major != 0 ) {
-//                sprintf((char *)msg, "%s, lidar found", msg );
+//            if ( hardware.cameraInitialized ) {
+//                sprintf((char *)msg, "%s, tof camera found", msg );
 //            } else {
-//                sprintf((char *)msg, "%s, no lidar found", msg );
+//                sprintf((char *)msg, "%s, no tof camera found", msg );
 //            }
-            if ( manager.arduino_i2c > 0 ) {
-                sprintf((char *)msg, "%s, arduino mgr found", msg );
-            } else {
-                sprintf((char *)msg, "%s, no arduino mgr found", msg );
-            }
+//            if ( manager.arduino_i2c > 0 ) {
+//                sprintf((char *)msg, "%s, arduino mgr found", msg );
+//            } else {
+//                sprintf((char *)msg, "%s, no arduino mgr found", msg );
+//            }
+//            snprintf((char *)msg, 29, "Status is fine, how are you?" );
         }
             break;
 
+            // MARK: Lower case are on a thread, upper case are being called from the listen response and should be quick - no sync calls or usleeps - WFS ??
             // MARK: - Calibration -- A through F reserved for scanner zeroing and speed syncronization
         case 'A':
 //            syslog(LOG_NOTICE, "Command A, return rangeData" );
@@ -154,11 +148,11 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             break;
             
         case 'a':
-//            syslog(LOG_NOTICE, "Command a, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
-            hardware.rangeData.pwmCenter = token1;
-            hardware.rangeData.servoPort = token2;
-            hardware.minimumPWM = token1 - 180;
-            filer.saveRange( &(hardware.rangeData) );
+////            syslog(LOG_NOTICE, "Command a, save rangeData, pwm: %d, servo pin: %d", token1, token2 );
+//            hardware.rangeData.pwmCenter = token1;
+//            hardware.rangeData.servoPort = token2;
+//            hardware.minimumPWM = token1 - 180;
+//            filer.saveRange( &(hardware.rangeData) );
             break;
 
         case 'B':
@@ -170,10 +164,16 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			break;
 
 		case 'C':
-            syslog(LOG_NOTICE, "Command C, cmdAngle to set servo to %d degree value - 0 to 180, 90 is center", token1 );
-            hardware.cmdAngle( token1 );
-			break;
-			
+        {
+            syslog(LOG_NOTICE, "Command C, reread speed file data, then return speed array data" );
+            char *display = (char *)malloc( 1024 );
+            hardware.speed.revertSpeedArray( display );
+            memcpy( msg, display, strlen( display ) );
+            syslog(LOG_NOTICE, "revertSpeedArray():\n%s", msg );
+            free( display );
+        }
+            break;
+
         case 'c':       // WFS Available for thread
             break;
             
@@ -182,23 +182,24 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
             syslog(LOG_NOTICE, "Command D, return speed array data" );
             char *display = (char *)malloc( 1024 );
             hardware.speed.returnSpeedArray( display );
-//            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", display );
             memcpy( msg, display, strlen( display ) );
+            syslog(LOG_NOTICE, "returnSpeedArray():\n%s", msg );
             free( display );
-            break;
         }
+            break;
 
-        case 'd':       // WFS Available for thread
+        case 'd':
+            hardware.speed.saveSpeedArray();
 			break;
             
 		case 'E':
-            syslog(LOG_NOTICE, "Command E, set speed array entry" );
+            syslog(LOG_NOTICE, "Command E, set speed array entry %d: %d - %d ", token1, token2, token3);
             hardware.speed.setSpeedBoth( token1, token2, token3 );
             break;
             
 		case 'e':
             syslog(LOG_NOTICE, "Command e, setup speed array from endpoints and save it" );
-            hardware.speed.saveSpeedArray();
+            hardware.speed.makeSpeedArray();
 			break;
 			
 		case 'F':
@@ -211,25 +212,23 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
             // MARK: - Calibration -- Motor control/speed commands
 		case 'G':
-		case 'g':
-//			syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
-//			hardware.cmdSpeed( token1 );
-        {
-            long pingTimeuSec = hardware.doPing();
-            long cm = pingTimeuSec/29/2;
-            long inches = pingTimeuSec/74/2;
-//            long mm = (pingTimeuSec*10)/29/2;
-            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
-        }
+            syslog(LOG_NOTICE, "Command g calls: hardware.cmdSpeed( %d )", token1 );
+            hardware.cmdSpeed( token1 );
+            break;
+		case 'g':       // WFS Available for thread
+//        {
+//            long pingTimeuSec = hardware.doPing();
+//            long cm = pingTimeuSec/29/2;
+//            long inches = pingTimeuSec/74/2;
+////            long mm = (pingTimeuSec*10)/29/2;
+//            sprintf( msg, "Ping distance %ld cm, %ld inches", cm, inches );
+//        }
 			break;
 			
 		case 'H':
 		case 'h':
 		{
-			char *display = hardware.speed.displaySpeedArray( (char *)msg );
-			syslog(LOG_NOTICE, "displaySpeedArray():\n%s", msg );
-//			memcpy( msg, display, strlen( display ) );
-//			free( display );
+			hardware.speed.printSpeedArray();   // Causes debug print of speed array
 		}
 			break;
 			
@@ -283,48 +282,48 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 //			hardware.prepPing( token1, token2, token3 );
 //			hardware.scanPing( sockOrAddr );
 			break;
-			
+
         case 'O':
         case 'o':            // Available
         {
-            manager.request( writeI2C, manager.arduino_i2c, 's', 0x66 );
-            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-            syslog(LOG_NOTICE, "Test getting status, got response: %08lX\n", status );
+            syslog(LOG_NOTICE, "Test camera streaming\n" );
+            hardware.cameraStreamTest( sockOrAddr );
             break;
         }
         case 'P':
         case 'p':
-        {
-            manager.request( writeI2C, manager.arduino_i2c, 'p', token1 );
-            long status = manager.request( readI2C, manager.arduino_i2c, 4 );
-            syslog(LOG_NOTICE, "Test p %d, got response: %08lX\n", token1, status );
-        }
+            syslog(LOG_NOTICE, "Test get camera data\n" );
+            hardware.cameraDataSend( sockOrAddr );
             break;
         case 'Q':
-//        case 'q':
+        case 'q':
             system( "sudo shutdown now" );
             break;
-            
+
 		case 'R':
+            // Motor control for direct screen - m0 dir, m0speed, m1 dir, m1 speed
+            hardware.setMotorsPWM( token1, token2, token3, token4 );
+            break;
+
 		case 'r':
             // Motor control for direct screen
             hardware.setMotors( token1, token2, token3, token4 );
 //			filer.readSpeedArrays( hardware.speed.forward, hardware.speed.reverse );
 			break;
 			
-		case 'S':
+		case 'S':   // Stop
+            syslog(LOG_NOTICE, "cmdSpeed(0) in serviceCommand for command 'S'" );
             hardware.cmdSpeed( 0 );
-            hardware.scanStop();
-            syslog(LOG_NOTICE, "scanStop in Commander::serviceCommand for command 'S'" );
-            hardware.centerServo();
+//            hardware.scanStop();
+//            hardware.centerServo();
 //            actor.stop();
 			break;
 
         case 's':
 //            manager.stopVL();
-            syslog(LOG_NOTICE, "Did stopVL" );
-            hardware.scanStop();
-            syslog(LOG_NOTICE, "Did scanStop for command 's'" );
+//            syslog(LOG_NOTICE, "Did stopVL" );
+//            hardware.scanStop();
+//            syslog(LOG_NOTICE, "Did scanStop for command 's'" );
             hardware.cmdSpeed( 0 );
             syslog(LOG_NOTICE, "Did cmdSpeed" );
 //            taskMaster.killTasks();
@@ -360,7 +359,7 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 			
 		case 'X':
 		case 'x':
-			for ( int i = 0; i < 3; i++ ) {
+			for ( int i = 0; i < 2; i++ ) {
 				hardware.setMtrDirSpd( 1, 1, token1 );
 				usleep( xWaitOn );
 				hardware.setMtrDirSpd( 1, 1, 0 );
@@ -382,7 +381,8 @@ void Commander::serviceCommand( char *command, int sockOrAddr ) {	// Main comman
 
 		case 'Y':
 		case 'y':
-			hardware.scanTest();
+//			hardware.scanTest();
+            taskMaster.serviceTask(cameraTest, sockOrAddr);
 			break;
 			
 		case 'Z':

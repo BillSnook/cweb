@@ -9,7 +9,6 @@
 #ifndef commands_hpp
 #define commands_hpp
 
-
 class Commander {
 	
 public:

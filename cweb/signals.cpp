@@ -35,11 +35,11 @@ void signals_setup() {
 void sig_handler(int signum) {
 
 	switch ( signum ) {
-		case 2:
+		case SIGINT:
 			syslog(LOG_NOTICE, "Received INT signal (ctrl-C), exiting now." );
 			leaveGracefully( signum );
 			break;
-		case 9:
+		case SIGKILL:
 			syslog(LOG_NOTICE, "Received Kill signal, exiting now." );
 			leaveGracefully( signum );
 			break;

@@ -11,6 +11,7 @@
 #include <syslog.h>
 #include <arpa/inet.h>
 
+#include "mtrctl.hpp"
 #include "listen.hpp"
 #include "threader.hpp"
 #include "commands.hpp"
@@ -38,12 +39,19 @@ void Listener::shutdownListener() {
 //    usleep( 100000 );
 }
 
-void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for listening
+// Runs as listenerThread - return ends that thread - fails and useDatagram (UDP) returns immediately
+void Listener::acceptConnections( uint16_t rcvPortNo) {	// Create and bind socket for listening
 	
+    syslog(LOG_NOTICE, "    In acceptConnections with socket: %d", socketfd );
     if ( useDatagramProtocol ) {
-        socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+        if (socketfd != 0) {
+            syslog(LOG_NOTICE, "    Previous success binding to UDP socket %d", socketfd);
+            return;
+        } else {
+            socketfd = socket( AF_INET, SOCK_DGRAM, 0 );   // SOCK_DGRAM for UDP
+        }
     } else {
-        socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_DGRAM for UDP
+        socketfd = socket( AF_INET, SOCK_STREAM, 0 );   // SOCK_STREAM for TCP
     }
 	if ( socketfd < 0 ) {
 		syslog(LOG_ERR, "ERROR opening socket" );
@@ -60,52 +68,53 @@ void Listener::acceptConnections( int rcvPortNo) {	// Create and bind socket for
 		return;
 	}
 
-    threader.queueThread( keepAliveThread, (int)0, 0 );    // Start keep-alive monitor
-
     char *inAddress = inet_ntoa(serv_addr.sin_addr);
-    if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle incoming data
-        syslog(LOG_NOTICE, "Success binding to UDP socket %d, port %d, on %s", socketfd, rcvPortNo, inAddress);
+    if ( useDatagramProtocol ) {        // Basically do once after binding to start server thread to handle any incoming data
+        syslog(LOG_NOTICE, "    Success binding to UDP socket %d, port %u", socketfd, rcvPortNo);
         threader.queueThread( serverThread, inAddress, socketfd );
-    } else {                            // Basically listen forever for a new connection then create a server thread
-        bool doListenerLoop = true;
-        syslog(LOG_NOTICE, "Success binding to TCP socket port %d on %s", rcvPortNo, inAddress );
-        struct sockaddr_in cli_addr;
-        socklen_t clilen = sizeof( cli_addr );
-        while ( doListenerLoop ) {
-            syslog(LOG_NOTICE, "In acceptConnections, listening on socket %d", socketfd);
-            listen( socketfd, 5 );
-            int connectionSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
-            syslog(LOG_NOTICE, "Listen socket %d accepted a connection on socket %d", socketfd, connectionSockfd);
-            if ( connectionSockfd < 0 ) {
-                syslog(LOG_ERR, "ERROR on accept" );
-                break;
-            }
-            syslog(LOG_NOTICE, "Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
-            
-            threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), connectionSockfd );
-            
-//          doListenerLoop = false; // Do once for testing
-        }
-        close( socketfd );
-        syslog(LOG_NOTICE, "In acceptConnections at exit" );
+        return;
     }
+
+    // Basically listen forever for a new connection then create a server thread for each - deprecated because we upgraded to UDP
+    bool doListenerLoop = true;
+    syslog(LOG_NOTICE, "    Success binding to TCP socket %d, port %u", socketfd, rcvPortNo);
+    struct sockaddr_in cli_addr;
+    socklen_t clilen = sizeof( cli_addr );
+    while ( doListenerLoop ) {
+        syslog(LOG_NOTICE, "    In acceptConnections, listening on socket %d", socketfd);
+        listen( socketfd, 5 );
+        int acceptSockfd = accept( socketfd, (struct sockaddr *)&cli_addr, &clilen);
+        syslog(LOG_NOTICE, "     Listen socket %d accepted a connection on socket %d", socketfd, acceptSockfd);
+        if ( acceptSockfd < 0 ) {
+            syslog(LOG_ERR, "ERROR on accept" );
+            break;
+        }
+        syslog(LOG_NOTICE, "    Accepted connection, clientAddr: %s", inet_ntoa( cli_addr.sin_addr ) );
+
+        threader.queueThread( serverThread, inet_ntoa( cli_addr.sin_addr ), acceptSockfd );
+
+//          doListenerLoop = false; // Do once for testing
+    }
+    close( socketfd );
+    syslog(LOG_NOTICE, "    In acceptConnections at exit from TCP version" );
 }
 
 void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
 	
     bool    localLoop = true;
     long    n;
-	while ( localLoop ) {
+
+    syslog(LOG_NOTICE, "    In serviceConnection ready for data...");
+    while ( localLoop ) {
         int sockOrAddr = connectionSockfd;
 		char	*buffer = (char *)valloc( bufferSize ); // 256 bytes
 		bzero( buffer, bufferSize );
-//		syslog(LOG_NOTICE, "In serviceConnection waiting for data...");
         if ( useDatagramProtocol ) {
             struct sockaddr_in serverStorage;
             socklen_t addr_size = sizeof( serverStorage );
             n = recvfrom(connectionSockfd, buffer, bufferSize, 0, (struct sockaddr *)&serverStorage, &addr_size);
             if ((n != 1) || (buffer[0] != '?')) {
-                syslog(LOG_NOTICE, "In datagram serviceConnection received %ld bytes of data from clientAddr: %s, port %d", n, inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
+                syslog(LOG_NOTICE, "    In datagram serviceConnection: %ld bytes of data %c from addr: %s, port %d", n, buffer[0], inet_ntoa( serverStorage.sin_addr ), ntohs(serverStorage.sin_port));
             }
             // WFS Need an addr/port reference vs socketfd here
             int addrno = ntohl(serverStorage.sin_addr.s_addr);
@@ -116,44 +125,56 @@ void Listener::serviceConnection( int connectionSockfd, char *inet_address ) {
             n = read( connectionSockfd, buffer, bufferSize );    // Blocks waiting for incoming data from WiFi
         }
         if ( n <= 0 ) {
-            syslog(LOG_NOTICE, "Connection closed by %s", inet_address );
+            syslog(LOG_NOTICE, "Connection closed by %s, error %ld", inet_address, n );
 //          syslog(LOG_ERR, "ERROR reading command from socket" );
             free( buffer );
             break;
         }
         
-        if ( !keepAliveOn ) {
-            syslog(LOG_NOTICE, "Keep-alive enabled" );  // Wake up
-            keepAliveOn = true;
-        }
-        gettimeofday(&tvLatest, NULL);
-        
+//        if ( !keepAliveOn ) {
+//            syslog(LOG_NOTICE, "    Keep-alive monitor enabled" );
+//            keepAliveOn = true;         // Wake up
+//            threader.queueThread( keepAliveThread, 0, (uint)0 );    // Start keep-alive monitor
+//        }
+        gettimeofday(&tvLatest, NULL);  // Last time communication received
+
         char cmd = buffer[0];
 //        syslog(LOG_NOTICE, "Received command: %s", buffer );
 
         if ( cmd < '@' ) {              // Control characters, numbers, and punctuation
             if ( cmd == '?' ) {         // Special keep-alive - do nothing
-                // Was sent if no other commmand in 1/2 second which indicates the communication channel is still open
+                // Was sent if no other commmand in 1/2 second to indicate the communication channel is still open
+//                syslog(LOG_NOTICE, "." ); // Debug keep-alive
             } else if ( cmd == '#' ) {  // Goodbye command - no further keep alive are to be expected
                 keepAliveOn = false;
-                localLoop = false;
-                syslog(LOG_NOTICE, "Received goodbye command, #, keep-alive disabled, exiting service loop" );
+//                localLoop = false;
+                syslog(LOG_NOTICE, "    Received goodbye command #, keep-alive disabled, exiting service loop" );
+//                threader.queueThread( listenThread, PORT, 0 );    // WFS test
             } else {
                 // Real high priority or otherwise needs to have as much thread time as possible
                 threader.queueThread( taskThread, buffer, sockOrAddr );    // addr/port reference or socketfd
             }
         } else if ( cmd < 'a' ) {       // Capitalized characters
-            // Run real quick command such as setting a pin or pwm value
+            // Run real quick command such as setting a pin or formatting the speed array for sending
             commander.serviceCommand( buffer, sockOrAddr );
         } else {                        // Lower case characters
-            // Command that may take a while to complete and needs it's own thread
+            // Command that may take a while and commander.serviceCommand needs it's own thread
             threader.queueThread( commandThread, buffer, sockOrAddr );    // addr/port reference or socketfd
         }
 
 		free( buffer );
-	}
-	close( connectionSockfd );
-//	syslog(LOG_NOTICE, "In serviceConnection at end" );
+	}   // end while localLoop
+    if ( !useDatagramProtocol ) {    // No need to listen again for connection
+        // keepaliveThread should die, restart listenThread
+//        uint16_t portNo = PORT;
+//        threader.queueThread( listenThread, portNo, 0 );
+//        syslog(LOG_NOTICE, "    Ready to accept connections again on port %u", portNo );
+//    } else {
+        close( connectionSockfd );
+        connectionSockfd = 0;
+    }
+    syslog(LOG_NOTICE, "    In serviceConnection at end" );
+
 }
 
 int Listener::findMatchOrNewIndex( int addr, int port ) {
@@ -205,11 +226,43 @@ void Listener::writeBack( char *msg, int sockOrAddr ) {  // We use an addr/port 
     }
 }
 
+void Listener::writeBackCount( char *msg, int count, int sockOrAddr ) {  // We use an addr/port reference vs socketfd here
+    long n;
+    if ( useDatagramProtocol ) {
+        // Get addr and port from sockOrAddr as addr/port array index
+        if ( sockOrAddr == 0 ) {
+//            syslog(LOG_ERR, "In writeBack, invalid response entry index");
+            return;     // Invalid addr/port index
+        }
+        struct sockaddr_in serv_addr;
+        socklen_t addr_size = sizeof( serv_addr );
+        addrPort ap = apArray[sockOrAddr];
+//        syslog(LOG_NOTICE, "writeBack index %d, addr %08X, port %d", sockOrAddr, ap.addr, ap.port);
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_addr.s_addr = htonl(ap.addr);
+        serv_addr.sin_port = htons( ap.port );
+        n = sendto(socketfd, msg, count, 0, (struct sockaddr *)&serv_addr, addr_size);
+//        syslog(LOG_ERR, "Sending back to addr %s, port %d, response length %ld", inet_ntoa(serv_addr.sin_addr), ap.port, n);
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing to address %s, port %d", inet_ntoa(serv_addr.sin_addr), ap.port );
+            return;
+        }
+//        syslog(LOG_NOTICE, "In UDP writeBack sent %ld bytes successfully to address %s, port %d", n, inet_ntoa(serv_addr.sin_addr), ap.port);
+    } else {
+        n = write( sockOrAddr, msg, count );
+        if ( n < 0 ) {
+            syslog(LOG_ERR, "ERROR writing back to socket %d", sockOrAddr );
+            return;
+        }
+        syslog(LOG_NOTICE, "In TCP writeBack sent successfully on socket %d", sockOrAddr);
+    }
+}
+
 long Listener::testTimedOut() {      // Keep-alive support - true iff too long
     
     struct timeval diffTime, tvNow;
     gettimeofday(&tvNow, NULL);
-    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;;
+    diffTime.tv_sec = tvNow.tv_sec - tvLatest.tv_sec;
     diffTime.tv_usec = tvNow.tv_usec - tvLatest.tv_usec;
     if ( diffTime.tv_usec < 0 ) {
         diffTime.tv_sec -= 1;
@@ -222,16 +275,15 @@ long Listener::testTimedOut() {      // Keep-alive support - true iff too long
 void Listener::monitor() {      // Intended to run in a thread to monitor keep alive timer
 
     // WFS note - may want to not do this if we go to autonomous mode
-    syslog(LOG_NOTICE, "In Listener monitor, entering loop testing for loss of comm to controller" );
-    while ( true ) {
-        if ( keepAliveOn && ( testTimedOut() > 1500000 ) ) {    // 1.5 seconds delay before
-            keepAliveOn = false;       // Only do this once until comms are reestablished
-            char killAction[] = "?";
-            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
-            syslog(LOG_NOTICE, "Lost comms, emergency stop, keep-alive off" );
-        }
+    syslog(LOG_NOTICE, "    In Listener monitor, entering loop testing for loss of comm to controller" );
+    while ( keepAliveOn ) {
         usleep( 100000 );       // 1/10 seconds
+        if ( testTimedOut() ) {    // 1.5 seconds delay before true
+            keepAliveOn = false;       // Only do this once until comms are reestablished
+            char killAction[] = "S";
+            commander.serviceCommand( (char *)&killAction, 0 ); // Send emergency stop command
+            syslog(LOG_NOTICE, "Lost comms, sent emergency stop, keep-alive off, monitor exiting" );
+        }
     }
 //    syslog(LOG_NOTICE, "In Listener monitor, exiting loop testing for loss of comm to controller" );
 }
-

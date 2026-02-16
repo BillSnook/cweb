@@ -64,8 +64,9 @@ class Manager {
 public:
 	ControllerMode	expectedControllerMode;
 	
-    int  arduino_i2c;
-    
+    int  arduino_i2c;           // Unused but may reappear in the future
+    int  motor_i2c;             // To retain i2cOpen handle
+
 	void setupManager();
 	void shutdownManager();
 	
@@ -81,8 +82,6 @@ public:
 //	void setRange( unsigned int angle );
 //	long getRangeResult();
 //	unsigned int getRange();
-	
-	void setMotorPower( bool On );
 	
 //	void startVL();
 //	void stopVL();

@@ -1,8 +1,8 @@
 *.o
 mtrctl
 xcshareddata
+xcuserdata
+.DS_Store
 
 speed.bin
 Makefile
-vl53l0x_ContinuousRanging_Example.c
-vl53l0x_SingleRanging_Long_Range_Example.c

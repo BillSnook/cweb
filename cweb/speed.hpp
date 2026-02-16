@@ -10,11 +10,12 @@
 #define speed_hpp
 
 
-// There are 4096 possible counts per interval. This supplies full voltage to the motors.
-// Micros seem to freak out after about 6v. So we keep our count below 2048 with a 12v supply
-// For the tank we have < ~9v and the motors can take that.
+// There are 4096 possible counts per interval. The hardware supplies full voltage
+// to the motors but this affects the duty cycle and thus the speed.
+// We use the indexed speeds like gears as the index is into lists that have the counts
 #define SPEED_INDEX_MAX         9		// Number of distinct speeds we can select - f and r
-#define SPEED_ADJUSTMENT        512     // Half for now to solve crash if too high
+#define SPEED_ADJUSTMENT        512     // Start value for even intervals between each index
+#define SPEED_MAX_PWM           4095    // Maximum PWM value to send to device
 
 struct speed_array {
     int left;
@@ -26,11 +27,13 @@ class Speed {
 	
 	bool    		debug;
 	int				calibrationTestIndex;	// Keep track of working index
-	
+    int             speedLimit;
+
+
 public:
     explicit        Speed();
 
-	speed_array 	forward[SPEED_INDEX_MAX];
+	speed_array 	forward[SPEED_INDEX_MAX];   // 0...8
 	speed_array 	reverse[SPEED_INDEX_MAX];
 
 	
@@ -41,7 +44,10 @@ public:
 	void            resetSpeedArray();
     
     void            returnSpeedArray( char *displayString );
-    
+    void            revertSpeedArray( char *displayString );
+
+    void            printSpeedArray();
+
 
 	char            *displaySpeedArray( char * displayString );
 	char            *setSpeedTestIndex( int newSpeedIndex );
@@ -61,6 +67,7 @@ public:
 	void            setSpeedReverse();
     
     void            saveSpeedArray();
+    void            makeSpeedArray();
 };
 
 #endif /* speed_hpp */

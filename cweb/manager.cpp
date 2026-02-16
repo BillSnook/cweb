@@ -13,7 +13,6 @@
 #include <stdio.h>			// sprintf
 #include <fcntl.h>
 
-//#include "vl53l0x.hpp"
 #include "hardware.hpp"
 #include "manager.hpp"
 #include "map.hpp"
@@ -21,6 +20,7 @@
 
 #ifdef ON_PI
 
+#include <pigpio.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
@@ -84,6 +84,7 @@ const char *I2CControl::description() {
 }
 
 // MARK: - Manager
+
 void Manager::setupManager() {
 	stopLoop = false;
     endLoop = false;
@@ -98,18 +99,14 @@ void Manager::setupManager() {
     pthread_mutex_init( &readWaitMutex, NULL );     // Protect I2C bus operations
     pthread_cond_init( &readWaitCond, NULL );
 
-    arduino_i2c = openI2CFile( ARD_I2C_ADDR );      // For talking to arduino, if any
-
-//    vl53l0x = VL53L0X();                  // VL53L0xes talk to the array of light-rangers
-//    vl53l0x.setupVL53L0X( 0x29 );
+//    arduino_i2c = openI2CFile( ARD_I2C_ADDR );      // For talking to arduino, if any
 }
 
 void Manager::shutdownManager() {
 
+    int result = i2cClose( motor_i2c);
+
     endLoop = true;
-//    if ( vl53l0x.isSetup ) {
-//		vl53l0x.shutdownVL53L0X();
-//	}
 
     pthread_mutex_lock( &readWaitMutex );
     pthread_cond_signal( &readWaitCond );   // Unblock thread so it can exit
@@ -129,26 +126,18 @@ void Manager::shutdownManager() {
     pthread_mutex_destroy( &i2cQueueMutex );
     pthread_cond_destroy( &i2cQueueCond );
 
-	syslog(LOG_NOTICE, "In shutdownManager" );
+	syslog(LOG_NOTICE, "In shutdownManager at end" );
 }
 
 int Manager::openI2CFile( int address ) {
-    int fileDescriptor;
-    if ( ( fileDescriptor = open( "/dev/i2c-1", O_RDWR ) ) < 0 ) {
-        syslog( LOG_ERR, "Unable to open I2C device address %02X, error: %s\n", address, strerror( errno ) );
-    } else if ( ioctl( fileDescriptor, I2C_SLAVE, address ) < 0 ) {
-        syslog( LOG_ERR, "Unable to select I2C device address %02X, error: %s\n", address, strerror( errno ) );
-        close( fileDescriptor );
-        fileDescriptor = 0;
-    } else {
-        syslog( LOG_NOTICE, "Found manager I2C device file pointer for addr %02X: %d\n", address, fileDescriptor );
-    }
-    return fileDescriptor;
+
+    motor_i2c = i2cOpen(1, address, 0);
+    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", address, motor_i2c );
+    return motor_i2c;
 }
 
+void Manager::monitor() {       // Wait for an i2c bus request on queue, then execute it
 
-void Manager::monitor() {       // Wait for an i2c bus request, then execute it
-	
 //	syslog(LOG_NOTICE, "In Manager monitor, entering loop waiting for queued I2C requests" );
 
     while ( !stopLoop ) {
@@ -184,44 +173,50 @@ void Manager::monitor() {       // Wait for an i2c bus request, then execute it
 
 void Manager::execute( I2CControl i2cControl ) {
     
-//    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
+    syslog(LOG_NOTICE, "execute, command type: %s, cmd/reg %02X: %02X, fp: %02X", i2cControl.description(), i2cControl.i2cCommand, i2cControl.i2cParam, i2cControl.i2cFile );
     
     switch ( i2cControl.i2cType ) {
         case writeI2C:
         case writeReg8I2C:
             {
-                unsigned char buffer[4] = {0};
-                buffer[0] = i2cControl.i2cCommand;  // Send this command
-                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
-                write( i2cControl.i2cFile, buffer, 2 );
+//                unsigned char buffer[4] = {0};
+//                buffer[0] = i2cControl.i2cCommand;  // Send this command
+//                buffer[1] = i2cControl.i2cParam;    // With this optional parameter
+//                write( i2cControl.i2cFile, buffer, 2 );
+                int result = i2cWriteByteData(i2cControl.i2cFile, i2cControl.i2cCommand, i2cControl.i2cParam);
             }
             break;
 
         case readI2C:
             {
-                pthread_mutex_lock( &readWaitMutex );
-                read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
-//                syslog(LOG_NOTICE, "execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
-                i2cControl.i2cData[0] = 1;  // Signal completion
-                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
-                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
-                pthread_mutex_unlock( &readWaitMutex );
+                syslog(LOG_NOTICE, "\n\n\treadI2C is called in ERROR, deprecated\n\n" );
+//                pthread_mutex_lock( &readWaitMutex );
+//                read( i2cControl.i2cFile, &i2cControl.i2cData[2], i2cControl.i2cCommand );
+////                syslog(LOG_NOTICE, "execute, data read: %02X %02X %02X %02X, command: 0x%04X\n", i2cControl.i2cData[2], i2cControl.i2cData[3], i2cControl.i2cData[4], i2cControl.i2cData[5], i2cControl.i2cCommand);
+//                i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+//                i2cControl.i2cData[0] = 1;  // Signal completion
+//                pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
+//                pthread_mutex_unlock( &readWaitMutex );
             }
             break;
 
         case readReg8I2C:
             {
                 pthread_mutex_lock( &readWaitMutex );
-                write( i2cControl.i2cFile, &i2cControl.i2cCommand, 1 );
-                read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
-                i2cControl.i2cData[0] = 1;  // Signal completion
+//                write( i2cControl.i2cFile, &i2cControl.i2cCommand, 1 );
+//                read( i2cControl.i2cFile, &i2cControl.i2cData[2], 1 );
+                int result = i2cReadByteData(i2cControl.i2cFile, i2cControl.i2cCommand);
                 i2cControl.i2cCommand = 0;  // Signal completion - deprecated
+                i2cControl.i2cData[0] = 1;  // Signal completion
+                i2cControl.i2cData[1] = 0;  // Signal completion - deprecated
+                i2cControl.i2cData[2] = result & 0xFF;      // Clean byte
                 pthread_cond_broadcast( &readWaitCond );    // Tell them all, they can check for done
                 pthread_mutex_unlock( &readWaitMutex );
             }
             break;
             
         default:
+            syslog(LOG_NOTICE, "Manager::execute with unrecognized command: %04X", i2cControl.i2cType);
             break;
     }
 //    syslog(LOG_NOTICE, "execute, command type: %d, %d completed, 0x%08X returned", i2cControl.i2cType, i2cControl.i2cCommand, i2cControl.i2cParam );
@@ -312,24 +307,7 @@ long Manager::getNowMs() {
 //    return (int)result;
 //}
 
-//void Manager::startVL() {
-//
-//	syslog(LOG_NOTICE, "In Manager::startVL()" );
-//	if ( vl53l0x.isSetup ) {
-//		vl53l0x.measureRun();
-//	}
-//}
-//
-//void Manager::stopVL() {
-//
-//	syslog(LOG_NOTICE, "In Manager::stopVL()" );
-//	if ( vl53l0x.isSetup ) {
-//		vl53l0x.measureStop();
-//	}
-//}
-
-
-// These routines need to manage the freshness of the range data - depreczted, now done loczlly
+// These routines need to manage the freshness of the range data - deprecated, now done locally
 // They could compare the index to a copy of the timestamp when it was sent
 //void Manager::setRange( unsigned int angle) {
 //
@@ -355,8 +333,3 @@ long Manager::getNowMs() {
 //    unsigned int range = result & 0x0FFFF;        // Actual range value
 //	return range;
 //}
-
-void Manager::setMotorPower( bool On ) {
-
-    syslog( LOG_NOTICE, "In Manager::setMotorPower(), test for access to manager from vl code" );
-}

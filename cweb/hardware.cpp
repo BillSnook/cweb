@@ -22,15 +22,15 @@
 #include "manager.hpp"
 #include "map.hpp"
 #include "filer.hpp"
+#include "tasks.hpp"
 
 #ifdef ON_PI
 
-#include <wiringPi.h>
+#include <pigpio.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
 #endif  // ON_PI
-
 
 #define VERSION_REQUIRED_MAJOR 1
 #define VERSION_REQUIRED_MINOR 0
@@ -39,7 +39,7 @@
 
 #define PWM_RESOLUTION          4096.0
 #define PWM_COUNT               4096	// Also used as value for PWM pin to be all on
-#define PWM_MAX                 4095	// Supplys full voltage to motor
+#define PWM_MAX                 4095	// Supplys full pulse width to motor
 #define PWM_FREQ                50		// For servos, motors seem to not care
 
 //#define SPEED_INDEX_MAX			PWM_COUNT / SPEED_ADJUSTMENT	// 8
@@ -114,56 +114,64 @@ extern  Manager     manager;
 bool	scanLoop;
 
 
-//  MARK: i2c interface read and write support
+//  MARK: - i2c interface; open, read, and write support
+
 I2C::I2C( int addr ) {
 	
-	debug = false;
-	address = addr;
-	
-#ifdef ON_PI
-//	file_i2c = wiringPiI2CSetup( addr );
-#endif  // ON_PI
+//    file_i2c = manager.openI2CFile( addr );
 
-    file_i2c = manager.openI2CFile( address );
+#ifdef ON_PI
+    motor_i2c = i2cOpen(1, addr, 0);
+#endif  // ON_PI
+    syslog( LOG_NOTICE, "In openI2CFile, I2C device handle for addr %02X: %d\n", addr, motor_i2c );
 }
 
 int I2C::i2cRead( int reg ) {
 	
-    return int( manager.request( readReg8I2C, file_i2c, reg ) );
+//    return int( manager.request( readReg8I2C, file_i2c, reg ) );
+
+#ifdef ON_PI
+    return i2cReadByteData(motor_i2c, reg);
+#else
+    return 0;
+#endif  // ON_PI
+
 }
 
 
 void I2C::i2cWrite(int reg, int data) {
     
-    manager.request( writeI2C, file_i2c, reg, data );
+//    manager.request( writeI2C, file_i2c, reg, data );
+
+#ifdef ON_PI
+    int result = i2cWriteByteData(motor_i2c, reg, data);
+#endif  // ON_PI
 }
 
-void I2C::i2cWriteX(int reg, int data) {        // WFS ??
-    
-    manager.request( writeI2C, file_i2c, reg, data );
-}
+// MARK: - PWM support
 
-
-// MARK: PWM control
 PWM::PWM( int addr ) {
 	
-	debug = false;
-	address = addr;
 	i2c = new I2C( addr );
-	setPWMAll( 0, 0 );                  // Clear all to 0
-	i2c->i2cWrite( MODE2, OUTDRV );
-	i2c->i2cWrite( MODE1, ALLCALL );
-	i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
-	i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
-	
+    if (i2c->motor_i2c >= 0) {
+        setPWMAll( 0, 0 );                  // Clear all to 0 - stop motors
+        i2c->i2cWrite( MODE2, OUTDRV );
+        i2c->i2cWrite( MODE1, ALLCALL );
+        i2c->i2cWrite( CHANNEL0_OFF_L, 0 );
+        i2c->i2cWrite( CHANNEL0_OFF_H, 0 );
+
 #ifdef ON_PI
-	delay( 1 );                         // Millisecond to let oscillator setup
+        gpioDelay( 1000 );                  // Millisecond to let oscillator setup
 #endif  // ON_PI
-	
+    }
+
 }
 
 void PWM::setPWMFrequency( int freq ) {
 	
+    if (i2c->motor_i2c < 0) {
+        return;
+    }
 	int prescaleval = 25000000.0;           // Nominal clock freq 25MHz
 	prescaleval /= PWM_RESOLUTION;          // 12-bit
 	prescaleval /= float( freq );
@@ -176,14 +184,14 @@ void PWM::setPWMFrequency( int freq ) {
 	}
 	
 	int oldmode = i2c->i2cRead( MODE1 );
-//    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
-	int newmode = ( oldmode & 0x7F ) | SLEEP;  // sleep
-	i2c->i2cWrite( MODE1, newmode );             // go to sleep while changing freq stuff
+    syslog( LOG_NOTICE, "SPECIAL, oldmode read from PWM board: 0x%04X before rework", oldmode );
+	int newmode = ( oldmode & 0x7F ) | SLEEP;   // sleep
+	i2c->i2cWrite( MODE1, newmode );            // go to sleep while changing freq stuff
 	i2c->i2cWrite( PRESCALE, prescaleSetting );
 	i2c->i2cWrite( MODE1, oldmode );
 	
 #ifdef ON_PI
-	delay( 1 );                         // Millisecond to let oscillator stabilize
+	gpioDelay( 1000 );                         // Millisecond to let oscillator stabilize
 #endif  // ON_PI
 }
 
@@ -204,10 +212,10 @@ void PWM::setPWM( int channel, int on, int off ) {
 	}
 	
 //	syslog(LOG_NOTICE, "PWM:setPWM%d on: %04X, off: %04X", channel, on, off);
-	i2c->i2cWriteX( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_ON_H + (4 * channel), on >> 8 );
-	i2c->i2cWriteX( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
-	i2c->i2cWriteX( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
+	i2c->i2cWrite( CHANNEL0_ON_L + (4 * channel), on & 0xFF );
+	i2c->i2cWrite( CHANNEL0_ON_H + (4 * channel), on >> 8 );
+	i2c->i2cWrite( CHANNEL0_OFF_L + (4 * channel), off & 0xFF );
+	i2c->i2cWrite( CHANNEL0_OFF_H + (4 * channel), off >> 8 );
 }
 
 void PWM::setPWMAll( int on, int off ) {
@@ -222,13 +230,9 @@ void PWM::setPWMAll( int on, int off ) {
 	i2c->i2cWrite( ALLCHANNEL_OFF_H, off >> 8 );
 }
 
-int PWM::getPWMResolution() {
-	
-	return PWM_RESOLUTION;
-}
+// MARK: - Hardware interface setup and control  primitives
 
-
-bool Hardware::setupHardware() {
+void Hardware::setupHardware() {
 	
     syslog(LOG_NOTICE, "In setupHardware" );
 
@@ -236,74 +240,139 @@ bool Hardware::setupHardware() {
     motor1Setup = false;
     sweepOneWay = false;
     upsideDownScanner = false;
+    cameraInitialized = false;
+    gpioInitialised = false;
+    scanLoop = false;
+    i2cDevice = -1;
 
-#ifdef ON_PI
-	int setupResult = wiringPiSetup();
-	if ( setupResult == -1 ) {
-		syslog(LOG_ERR, "Error setting up wiringPi." );
-		return false;
-	}
-//	syslog(LOG_NOTICE, "wiringPi version: %d", setupResult );
-    pinMode( TRIG, OUTPUT );            // Trigger ultasonic range finder
-    pinMode( ECHO, INPUT );             // Echo response pulse for ultasonic range finder
-    
-    pinMode( SCAN_INVERTED, INPUT );    // Orientation of servo for scanner for ultasonic range finder
-    
-    digitalWrite( TRIG, 0);             // Init trigger to 0, idle for now
-    
-    upsideDownScanner = ( digitalRead( SCAN_INVERTED ) == 1 );
-    syslog(LOG_WARNING, "Scanner is %s", upsideDownScanner ? "upside down" : "right-side up" );
+    setupPiGPIO();
+//    setupTOFCamera();
 
-#endif  // ON_PI
-    
-    bool success = filer.readRange( &rangeData );
-    if ( ! success ) {
-        rangeData.pwmCenter = 330;
-        rangeData.servoPort = Scanner;
-        filer.saveRange( &rangeData );
+    if ( gpioInitialised ) {
+        syslog(LOG_NOTICE, "In setupHardware, setting MotorI2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
+
+        pwm = new PWM( MOTOR_I2C_ADDRESS );        // Default for Motor Hat PWM chip
+        syslog(LOG_NOTICE, "In setupHardware, pwm initialized" );
+        i2cDevice = pwm->i2c->motor_i2c;
+        pwm->setPWMFrequency( PWM_FREQ );
+        syslog(LOG_NOTICE, "In setupHardware, pwm setup" );
+
+//     WFS - why is this being done here?  where should it be?
+//        pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
+//        siteMap = SiteMap( pattern );
+//        siteMap.setupSiteMap();
     }
-    minimumPWM = rangeData.pwmCenter - 180;
-	
-	syslog(LOG_NOTICE, "Setting I2C address: 0x%02X, PWM freq: %d", MOTOR_I2C_ADDRESS, PWM_FREQ );
-	pwm = new PWM( MOTOR_I2C_ADDRESS );		// Default for Motor Hat PWM chip
-	pwm->setPWMFrequency( PWM_FREQ );
-	
-	syslog(LOG_NOTICE, "Setting up speed array" );
-	speed = Speed();
-	speed.initializeSpeedArray();
-    
-    // WFS - why is this being done here?  where should it be?
-    pattern = SearchPattern( 45, 135, 5 );  // Scan start, end, increment in degrees.
-    siteMap = SiteMap( pattern );
-    siteMap.setupSiteMap();
 
-	scanLoop = false;
-
-	return true;
+    speed = Speed();
+    speed.initializeSpeedArray();
 }
 
-bool Hardware::shutdownHardware() {
-	
+void Hardware::shutdownHardware() {
+
 //	scanStop();
 //	centerServo();
 	
 	syslog(LOG_NOTICE, "In shutdownHardware" );
 	
-	setPWM( M0En, 0 );		    // Turn off motors
-	setPin( M0Fw, 0 );
-	setPin( M0Rv, 0 );
-	setPWM( M1En, 0 );
-	setPin( M1Fw, 0 );
-	setPin( M1Rv, 0 );
-	
-	motor0Setup = false;
-	motor1Setup = false;
-	
-	setPWM( rangeData.servoPort, 0 );		// Unpower servos
+//    shutdownTOFCamera();
+    shutdownPiGPIO();
 
-    siteMap.shutdownSiteMap();
+//	setPWM( M0En, 0 );		    // Turn off motors
+//	setPin( M0Fw, 0 );
+//	setPin( M0Rv, 0 );
+//	setPWM( M1En, 0 );
+//	setPin( M1Fw, 0 );
+//	setPin( M1Rv, 0 );
+//	
+//	motor0Setup = false;
+//	motor1Setup = false;
+//	
+//	setPWM( rangeData.servoPort, 0 );		// Unpower servos
 
-	return true;
+//    siteMap.shutdownSiteMap();
+}
+
+void Hardware::setupPiGPIO() {
+
+#ifdef ON_PI
+
+    int cfg = gpioCfgGetInternals();
+    cfg |= PI_CFG_NOSIGHANDLER;  // (1<<10) - allows us to manage signals
+    gpioCfgSetInternals(cfg);
+
+    int initGPIO = gpioInitialise();
+    gpioInitialised = initGPIO >= 0;
+    if ( ! gpioInitialised ) {
+        syslog(LOG_NOTICE, "In setupHardware, gpioInitialise() failed: %d", initGPIO);
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::shutdownPiGPIO() {
+
+#ifdef ON_PI
+
+    if (gpioInitialised) {
+        if (i2cDevice >= 0) {
+            i2cClose(i2cDevice);
+        }
+        gpioTerminate();
+        gpioInitialised = false;
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::setupTOFCamera() {
+
+#ifdef ON_PI
+
+    tof = createArducamDepthCamera();
+
+    if ( arducamCameraOpen( tof, CSI, 0 ) ) {
+        syslog(LOG_NOTICE, "In setupHardware, arducamCameraOpen failed");
+    } else if ( arducamCameraStart( tof, DEPTH_FRAME ) ) {
+        syslog(LOG_NOTICE, "In setupHardware, arducamCameraStart failed");
+    } else {
+        cameraInitialized = true;
+    }
+
+#endif  // ON_PI
+
+}
+
+void Hardware::shutdownTOFCamera() {
+
+#ifdef ON_PI
+
+    if (cameraInitialized) {
+        if ( arducamCameraStop( tof ) ) {
+            syslog(LOG_NOTICE, "arducamCameraStop failed");
+        }
+//        if ( arducamCameraClose( &tof ) ) {
+//            syslog(LOG_NOTICE, "arducamCameraClose failed");
+//            return -1;
+//        }
+        cameraInitialized = false;
+    }
+
+#endif  // ON_PI
+
+}
+
+long Hardware::getStatus() {
+
+//    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
+    int setStatusFlags = 0;
+    if ( upsideDownScanner ) {
+        setStatusFlags |= statusScannerOrientation;
+    }
+    syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
+
+    return setStatusFlags;
 }
 
 void Hardware::setPin( int pin, int value ) {
@@ -330,17 +399,17 @@ void Hardware::setPWM( int pin, int value ) {
 		syslog(LOG_ERR, "ERROR: Hardware::setPWM%d value: %d; should be 0 <= value <= %d", pin, value, PWM_MAX);
 		return;
 	}
-//	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
+	syslog(LOG_INFO, "INFO: Hardware::setPWM%d value: %d", pin, value);
 	pwm->setPWM( pin, 0, value );
 }
 
-// MARK: motor section
+// MARK: motor  manaegment section
 void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 	
-	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
-		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, SPEED_INDEX_MAX);
-		return;
-	}
+//	if ( ( speedIndex < 0 ) || ( speedIndex > SPEED_INDEX_MAX ) ) {
+//		syslog(LOG_ERR, "ERROR: Hardware::setMtrDirSpd speed: %d; should be 0 <= speed <= %d", speedIndex, SPEED_INDEX_MAX);
+//		return;
+//	}
 	syslog(LOG_NOTICE, "setMtrDirSpd m%d, d: %s, speed: %d", motor, direction ? "f" : "r", speedIndex);
 	if ( motor == 0 ) {
 		if ( direction == 1 ) {
@@ -351,8 +420,8 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 			setPin( M0Rv, 1 );
 		}
 		motor0Setup = true;
-//		setPWM( M0En, speedIndex * SPEED_ADJUSTMENT );
-		setPWM( M0En, speed.speedLeft( speedIndex ) );
+		setPWM( M0En, speedIndex * SPEED_ADJUSTMENT );
+        //       setPWM( M0En, speed.speedLeft( speedIndex ) );
 	}
 	if ( motor == 1 ) {
 		if ( direction == 1 ) {
@@ -363,8 +432,8 @@ void Hardware::setMtrDirSpd(int motor, int direction , int speedIndex) {
 			setPin( M1Rv, 1 );
 		}
 		motor1Setup = true;
-//		setPWM( M1En, speedIndex * SPEED_ADJUSTMENT );
-		setPWM( M1En, speed.speedRight( speedIndex ) );
+		setPWM( M1En, speedIndex * SPEED_ADJUSTMENT );
+        //		setPWM( M1En, speed.speedRight( speedIndex ) );
 	}
 }
 
@@ -447,7 +516,7 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	}
 	int speedLeft = speed.speedLeft( speedIndex );	// Index says f or r but speedL or R is absolute
 	int speedRight = speed.speedRight( speedIndex );
-	syslog( LOG_NOTICE, "cmdSpeed, sl: %d, sr: %d", speedLeft, speedRight );
+	syslog( LOG_NOTICE, "cmdSpeed index %d, sl: %d, sr: %d", speedIndex, speedLeft, speedRight );
 	if ( speedIndex < 0 ) {
 		setPin( M0Fw, 1 );
 		setPin( M0Rv, 0 );
@@ -461,25 +530,6 @@ void Hardware::cmdSpeed( int speedIndex ) {
 	}
 	setPWM( M0En, speedLeft );
 	setPWM( M1En, speedRight );
-}
-
-// MARK: status section
-void Hardware::setStatus( unsigned int newStatusFlags ) {
-    
-    syslog(LOG_NOTICE, "In Hardware::setStatus( 0x%04X )", newStatusFlags);
-    getStatusFlags = newStatusFlags;
-}
-
-long Hardware::getStatus() {
-    
-//    syslog(LOG_NOTICE, "In Hardware::getStatus()" );
-    setStatusFlags = 0;
-    if ( upsideDownScanner ) {
-        setStatusFlags |= statusScannerOrientation;
-    }
-    syslog(LOG_NOTICE, "In Hardware::getStatus response: 0x%04X\n", setStatusFlags);
-
-    return setStatusFlags;
 }
 
 
@@ -530,23 +580,23 @@ long Hardware::doPing() {
     int loopCount1 = 0;
     int loopCount2 = 0;
     int echoResponse;
-    digitalWrite( TRIG, 0);   // Make sure
-    usleep( 5 );
-    digitalWrite( TRIG, 1);
-    usleep( 15 );
-    digitalWrite( TRIG, 0);
-    
+/// WFS    digitalWrite( TRIG, 0);   // Make sure
+/// WFS    usleep( 5 );
+/// WFS    digitalWrite( TRIG, 1);
+/// WFS    usleep( 15 );
+/// WFS    digitalWrite( TRIG, 0);
+
     // Wait until echo goes high to indicate pulse start
     do {
         loopCount1 += 1;
-        echoResponse = digitalRead( ECHO );
+/// WFS        echoResponse = digitalRead( ECHO );
     } while ( ( echoResponse == 0 ) && ( loopCount1 < 10000) );
     gettimeofday(&tvStart, NULL);
 
     // Wait for response on echo pin to go low indicating pulse end
     do {
         loopCount2 += 1;
-        echoResponse = digitalRead( ECHO );
+/// WFS        echoResponse = digitalRead( ECHO );
     } while ( ( echoResponse != 0 ) && ( loopCount2 < 1000000) );
     gettimeofday(&tvEnd, NULL);
     
@@ -570,8 +620,8 @@ long Hardware::doPing() {
 void Hardware::pinState( int pin, int state ) {
     
 #ifdef ON_PI
-    pinMode( pin, OUTPUT );            // Make sure it is an output
-    digitalWrite( pin, state );
+/// WFS    pinMode( pin, OUTPUT );            // Make sure it is an output
+/// WFS    digitalWrite( pin, state );
 #endif // ON_PI
 }
 
@@ -742,10 +792,155 @@ void Hardware::allStop() {
 	
 }
 
-void Hardware::scanUntilFound( int scanType ) {
-	
+// MARK: Camera stuff
+
+float Hardware::getCameraData(int socketOrAddr) {
+    struct timeval tvNow;
+    float savedDepth = 0.0;
+
+    if (!cameraInitialized) {
+        syslog(LOG_NOTICE, "In hardware, in getCameraData with camera not running" );
+        return 0;
+    }
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In hardware, in getCameraData started, time: %i", tvNow.tv_usec );
+
+#ifdef ON_PI
+    ArducamFrameBuffer frame;
+
+    float *depth_ptr = 0;
+//    float *amplitude_ptr = 0;
+//    uint8_t *preview_ptr = (uint8_t *)malloc( 180 * 240 * sizeof(uint8_t) ) ;
+
+    // Is this needed - apparently yes, preps format
+    ArducamFrameFormat format;
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    for ( int i = 0; i < 10; i++ ) {
+        if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+            depth_ptr = (float*)arducamCameraGetDepthData( frame );
+//            amplitude_ptr = (float*)arducamCameraGetAmplitudeData( frame );
+//            getPreview( preview_ptr, depth_ptr, amplitude_ptr );
+            gettimeofday( &tvNow, NULL );
+            savedDepth = depth_ptr[21720];
+            syslog(LOG_NOTICE, "Center distance: %.2f, time: %i\n", depth_ptr[21720], tvNow.tv_usec);
+//            listener.writeBack((char *)preview_ptr, socketOrAddr);
+            arducamCameraReleaseFrame( tof, frame );
+            usleep(1000000);
+        }
+    }
+//    free(preview_ptr);
+
+#endif  // ON_PI
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "Clean exit from getCameraData routine, time: %i", tvNow.tv_usec );
+    return savedDepth;
 }
 
-void Hardware::turnAndFollow( int followDistance ) {
-	
+int Hardware::cameraDataSend(int socketOrAddr) {
+    struct timeval tvNow;
+
+    if (!cameraInitialized) {
+        syslog(LOG_NOTICE, "In hardware, in cameraDataSend with camera not started" );
+        return 0;
+    }
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "In hardware, in cameraDataSend started, time: %i", tvNow.tv_usec );
+
+#ifdef ON_PI
+    // 240 x 180 = 43200, half is 21600
+    ArducamFrameBuffer frame;
+    float *depth_ptr = 0;
+    float *depth_line = 0;
+    uint8_t preview_data[242];
+    uint8_t *preview_ptr;   //  = &preview_data[2];
+    preview_data[0] = 0x43; // "C"
+    preview_data[1] = 0x30; // "0"
+
+    ArducamFrameFormat format;
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        format = arducamCameraGetFormat( frame, DEPTH_FRAME );
+        arducamCameraReleaseFrame( tof, frame );
+    }
+
+    if ( ( frame = arducamCameraRequestFrame( tof, 200 ) ) != 0x00 ) {
+        depth_ptr = (float*)arducamCameraGetDepthData( frame );
+        depth_line = &depth_ptr[21600];
+        for (unsigned long int i = 0; i < 240; i++) {
+            float phase = (*(depth_line + i) / 2) * 255;
+            uint8_t depth = phase > 255 ? 255 : phase;
+            *(preview_ptr + 2 + i) = depth;
+        }
+        listener.writeBackCount((char *)preview_ptr, 242, socketOrAddr);
+        arducamCameraReleaseFrame( tof, frame );
+    }
+#endif  // ON_PI
+
+    gettimeofday( &tvNow, NULL );
+    syslog(LOG_NOTICE, "Clean exit from cameraDataSend routine, time: %i", tvNow.tv_usec );
+
+    return 0;
 }
+
+void Hardware::cameraStreamTest(int socketOrAddr) {    // Print out messages so we know this task is running
+
+    if ( !cameraInitialized ) {
+        syslog(LOG_NOTICE, "In cameraStreamTest, camera has not been started" );
+        return;
+    }
+#ifdef ON_PI
+    char msg[64];
+    float x = getCameraData(socketOrAddr);
+    snprintf(msg, 64, "T In cameraStreamTest, data = %.2f", x);
+    listener.writeBack(msg, socketOrAddr);
+    syslog(LOG_NOTICE, "In cameraStreamTest, data = %.2f", x );
+#endif  // ON_PI
+}
+
+//#ifdef ON_PI
+//
+//void getPreview(uint8_t *preview_ptr, float *phase_image_ptr, float *amplitude_image_ptr) {
+//    unsigned long int len = 240 * 180;
+//    for (unsigned long int i = 0; i < len; i++) {
+//        uint8_t amplitude = *(amplitude_image_ptr + i) > 30 ? 254 : 0;
+//        float phase = ((1 - (*(phase_image_ptr + i) / 2)) * 255);
+//        uint8_t depth = phase > 255 ? 255 : phase;
+//        *(preview_ptr + i) = depth & amplitude;
+//    }
+//}
+//
+//#endif  // ON_PI
+
+/*  Startup sequence for device
+
+ mtrctllog[2690]: In setupHardware
+
+ mtrctllog[2690]: In setupHardware, gpioInitialise failed
+
+ mtrctllog[2690]: In setupTaskMaster
+ mtrctllog[2690]: In setupListener
+
+
+ ----    ----    Run with sudo .mtrctl:
+
+ mtrctllog[2696]: In setupHardware
+
+ mtrctllog[2696]: In hardware, in startCamera
+ open ***WARNING*** Could not open device node /dev/video0. Please check for permissions.
+ mtrctllog[2696]: arducamCameraOpen failed
+ mtrctllog[2696]: In cameraInit, failed to start camera, continuing
+
+ mtrctllog[2696]: In setupHardware, setting MotorI2C address: 0x6F, PWM freq: 50
+ mtrctllog[2696]: In openI2CFile, I2C device handle for addr 6F: 0
+ mtrctllog[2696]: In setupHardware, pwm initialized
+ mtrctllog[2696]: SPECIAL, oldmode read from PWM board: 0x0001 before rework
+ mtrctllog[2696]: In setupHardware, pwm setup
+ mtrctllog[2696]: readSpeedArrays opened file
+ mtrctllog[2696]: Read speed array from file
+
+ mtrctllog[2696]: In setupTaskMaster
+ mtrctllog[2696]: In setupListener
+*/

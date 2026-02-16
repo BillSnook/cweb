@@ -24,19 +24,28 @@ extern Threader		threader;
 extern Commander    commander;
 
 
+struct tcData {
+    int16_t     nextThreadType;
+    int         nextSocket;
+    uint        nextAddress;
+    char        nextCommand[ COMMAND_SIZE ];
+} tcData;
+
 // Class or factory methods to create and initialize an instance of ThreadControl
 ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, uint address ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
 	newThreadControl.nextAddress = address;
-	return newThreadControl;
+    newThreadControl.nextCommand[0] = 0;
+    return newThreadControl;
 }
 
-ThreadControl ThreadControl::initThread( ThreadType threadType, char *command, int socket ) {
+ThreadControl ThreadControl::initThread( ThreadType threadType, int socket, char *command ) {
 	ThreadControl newThreadControl = ThreadControl();
 	newThreadControl.nextThreadType = threadType;
 	newThreadControl.nextSocket = socket;
+    newThreadControl.nextAddress = 0;
     int cmdSize = (int)strlen( command );
 //    syslog(LOG_NOTICE, "In initThread with cmdSize: %d, command: %s.", cmdSize, command );
 	memcpy( newThreadControl.nextCommand, command, cmdSize );
@@ -70,7 +79,7 @@ const char *ThreadControl::description() {
             name = "keepAliveThread";
             break;
 		default:
-			name = "noThread";
+			name = "unrecognized Thread type";
 			break;
 	}
 	return name;
@@ -82,11 +91,13 @@ void Threader::setupThreader() {
     syslog(LOG_NOTICE, "In setupThreader" );
 	pthread_mutex_init( &threadArrayMutex, nullptr );
 //    manager = Manager();
-    manager.setupManager();         // Manages i2c queue and controller communication
-    queueThread( managerThread, 8, 0 );
-    usleep( 100000 );   // 1/10 second but will it change threads?
-    createThread();
-    usleep( 100000 );   // 1/10 second but will it change threads?
+
+    // i2c being unused now
+//    manager.setupManager();         // Manages i2c queue and controller communication
+//    queueThread( managerThread, 8, 0 );
+//    usleep( 100000 );   // 1/10 second but will it change threads?
+//    createThread();
+//    usleep( 100000 );   // 1/10 second but will it change threads?
 
 //	commander = Commander();
 	commander.setupCommander();		// Manages mostly external commands
@@ -104,7 +115,7 @@ void Threader::shutdownThreads() {
     listener.shutdownListener();
 	taskMaster.shutdownTaskMaster();
 	commander.shutdownCommander();
-    manager.shutdownManager();
+//    manager.shutdownManager();
 	pthread_mutex_destroy( &threadArrayMutex );
 }
 
@@ -139,7 +150,7 @@ void Threader::queueThread( ThreadType threadType, int socket, uint address ) {
 void Threader::queueThread( ThreadType threadType, char *command, int socket ) {
 	
 //	syslog(LOG_NOTICE, "In queueThread2 for command at start" );
-	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, command, socket );
+	ThreadControl nextThreadControl = ThreadControl::initThread( threadType, socket, command );
     lock();
 	try {
 		threadQueue.push( nextThreadControl );
@@ -154,6 +165,7 @@ void Threader::createThread() {
 //    syslog(LOG_NOTICE, "In createThread at start" );
     ThreadControl nextThreadControl;
     bool foundThread = false;
+
     lock();
     try {
         if ( ! threadQueue.empty() ) {
@@ -177,7 +189,7 @@ void Threader::createThread() {
 	pthread_attr_init( attrPtr );
 	pthread_attr_setdetachstate( attrPtr, 0 );
     
-    ThreadControl copyThreadControl = nextThreadControl;
+//    ThreadControl copyThreadControl = nextThreadControl;
     if ( nextThreadControl.nextThreadType == taskThread ) {                 // If a designated high priority task
         int result = pthread_attr_setschedpolicy( attrPtr, SCHED_FIFO );    // Enable ability to set a non-zero priority
         if (result != 0) {
@@ -193,36 +205,52 @@ void Threader::createThread() {
 //        syslog(LOG_NOTICE, "In createThread with SCHED_FIFO policy set with priority of %d", priority.sched_priority);
     }
 
-	pthread_create(threadPtr,
+    struct tcData *copyDataPtr = (struct tcData*)malloc(sizeof(struct tcData));
+    copyDataPtr->nextThreadType = nextThreadControl.nextThreadType;
+    copyDataPtr->nextSocket = nextThreadControl.nextSocket;
+    copyDataPtr->nextAddress = nextThreadControl.nextAddress;
+    memcpy(copyDataPtr->nextCommand, nextThreadControl.nextCommand, 32);
+
+    pthread_create(threadPtr,
 				   attrPtr,
 				   startThread,
-                   &copyThreadControl);
+                   copyDataPtr);
 
 	free( attrPtr );
 	free( threadPtr );
 }
 
 void Threader::runNextThread( void *tcPointer ) {
-    
-    ThreadControl nextThreadControl = *((ThreadControl *)tcPointer);
+
+    struct tcData *nextThreadDataPtr = (struct tcData *)tcPointer;
+    ThreadControl newThreadControl = ThreadControl();
+    newThreadControl.nextThreadType = ThreadType(nextThreadDataPtr->nextThreadType);
+    newThreadControl.nextSocket = nextThreadDataPtr->nextSocket;
+    newThreadControl.nextAddress = nextThreadDataPtr->nextAddress;
+    memcpy(newThreadControl.nextCommand, nextThreadDataPtr->nextCommand, 32);
+    free(tcPointer);
+
     threadCount += 1;
-    syslog(LOG_NOTICE, "Run thread with %s, threads: %d", nextThreadControl.description(), threadCount );
-	switch ( nextThreadControl.nextThreadType ) {
-		case managerThread:         // Singleton, started first, manages I2C communication
-			manager.monitor();
-			break;
+    uint16_t newPort = newThreadControl.nextSocket & 0x0FFFF;
+    syslog(LOG_NOTICE, "  Run next thread type %s, count: %d", newThreadControl.description(), threadCount );
+    syslog(LOG_NOTICE, "      socket: %u, addr: %u, command: %s", newPort, newThreadControl.nextAddress,  newThreadControl.nextCommand);
+
+	switch ( newThreadControl.nextThreadType ) {
+//		case managerThread:         // Singleton, started first, manages I2C communication - deprecated - used to talk to an arduino over i2c
+//			manager.monitor();
+//			break;
 		case listenThread:          // Singleton, started second, accepts WiFi connections from controllers
-                                    // For datagram, binds socket to port and returns
-			listener.acceptConnections( nextThreadControl.nextSocket );
+                                    // For datagram, binds socket and returns
+			listener.acceptConnections( newPort);
 			break;
 		case serverThread:          // One started for each connection accepted, queues commands received
-			listener.serviceConnection( nextThreadControl.nextSocket, nextThreadControl.nextCommand );
+			listener.serviceConnection( newThreadControl.nextSocket, newThreadControl.nextCommand );
 			break;
 		case commandThread:         // One for each command queued, executes method for command with params
-			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+			commander.serviceCommand( newThreadControl.nextCommand, newThreadControl.nextSocket );
             break;
 		case taskThread:            // Thread intended for longer running high priority tasks - set when thread was created
-			commander.serviceCommand( nextThreadControl.nextCommand, nextThreadControl.nextSocket );
+			commander.serviceCommand( newThreadControl.nextCommand, newThreadControl.nextSocket );
 			break;
         case keepAliveThread:       // Thread intended for keep alive support
             listener.monitor();
@@ -231,10 +259,11 @@ void Threader::runNextThread( void *tcPointer ) {
 			syslog(LOG_NOTICE, "In runNextThread with testThread" );
 			break;
 		default:
+            syslog(LOG_NOTICE, "!!  WARNING:  In runNextThread with unknown thread type: %d", newThreadControl.nextThreadType );
 			break;
 	}
 	threadCount -= 1;
-	syslog(LOG_NOTICE, "Run thread exit %s, threads: %d", nextThreadControl.description(), threadCount );
+	syslog(LOG_NOTICE, "  Run next thread exit %s, thread count: %d", newThreadControl.description(), threadCount );
 }
 
 void *startThread(void *arguments) {

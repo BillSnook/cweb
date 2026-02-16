@@ -24,10 +24,6 @@
 #include "filer.hpp"
 
 
-#define	PORT	5555
-
-#define MAKE_DAEMON     // Potentially become a daemon and run in the background
-
 Threader	threader;
 
 Listener	listener;
@@ -103,31 +99,21 @@ int main(int argc, const char * argv[]) {
 		syslog(LOG_NOTICE, "Started mtrctl as user");
 	}
 	
+    // Done figuring out whether we are a daemon, running in the background, or not.
+    doLoop = true;
+    ready = true;
+
     filer.getHostName();
     filer.setupFiles();
 
-	// Done figuring out whether we are a daemon, running in the background, or not.
-	doLoop = true;
-	ready = true;
-	
 	threader = Threader();
 	threader.setupThreader();
 	
-//    return 0;         // To test on Mac
-    
 //	syslog(LOG_NOTICE, "mtrctl argc = %d", argc );
-	if ( argc == 2 ) {	// Should be sender as we must pass in a host name
-        // Deprecated - just not used anymore
-		char buff[32], *buffer = (char *)&buff;
-		bcopy( argv[1], buffer, 31);
-		sender = Sender();
-		sender.setupSender( buff, PORT );
-	} else {
-		listener = Listener();
-		threader.queueThread( listenThread, PORT, 0 );
-	}
-
-	syslog(LOG_NOTICE, "Ready to service queue, v2.0.2" );
+    listener = Listener();
+    uint16_t portNo = PORT;
+    threader.queueThread( listenThread, portNo, 0 );
+	syslog(LOG_NOTICE, "Ready to accept connections on port %u, v4.2", portNo );
 
 	while ( doLoop ) {
 		threader.lock();
